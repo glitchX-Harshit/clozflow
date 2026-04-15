@@ -1,59 +1,45 @@
-import { Zap, Mic } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import './ResponseSuggestion.css';
 
-const ResponseSuggestion = () => {
-    return (
-        <section className="resp-section" id="response-suggestions">
-            <div className="container">
-                <div className="resp-layout">
-                    {/* Text content */}
-                    <div className="resp-text-content">
-                        <div className="resp-eyebrow">
-                            <Zap size={14} />
-                            <span>AI Closing Engine</span>
-                        </div>
-                        <h2 className="resp-title">
-                            Never scramble <br />
-                            for <em>words </em> again.
-                        </h2>
-                        <p className="resp-desc">
-                            Get high-converting, context-aware response suggestions 
-                            the moment an objection is detected. 
-                        </p>
+const ResponseSuggestion = () => (
+    <section className="resp__section" id="response">
+        <div className="container">
+            <div className="resp__layout">
+                <div className="resp__text">
+                    <span className="eyebrow eyebrow-accent">AI Response Engine</span>
+                    <h2 className="section-title">
+                        The perfect<br />
+                        <span className="italic-accent">answer. Always.</span>
+                    </h2>
+                    <p className="resp__desc">
+                        Never be caught off-guard. Hexagon surfaces the ideal
+                        rebuttal in under 200ms — tested across millions of 
+                        high-stakes conversations.
+                    </p>
+                    <button className="btn btn-primary">See it in action</button>
+                </div>
+
+                <div className="resp__visual">
+                    <div className="resp__card">
+                        <div className="resp__card-label">Prospect Objection</div>
+                        <p>"We already have a solution in place for this. Switching costs are going to be a nightmare."</p>
                     </div>
-
-                    {/* Interactive area */}
-                    <div className="resp-interactive-area">
-                        {/* Before/Standard */}
-                        <div className="resp-card secondary">
-                            <div className="resp-card-header">
-                                Standard Response (Average)
-                            </div>
-                            <p>"Uh, let me check with my manager on the pricing for that..."</p>
-                            <div className="resp-card-footer">
-                                Logic: Defensive • Probability: 12%
-                            </div>
+                    <div className="resp__card resp__card--primary">
+                        <div className="resp__card-label resp__card-label--accent">
+                            <Zap size={11} />
+                            Hexagon rebuttal · confidence 97%
                         </div>
-
-                        {/* After/AI */}
-                        <div className="resp-card primary interactive">
-                            <div className="resp-card-header highlight">
-                                <Mic size={14} />
-                                ✦ klyro.ai Recommendation
-                            </div>
-                            <p>
-                                "Our Starter plan at $49/seat is designed exactly for teams your size, 
-                                and it usually sees a full ROI within the first 30 days. Shall we look at the numbers?"
-                            </p>
-                            <div className="resp-card-footer" style={{ color: '#7c3aed' }}>
-                                Logic: Value-First • Probability: 94%
-                            </div>
-                        </div>
+                        <p>
+                            "Switching costs are a real concern — I respect that. We actually offer a white-glove 
+                            migration service that most clients complete in under 48 hours. Can I walk you through 
+                            how we handled it for [similar company]?"
+                        </p>
+                        <div className="resp__card-foot">Strategy: Empathize → Diffuse → Redirect</div>
                     </div>
                 </div>
             </div>
-        </section>
-    );
-};
+        </div>
+    </section>
+);
 
 export default ResponseSuggestion;

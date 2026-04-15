@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'back
 from services.sales_ai_engine import SalesAIEngine
 
 async def run_test():
-    engine = SalesAIEngine(call_context={"client_name": "TestCorp", "product_name": "klyro.ai", "call_goal": "Discovery"})
+    engine = SalesAIEngine(call_context={"client_name": "TestCorp", "product_name": "hexagon.ai", "call_goal": "Discovery"})
     engine.min_messages = 1 # Override for testing to trigger immediately
     
     # Pre-seed buffer with a rep message so it feels natural

@@ -1,0 +1,245 @@
+PROJECT: Hexagon Sales AI Engine - CloserBrain V2 Final
+
+GOAL:
+  Transform AI from reactive responder → strategic deal closer
+  WITHOUT increasing latency or breaking current pipeline
+
+---
+
+CORE_UPGRADES:
+
+  1. DEAL STATE ENGINE
+  2. PRESSURE SYSTEM
+  3. CONTROL ENFORCEMENT
+  4. PERSONALIZATION LOCK
+  5. STRATEGY GOVERNOR
+  6. ANTI-REPETITION++
+  7. STAGE-BASED BEHAVIOR
+
+---
+
+BACKEND MODIFICATIONS:
+
+  FILE: sales_ai_engine.py
+
+---
+
+STEP 1: ADD DEAL STATE
+
+  Inside __init__:
+
+    self.deal_state = {
+        "stage": "discovery",
+        "last_intent": None,
+        "objections_handled": [],
+        "pressure_level": 1
+    }
+
+---
+
+STEP 2: ADD STAGE ENGINE
+
+  Add function:
+
+    def update_stage(self, intent: str):
+        if intent in ["pricing", "hesitation", "trust"]:
+            self.deal_state["stage"] = "objection"
+        elif intent in ["interest"]:
+            self.deal_state["stage"] = "closing"
+        elif intent in ["confusion"]:
+            self.deal_state["stage"] = "discovery"
+
+---
+
+STEP 3: ADD PRESSURE SYSTEM
+
+  Add function:
+
+    def get_pressure_instruction(self):
+        level = self.deal_state["pressure_level"]
+
+        if level == 1:
+            return "Keep it consultative and exploratory."
+        elif level == 2:
+            return "Guide the prospect toward a decision subtly."
+        else:
+            return "Apply firm pressure and move toward commitment."
+
+---
+
+STEP 4: AUTO PRESSURE ESCALATION
+
+  Inside analyze():
+
+    if self.deal_state["stage"] == "objection":
+        self.deal_state["pressure_level"] = min(self.deal_state["pressure_level"] + 1, 3)
+
+---
+
+STEP 5: STRATEGY GOVERNOR
+
+  Before LLM call:
+
+    intent = self.deal_state["last_intent"]
+
+    if intent == "pricing":
+        forced_strategy = "ROI_REFRAME"
+    elif intent == "authority":
+        forced_strategy = "DECISION_CONTROL"
+    else:
+        forced_strategy = None
+
+---
+
+STEP 6: MODIFY SYSTEM PROMPT (CRITICAL)
+
+  Replace system_content with:
+
+    You are "CloserBrain V2" — an elite B2B sales closing engine.
+
+    {context_str}
+
+    CURRENT DEAL STATE:
+    - Stage: {self.deal_state["stage"]}
+    - Pressure Level: {self.deal_state["pressure_level"]}
+
+    PRESSURE MODE:
+    {self.get_pressure_instruction()}
+
+    CORE BEHAVIOR RULES:
+    - You MUST lead the conversation.
+    - You MUST move the deal forward every response.
+    - NEVER just answer — always guide.
+    - Always include a directional question.
+
+    PERSONALIZATION:
+    - You MUST reference user's business, problem, or goal.
+    - Do NOT give generic responses.
+
+    STRATEGY RULES:
+    - Avoid recently used strategies: [{avoid_strategies}]
+    - Use correct strategy for intent.
+    - Do NOT repeat same persuasion pattern.
+
+    AUTHORITY RULES:
+    - NEVER offer discounts immediately
+    - NEVER sound desperate
+    - Maintain control
+
+    RESPONSE STYLE:
+    - Max 2 sentences
+    - Sharp, confident, non-generic
+    - Mix statement + question
+
+    OUTPUT JSON:
+    {
+      "intent": "...",
+      "stage": "...",
+      "strategy": "...",
+      "confidence": 0.0,
+      "response": "...",
+      "next_question": "...",
+      "coaching_tip": "..."
+    }
+
+---
+
+STEP 7: UPDATE STATE AFTER RESPONSE
+
+  After parsing LLM output:
+
+    intent = data.get("intent", "neutral")
+
+    self.deal_state["last_intent"] = intent
+    self.update_stage(intent)
+
+    if intent in ["pricing", "trust", "hesitation"]:
+        self.deal_state["objections_handled"].append(intent)
+
+---
+
+STEP 8: HARD CLOSING HOOK
+
+  After response:
+
+    if self.deal_state["stage"] == "closing":
+        data["next_question"] = "If this solves your problem, is there anything stopping you from moving forward today?"
+
+---
+
+STEP 9: ANTI-REPETITION++
+
+  Modify duplicate check:
+
+    if self.is_duplicate(suggested_resp):
+        print("[BLOCKED] Duplicate response prevented")
+        return self.smart_fallback()
+
+---
+
+STEP 10: CONTEXT LOCK
+
+  Before sending prompt:
+
+    if self.call_context:
+        system_content += "\nMANDATORY CONTEXT USAGE:\n"
+        system_content += json.dumps(self.call_context)
+
+---
+
+---
+
+FRONTEND (OPTIONAL BUT POWERFUL):
+
+  Display:
+    - Stage (Discovery / Objection / Closing)
+    - Strategy used
+    - Pressure level
+
+---
+
+EXPECTED IMPROVEMENTS:
+
+  BEFORE:
+    - reactive
+    - repetitive
+    - weak authority
+    - generic
+
+  AFTER:
+    - controlled conversation
+    - adaptive pressure
+    - strategic variation
+    - stronger closing behavior
+
+---
+
+LATENCY IMPACT:
+
+  - No additional API calls
+  - No heavy computation added
+  - Maintains <2s response
+
+---
+
+TESTING:
+
+  Test with:
+    - pricing objection
+    - authority objection
+    - hesitation
+    - closing scenario
+
+  VERIFY:
+    - AI pushes forward
+    - no repetition
+    - stronger framing
+    - contextual responses
+
+---
+
+SUCCESS CRITERIA:
+
+  - AI feels like a closer, not assistant
+  - Responses feel intentional, not reactive
+  - Conversation progresses toward decision

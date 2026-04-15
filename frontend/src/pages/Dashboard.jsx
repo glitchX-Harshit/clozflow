@@ -22,10 +22,10 @@ const OverviewTab = ({ user, navigate }) => (
     <div className="animate-fade-in">
         {/* Header Section */}
         <div style={{ padding: '4rem 0', marginBottom: '3rem' }}>
-            <h1 className="gradient-text" style={{ fontSize: '3.5rem', marginBottom: '1rem', fontWeight: 800, letterSpacing: '-0.05em' }}>
-                Welcome back{user?.name ? `, ${user.name}` : ''}!
+            <h1 className="text-display" style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', marginBottom: '1rem', fontWeight: 800, letterSpacing: '-0.05em', color: 'var(--text)' }}>
+                Welcome back{user?.name ? `, ${user.name}` : ''}.
             </h1>
-            <p style={{ color: 'var(--color-text-dim)', fontSize: '1.25rem', marginBottom: '2.5rem', fontWeight: 500, maxWidth: '600px' }}>
+            <p style={{ color: 'var(--text-dim)', fontSize: '1.25rem', marginBottom: '2.5rem', fontWeight: 500, maxWidth: '600px' }}>
                 Your AI-powered deal intelligence is ready. Boost your conversion rates with real-time coaching.
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -49,22 +49,22 @@ const OverviewTab = ({ user, navigate }) => (
         {/* Bento Grid Features */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
             <div className="card card-hover" style={{ padding: '2rem' }}>
-                <div style={{ background: 'rgba(99, 102, 241, 0.1)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                    <ShieldCheck size={24} color="var(--color-primary)" />
+                <div style={{ background: 'var(--accent-dim)', width: '48px', height: '48px', borderRadius: 'var(--r-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                    <ShieldCheck size={22} color="var(--accent)" />
                 </div>
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>Deal Health</h3>
                 <p style={{ fontSize: '0.9375rem' }}>Analyze prospect intent and risk factors automatically across your conversations.</p>
             </div>
             <div className="card card-hover" style={{ padding: '2rem' }}>
-                <div style={{ background: 'rgba(6, 182, 212, 0.1)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                    <TrendingUp size={24} color="var(--color-accent)" />
+                <div style={{ background: 'var(--accent-dim)', width: '48px', height: '48px', borderRadius: 'var(--r-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                    <TrendingUp size={22} color="var(--accent)" />
                 </div>
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>Performance</h3>
                 <p style={{ fontSize: '0.9375rem' }}>Track your objections-handled ratio and closing effectiveness in real-time.</p>
             </div>
             <div className="card card-hover" style={{ padding: '2rem' }}>
-                <div style={{ background: 'rgba(236, 72, 153, 0.1)', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                    <MessageSquare size={24} color="#ec4899" />
+                <div style={{ background: 'var(--accent-dim)', width: '48px', height: '48px', borderRadius: 'var(--r-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                    <MessageSquare size={22} color="var(--accent)" />
                 </div>
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>AI Coaching</h3>
                 <p style={{ fontSize: '0.9375rem' }}>Get instant suggestions for next-best-questions and value propositions.</p>
@@ -75,14 +75,14 @@ const OverviewTab = ({ user, navigate }) => (
         <div style={{ marginTop: '4rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <History size={20} color="var(--color-text-dim)" /> Recent Sessions
+                    <History size={20} color="var(--text-dim)" /> Recent Sessions
                 </h2>
                 <button className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.8125rem' }}>View all history</button>
             </div>
-            <div className="card" style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--color-surface)' }}>
+            <div className="card" style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--surface)' }}>
                 <div style={{ marginBottom: '1.5rem', opacity: 0.1 }}><History size={64} /></div>
-                <p style={{ fontWeight: 600, fontSize: '1.125rem', color: 'var(--color-text)' }}>Quiet for now...</p>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-text-dim)', marginTop: '0.5rem' }}>Your deal intelligence will populate here once you start your first call.</p>
+                <p style={{ fontWeight: 600, fontSize: '1.125rem', color: 'var(--text)' }}>Quiet for now...</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginTop: '0.5rem' }}>Your deal intelligence will populate here once you start your first call.</p>
             </div>
         </div>
     </div>
@@ -93,15 +93,15 @@ const SettingsTab = ({ user }) => (
         <h2 style={{ fontSize: '2rem', marginBottom: '2.5rem', fontWeight: 800 }}>Settings</h2>
         
         <div style={{ marginBottom: '3rem' }}>
-            <h3 style={{ fontSize: '0.75rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Profile Information</h3>
+            <h3 style={{ fontSize: '0.75rem', fontWeight: 700, marginBottom: '1.25rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Profile Information</h3>
             <div className="card" style={{ padding: '2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
-                    <div className="shadow-premium" style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'var(--color-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 800 }}>
+                    <div className="shadow-premium" style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'var(--text)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 800 }}>
                         {user?.email?.charAt(0).toUpperCase() || 'U'}
                     </div>
                     <div>
                         <div style={{ fontWeight: 700, fontSize: '1.125rem' }}>{user?.email?.split('@')[0]}</div>
-                        <div style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem' }}>{user?.email}</div>
+                        <div style={{ color: 'var(--text-dim)', fontSize: '0.875rem' }}>{user?.email}</div>
                     </div>
                     <button className="btn btn-outline" style={{ marginLeft: 'auto' }}>Edit Profile</button>
                 </div>
@@ -132,10 +132,10 @@ const Dashboard = () => {
         <div className="db-layout">
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <div className="db-logo-icon" style={{ background: 'var(--color-primary)' }}>
+                    <div className="db-logo-icon" style={{ background: 'var(--accent)' }}>
                         <Zap size={18} color="white" />
                     </div>
-                    <span className="db-logo-text">klyro.ai</span>
+                    <span className="db-logo-text">Hexagon</span>
                 </div>
 
                 <nav className="db-nav">
@@ -158,7 +158,7 @@ const Dashboard = () => {
 
                 <div className="db-user-section">
                     <div className="db-user-info">
-                        <div className="db-user-avatar" style={{ background: 'var(--color-surface)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}>
+                        <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' }}>
                             {user?.email?.charAt(0).toUpperCase() || 'U'}
                         </div>
                         <div className="db-user-details">
@@ -179,7 +179,7 @@ const Dashboard = () => {
                 {activeTab !== 'overview' && activeTab !== 'history' && activeTab !== 'settings' && (
                     <div className="animate-fade-in" style={{ padding: '4rem 0', textAlign: 'center' }}>
                         <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>{navItems.find(i => i.id === activeTab)?.label}</h2>
-                        <p style={{ color: 'var(--color-text-dim)' }}>This module is currently being optimized for high-performance sales teams.</p>
+                        <p style={{ color: 'var(--text-dim)' }}>This module is currently being optimized for high-performance sales teams.</p>
                     </div>
                 )}
             </main>
@@ -188,14 +188,14 @@ const Dashboard = () => {
                 .db-layout {
                     display: flex;
                     min-height: 100vh;
-                    background: var(--color-bg);
+                    background: var(--bg);
                 }
 
                 .db-sidebar {
                     width: 280px;
                     min-width: 280px;
-                    background: var(--color-bg);
-                    border-right: 1px solid var(--color-border);
+                    background: var(--bg);
+                    border-right: 1px solid var(--border);
                     display: flex;
                     flex-direction: column;
                     position: sticky;
@@ -243,7 +243,7 @@ const Dashboard = () => {
                     gap: 0.75rem;
                     padding: 0.75rem 0.875rem;
                     border-radius: 10px;
-                    color: var(--color-text-dim);
+                    color: var(--text-dim);
                     border: none;
                     background: transparent;
                     cursor: pointer;
@@ -253,13 +253,13 @@ const Dashboard = () => {
                 }
 
                 .db-nav-item:hover {
-                    background: var(--color-surface);
-                    color: var(--color-text);
+                    background: var(--surface);
+                    color: var(--text);
                 }
 
                 .db-nav-item.active {
                     background: rgba(99, 102, 241, 0.05);
-                    color: var(--color-primary);
+                    color: var(--accent);
                 }
 
                 .db-nav-label {
@@ -274,7 +274,7 @@ const Dashboard = () => {
                 .db-user-section {
                     margin-top: auto;
                     padding-top: 2rem;
-                    border-top: 1px solid var(--color-border);
+                    border-top: 1px solid var(--border);
                 }
 
                 .db-user-info {
@@ -312,7 +312,7 @@ const Dashboard = () => {
 
                 .db-user-role {
                     font-size: 0.75rem;
-                    color: var(--color-text-dim);
+                    color: var(--text-dim);
                 }
 
                 .db-logout-btn {
@@ -321,26 +321,26 @@ const Dashboard = () => {
                     justify-content: center;
                     gap: 0.5rem;
                     width: 100%;
-                    background: var(--color-surface);
-                    border: 1px solid var(--color-border);
-                    color: var(--color-text);
+                    background: var(--surface);
+                    border: 1px solid var(--border);
+                    color: var(--text);
                     padding: 0.625rem;
-                    border-radius: 10px;
+                    border-radius: var(--r-md);
                     font-size: 0.8125rem;
                     font-weight: 600;
                 }
 
                 .db-logout-btn:hover {
-                    background: #fee2e2;
-                    color: #bd2130;
-                    border-color: #f5c6cb;
+                    background: rgba(239,68,68,0.06);
+                    color: #dc2626;
+                    border-color: rgba(239,68,68,0.15);
                 }
 
                 .db-main {
                     flex: 1;
                     padding: 4rem 6rem;
                     max-width: 1400px;
-                    background: #ffffff;
+                    background: var(--surface);
                 }
 
                 @media (max-width: 1200px) {

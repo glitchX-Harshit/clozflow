@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import './Navbar.css';
 
 const LINKS = [
@@ -10,47 +11,80 @@ const LINKS = [
 
 const Navbar = ({ onSignup, onLogin }) => {
     const [scrolled, setScrolled] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20);
+        const onScroll = () => setScrolled(window.scrollY > 30);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    return (
-        <nav className={`nb ${scrolled ? 'nb-scrolled' : ''}`}>
-            <div className="nb-inner">
-                {/* Logo */}
-                <a href="#" className="nb-logo interactive">
-                    <span className="nb-logo-mark">
-                        <span className="nb-logo-pulse"></span>
-                    </span>
-                    <span className="nb-logo-text">
-                        klyro<span className="nb-logo-dot">.</span><span className="nb-logo-ai">ai</span>
-                    </span>
-                </a>
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [mobileOpen]);
 
-                {/* Nav links — center pill */}
-                <div className="nb-links-pill">
+    const close = () => setMobileOpen(false);
+
+    return (
+        <>
+            <nav className={`nb ${scrolled ? 'nb--scrolled' : ''}`}>
+                <div className="nb__inner">
+                    {/* Logo */}
+                    <a href="#" className="nb__logo">
+                        <span className="nb__mark" aria-hidden="true">K</span>
+                        <span className="nb__wordmark">
+                            hexagon<span className="nb__dot">.</span>ai
+                        </span>
+                    </a>
+
+                    {/* Center links */}
+                    <div className="nb__links">
+                        {LINKS.map(l => (
+                            <a key={l.href} href={l.href} className="nb__link">
+                                {l.label}
+                            </a>
+                        ))}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="nb__actions">
+                        <button className="nb__login" onClick={onLogin}>
+                            Log in
+                        </button>
+                        <button className="nb__cta btn btn-primary" onClick={onSignup}>
+                            Get started
+                        </button>
+                        <button
+                            className="nb__hamburger"
+                            onClick={() => setMobileOpen(o => !o)}
+                            aria-label="Toggle menu"
+                        >
+                            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Mobile drawer */}
+            <div className={`nb__drawer ${mobileOpen ? 'nb__drawer--open' : ''}`}>
+                <div className="nb__drawer-links">
                     {LINKS.map(l => (
-                        <a key={l.href} href={l.href} className="nb-link interactive">
+                        <a key={l.href} href={l.href} className="nb__drawer-link" onClick={close}>
                             {l.label}
                         </a>
                     ))}
                 </div>
-
-                {/* Right actions */}
-                <div className="nb-actions">
-                    <a href="#" className="nb-signin interactive" onClick={(e) => { e.preventDefault(); onLogin(); }}>Log in</a>
-                    <button className="nb-cta interactive" onClick={onSignup}>
-                        Get Started
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                <div className="nb__drawer-actions">
+                    <button className="btn btn-outline" style={{width:'100%', justifyContent:'center'}} onClick={() => { onLogin(); close(); }}>
+                        Log in
+                    </button>
+                    <button className="btn btn-primary" style={{width:'100%', justifyContent:'center'}} onClick={() => { onSignup(); close(); }}>
+                        Get started
                     </button>
                 </div>
             </div>
-        </nav>
+        </>
     );
 };
 
