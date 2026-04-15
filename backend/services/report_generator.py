@@ -18,7 +18,7 @@ def generate_call_report(call_log):
     
     # Custom Styles
     title_style = ParagraphStyle(
-        'KlyroTitle',
+        'HexagonTitle',
         parent=styles['Heading1'],
         fontSize=24,
         textColor=colors.HexColor("#6366f1"), # Indigo
@@ -27,7 +27,7 @@ def generate_call_report(call_log):
     )
     
     header_style = ParagraphStyle(
-        'KlyroHeader',
+        'HexagonHeader',
         parent=styles['Heading2'],
         fontSize=14,
         textColor=colors.HexColor("#09090b"),
@@ -62,7 +62,7 @@ def generate_call_report(call_log):
     elements = []
     
     # Header
-    elements.append(Paragraph("Klyro Call Intelligence Report", title_style))
+    elements.append(Paragraph("Hexagon Call Intelligence Report", title_style))
     elements.append(Spacer(1, 12))
     
     date_str = call_log.timestamp.strftime("%B %d, %Y at %I:%M %p")

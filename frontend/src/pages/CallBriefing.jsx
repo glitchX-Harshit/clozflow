@@ -62,7 +62,7 @@ const CallBriefing = () => {
             <div className="cb-card animate-fade-in">
                 <div className="cb-head">
                     <div className="cb-logo-mark">
-                        <Zap size={24} color="#fff" strokeWidth={2.5} />
+                        <Zap size={24} color="var(--bg)" strokeWidth={2.5} />
                     </div>
                     <div className="cb-head-text">
                         <h2 className="cb-title">Call Intelligence Briefing</h2>
@@ -73,7 +73,7 @@ const CallBriefing = () => {
                 <form className="cb-form" onSubmit={handleSubmit}>
                     <div className="cb-grid-fields">
                         <div className="cb-field">
-                            <label className="cb-label"><User size={14} color="var(--color-primary)" /> Prospect Name</label>
+                            <label className="cb-label"><User size={14} color="var(--accent)" /> Prospect Name</label>
                             <input 
                                 type="text" 
                                 className="cb-input" 
@@ -84,7 +84,7 @@ const CallBriefing = () => {
                             />
                         </div>
                         <div className="cb-field">
-                            <label className="cb-label"><Building size={14} color="var(--color-primary)" /> Company / Industry</label>
+                            <label className="cb-label"><Building size={14} color="var(--accent)" /> Company / Industry</label>
                             <input 
                                 type="text" 
                                 className="cb-input" 
@@ -95,7 +95,7 @@ const CallBriefing = () => {
                             />
                         </div>
                         <div className="cb-field">
-                            <label className="cb-label"><Briefcase size={14} color="var(--color-primary)" /> Title / Role</label>
+                            <label className="cb-label"><Briefcase size={14} color="var(--accent)" /> Title / Role</label>
                             <input 
                                 type="text" 
                                 className="cb-input" 
@@ -108,7 +108,7 @@ const CallBriefing = () => {
                     </div>
 
                     <div className="cb-field">
-                        <label className="cb-label"><Zap size={14} color="var(--color-primary)" /> Your Product or Service</label>
+                        <label className="cb-label"><Zap size={14} color="var(--accent)" /> Your Product or Service</label>
                         <input 
                             type="text" 
                             className="cb-input" 
@@ -120,7 +120,7 @@ const CallBriefing = () => {
                     </div>
 
                     <div className="cb-field">
-                        <label className="cb-label"><Target size={14} color="var(--color-primary)" /> Strategic Call Goal</label>
+                        <label className="cb-label"><Target size={14} color="var(--accent)" /> Strategic Call Goal</label>
                         <textarea 
                             className="cb-textarea" 
                             placeholder="Identify pain points regarding lead velocity and handle pricing objections for the Q3 pilot..."

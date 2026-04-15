@@ -1,51 +1,52 @@
 import './Integrations.css';
 
 const APPS = [
-    { name: 'Zoom', color: '#2D8CFF' },
-    { name: 'Google Meet', color: '#00AC47' },
-    { name: 'Teams', color: '#6264A7' },
-    { name: 'Slack', color: '#4A154B' },
     { name: 'Salesforce', color: '#00A1E0' },
     { name: 'HubSpot', color: '#FF7A59' },
-    { name: 'Notion', color: '#000000' },
-    { name: 'Clari', color: '#F8A155' },
-    { name: 'Gong', color: '#E82B6D' },
+    { name: 'Zoom', color: '#2D8CFF' },
+    { name: 'Slack', color: '#4A154B' },
+    { name: 'Notion', color: '#0a0a0a' },
+    { name: 'Google Meet', color: '#00A651' },
+    { name: 'Pipedrive', color: '#0F9E52' },
+    { name: 'Outreach', color: '#2B5990' },
+    { name: 'Gong', color: '#E85535' },
+    { name: 'MS Teams', color: '#6264A7' },
+    { name: 'Chorus', color: '#161C2D' },
+    { name: 'LinkedIn', color: '#0A66C2' },
 ];
 
-const Integrations = () => {
-    return (
-        <section className="int-section" id="integrations">
-            <div className="container">
-                <div className="int-layout">
-                    {/* Text content */}
-                    <div className="int-text">
-                        <div className="int-eyebrow">Integrations</div>
-                        <h2 className="int-title">
-                            Works where <br />
-                            <em>you work.</em>
-                        </h2>
-                        <p className="int-desc">
-                            Connect klyro.ai with your existing sales stack in seconds. No complex setup, no browser extensions, just seamless data flow.
-                        </p>
-                    </div>
+const Integrations = () => (
+    <section className="int__section" id="integrations">
+        <div className="container">
+            <div className="int__layout">
+                <div className="int__text">
+                    <span className="eyebrow eyebrow-accent">Integrations</span>
+                    <h2 className="section-title int__title">
+                        Plugs into<br />
+                        <span className="italic-accent">your stack.</span>
+                    </h2>
+                    <p className="int__desc">
+                        hexagon.ai connects natively with the tools your team
+                        already uses. From CRMs to video calls — we're everywhere your deals happen.
+                    </p>
+                    <button className="btn btn-primary">See all integrations</button>
+                </div>
 
-                    {/* Apps cloud */}
-                    <div className="int-apps-cloud">
-                        {APPS.map((app, i) => (
-                            <div 
-                                key={app.name} 
-                                className="int-app-pill interactive"
-                                style={{ '--app-color': app.color }}
-                            >
-                                <span className="int-app-dot"></span>
-                                {app.name}
-                            </div>
-                        ))}
-                    </div>
+                <div className="int__cloud">
+                    {APPS.map(app => (
+                        <div
+                            key={app.name}
+                            className="int__pill"
+                            style={{ '--app-color': app.color }}
+                        >
+                            <span className="int__pill-dot" />
+                            {app.name}
+                        </div>
+                    ))}
                 </div>
             </div>
-        </section>
-    );
-};
+        </div>
+    </section>
+);
 
 export default Integrations;

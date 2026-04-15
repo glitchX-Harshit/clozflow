@@ -44,7 +44,7 @@ const HistoryView = () => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `klyro_report_${callId}.pdf`;
+            a.download = `hexagon_report_${callId}.pdf`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -76,8 +76,8 @@ const HistoryView = () => {
     if (loading) {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '400px', gap: '1rem' }}>
-                <Loader2 className="animate-spin" size={32} color="var(--color-primary)" />
-                <p style={{ color: 'var(--color-text-dim)', fontWeight: 500 }}>Retrieving your deal history...</p>
+                <Loader2 className="animate-spin" size={32} color="var(--accent)" />
+                <p style={{ color: 'var(--text-dim)', fontWeight: 500 }}>Retrieving your deal history...</p>
             </div>
         );
     }
@@ -93,10 +93,10 @@ const HistoryView = () => {
 
     if (calls.length === 0) {
         return (
-            <div className="card" style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--color-surface)' }}>
+            <div className="card" style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--surface)' }}>
                 <div style={{ marginBottom: '1.5rem', opacity: 0.1 }}><Clock size={64} /></div>
-                <h3 style={{ fontWeight: 800, fontSize: '1.5rem', color: 'var(--color-text)', marginBottom: '1rem' }}>Start your first session</h3>
-                <p style={{ fontSize: '0.9375rem', color: 'var(--color-text-dim)', maxWidth: '400px', margin: '0 auto' }}>
+                <h3 style={{ fontWeight: 800, fontSize: '1.5rem', color: 'var(--text)', marginBottom: '1rem' }}>Start your first session</h3>
+                <p style={{ fontSize: '0.9375rem', color: 'var(--text-dim)', maxWidth: '400px', margin: '0 auto' }}>
                     Your AI insights and call reports will appear here automatically.
                 </p>
             </div>
@@ -107,22 +107,22 @@ const HistoryView = () => {
         <div className="animate-fade-in">
             <header style={{ marginBottom: '3rem' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.05em' }}>Deal Intelligence History</h2>
-                <p style={{ color: 'var(--color-text-dim)', marginTop: '0.5rem' }}>Full record of your coached calls and strategy effectiveness.</p>
+                <p style={{ color: 'var(--text-dim)', marginTop: '0.5rem' }}>Full record of your coached calls and strategy effectiveness.</p>
             </header>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {calls.map((call) => (
                     <div className="card card-hover" key={call.id} style={{ padding: '1.5rem 2rem', display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                        <div style={{ background: 'var(--color-surface)', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-primary)', border: '1px solid var(--color-border)' }}>
+                        <div style={{ background: 'var(--surface)', width: '56px', height: '56px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', border: '1px solid var(--border)' }}>
                             <FileText size={24} />
                         </div>
                         
                         <div style={{ flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
                                 <span style={{ fontWeight: 800, fontSize: '1.125rem' }}>Session #{call.id}</span>
-                                <span style={{ padding: '0.25rem 0.75rem', background: 'rgba(99, 102, 241, 0.08)', color: 'var(--color-primary)', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 700 }}>VERIFIED</span>
+                                <span style={{ padding: '0.25rem 0.75rem', background: 'var(--accent-dim)', color: 'var(--accent)', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 700 }}>VERIFIED</span>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', color: 'var(--color-text-dim)', fontSize: '0.875rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', color: 'var(--text-dim)', fontSize: '0.875rem' }}>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                                     <Clock size={14} /> {new Date(call.timestamp).toLocaleDateString()} at {new Date(call.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>

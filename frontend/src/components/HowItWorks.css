@@ -1,74 +1,163 @@
-.hiw-section {
-    background: var(--color-bg);
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
+/* ══ HOW IT WORKS ════════════════════════════════════ */
+.hiw__section {
+  padding: 10rem 0;
+  background: var(--bg);
+  position: relative;
 }
 
-.hiw-header {
-    margin-bottom: 5rem;
+.hiw__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 8rem;
 }
 
-.hiw-eyebrow {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1rem;
+.hiw__subtitle {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  max-width: 480px;
+  margin-top: 1.25rem;
+  line-height: 1.7;
 }
 
-.hiw-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    line-height: 1.2;
+/* Timeline */
+.hiw__timeline {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-.hiw-title em {
-    font-style: normal;
-    color: var(--color-primary);
+/* SVG connector */
+.hiw__svg-wrap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.hiw-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
+.hiw__svg-wrap svg { width: 100%; height: 100%; display: block; }
+
+/* Steps */
+.hiw__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 7rem;
+  position: relative;
+  z-index: 1;
 }
 
-.hiw-step {
-    position: relative;
-    padding: 2rem;
-    background: var(--color-glass);
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    transition: all 0.3s ease;
+.hiw__step {
+  width: 50%;
+  display: flex;
 }
 
-.hiw-step:hover {
-    background: var(--color-glass-hover);
-    border-color: var(--color-primary);
-    transform: translateY(-5px);
+.hiw__step--left {
+  align-self: flex-start;
+  justify-content: flex-end;
+  padding-right: 4.5rem;
 }
 
-.hiw-step-num {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--color-primary);
-    margin-bottom: 2rem;
-    display: block;
+.hiw__step--right {
+  align-self: flex-end;
+  justify-content: flex-start;
+  padding-left: 4.5rem;
 }
 
-.hiw-step-title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+/* Step card */
+.hiw__step-card {
+  max-width: 380px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 2.5rem 2.75rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
-.hiw-step-sub {
-    font-size: 0.95rem;
-    color: var(--color-text-dim);
-    line-height: 1.6;
+.hiw__step-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
 }
 
-@media (max-width: 1024px) {
-    .hiw-steps {
-        grid-template-columns: 1fr;
-    }
+/* Step number — large ghost decoration */
+.hiw__step-num {
+  position: absolute;
+  top: -2.25rem;
+  right: 1.75rem;
+  font-family: var(--font-display);
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--text);
+  opacity: 0.06;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  user-select: none;
+}
+
+.hiw__step--left .hiw__step-num {
+  right: auto;
+  left: 1.75rem;
+}
+
+.hiw__step-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.hiw__step-title {
+  font-size: 1.625rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin-bottom: 0.875rem;
+  color: var(--text);
+  font-family: var(--font-display);
+  position: relative;
+  z-index: 2;
+}
+
+.hiw__step-sub {
+  font-size: 0.9375rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+  font-weight: 400;
+  position: relative;
+  z-index: 2;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hiw__section { padding: 6rem 0; }
+  .hiw__header  { margin-bottom: 5rem; }
+
+  .hiw__svg-wrap {
+    left: 16px;
+    transform: none;
+    width: 36px;
+  }
+
+  .hiw__steps { gap: 4rem; }
+
+  .hiw__step {
+    width: 100%;
+    padding-left: 60px !important;
+    padding-right: 0 !important;
+  }
+
+  .hiw__step--left .hiw__step-num {
+    left: auto;
+    right: 1.5rem;
+  }
 }

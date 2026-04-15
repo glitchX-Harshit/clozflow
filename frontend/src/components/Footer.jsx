@@ -1,60 +1,64 @@
-import React from 'react';
 import './Footer.css';
 
-const Footer = () => {
-    return (
-        <footer className="footer-section">
-            <div className="container">
-                {/* Top Links Grid */}
-                <div className="footer-links-grid">
-                    <div className="footer-column">
-                        <h3>Company</h3>
-                        <ul>
-                            <li><a href="#" className="interactive">About Us</a></li>
-                            <li><a href="#" className="interactive">Careers</a></li>
-                            <li><a href="#" className="interactive">Security</a></li>
-                            <li><a href="#" className="interactive">Terms of Service</a></li>
-                            <li><a href="#" className="interactive">Privacy Policy</a></li>
-                        </ul>
+const Footer = () => (
+    <footer className="ft__section">
+        <div className="container">
+            <div className="ft__top">
+                {/* Brand */}
+                <div className="ft__brand">
+                    <div className="ft__logo">
+                        <div className="ft__logo-mark">K</div>
+                        <span className="ft__logo-text">
+                            hexagon<span className="ft__logo-dot">.</span>ai
+                        </span>
                     </div>
-
-                    <div className="footer-column">
-                        <h3>Product</h3>
-                        <ul>
-                            <li><a href="#" className="interactive">Features</a></li>
-                            <li><a href="#" className="interactive">Integrations</a></li>
-                            <li><a href="#" className="interactive">Pricing</a></li>
-                            <li><a href="#" className="interactive">Desktop App</a></li>
-                            <li><a href="#" className="interactive">Enterprise</a></li>
-                        </ul>
-                    </div>
-
-                    <div className="footer-column">
-                        <h3>Resources</h3>
-                        <ul>
-                            <li><a href="#" className="interactive">Documentation</a></li>
-                            <li><a href="#" className="interactive">API Reference</a></li>
-                            <li><a href="#" className="interactive">Sales Guide</a></li>
-                            <li><a href="#" className="interactive">Support Center</a></li>
-                            <li><a href="#" className="interactive">Status</a></li>
-                        </ul>
-                    </div>
+                    <p className="ft__brand-desc">
+                        Precision intelligence for elite sales professionals.
+                        Close more. Faster. Consistently.
+                    </p>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="footer-bottom">
-                    <div className="footer-bottom-logo">
-                        <div className="footer-logo-text">
-                            klyro<span className="footer-logo-dot">.</span>ai
-                        </div>
+                {/* Links */}
+                <div className="ft__links-grid">
+                    <div>
+                        <div className="ft__col-title">Product</div>
+                        <ul className="ft__col-links">
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#how-it-works">How it Works</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="#integrations">Integrations</a></li>
+                        </ul>
                     </div>
-                    <div className="footer-copyright">
-                        © 2026 klyro.ai. All rights reserved.
+                    <div>
+                        <div className="ft__col-title">Company</div>
+                        <ul className="ft__col-links">
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div className="ft__col-title">Legal</div>
+                        <ul className="ft__col-links">
+                            <li><a href="#">Privacy</a></li>
+                            <li><a href="#">Terms</a></li>
+                            <li><a href="#">Security</a></li>
+                            <li><a href="#">GDPR</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </footer>
-    );
-};
+
+            <div className="ft__bottom">
+                <p className="ft__copy">© 2025 Hexagon.ai — All rights reserved.</p>
+                <div className="ft__bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+);
 
 export default Footer;

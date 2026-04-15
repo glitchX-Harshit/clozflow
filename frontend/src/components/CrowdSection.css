@@ -1,0 +1,154 @@
+/* ══ CROWD SECTION — Testimonial Marquee ═════════════ */
+.crowd__section {
+    background: var(--bg);
+    padding: 8rem 0;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+}
+
+.crowd__header {
+    margin-bottom: 4.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Two rows */
+.crowd__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ── Marquee ── */
+.crowd__marquee-outer {
+    overflow: hidden;
+    position: relative;
+}
+
+/* Edge fades */
+.crowd__marquee-outer::before,
+.crowd__marquee-outer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 180px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.crowd__marquee-outer::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
+}
+
+.crowd__marquee-outer::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
+}
+
+.crowd__marquee-track {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    width: max-content;
+    animation: marquee-fwd 35s linear infinite;
+}
+
+.crowd__marquee-track--rev {
+    animation: marquee-rev 35s linear infinite;
+}
+
+@keyframes marquee-fwd {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+@keyframes marquee-rev {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+}
+
+/* Pause on hover */
+.crowd__marquee-outer:hover .crowd__marquee-track {
+    animation-play-state: paused;
+}
+
+/* ── Card ── */
+.crowd__card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 1.5rem;
+    width: 340px;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-xs);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.crowd__card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Card header */
+.crowd__card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.crowd__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    letter-spacing: -0.02em;
+}
+
+.crowd__card-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.crowd__card-role {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.crowd__stars {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* Quote */
+.crowd__card-quote {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .crowd__section { padding: 6rem 0; }
+    .crowd__card    { width: 290px; }
+}

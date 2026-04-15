@@ -10,9 +10,10 @@ import Integrations from './components/Integrations';
 import ObjectionHandling from './components/ObjectionHandling';
 import ResponseSuggestion from './components/ResponseSuggestion';
 import UseCases from './components/UseCases';
-import Testimonials from './components/Testimonials';
 import Pricing from './components/Pricing';
 import Footer from './components/Footer';
+import CrowdSection from './components/CrowdSection';
+import CrowdCanvasSection from './components/CrowdCanvasSection';
 
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
@@ -31,14 +32,15 @@ function LandingPage() {
                 onLogin={() => navigate('/auth', { state: { view: 'login' } })}
             />
             <Hero onGetStarted={() => navigate('/dashboard')} />
-            <Features />
             <HowItWorks />
+            <Features />
             <Integrations />
             <ObjectionHandling />
             <ResponseSuggestion />
             <UseCases />
-            <Testimonials />
             <Pricing />
+            <CrowdSection />
+            <CrowdCanvasSection />
             <Footer />
         </main>
     );

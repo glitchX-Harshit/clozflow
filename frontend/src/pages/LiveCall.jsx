@@ -144,10 +144,10 @@ const LiveCall = () => {
             {/* ── SIDEBAR */}
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <div className="db-logo-icon" style={{ background: 'var(--color-primary)' }}>
+                    <div className="db-logo-icon" style={{ background: 'var(--accent)' }}>
                         <Zap size={18} color="white" strokeWidth={2.5} />
                     </div>
-                    <span className="db-logo-text">klyro.ai</span>
+                    <span className="db-logo-text">hexagon.ai</span>
                 </div>
 
                 <nav className="db-nav">
@@ -159,7 +159,7 @@ const LiveCall = () => {
 
                 <div className="db-user-section">
                     <div className="db-user-info">
-                        <div className="db-user-avatar" style={{ background: 'var(--color-surface)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}>JR</div>
+                        <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' }}>JR</div>
                         <div className="db-user-details">
                             <span className="db-user-name">Jake Rivera</span>
                             <span className="db-user-role">Account Executive</span>
@@ -179,7 +179,7 @@ const LiveCall = () => {
                         <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.05em' }}>
                             Intelligence Session
                         </h1>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginTop: '0.6rem', fontSize: '0.875rem', color: 'var(--color-text-dim)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginTop: '0.6rem', fontSize: '0.875rem', color: 'var(--text-dim)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <Clock size={16} /> <span style={{ fontWeight: 600 }}>{formatTime(callDuration)}</span>
                             </div>
@@ -213,7 +213,7 @@ const LiveCall = () => {
                         <div className="card" style={{ padding: '2rem' }}>
                             <div className="db-panel-header" style={{ marginBottom: '1.75rem' }}>
                                 <span className="db-panel-title">Audio Stream</span>
-                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--color-primary)', background: 'rgba(99, 102, 241, 0.08)', padding: '0.3rem 0.75rem', borderRadius: '999px' }}>LIVE</div>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-dim)', padding: '0.3rem 0.75rem', borderRadius: '999px' }}>LIVE</div>
                             </div>
                             <div className="db-waveform" style={{ height: '80px' }}>
                                 {waveHeights.map((h, i) => (
@@ -222,7 +222,7 @@ const LiveCall = () => {
                                         className="db-wave-bar" 
                                         style={{ 
                                             height: `${h * 100}%`, 
-                                            background: isListening ? 'var(--color-primary)' : 'var(--color-border)',
+                                            background: isListening ? 'var(--accent)' : 'var(--border)',
                                             opacity: isListening ? (i % 2 === 0 ? 1 : 0.6) : 0.3
                                         }} 
                                     />
@@ -236,19 +236,19 @@ const LiveCall = () => {
                                 <span className="db-panel-title">Prospect Context</span>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ background: 'var(--color-surface)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Client</span>
+                                <div style={{ background: 'var(--surface)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Client</span>
                                     <div style={{ fontSize: '1.125rem', fontWeight: 800, marginTop: '0.25rem' }}>{callContext.client_name}</div>
-                                    <div style={{ fontSize: '0.8125rem', color: 'var(--color-text-dim)', marginTop: '0.2rem' }}>{callContext.client_industry} • {callContext.client_role}</div>
+                                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>{callContext.client_industry} • {callContext.client_role}</div>
                                 </div>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
                                     <div className="card shadow-sm" style={{ padding: '1rem', background: '#fafafa' }}>
-                                        <div style={{ color: 'var(--color-primary)', marginBottom: '0.5rem' }}><Target size={16} strokeWidth={2.5} /></div>
+                                        <div style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}><Target size={16} strokeWidth={2.5} /></div>
                                         <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>Defined Goal</div>
                                         <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>{callContext.call_goal}</div>
                                     </div>
                                     <div className="card shadow-sm" style={{ padding: '1rem', background: '#fafafa' }}>
-                                        <div style={{ color: 'var(--color-accent)', marginBottom: '0.5rem' }}><BrainCircuit size={16} strokeWidth={2.5} /></div>
+                                        <div style={{ color: 'var(--accent-mid)', marginBottom: '0.5rem' }}><BrainCircuit size={16} strokeWidth={2.5} /></div>
                                         <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>Product Pitch</div>
                                         <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>{callContext.product_name}</div>
                                     </div>
@@ -262,22 +262,22 @@ const LiveCall = () => {
                         <div className="db-panel-header" style={{ marginBottom: '2rem' }}>
                             <span className="db-panel-title">Suggested Intelligence</span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
-                                <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-primary)' }} />
-                                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--color-primary)', letterSpacing: '0.05em' }}>AI ACTIVE</span>
+                                <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
+                                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>AI ACTIVE</span>
                             </div>
                         </div>
                         
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', padding: '0 1rem', minHeight: 0, overflowY: 'auto' }}>
                             {!isListening ? (
-                                <div className="animate-fade-in" style={{ color: 'var(--color-text-dim)' }}>
+                                <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><Zap size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--color-text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Engine Idle</h4>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Engine Idle</h4>
                                     <p style={{ fontSize: '0.9375rem', maxWidth: '300px', margin: '0 auto' }}>Strategic suggestions will appear here once audio analysis begins.</p>
                                 </div>
                             ) : !latestSuggestion ? (
-                                <div className="animate-fade-in" style={{ color: 'var(--color-text-dim)' }}>
+                                <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><BrainCircuit size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--color-text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Listening for Cues...</h4>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Listening for Cues...</h4>
                                 </div>
                             ) : (
                                 <div className="animate-fade-in" style={{ textAlign: 'left' }}>
@@ -286,18 +286,18 @@ const LiveCall = () => {
                                             {latestObjection.type.toUpperCase()} DETECTED
                                         </div>
                                     )}
-                                    <div style={{ display: 'inline-block', padding: '0.35rem 0.75rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800, marginBottom: '1.5rem', letterSpacing: '0.05em' }}>
+                                    <div style={{ display: 'inline-block', padding: '0.35rem 0.75rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800, marginBottom: '1.5rem', letterSpacing: '0.05em' }}>
                                         {latestSuggestion.strategy.toUpperCase()}
                                     </div>
-                                    <p style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.3, color: 'var(--color-text)', marginBottom: '2.5rem', letterSpacing: '-0.03em' }}>
+                                    <p style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.3, color: 'var(--text)', marginBottom: '2.5rem', letterSpacing: '-0.03em' }}>
                                         "{latestSuggestion.text}"
                                     </p>
                                     {latestSuggestion.nextQuestion && (
-                                        <div style={{ display: 'flex', gap: '1.125rem', padding: '1.5rem', background: 'var(--color-surface)', borderRadius: '16px', border: '1px solid var(--color-border)' }}>
-                                            <TrendingUp size={24} color="var(--color-primary)" strokeWidth={2.5} />
+                                        <div style={{ display: 'flex', gap: '1.125rem', padding: '1.5rem', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
+                                            <TrendingUp size={24} color="var(--accent)" strokeWidth={2.5} />
                                             <div>
                                                 <div style={{ fontSize: '0.875rem', fontWeight: 800 }}>Next Strategic Move</div>
-                                                <div style={{ fontSize: '0.9375rem', color: 'var(--color-text-dim)', marginTop: '0.3rem', lineHeight: 1.4 }}>Ask: "{latestSuggestion.nextQuestion}"</div>
+                                                <div style={{ fontSize: '0.9375rem', color: 'var(--text-dim)', marginTop: '0.3rem', lineHeight: 1.4 }}>Ask: "{latestSuggestion.nextQuestion}"</div>
                                             </div>
                                         </div>
                                     )}
@@ -314,11 +314,11 @@ const LiveCall = () => {
                             </div>
                             <div className="db-transcript-scroll" style={{ flex: 1, minHeight: 0 }}>
                                {!isListening ? (
-                                   <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
+                                   <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
                                        Waiting for stream...
                                    </div>
                                ) : transcript.length === 0 ? (
-                                   <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
+                                   <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
                                        Listening...
                                    </div>
                                ) : (

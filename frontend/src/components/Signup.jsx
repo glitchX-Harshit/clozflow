@@ -79,7 +79,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
             <div className="su-card shadow-premium" ref={cardRef}>
                 <div className="su-head">
                     <div className="su-logo-mark">
-                        <CheckCircle size={24} color="var(--color-white)" />
+                        <CheckCircle size={24} color="var(--bg)" />
                     </div>
                     <h2 className="su-title">Get started</h2>
                     <p className="su-subtitle">Join 2,000+ sales professionals closing faster with AI.</p>
@@ -128,7 +128,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                 </form>
 
                 <p className="su-login-prompt">
-                    Already using klyro? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>Log in</a>
+                    Already using hexagon? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>Log in</a>
                 </p>
             </div>
         </div>

@@ -66,7 +66,7 @@ def download_call_report(
         
     try:
         pdf_buffer = generate_call_report(call_log)
-        pdf_filename = f"klyro_report_{call_id}.pdf"
+        pdf_filename = f"hexagon_report_{call_id}.pdf"
         
         return Response(
             content=pdf_buffer.getvalue(),

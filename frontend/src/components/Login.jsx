@@ -71,7 +71,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
             <div className="su-card shadow-premium" ref={cardRef}>
                 <div className="su-head">
                     <div className="su-logo-mark">
-                        <Lock size={20} color="var(--color-bg)" />
+                        <Lock size={20} color="var(--bg)" />
                     </div>
                     <h2 className="su-title">Welcome back</h2>
                     <p className="su-subtitle">Precision intelligence for today's sales calls.</p>
@@ -120,7 +120,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
                 </form>
 
                 <p className="su-login-prompt">
-                    New to klyro? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}>Create account</a>
+                    New to hexagon? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}>Create account</a>
                 </p>
             </div>
         </div>

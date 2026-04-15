@@ -17,7 +17,7 @@ load_dotenv()
 # [DEBUG LOG] Check if deepgram key was found in .env
 print("Deepgram key loaded:", bool(os.getenv("DEEPGRAM_API_KEY")))
 
-app = FastAPI(title="klyro.ai Backend", description="AI Sales Assistant API")
+app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API")
 
 # Configure CORS for frontend access
 app.add_middleware(
@@ -46,7 +46,7 @@ class CallStartRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "klyro.ai backend is running."}
+    return {"message": "hexagon.ai backend is running."}
 
 @app.get("/health")
 async def health_check():

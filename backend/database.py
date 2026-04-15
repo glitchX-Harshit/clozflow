@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./klyro.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./hexagon.db"
 # If using PostgreSQL, it would be "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(

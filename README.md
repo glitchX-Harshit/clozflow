@@ -8,7 +8,7 @@
 
 </div>
 
-# ✦ klyro.ai — AI Sales Assistant
+# ✦ hexagon.ai — AI Sales Assistant
 
 <p align="center">
   <strong>An intelligent, real-time AI agent that handles clients on your behalf, detecting objections and providing high-accuracy reasoning to close deals.</strong>
@@ -26,7 +26,7 @@
 
 ## About the Project
 
-**klyro.ai** is not just a call recorder. It is a live, real-time AI sales partner designed for high-pressure environments. By listening to client interactions continuously, klyro.ai analyzes sentiment, detects key objections (pricing, competitors, timelines), and surfaces the most effective counter-responses instantly. 
+**hexagon.ai** is not just a call recorder. It is a live, real-time AI sales partner designed for high-pressure environments. By listening to client interactions continuously, hexagon.ai analyzes sentiment, detects key objections (pricing, competitors, timelines), and surfaces the most effective counter-responses instantly. 
 
 Designed with an "Awwwards-winning" aesthetic, the application features an engaging, minimal, and premium UI with seamless animations and interactive elements.
 

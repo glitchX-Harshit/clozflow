@@ -1,7 +1,7 @@
-/* ================================================================
-   CALL BRIEFING FORM — Precision Light Refinement
-================================================================= */
+/* ══ DASHBOARD ═══════════════════════════════════════ */
+/* (Dashboard uses inline styles in JSX, these fill in gaps) */
 
+/* ══ CALL BRIEFING ════════════════════════════════════ */
 .cb-overlay {
     position: fixed;
     inset: 0;
@@ -10,85 +10,94 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background: var(--color-surface);
+    background: var(--surface);
     padding: 2rem 1rem;
     overflow-y: auto;
 }
 
-/* ── BACK BUTTON ── */
+.cb-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
 .cb-back {
     position: absolute;
-    top: 2.5rem;
-    left: 2.5rem;
+    top: 2rem;
+    left: 2rem;
     z-index: 20;
-    background: #ffffff;
-    border: 1px solid var(--color-border);
-    padding: 0.6rem 1.2rem;
-    border-radius: 12px;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--color-text);
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-full);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: inherit;
 }
 
 .cb-back:hover {
-    background: var(--color-surface);
-    transform: translateX(-4px);
-    box-shadow: var(--shadow-md);
+    color: var(--text);
+    border-color: var(--border-hover);
 }
 
-/* ── CARD ── */
 .cb-card {
     position: relative;
     z-index: 10;
     width: 100%;
     max-width: 680px;
-    background: #ffffff;
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    padding: 3rem 2.5rem;
-    box-shadow: var(--shadow-premium);
+    margin-top: 5.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-2xl);
+    padding: 3rem 2.75rem;
+    box-shadow: var(--shadow-xl);
 }
 
-/* ── HEADER ── */
 .cb-head {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     display: flex;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .cb-logo-mark {
-    width: 48px;
-    height: 48px;
-    background: var(--color-primary);
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: var(--r-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .cb-title {
-    font-size: 2.25rem;
+    font-size: 2rem;
     font-weight: 800;
     letter-spacing: -0.05em;
-    margin-bottom: 0.5rem;
-    color: var(--color-text);
+    margin-bottom: 0.375rem;
+    color: var(--text);
+    font-family: var(--font-display);
 }
 
 .cb-subtitle {
-    font-size: 1rem;
-    color: var(--color-text-dim);
-    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 400;
 }
 
-/* ── FORM ── */
 .cb-form {
     display: flex;
     flex-direction: column;
@@ -98,42 +107,48 @@
 .cb-grid-fields {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .cb-field {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.4rem;
 }
 
 .cb-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    color: var(--color-text);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
 .cb-input, .cb-textarea {
-    background: #ffffff;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1rem 1.125rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    padding: 0.8rem 1rem;
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--color-text);
-    transition: all 0.2s ease;
+    color: var(--text);
+    transition: all 0.18s ease;
     outline: none;
     font-family: inherit;
+    width: 100%;
 }
 
-.cb-input:focus, .cb-textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+.cb-input::placeholder,
+.cb-textarea::placeholder { color: var(--text-muted); }
+
+.cb-input:focus,
+.cb-textarea:focus {
+    border-color: rgba(0,0,0,0.3);
+    background: var(--bg);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
 }
 
 .cb-textarea {
@@ -141,51 +156,51 @@
     resize: none;
 }
 
-/* ── SUBMIT BUTTON ── */
 .cb-submit {
-    background: var(--color-text);
-    color: #ffffff;
-    padding: 1.125rem;
-    border-radius: 12px;
-    font-size: 1rem;
+    background: var(--text);
+    color: var(--bg);
+    padding: 1rem;
+    border-radius: var(--r-lg);
+    font-size: 0.9375rem;
     font-weight: 700;
     border: none;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 0.75rem;
+    transition: all 0.22s ease;
+    margin-top: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    box-shadow: var(--shadow-sm);
+    font-family: inherit;
+    width: 100%;
 }
 
 .cb-submit:hover:not(:disabled) {
-    background: #18181b;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    background: #1a1a1a;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
 }
 
 .cb-submit:disabled {
-    opacity: 0.6;
+    opacity: 0.45;
     cursor: not-allowed;
 }
 
 .cb-error {
-    color: #ef4444;
     font-size: 0.8125rem;
     font-weight: 600;
     text-align: center;
-    background: #fef2f2;
+    color: #dc2626;
+    background: rgba(239,68,68,0.06);
     padding: 0.75rem;
-    border-radius: 8px;
-    border: 1px solid #fee2e2;
+    border-radius: var(--r-md);
+    border: 1px solid rgba(239,68,68,0.15);
 }
 
 .cb-footnote {
     text-align: center;
     font-size: 0.8125rem;
-    color: var(--color-text-dim);
+    color: var(--text-muted);
     margin-top: 2rem;
     display: flex;
     align-items: center;
@@ -194,14 +209,6 @@
 }
 
 @media (max-width: 768px) {
-    .cb-card {
-        padding: 3rem 2rem;
-        border-radius: 20px;
-    }
-    .cb-head {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-        align-items: center;
-    }
+    .cb-card  { padding: 2.5rem 1.75rem; margin-top: 4.5rem; }
+    .cb-head  { flex-direction: column; gap: 0.875rem; align-items: center; text-align: center; }
 }

@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, loading } = useAuth();
     const location = useLocation();
 
-    if (loading) return <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text)', background: 'var(--color-bg)', fontWeight: 600 }}>Loading profile...</div>;
+    if (loading) return <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', background: 'var(--bg)', fontWeight: 600 }}>Loading profile...</div>;
 
     if (!isAuthenticated) {
         return <Navigate to="/auth" state={{ from: location }} replace />;

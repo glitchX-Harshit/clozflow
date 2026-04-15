@@ -1,4 +1,4 @@
-PROJECT: Klyro - Closer Brain V2
+PROJECT: Hexagon - Closer Brain V2
 
 GOAL:
   Transform AI from reactive responder → strategic deal closer

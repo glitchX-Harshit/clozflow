@@ -20,10 +20,35 @@ class SalesAIEngine:
         self.response_history: list[str] = []
         self.last_strategies: list[str] = []
         
+        self.deal_state = {
+            "stage": "discovery",
+            "last_intent": None,
+            "objections_handled": [],
+            "pressure_level": 1
+        }
+        
         self.max_messages = 8
         self.max_latency = 2.0  # V2 2-sec strict limit
         self._last_call_time: float = 0.0
         self._cooldown_secs: float = 2.0  # Min 2 secs between calls
+
+    def get_pressure_instruction(self):
+        level = self.deal_state["pressure_level"]
+
+        if level == 1:
+            return "Keep it consultative and exploratory."
+        elif level == 2:
+            return "Guide the prospect toward a decision subtly."
+        else:
+            return "Apply firm pressure and move toward commitment."
+
+    def update_stage(self, intent: str):
+        if intent in ["pricing", "hesitation", "trust"]:
+            self.deal_state["stage"] = "objection"
+        elif intent in ["interest"]:
+            self.deal_state["stage"] = "closing"
+        elif intent in ["confusion"]:
+            self.deal_state["stage"] = "discovery"
 
     def add_message(self, speaker: str, text: str):
         self.message_buffer.append({"speaker": speaker, "text": text, "timestamp": time.time()})
@@ -73,6 +98,9 @@ class SalesAIEngine:
         if speaker != "prospect":
             return None
 
+        if self.deal_state["stage"] == "objection":
+            self.deal_state["pressure_level"] = min(self.deal_state["pressure_level"] + 1, 3)
+
         # Pass transcripts containing useful words
         if len(text.strip().split()) < 3 and len(text.strip()) < 15:
             print("[AI_SKIPPED] Transcript too short.")
@@ -95,42 +123,69 @@ class SalesAIEngine:
 
         context_str = ""
         if self.call_context:
-            context_str = "\nCall context:\n" + "\n".join([f"- {k}: {v}" for k, v in self.call_context.items()])
+            context_str = "\nMANDATORY CONTEXT USAGE:\n" + json.dumps(self.call_context)
 
         avoid_strategies = ", ".join(self.last_strategies) if self.last_strategies else "None"
 
-        system_content = f"""You are "CloserBrain V2" - an elite B2B sales closing engine.
+        intent = self.deal_state["last_intent"]
+
+        if intent == "pricing":
+            forced_strategy = "ROI_REFRAME"
+        elif intent == "authority":
+            forced_strategy = "DECISION_CONTROL"
+        else:
+            forced_strategy = None
+
+        system_content = f"""You are "CloserBrain V2" — an elite B2B sales closing engine.
 
 {context_str}
 
-CORE DIRECTIVES:
-- Transform from reactive responder to strategic deal closer.
-- Lead the conversation; do not just answer questions blindly.
-- Never sound desperate. Avoid long explanations.
-- Mix statements and questions. Use confident, guiding tone.
+CURRENT DEAL STATE:
+- Stage: {self.deal_state["stage"]}
+- Pressure Level: {self.deal_state["pressure_level"]}
 
-AVAILABLE STRATEGIES (Pick EXACTLY ONE based on intent):
-- ROI_REFRAME (for pricing intent - show value vs cost)
-- COST_OF_INACTION (for hesitation intent - highlight missed opportunity)
-- SOCIAL_PROOF (for trust intent - case study/others success)
-- DIAGNOSTIC_QUESTION (for confusion intent - ask smart question)
-- FUTURE_PACING (for interest intent - paint future outcome)
-- PILOT_CLOSE (for closing/ready bounds - low risk entry)
-- DECISION_CONTROL (for authority - uncover decision process)
+PRESSURE MODE:
+{self.get_pressure_instruction()}
 
-RESTRICTIONS:
-- Do NOT use these recently used strategies: [{avoid_strategies}]
-- Keep "response" punchy, confident, and under 2 sentences.
-- DO NOT start with "Our product helps you increase..." or repetitive pleasantries.
+CORE BEHAVIOR RULES:
+- You MUST lead the conversation.
+- You MUST move the deal forward every response.
+- NEVER just answer — always guide.
+- Always include a directional question.
 
-OUTPUT STRICT JSON WITH EXACTLY THESE KEYS:
-- "intent": (pricing|trust|timeline|authority|confusion|interest|neutral|hesitation)
-- "stage": (discovery|problem|objection|closing)
-- "strategy": (ONE OF THE 7 STRATEGIES ABOVE)
-- "confidence": Float 0.0-1.0
-- "response": (Your core short confident statement)
-- "next_question": (A direct follow-up question to advance the deal)
-- "coaching_tip": (A brief 1-sentence tip on body language or tone)
+PERSONALIZATION:
+- You MUST reference user's business, problem, or goal.
+- Do NOT give generic responses.
+
+STRATEGY RULES:
+- Avoid recently used strategies: [{avoid_strategies}]
+- Use correct strategy for intent.
+- Do NOT repeat same persuasion pattern.
+"""
+        if forced_strategy:
+            system_content += f"\n- MANDATORY STRATEGY: Use {forced_strategy} for this response."
+
+        system_content += """
+AUTHORITY RULES:
+- NEVER offer discounts immediately
+- NEVER sound desperate
+- Maintain control
+
+RESPONSE STYLE:
+- Max 2 sentences
+- Sharp, confident, non-generic
+- Mix statement + question
+
+OUTPUT JSON:
+{
+  "intent": "...",
+  "stage": "...",
+  "strategy": "...",
+  "confidence": 0.0,
+  "response": "...",
+  "next_question": "...",
+  "coaching_tip": "..."
+}
 """
 
         prev_context = list(self.message_buffer[:-1])
@@ -163,16 +218,26 @@ Output strictly conforming JSON.
                 content = llm_response.choices[0].message.content
                 data = json.loads(content)
 
+                intent = data.get("intent", "neutral")
+                self.deal_state["last_intent"] = intent
+                self.update_stage(intent)
+
+                if intent in ["pricing", "trust", "hesitation"]:
+                    self.deal_state["objections_handled"].append(intent)
+
                 suggested_resp = data.get("response", "").strip()
                 if not suggested_resp:
                     return self.smart_fallback()
 
                 # Anti-Repetition logic
-                if self.is_duplicate(suggested_resp) and attempt == 0:
-                    print(f"[AI_DUPLICATE] Repetition block triggered! Retrying... '{suggested_resp[:30]}'")
-                    continue
+                if self.is_duplicate(suggested_resp):
+                    print("[BLOCKED] Duplicate response prevented")
+                    return self.smart_fallback()
 
                 self.push_response_history(suggested_resp, data.get("strategy"))
+                
+                if self.deal_state["stage"] == "closing":
+                    data["next_question"] = "If this solves your problem, is there anything stopping you from moving forward today?"
 
                 # Output Normalization for existing frontend fields
                 data["suggested_response"] = suggested_resp

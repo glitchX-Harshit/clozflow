@@ -12,12 +12,12 @@ export const useRealtimeCopilot = (wsUrl = 'ws://localhost:8000/ws') => {
 
         ws.current.onopen = () => {
             setIsConnected(true);
-            console.log('Connected to klyro.ai copilot backend');
+            console.log('Connected to hexagon.ai copilot backend');
         };
 
         ws.current.onclose = () => {
             setIsConnected(false);
-            console.log('Disconnected from klyro.ai copilot backend');
+            console.log('Disconnected from hexagon.ai copilot backend');
         };
 
         ws.current.onmessage = (event) => {
