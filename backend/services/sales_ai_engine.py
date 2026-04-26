@@ -5,6 +5,7 @@ import asyncio
 from typing import Any
 from openai import AsyncOpenAI
 from difflib import SequenceMatcher
+from rag.rag_engine import RAGEngine
 
 api_key = os.getenv("OPENAI_API_KEY")
 client = AsyncOpenAI(
@@ -31,6 +32,9 @@ class SalesAIEngine:
         self.max_latency = 2.0  # V2 2-sec strict limit
         self._last_call_time: float = 0.0
         self._cooldown_secs: float = 2.0  # Min 2 secs between calls
+        
+        self.rag = RAGEngine()
+        self.rag.load_index()
 
     def get_pressure_instruction(self):
         level = self.deal_state["pressure_level"]
@@ -129,16 +133,28 @@ class SalesAIEngine:
 
         intent = self.deal_state["last_intent"]
 
-        if intent == "pricing":
-            forced_strategy = "ROI_REFRAME"
-        elif intent == "authority":
-            forced_strategy = "DECISION_CONTROL"
-        else:
-            forced_strategy = None
+        rag_results = self.rag.retrieve(text)
+
+        rag_context = "\n".join([
+            f"- Insight: {r.get('insight', '')} | Strategy: {r.get('strategy', '')} | Avoid: {r.get('avoid', '')}"
+            for r in rag_results
+        ])
+
+        forced_strategy = None
+        if rag_results:
+            forced_strategy = rag_results[0].get("strategy")
 
         system_content = f"""You are "CloserBrain V2" — an elite B2B sales closing engine.
 
 {context_str}
+
+RELEVANT SALES INSIGHTS:
+{rag_context}
+
+RULES:
+- Use insights ONLY if relevant
+- Do NOT copy text directly
+- Use them to guide strategy selection
 
 CURRENT DEAL STATE:
 - Stage: {self.deal_state["stage"]}
@@ -163,6 +179,7 @@ STRATEGY RULES:
 - Do NOT repeat same persuasion pattern.
 """
         if forced_strategy:
+            system_content += f"\n- Preferred strategy: {forced_strategy}"
             system_content += f"\n- MANDATORY STRATEGY: Use {forced_strategy} for this response."
 
         system_content += """
