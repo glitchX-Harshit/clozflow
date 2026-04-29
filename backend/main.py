@@ -1,4 +1,9 @@
 import os
+import sys
+
+# Add parent directory to sys.path to allow importing sibling modules like 'rag'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Pricing + Trust Combo",
+    "messages": [
+      "yeah pricing feels a bit high honestly",
+      "we tried something similar before and it didn't work",
+      "not sure if this will work for us"
+    ]
+  },
+  {
+    "name": "Authority Delay",
+    "messages": [
+      "i need to talk to my partner",
+      "he usually questions ROI a lot",
+      "we don't decide quickly"
+    ]
+  },
+  {
+    "name": "Hesitation + Pricing Combo",
+    "messages": [
+      "i'm just not sure yet",
+      "what's the total cost if we go ahead",
+      "that's a bit more than i expected"
+    ]
+  },
+  {
+    "name": "Dismissive Tone",
+    "messages": [
+      "we already have tools for this",
+      "i don't think we need another solution",
+      "why would this be different"
+    ]
+  }
+]

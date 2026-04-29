@@ -5,6 +5,7 @@ import asyncio
 from typing import Any
 from openai import AsyncOpenAI
 from difflib import SequenceMatcher
+from rag.rag_engine import RAGEngine
 
 api_key = os.getenv("OPENAI_API_KEY")
 client = AsyncOpenAI(
@@ -31,6 +32,9 @@ class SalesAIEngine:
         self.max_latency = 2.0  # V2 2-sec strict limit
         self._last_call_time: float = 0.0
         self._cooldown_secs: float = 2.0  # Min 2 secs between calls
+        
+        self.rag = RAGEngine()
+        self.rag.load_index()
 
     def get_pressure_instruction(self):
         level = self.deal_state["pressure_level"]
@@ -129,16 +133,59 @@ class SalesAIEngine:
 
         intent = self.deal_state["last_intent"]
 
+        rag_results = self.rag.retrieve(text)
+
+        # STEP_8: RAG output limited to Insight + Avoid only — no Strategy injection
+        rag_context = "\n".join([
+            f"- Insight: {r.get('insight', '')} | Avoid: {r.get('avoid', '')}"
+            for r in rag_results
+        ])
+
+        # STEP_9: Strategy variation pool
+        available_strategies = [
+            "ROI_REFRAME",
+            "COST_OF_INACTION",
+            "SOCIAL_PROOF",
+            "DIAGNOSTIC_QUESTION",
+            "FUTURE_PACING",
+            "DECISION_CONTROL"
+        ]
+
+        # STEP_2: Decision priority system — System > RAG (RAG is hint only)
+        rag_strategy = rag_results[0].get("strategy") if rag_results else None
         if intent == "pricing":
-            forced_strategy = "ROI_REFRAME"
+            final_strategy = "ROI_REFRAME"
         elif intent == "authority":
-            forced_strategy = "DECISION_CONTROL"
+            final_strategy = "DECISION_CONTROL"
+        elif intent == "trust":
+            final_strategy = "SOCIAL_PROOF"
         else:
-            forced_strategy = None
+            final_strategy = rag_strategy or "DIAGNOSTIC_QUESTION"
+
+        # STEP_4: Anti-repetition enforcement
+        if self.last_strategies and final_strategy == self.last_strategies[-1]:
+            final_strategy = "DIAGNOSTIC_QUESTION"
+
+        # STEP_3: Debug info (simulator + development visibility)
+        print("\n=== DEBUG INFO ===")
+        print("Transcript      :", text)
+        print("RAG Results     :", rag_results)
+        print("Chosen Strategy :", final_strategy)
+        print("Deal State      :", self.deal_state)
+        print("==================\n")
 
         system_content = f"""You are "CloserBrain V2" — an elite B2B sales closing engine.
 
 {context_str}
+
+RAG INSIGHTS (HINTS ONLY — NOT ORDERS):
+{rag_context}
+
+RAG RULES:
+- RAG INSIGHTS ARE ONLY HINTS.
+- DO NOT follow them blindly.
+- DO NOT repeat patterns from them.
+- Use your own reasoning first.
 
 CURRENT DEAL STATE:
 - Stage: {self.deal_state["stage"]}
@@ -147,37 +194,45 @@ CURRENT DEAL STATE:
 PRESSURE MODE:
 {self.get_pressure_instruction()}
 
+SYSTEM STRATEGY (MANDATORY):
+- Use strategy: {final_strategy}
+- Available strategies: {available_strategies}
+- Avoid recently used strategies: [{avoid_strategies}]
+
 CORE BEHAVIOR RULES:
 - You MUST lead the conversation.
 - You MUST move the deal forward every response.
 - NEVER just answer — always guide.
-- Always include a directional question.
+
+RESPONSE BEHAVIOR:
+- Do NOT ask a question every time.
+- Mix: reframing, statements, challenges.
+- Only ask a question when truly needed.
+
+CONTROL RULE:
+- At least once every 2-3 turns: challenge the prospect OR reframe their thinking OR push toward decision.
 
 PERSONALIZATION:
-- You MUST reference user's business, problem, or goal.
+- Reference user context ONLY when relevant, not in every response.
 - Do NOT give generic responses.
 
-STRATEGY RULES:
-- Avoid recently used strategies: [{avoid_strategies}]
-- Use correct strategy for intent.
-- Do NOT repeat same persuasion pattern.
-"""
-        if forced_strategy:
-            system_content += f"\n- MANDATORY STRATEGY: Use {forced_strategy} for this response."
+TONE AWARENESS:
+- If prospect sounds skeptical → use proof-based tone.
+- If dismissive → be confident and direct.
+- If curious → be clear and structured.
 
-        system_content += """
 AUTHORITY RULES:
-- NEVER offer discounts immediately
-- NEVER sound desperate
-- Maintain control
+- NEVER offer discounts immediately.
+- NEVER sound desperate.
+- Maintain control.
 
 RESPONSE STYLE:
-- Max 2 sentences
-- Sharp, confident, non-generic
-- Mix statement + question
+- Max 2 sentences.
+- Sharp, confident, non-generic.
+- NEVER use phrases like: "our product helps...", "this solution can increase...".
 
 OUTPUT JSON:
-{
+{{
   "intent": "...",
   "stage": "...",
   "strategy": "...",
@@ -185,7 +240,7 @@ OUTPUT JSON:
   "response": "...",
   "next_question": "...",
   "coaching_tip": "..."
-}
+}}
 """
 
         prev_context = list(self.message_buffer[:-1])
@@ -246,7 +301,7 @@ Output strictly conforming JSON.
                 data["type"] = data.get("intent", "")
                 data["deal_stage"] = data.get("stage", "")
 
-                print(f"[AI_RESPONSE] ✅ {data.get('strategy', 'NONE')} | {suggested_resp[:60]}...")
+                print(f"[AI_RESPONSE] OK | {data.get('strategy', 'NONE')} | {suggested_resp[:60]}...")
                 return data
 
             except asyncio.TimeoutError:

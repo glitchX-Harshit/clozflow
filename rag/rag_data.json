@@ -1,0 +1,23 @@
+[
+  {
+    "text": "too expensive high price budget issue",
+    "intent": "pricing",
+    "insight": "price objection means value is unclear",
+    "strategy": "ROI_REFRAME",
+    "avoid": "do not offer discount immediately"
+  },
+  {
+    "text": "need to talk to partner spouse wife boss decision maker",
+    "intent": "authority",
+    "insight": "stall tactic or lack of internal authority",
+    "strategy": "DECISION_CONTROL",
+    "avoid": "do not schedule a follow-up without getting commitment from current speaker"
+  },
+  {
+    "text": "not sure this works skeptical doubt effectiveness past failure",
+    "intent": "trust",
+    "insight": "they have been burned before or lack faith in the product",
+    "strategy": "RISK_REVERSAL",
+    "avoid": "do not just list features"
+  }
+]
