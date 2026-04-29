@@ -1,8 +1,11 @@
+import os
 import json
 import faiss
 import numpy as np
 import pickle
 from sentence_transformers import SentenceTransformer
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class RAGEngine:
     def __init__(self):
@@ -10,7 +13,9 @@ class RAGEngine:
         self.index = None
         self.data = None
 
-    def build_index(self, data_path="rag/rag_data.json"):
+    def build_index(self, data_path=None):
+        if data_path is None:
+            data_path = os.path.join(BASE_DIR, "rag_data.json")
         with open(data_path, "r") as f:
             self.data = json.load(f)
 
@@ -21,15 +26,15 @@ class RAGEngine:
         self.index = faiss.IndexFlatL2(dim)
         self.index.add(np.array(embeddings))
 
-        faiss.write_index(self.index, "rag/faiss_index.bin")
+        faiss.write_index(self.index, os.path.join(BASE_DIR, "faiss_index.bin"))
 
-        with open("rag/metadata.pkl", "wb") as f:
+        with open(os.path.join(BASE_DIR, "metadata.pkl"), "wb") as f:
             pickle.dump(self.data, f)
 
     def load_index(self):
-        self.index = faiss.read_index("rag/faiss_index.bin")
+        self.index = faiss.read_index(os.path.join(BASE_DIR, "faiss_index.bin"))
 
-        with open("rag/metadata.pkl", "rb") as f:
+        with open(os.path.join(BASE_DIR, "metadata.pkl"), "rb") as f:
             self.data = pickle.load(f)
 
     def retrieve(self, query, k=2):
