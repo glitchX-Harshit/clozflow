@@ -42,6 +42,7 @@ REPORT_DIR = os.path.join(PROJECT_ROOT, "test_reports")
 os.makedirs(REPORT_DIR, exist_ok=True)
 
 
+
 def generate_pdf(scenario_name: str, report_data: list, filename: str):
     styles = getSampleStyleSheet()
 
