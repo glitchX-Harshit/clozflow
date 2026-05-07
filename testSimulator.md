@@ -1,6 +1,6 @@
-id: klyro_test_simulator_v1
+id: hexagon_test_simulator_v1
 
-PROJECT: Klyro Offline Testing + Debug System
+PROJECT: Hexagon Offline Testing + Debug System
 
 GOAL:
   Simulate conversations without real calls,
@@ -79,7 +79,7 @@ STEP_2_SIMULATOR:
 
         content = []
 
-        content.append(Paragraph("Klyro Test Simulation Report", styles["Title"]))
+        content.append(Paragraph("Hexagon Test Simulation Report", styles["Title"]))
         content.append(Spacer(1, 10))
 
         for entry in report_data:

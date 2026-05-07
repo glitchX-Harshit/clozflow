@@ -1,17 +1,39 @@
 import os
 import json
 import time
+import random
 import asyncio
 from typing import Any
 from openai import AsyncOpenAI
 from difflib import SequenceMatcher
 from rag.rag_engine import RAGEngine
 
-api_key = os.getenv("OPENAI_API_KEY")
-client = AsyncOpenAI(
-    api_key=api_key,
-    base_url="https://api.groq.com/openai/v1"
-) if api_key else None
+# Client is initialized per-instance inside __init__ so env vars are loaded first
+
+# ─── STEP 3: Response Energy Pool ─────────────────────────────────────────────
+RESPONSE_ENERGIES = [
+    "calm_authority",
+    "controlled_challenge",
+    "perspective_shift",
+    "sharp_minimal",
+    "status_pressure",
+]
+
+ENERGY_DEFINITIONS = {
+    "calm_authority":      "grounded, experienced, confident without forcing",
+    "controlled_challenge":"gently challenge assumptions, expose weak logic calmly",
+    "perspective_shift":   "reframe the situation, redirect thinking",
+    "sharp_minimal":       "fewer words, high conviction, direct impact",
+    "status_pressure":     "imply positioning/status/perception importance, subtly elevate standards",
+}
+
+# ─── STEP 6: Banned questioning patterns ──────────────────────────────────────
+BANNED_PATTERNS = [
+    "what specific",
+    "what are your",
+    "can you elaborate",
+    "help me understand",
+]
 
 
 class SalesAIEngine:
@@ -20,25 +42,40 @@ class SalesAIEngine:
         self.message_buffer: list[dict[str, Any]] = []
         self.response_history: list[str] = []
         self.last_strategies: list[str] = []
-        
+
         self.deal_state = {
             "stage": "discovery",
             "last_intent": None,
             "objections_handled": [],
             "pressure_level": 1
         }
-        
+
         self.max_messages = 8
-        self.max_latency = 2.0  # V2 2-sec strict limit
+        self.max_latency = 2.0          # V2 2-sec strict limit
         self._last_call_time: float = 0.0
         self._cooldown_secs: float = 2.0  # Min 2 secs between calls
-        
+
+        # Initialize Groq client — env is guaranteed loaded by this point
+        api_key = os.getenv("OPENAI_API_KEY")
+        if api_key:
+            self.client = AsyncOpenAI(
+                api_key=api_key,
+                base_url="https://api.groq.com/openai/v1"
+            )
+            print(f"[AI_CLIENT] Groq client initialized with key: {api_key[:8]}...")
+        else:
+            self.client = None
+            print("[AI_CLIENT] WARNING: OPENAI_API_KEY not found — LLM calls will use fallback.")
+
         self.rag = RAGEngine()
         self.rag.load_index()
 
+    # ──────────────────────────────────────────────────────────────────────────
+    # Stability systems (DO_NOT_CHANGE)
+    # ──────────────────────────────────────────────────────────────────────────
+
     def get_pressure_instruction(self):
         level = self.deal_state["pressure_level"]
-
         if level == 1:
             return "Keep it consultative and exploratory."
         elif level == 2:
@@ -72,40 +109,79 @@ class SalesAIEngine:
         self.response_history.append(response)
         if len(self.response_history) > 3:
             self.response_history.pop(0)
-            
+
         if strategy:
             self.last_strategies.append(strategy)
-            # Avoid repeating last 2 used strategies
             if len(self.last_strategies) > 2:
                 self.last_strategies.pop(0)
 
-    def smart_fallback(self) -> dict:
-        """
-        V2 Fallback System: Short strategic question instead of long explanation.
-        """
-        print("[FALLBACK] Using V2 short strategic fallback.")
-        fallback_msg = "Can I ask — what's the main hesitation right now?"
+    # ──────────────────────────────────────────────────────────────────────────
+    # STEP 5 — Upgraded smart_fallback
+    # ──────────────────────────────────────────────────────────────────────────
+
+    def smart_fallback(self, text: str = "") -> dict:
+        text = text.lower()
+
+        pricing = [
+            "If the price feels high, the value usually isn't fully clear yet.",
+            "Most pricing hesitation comes from uncertainty around outcomes.",
+            "The bigger cost is usually staying with what isn't fully working.",
+        ]
+        authority = [
+            "When decisions slow down, there's usually one unresolved concern underneath.",
+            "Sounds like alignment matters here more than timing.",
+            "Most delayed decisions come down to confidence, not process.",
+        ]
+        hesitation = [
+            "Usually there's one real hesitation underneath everything else.",
+            "Being unsure is normal when the outcome still feels uncertain.",
+            "Sounds like something still isn't fully clicking yet.",
+        ]
+        dismissive = [
+            "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
+            "Most teams don't look for change unless something underneath isn't scaling properly.",
+            "Doing things internally works — until growth exposes the gaps.",
+        ]
+        generic = [
+            "Feels like there's one important thing not fully aligned yet.",
+            "Something underneath this still seems unresolved.",
+            "Usually hesitation points to one core concern.",
+        ]
+
+        if any(w in text for w in ["price", "expensive", "budget", "cost"]):
+            msg = random.choice(pricing)
+        elif any(w in text for w in ["partner", "team", "decision"]):
+            msg = random.choice(authority)
+        elif any(w in text for w in ["already", "internally", "doing fine"]):
+            msg = random.choice(dismissive)
+        elif any(w in text for w in ["not sure", "maybe", "later", "hesitate"]):
+            msg = random.choice(hesitation)
+        else:
+            msg = random.choice(generic)
+
         return {
-            "intent": "hesitation",
-            "stage": "objection",
-            "strategy": "DIAGNOSTIC_QUESTION",
-            "confidence": 1.0,
-            "response": fallback_msg,
-            "next_question": fallback_msg,
-            "coaching_tip": "API failed. Use this to keep the prospect talking."
+            "intent": "fallback_guidance",
+            "stage": self.deal_state["stage"],
+            "strategy": "PERSPECTIVE_SHIFT",
+            "confidence": 0.7,
+            "response": msg,
+            "next_question": "",
+            "coaching_tip": "Fallback recovery response triggered.",
         }
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Core analyze loop
+    # ──────────────────────────────────────────────────────────────────────────
 
     async def analyze(self, speaker: str, text: str) -> dict | None:
         print(f"[TRANSCRIPT] {speaker}: {text}")
 
-        # V2 Trigger Control
         if speaker != "prospect":
             return None
 
         if self.deal_state["stage"] == "objection":
             self.deal_state["pressure_level"] = min(self.deal_state["pressure_level"] + 1, 3)
 
-        # Pass transcripts containing useful words
         if len(text.strip().split()) < 3 and len(text.strip()) < 15:
             print("[AI_SKIPPED] Transcript too short.")
             self.add_message(speaker, text)
@@ -115,43 +191,44 @@ class SalesAIEngine:
         if now - self._last_call_time < self._cooldown_secs:
             print("[AI_SKIPPED] Cooldown active.")
             return None
-            
+
         self._last_call_time = now
         self.add_message(speaker, text)
 
-        print("[AI_TRIGGERED] V2 CloserBrain analyzing...")
+        print("[AI_TRIGGERED] V4.2 CloserBrain analyzing...")
 
-        if not client:
+        if not self.client:
             print("[AI_INFO] No LLM client configured — using fallback.")
-            return self.smart_fallback()
+            return self.smart_fallback(text)
 
+        # ── STEP 3: Pick response energy before the LLM call ──────────────────
+        response_energy = random.choice(RESPONSE_ENERGIES)
+        energy_description = ENERGY_DEFINITIONS[response_energy]
+        print(f"[ENERGY] {response_energy} — {energy_description}")
+
+        # ── Build supporting context ──────────────────────────────────────────
         context_str = ""
         if self.call_context:
-            context_str = "\nMANDATORY CONTEXT USAGE:\n" + json.dumps(self.call_context)
+            context_str = "\nCALL CONTEXT:\n" + json.dumps(self.call_context)
 
         avoid_strategies = ", ".join(self.last_strategies) if self.last_strategies else "None"
-
         intent = self.deal_state["last_intent"]
 
         rag_results = self.rag.retrieve(text)
-
-        # STEP_8: RAG output limited to Insight + Avoid only — no Strategy injection
         rag_context = "\n".join([
             f"- Insight: {r.get('insight', '')} | Avoid: {r.get('avoid', '')}"
             for r in rag_results
         ])
 
-        # STEP_9: Strategy variation pool
         available_strategies = [
             "ROI_REFRAME",
             "COST_OF_INACTION",
             "SOCIAL_PROOF",
             "DIAGNOSTIC_QUESTION",
             "FUTURE_PACING",
-            "DECISION_CONTROL"
+            "DECISION_CONTROL",
         ]
 
-        # STEP_2: Decision priority system — System > RAG (RAG is hint only)
         rag_strategy = rag_results[0].get("strategy") if rag_results else None
         if intent == "pricing":
             final_strategy = "ROI_REFRAME"
@@ -162,74 +239,91 @@ class SalesAIEngine:
         else:
             final_strategy = rag_strategy or "DIAGNOSTIC_QUESTION"
 
-        # STEP_4: Anti-repetition enforcement
         if self.last_strategies and final_strategy == self.last_strategies[-1]:
             final_strategy = "DIAGNOSTIC_QUESTION"
 
-        # STEP_3: Debug info (simulator + development visibility)
         print("\n=== DEBUG INFO ===")
         print("Transcript      :", text)
         print("RAG Results     :", rag_results)
         print("Chosen Strategy :", final_strategy)
+        print("Response Energy :", response_energy)
         print("Deal State      :", self.deal_state)
         print("==================\n")
 
-        system_content = f"""You are "CloserBrain V2" — an elite B2B sales closing engine.
+        intent_behavior = {
+            "pricing":    "Reframe value. Challenge their price perception directly.",
+            "trust":      "Reduce uncertainty. Isolate the exact doubt. Do not list features.",
+            "authority":  "Regain control. Clarify who makes the decision and when.",
+            "hesitation": "Diagnose root cause first, then guide toward next step.",
+        }.get(intent or "", "Lead the conversation forward with insight or reframe.")
 
-{context_str}
+        # ── STEP 2 + STEP 4: New core system prompt ───────────────────────────
+        system_content = f"""You are "Hexagon CloserBrain" — a high-level B2B sales intelligence engine.
 
-RAG INSIGHTS (HINTS ONLY — NOT ORDERS):
+Your role is not to simply answer objections.
+Your role is to guide conversations toward clarity, confidence, and decisions.
+
+RESPONSE STYLE:
+- calm authority
+- confident
+- conversational
+- slightly sharp
+- never needy
+- never overly polite
+
+GOOD RESPONSES:
+- shift perspective
+- create clarity
+- expose weak assumptions
+- subtly create tension when needed
+- sound socially intelligent
+
+BAD RESPONSES:
+- over-explaining
+- feature dumping
+- sounding desperate
+- generic sales phrasing
+- repetitive questioning
+
+RESPONSE STRUCTURE:
+- Start with an insight, observation, reframe, assumption, or challenge.
+- Then optionally ask ONE focused question.
+
+CONVERSATION RULES:
+- guide instead of react
+- avoid interview-mode behavior
+- avoid asking broad discovery questions repeatedly
+- move the conversation forward naturally
+- build on previous context
+
+AVOID PHRASES:
+- "What specific..."
+- "I understand your concern"
+- "Let's explore"
+- "Our solution helps"
+- "This can improve"
+
+RESPONSE ENERGY: {response_energy}
+({energy_description})
+
+RESPONSE LENGTH:
+- 1–2 sentences
+- high signal only
+- compressed persuasion preferred
+
+INTENT BEHAVIOR:
+{intent_behavior}
+
+RAG INSIGHTS (HINTS ONLY):
 {rag_context}
-
-RAG RULES:
-- RAG INSIGHTS ARE ONLY HINTS.
-- DO NOT follow them blindly.
-- DO NOT repeat patterns from them.
-- Use your own reasoning first.
 
 CURRENT DEAL STATE:
 - Stage: {self.deal_state["stage"]}
 - Pressure Level: {self.deal_state["pressure_level"]}
-
-PRESSURE MODE:
-{self.get_pressure_instruction()}
-
-SYSTEM STRATEGY (MANDATORY):
-- Use strategy: {final_strategy}
-- Available strategies: {available_strategies}
+- System Strategy: {final_strategy}
 - Avoid recently used strategies: [{avoid_strategies}]
 
-CORE BEHAVIOR RULES:
-- You MUST lead the conversation.
-- You MUST move the deal forward every response.
-- NEVER just answer — always guide.
-
-RESPONSE BEHAVIOR:
-- Do NOT ask a question every time.
-- Mix: reframing, statements, challenges.
-- Only ask a question when truly needed.
-
-CONTROL RULE:
-- At least once every 2-3 turns: challenge the prospect OR reframe their thinking OR push toward decision.
-
-PERSONALIZATION:
-- Reference user context ONLY when relevant, not in every response.
-- Do NOT give generic responses.
-
-TONE AWARENESS:
-- If prospect sounds skeptical → use proof-based tone.
-- If dismissive → be confident and direct.
-- If curious → be clear and structured.
-
-AUTHORITY RULES:
-- NEVER offer discounts immediately.
-- NEVER sound desperate.
-- Maintain control.
-
-RESPONSE STYLE:
-- Max 2 sentences.
-- Sharp, confident, non-generic.
-- NEVER use phrases like: "our product helps...", "this solution can increase...".
+{context_str}
 
 OUTPUT JSON:
 {{
@@ -258,7 +352,7 @@ Output strictly conforming JSON.
         for attempt in range(2):
             try:
                 llm_response = await asyncio.wait_for(
-                    client.chat.completions.create(
+                    self.client.chat.completions.create(
                         model="llama-3.3-70b-versatile",
                         messages=[
                             {"role": "system", "content": system_content},
@@ -282,15 +376,21 @@ Output strictly conforming JSON.
 
                 suggested_resp = data.get("response", "").strip()
                 if not suggested_resp:
-                    return self.smart_fallback()
+                    return self.smart_fallback(text)
 
-                # Anti-Repetition logic
+                # Anti-Repetition
                 if self.is_duplicate(suggested_resp):
                     print("[BLOCKED] Duplicate response prevented")
-                    return self.smart_fallback()
+                    return self.smart_fallback(text)
+
+                # ── STEP 6: Post-processing — ban generic questioning ──────────
+                response_lower = suggested_resp.lower()
+                if any(p in response_lower for p in BANNED_PATTERNS):
+                    print("[REWRITE_TRIGGER] Generic questioning detected")
+                    return self.smart_fallback(text)
 
                 self.push_response_history(suggested_resp, data.get("strategy"))
-                
+
                 if self.deal_state["stage"] == "closing":
                     data["next_question"] = "If this solves your problem, is there anything stopping you from moving forward today?"
 
@@ -306,9 +406,9 @@ Output strictly conforming JSON.
 
             except asyncio.TimeoutError:
                 print(f"[AI_TIMEOUT] Exceeded {self.max_latency}s SLA limit. Forcing fallback.")
-                return self.smart_fallback()
+                return self.smart_fallback(text)
             except (json.JSONDecodeError, Exception) as e:
                 print(f"[AI_ERROR] Engine Error: {e}")
-                return self.smart_fallback()
+                return self.smart_fallback(text)
 
-        return self.smart_fallback()
+        return self.smart_fallback(text)

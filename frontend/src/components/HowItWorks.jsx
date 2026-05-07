@@ -92,15 +92,15 @@ const HowItWorks = () => {
                 <div className="hiw__timeline" ref={sectionRef}>
                     {/* Animated SVG path */}
                     <div className="hiw__svg-wrap">
-                        <svg viewBox="0 0 80 900" preserveAspectRatio="none">
+                        <svg viewBox="0 0 1000 900" preserveAspectRatio="none">
                             <path
                                 ref={pathRef}
-                                d="M 40 0 C 80 200, 0 400, 40 600 C 80 700, 40 900, 40 900"
+                                d="M 500 0 C 500 200, 100 300, 500 450 C 900 600, 500 700, 500 900"
                                 fill="none"
-                                stroke="rgba(92,56,209,0.25)"
-                                strokeWidth="2"
+                                stroke="rgba(220, 38, 38, 0.4)"
+                                strokeWidth="9"
                                 strokeLinecap="round"
-                                strokeDasharray="6 6"
+                                strokeDasharray="12 20"
                             />
                         </svg>
                     </div>

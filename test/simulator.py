@@ -75,7 +75,7 @@ def generate_pdf(scenario_name: str, report_data: list, filename: str):
     doc = SimpleDocTemplate(filename, rightMargin=50, leftMargin=50, topMargin=50, bottomMargin=50)
     content = []
 
-    content.append(Paragraph("Klyro Test Simulation Report", title_style))
+    content.append(Paragraph("Hexagon Test Simulation Report", title_style))
     content.append(Paragraph(f"Scenario: {scenario_name}", styles["Heading2"]))
     content.append(Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", label_style))
     content.append(Spacer(1, 14))
