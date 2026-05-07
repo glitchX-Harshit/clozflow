@@ -1,34 +1,32 @@
 [
   {
-    "name": "Pricing + Trust Combo",
+    "name": "Ego + Dismissive",
     "messages": [
-      "yeah pricing feels a bit high honestly",
-      "we tried something similar before and it didn't work",
-      "not sure if this will work for us"
+      "we already have tools for this so i don’t see why we need another one"
     ]
   },
   {
-    "name": "Authority Delay",
+    "name": "Aggressive Skeptic",
     "messages": [
-      "i need to talk to my partner",
-      "he usually questions ROI a lot",
-      "we don't decide quickly"
+      "give me one real reason this isn’t just hype"
     ]
   },
   {
-    "name": "Hesitation + Pricing Combo",
+    "name": "Price Resistance",
     "messages": [
-      "i'm just not sure yet",
-      "what's the total cost if we go ahead",
-      "that's a bit more than i expected"
+      "wait that's more expensive than i expected"
     ]
   },
   {
-    "name": "Dismissive Tone",
+    "name": "Soft Delay",
     "messages": [
-      "we already have tools for this",
-      "i don't think we need another solution",
-      "why would this be different"
+      "maybe we can revisit this later or something"
+    ]
+  },
+  {
+    "name": "Mixed Interest + Hesitation",
+    "messages": [
+      "i mean i do see some value here but i'm still not fully convinced"
     ]
   }
 ]
