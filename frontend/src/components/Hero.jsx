@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import MagButton from './MagButton';
 import './Hero.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -107,10 +108,14 @@ const Hero = ({ onGetStarted }) => {
                     </p>
 
                     <div className="hero__actions" ref={actionsRef}>
-                        <button className="btn btn-primary hero__btn-primary" onClick={onGetStarted}>
-                            Start for free
-                            <ArrowRight size={16} />
-                        </button>
+                        <MagButton
+                            label="Start for free"
+                            variant="dark"
+                            icon={<ArrowRight size={16} />}
+                            onClick={onGetStarted}
+                            className="hero__btn-primary"
+                            magnetStrength={0.4}
+                        />
                         <span className="hero__cta-note">No credit card required</span>
                     </div>
 

@@ -1,4 +1,5 @@
 import { Check, Zap, Shield, Star } from 'lucide-react';
+import MagButton from './MagButton';
 import './Pricing.css';
 
 const STARTER = [
@@ -45,7 +46,7 @@ const Pricing = () => (
                     <ul className="pr__feats">
                         {STARTER.map((f, i) => <li key={i}><Check size={14} />{f}</li>)}
                     </ul>
-                    <button className="btn btn-outline pr__cta">Start Free Trial</button>
+                    <MagButton label="Start Free Trial" variant="outline" fullWidth magnetStrength={0.3} />
                 </div>
 
                 {/* Pro — inverted */}
@@ -66,7 +67,7 @@ const Pricing = () => (
                     <ul className="pr__feats">
                         {PRO.map((f, i) => <li key={i}><Check size={14} />{f}</li>)}
                     </ul>
-                    <button className="btn pr__cta pr__cta--primary">Get Started</button>
+                    <MagButton label="Get Started" variant="dark" fullWidth magnetStrength={0.3} />
                 </div>
 
                 {/* Enterprise */}
@@ -82,7 +83,7 @@ const Pricing = () => (
                         <li><Check size={14} />Dedicated CSM</li>
                         <li><Check size={14} />Custom AI Training</li>
                     </ul>
-                    <button className="btn btn-outline pr__cta">Contact Sales</button>
+                    <MagButton label="Contact Sales" variant="outline" fullWidth magnetStrength={0.3} />
                 </div>
             </div>
 

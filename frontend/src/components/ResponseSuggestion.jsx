@@ -1,4 +1,5 @@
 import { Zap } from 'lucide-react';
+import MagButton from './MagButton';
 import './ResponseSuggestion.css';
 
 const ResponseSuggestion = () => (
@@ -16,7 +17,7 @@ const ResponseSuggestion = () => (
                         rebuttal in under 200ms — tested across millions of 
                         high-stakes conversations.
                     </p>
-                    <button className="btn btn-primary">See it in action</button>
+                    <MagButton label="See it in action" variant="dark" magnetStrength={0.35} />
                 </div>
 
                 <div className="resp__visual">

@@ -1,3 +1,4 @@
+import MagButton from './MagButton';
 import './Integrations.css';
 
 const APPS = [
@@ -29,7 +30,7 @@ const Integrations = () => (
                         hexagon.ai connects natively with the tools your team
                         already uses. From CRMs to video calls — we're everywhere your deals happen.
                     </p>
-                    <button className="btn btn-primary">See all integrations</button>
+                    <MagButton label="See all integrations" variant="dark" magnetStrength={0.35} />
                 </div>
 
                 <div className="int__cloud">

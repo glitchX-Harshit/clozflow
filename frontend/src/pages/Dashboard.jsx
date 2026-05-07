@@ -19,6 +19,8 @@ import {
 import HistoryView from '../components/HistoryView';
 import AnalyticsPage from './AnalyticsPage';
 import PlaybooksPage from './PlaybooksPage';
+import SettingsShell from './SettingsShell';
+import MagButton from '../components/MagButton';
 
 const StatPill = ({ label, value, color }) => (
     <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 16, padding: '1.5rem', textAlign: 'center' }}>
@@ -40,21 +42,20 @@ const OverviewTab = ({ user, navigate }) => (
             <p style={{ color: 'var(--text-dim)', fontSize: '1.125rem', marginBottom: '2.5rem', fontWeight: 500, maxWidth: '560px' }}>
                 Your AI persuasion system is active. Every conversation is being analyzed, coached, and turned into behavioral intelligence.
             </p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-                <button
-                    className="btn btn-primary interactive"
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <MagButton
+                    label="Start New Session"
+                    variant="dark"
+                    icon={<Phone size={17} />}
                     onClick={() => navigate('/call-brief')}
-                    style={{ height: '52px', padding: '0 2.25rem', fontSize: '0.9375rem', borderRadius: '12px' }}
-                >
-                    <Phone size={17} /> Start New Session
-                </button>
-                <button
-                    className="btn btn-outline interactive"
+                    magnetStrength={0.3}
+                />
+                <MagButton
+                    label="View Intelligence"
+                    variant="outline"
                     onClick={() => {}}
-                    style={{ height: '52px', padding: '0 1.75rem', fontSize: '0.9375rem', borderRadius: '12px' }}
-                >
-                    View Intelligence
-                </button>
+                    magnetStrength={0.3}
+                />
             </div>
         </div>
 
@@ -97,7 +98,7 @@ const OverviewTab = ({ user, navigate }) => (
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                     <History size={18} color="var(--text-dim)" /> Recent Sessions
                 </h2>
-                <button className="btn btn-outline" style={{ padding: '0.4rem 0.875rem', fontSize: '0.8rem' }}>View all</button>
+                <MagButton label="View all" variant="outline" magnetStrength={0.2} />
             </div>
             <div className="card" style={{ padding: '5rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
                 <div style={{ marginBottom: '1.25rem', opacity: 0.1 }}><History size={56} /></div>
@@ -123,7 +124,7 @@ const SettingsTab = ({ user }) => (
                         <div style={{ fontWeight: 700, fontSize: '1.125rem' }}>{user?.email?.split('@')[0]}</div>
                         <div style={{ color: 'var(--text-dim)', fontSize: '0.875rem' }}>{user?.email}</div>
                     </div>
-                    <button className="btn btn-outline" style={{ marginLeft: 'auto' }}>Edit Profile</button>
+                    <MagButton label="Edit Profile" variant="outline" magnetStrength={0.25} />
                 </div>
             </div>
         </div>
@@ -179,12 +180,15 @@ const Dashboard = () => {
 
                 <div className="db-user-section">
                     <div className="db-user-info">
-                        <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' }}>
-                            {user?.email?.charAt(0).toUpperCase() || 'U'}
+                        <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)', overflow: 'hidden' }}>
+                            {user?.profile_image
+                                ? <img src={`http://localhost:8000${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                                : user?.email?.charAt(0).toUpperCase() || 'U'
+                            }
                         </div>
                         <div className="db-user-details">
-                            <span className="db-user-name">{user?.email?.split('@')[0]}</span>
-                            <span className="db-user-role">Closer Intelligence</span>
+                            <span className="db-user-name">{user?.username || user?.email?.split('@')[0]}</span>
+                            <span className="db-user-role">{user?.role || 'Closer Intelligence'}</span>
                         </div>
                     </div>
                     <button onClick={handleLogout} className="db-logout-btn interactive">
@@ -199,7 +203,7 @@ const Dashboard = () => {
                 {activeTab === 'history'   && <HistoryView />}
                 {activeTab === 'analytics' && <AnalyticsPage />}
                 {activeTab === 'playbooks' && <PlaybooksPage />}
-                {activeTab === 'settings'  && <SettingsTab user={user} />}
+                {activeTab === 'settings'  && <SettingsShell />}
             </main>
 
             {/* Bottom tab bar — mobile only */}
