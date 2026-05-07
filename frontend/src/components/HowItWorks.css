@@ -32,15 +32,19 @@
 .hiw__svg-wrap {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
+  left: 0;
+  width: 100%;
   height: 100%;
   pointer-events: none;
   z-index: 0;
 }
 
-.hiw__svg-wrap svg { width: 100%; height: 100%; display: block; }
+.hiw__svg-wrap svg { 
+  width: 100%; 
+  height: 100%; 
+  display: block; 
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+}
 
 /* Steps */
 .hiw__steps {
@@ -71,7 +75,8 @@
 /* Step card */
 .hiw__step-card {
   max-width: 380px;
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
   padding: 2.5rem 2.75rem;
@@ -143,9 +148,9 @@
   .hiw__header  { margin-bottom: 5rem; }
 
   .hiw__svg-wrap {
-    left: 16px;
+    left: 0;
+    width: 100%;
     transform: none;
-    width: 36px;
   }
 
   .hiw__steps { gap: 4rem; }

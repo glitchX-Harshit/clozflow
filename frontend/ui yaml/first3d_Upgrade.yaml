@@ -1,0 +1,271 @@
+project:
+  name: "HexagonAI"
+  type: "Award-winning cinematic AI SaaS landing page"
+  vibe:
+    - futuristic
+    - premium
+    - cinematic
+    - minimal
+    - glassmorphism
+    - apple-like storytelling
+    - red-black luxury tech aesthetic
+
+tech_stack:
+  framework: "Next.js 15"
+  styling: "TailwindCSS"
+  animation:
+    - "GSAP"
+    - "ScrollTrigger"
+    - "Lenis Smooth Scroll"
+  rendering:
+    - "HTML5 Canvas"
+  fonts:
+    primary: "Inter"
+    secondary: "Satoshi"
+  icons: "Lucide React"
+
+global_theme:
+  background:
+    type: "radial-gradient"
+    colors:
+      - "#ff003c"
+      - "#15000a"
+      - "#000000"
+    direction: "top-left to bottom-right"
+
+  lighting:
+    glow_color: "#ff2f5b"
+    ambient_red_glow: true
+    cinematic_vignette: true
+
+  typography:
+    heading:
+      weight: 800
+      color: "#ffffff"
+      tracking: "-0.05em"
+    subheading:
+      weight: 300
+      color: "rgba(255,255,255,0.85)"
+    body:
+      color: "rgba(255,255,255,0.7)"
+
+  ui_style:
+    glassmorphism: true
+    blur_strength: 18px
+    border:
+      color: "rgba(255,255,255,0.12)"
+    shadow:
+      color: "rgba(255,0,80,0.25)"
+
+layout:
+  hero_section:
+    height: "300vh"
+    pinned: true
+    overflow: hidden
+
+    layers:
+      - background_gradient
+      - floating_particles
+      - ui_cards
+      - robot_canvas
+      - foreground_typography
+
+hero_content:
+  navbar:
+    left:
+      logo:
+        shape: "hexagon"
+        text: "HexagonAI"
+
+    right:
+      profile_chip:
+        glassmorphism: true
+        avatar: true
+      menu_button:
+        circular: true
+        glow: true
+
+  headline:
+    line1:
+      text: "AI Sales Agent"
+      weight: 900
+      size_desktop: "120px"
+
+    line2:
+      text: "That Sells"
+      weight: 300
+      size_desktop: "100px"
+
+    line3:
+      text: "While You Scale"
+      weight: 300
+      size_desktop: "100px"
+
+    effects:
+      subtle_glow: true
+      fade_in: true
+      parallax: true
+
+  subheadline:
+    text: "Intelligent conversations. Smarter follow-ups. More deals closed effortlessly."
+
+  buttons:
+    primary:
+      text: "Book a Demo"
+      background: "#ff1455"
+      hover:
+        scale: 1.05
+        glow: true
+
+    secondary:
+      text: "See How It Works"
+      glassmorphism: true
+
+robot:
+  type: "futuristic humanoid android"
+
+  positioning:
+    desktop:
+      x: "58%"
+      y: "52%"
+    mobile:
+      x: "50%"
+      y: "55%"
+
+  style:
+    material: "white ceramic"
+    details:
+      - black mechanical internals
+      - orange/red rim lighting
+      - ultra realistic
+      - glossy surfaces
+      - cinematic reflections
+
+  lighting:
+    left_red_glow: true
+    edge_light: "#ff5b73"
+
+  render:
+    format: "webp"
+    background: "#000000"
+    frame_count: 60
+
+  animation_sequence:
+    frame_1_10:
+      movement: "head slightly down"
+
+    frame_11_20:
+      movement: "slow upward movement"
+
+    frame_21_30:
+      movement: "looking forward"
+
+    frame_31_40:
+      movement: "slight right rotation"
+
+    frame_41_50:
+      movement: "subtle activation pose"
+
+    frame_51_60:
+      movement: "final cinematic lock pose"
+
+canvas_animation:
+  enabled: true
+
+  scroll_controlled: true
+
+  gsap:
+    scrub: true
+    pin: true
+    ease: "none"
+
+  behavior:
+    scroll_progress_controls_frame: true
+
+  optimization:
+    preload_frames: true
+    use_webp: true
+    request_animation_frame: true
+
+glass_cards:
+  style:
+    backdrop_blur: 20px
+    transparency: 0.12
+    border_glow: true
+    rounded: "32px"
+
+  cards:
+    - title: "+24.04%"
+      subtitle: "Today's PNL"
+      type: "graph"
+
+    - title: "AI Conversations"
+      subtitle: "Human-like lead engagement"
+
+    - title: "Smarter Follow-Ups"
+      subtitle: "Automated nurturing"
+
+    - title: "More Deals Closed"
+      subtitle: "AI-driven conversions"
+
+floating_effects:
+  particles:
+    enabled: true
+    color: "#ff355e"
+    opacity: 0.2
+
+  ui_motion:
+    slow_float: true
+    parallax_depth: true
+
+  background_blur_orbs:
+    enabled: true
+    color: "#ff1455"
+
+scroll_storytelling:
+  section_1:
+    emotion: "mysterious"
+    robot_pose: "inactive"
+    text: "Every lead starts as noise."
+
+  section_2:
+    emotion: "awakening"
+    robot_pose: "lifting head"
+    text: "HexagonAI listens."
+
+  section_3:
+    emotion: "intelligence"
+    robot_pose: "active scanning"
+    text: "Conversations that convert."
+
+  section_4:
+    emotion: "dominance"
+    robot_pose: "forward confident"
+    text: "You scale. Hexagon sells."
+
+performance:
+  fps_target: 60
+
+  optimization:
+    lazy_loading: true
+    image_preloading: true
+    hardware_acceleration: true
+
+  mobile_fallback:
+    disable_canvas_sequence: true
+    use_static_robot_image: true
+
+final_feel:
+  inspiration:
+    - "Apple"
+    - "Tesla"
+    - "Linear"
+    - "Vercel"
+    - "Nothing.tech"
+    - "Resn"
+
+  emotional_goal:
+    - "judges should feel this is premium instantly"
+    - "cinematic storytelling"
+    - "high-end AI future aesthetic"
+    - "luxury SaaS experience"
