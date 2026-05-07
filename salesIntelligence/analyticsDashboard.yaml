@@ -1,0 +1,411 @@
+
+PROJECT: Hexagon
+MODULE: Analytics + Playbooks Intelligence Layer
+GOAL:
+  Transform dashboard from simple SaaS UI into:
+    - AI Sales Intelligence System
+    - Strategic Coaching Platform
+    - Deal Analysis Engine
+
+STACK_ASSUMPTION:
+  frontend: existing which is in use
+  backend: FastAPI / Python
+  database: existing session history storage
+  pdf reports: already working
+
+# =====================================================
+# SECTION 1 — ANALYTICS PAGE OVERHAUL
+# =====================================================
+
+ANALYTICS_PAGE:
+  route: "/dashboard/analytics"
+
+  PURPOSE:
+    NOT a chart dashboard.
+    SHOULD feel like:
+      - Deal intelligence center
+      - AI sales strategist
+      - Conversational performance analyzer
+
+  UI_LAYOUT:
+
+    TOP_HEADER:
+      title: "Sales Intelligence Analytics"
+      subtitle: "Behavioral insights and deal analysis from your coached conversations."
+
+    COMPONENTS:
+
+      - DEAL_RISK_PANEL
+      - OBJECTION_HEATMAP
+      - AI_CLOSER_SCORE
+      - MISSED_OPPORTUNITIES
+      - CONVERSATION_MOMENTUM
+      - DEAL_VERDICT
+
+# =====================================================
+# COMPONENT 1 — DEAL RISK PANEL
+# =====================================================
+
+DEAL_RISK_PANEL:
+
+  title: "Deal Risk Analysis"
+
+  data_source:
+    analyze:
+      - hesitation count
+      - unresolved objections
+      - urgency level
+      - authority resistance
+      - sentiment drift
+
+  output_examples:
+
+    low:
+      label: "LOW RISK"
+      reason:
+        - strong buying intent
+        - urgency detected
+        - objections handled
+
+    medium:
+      label: "MODERATE RISK"
+      reason:
+        - some hesitation remains
+        - trust not fully established
+
+    high:
+      label: "HIGH RISK"
+      reason:
+        - repeated delays
+        - pricing resistance unresolved
+        - weak commitment language
+
+# =====================================================
+# COMPONENT 2 — OBJECTION HEATMAP
+# =====================================================
+
+OBJECTION_HEATMAP:
+
+  title: "Top Objections"
+
+  track:
+    - pricing
+    - trust
+    - timing
+    - authority
+    - skepticism
+    - implementation
+    - urgency
+
+  UI:
+    - percentage bars
+    - small insight labels
+
+  example:
+    pricing: 42%
+    trust: 31%
+    timing: 17%
+
+# =====================================================
+# COMPONENT 3 — AI CLOSER SCORE
+# =====================================================
+
+AI_CLOSER_SCORE:
+
+  title: "Closer Performance Score"
+
+  scoring_factors:
+    - objection handling
+    - emotional control
+    - conversational dominance
+    - momentum preservation
+    - pressure balance
+    - response sharpness
+
+  output:
+
+    score_range:
+      weak: 40-60
+      decent: 60-75
+      strong: 75-90
+      elite: 90+
+
+  example_output:
+
+    score: 78
+
+    strengths:
+      - handled skepticism well
+      - maintained calm authority
+
+    weaknesses:
+      - too reactive during pricing
+      - weak urgency creation
+
+# =====================================================
+# COMPONENT 4 — MISSED OPPORTUNITIES
+# =====================================================
+
+MISSED_OPPORTUNITIES:
+
+  title: "Missed Opportunities"
+
+  PURPOSE:
+    detect moments where:
+      - buying signals appeared
+      - hesitation was exposed
+      - emotional leverage existed
+
+  AI_ANALYSIS:
+
+    detect_phrases:
+      - "i do see value"
+      - "interesting"
+      - "maybe"
+      - "not fully convinced"
+      - "sounds good"
+
+  output_format:
+
+    opportunity:
+      detected_line: "i do see value here"
+
+      insight:
+        "Prospect showed partial buying intent but uncertainty remained."
+
+      suggested_better_response:
+        "Usually when someone sees value but hesitates, the real concern is risk."
+
+# =====================================================
+# COMPONENT 5 — CONVERSATION MOMENTUM
+# =====================================================
+
+CONVERSATION_MOMENTUM:
+
+  title: "Conversation Momentum"
+
+  PURPOSE:
+    show emotional movement across call
+
+  track:
+    - skepticism
+    - confidence
+    - hesitation
+    - curiosity
+    - resistance
+    - urgency
+
+  UI_STYLE:
+    NOT boring charts
+
+  preferred:
+    - timeline cards
+    - conversational markers
+    - momentum indicators
+
+  example:
+    Turn 2:
+      skepticism ↑
+
+    Turn 5:
+      curiosity ↑
+
+    Turn 7:
+      urgency ↓
+
+# =====================================================
+# COMPONENT 6 — AI DEAL VERDICT
+# =====================================================
+
+DEAL_VERDICT:
+
+  title: "AI Deal Verdict"
+
+  PURPOSE:
+    final strategic recommendation
+
+  output:
+
+    deal_probability:
+      - low
+      - moderate
+      - high
+
+    main_blocker:
+      - trust uncertainty
+      - pricing resistance
+      - authority issue
+      - weak urgency
+
+    recommended_next_move:
+      - "Do not push pricing yet."
+      - "Rebuild trust through proof."
+      - "Challenge delay softly."
+      - "Introduce low-risk entry."
+
+# =====================================================
+# SECTION 2 — PLAYBOOKS PAGE
+# =====================================================
+
+PLAYBOOKS_PAGE:
+  route: "/dashboard/playbooks"
+
+  PURPOSE:
+    Tactical conversational coaching system
+
+  SHOULD_FEEL_LIKE:
+    - elite closer handbook
+    - psychological strategy center
+    - battle cards for objections
+
+  UI_LAYOUT:
+
+    TOP_HEADER:
+      title: "Sales Playbooks"
+      subtitle: "Tactical persuasion frameworks for high-pressure conversations."
+
+    PLAYBOOK_CARDS:
+      - Pricing Objection
+      - Skepticism Handling
+      - Delay & Stall
+      - Ego Prospect
+      - Trust Building
+      - Emotional Control
+
+# =====================================================
+# PLAYBOOK 1 — PRICING
+# =====================================================
+
+PRICING_PLAYBOOK:
+
+  title: "Pricing Objection"
+
+  sections:
+
+    WHY_IT_HAPPENS:
+      - unclear ROI
+      - weak perceived value
+      - fear of regret
+
+    WEAK_RESPONSE:
+      - "It's worth the investment."
+
+    STRONG_RESPONSE:
+      - "Expensive usually just means the return still isn’t fully clear yet."
+
+    CLOSER_INSIGHT:
+      - "Price objections are usually certainty objections in disguise."
+
+# =====================================================
+# PLAYBOOK 2 — SKEPTICISM
+# =====================================================
+
+SKEPTICISM_PLAYBOOK:
+
+  title: "Handling Skepticism"
+
+  scenarios:
+    - "sounds like hype"
+    - "everyone says that"
+    - "we tried before"
+
+  strong_examples:
+    - "If every solution delivered, skepticism wouldn’t exist."
+    - "Most disappointment comes from tools that sounded good but changed nothing operationally."
+
+# =====================================================
+# PLAYBOOK 3 — DELAY
+# =====================================================
+
+DELAY_PLAYBOOK:
+
+  title: "Delay & Stall"
+
+  scenarios:
+    - "later"
+    - "let me think"
+    - "not right now"
+
+  strong_examples:
+    - "Revisiting later usually means something still doesn’t feel fully justified."
+    - "Delay often feels safer than decision-making."
+
+# =====================================================
+# PLAYBOOK 4 — EGO PROSPECT
+# =====================================================
+
+EGO_PLAYBOOK:
+
+  title: "Ego & Control Prospects"
+
+  scenarios:
+    - dismissive founders
+    - strong personalities
+    - authority resistance
+
+  strong_examples:
+    - "If the current setup was fully solving the problem, this conversation probably wouldn’t exist."
+    - "Most teams already have tools. Few have tools actually moving the numbers that matter."
+
+# =====================================================
+# PLAYBOOK 5 — EMOTIONAL CONTROL
+# =====================================================
+
+EMOTIONAL_CONTROL_PLAYBOOK:
+
+  title: "Emotional Control"
+
+  teach:
+    - when to challenge
+    - when to stay calm
+    - when to compress responses
+    - when to create tension
+
+  key_rule:
+    - "The strongest responses are often short and psychologically directional."
+
+# =====================================================
+# SECTION 3 — OPTIONAL FUTURE FEATURES
+# =====================================================
+
+FUTURE_FEATURES:
+
+  - AI response replay
+  - compare weak vs strong responses
+  - live objection simulator
+  - objection practice arena
+  - emotional pressure training
+
+# =====================================================
+# UI STYLE GUIDELINES
+# =====================================================
+
+DESIGN_DIRECTION:
+
+  avoid:
+    - boring enterprise dashboards
+    - excessive charts
+    - CRM feel
+    - spreadsheet look
+
+  prioritize:
+    - intelligence feel
+    - dark tactical aesthetics
+    - strategic insight cards
+    - conversational analysis
+
+# =====================================================
+# FINAL PRODUCT POSITIONING
+# =====================================================
+
+FINAL_DIRECTION:
+
+  Hexagon is NOT:
+    - a chatbot
+    - a transcript tool
+    - a CRM
+
+  Hexagon IS:
+    - conversational deal intelligence
+    - AI-powered objection coaching
+    - behavioral sales guidance system

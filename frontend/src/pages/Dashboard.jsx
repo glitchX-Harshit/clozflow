@@ -17,72 +17,92 @@ import {
     MessageSquare
 } from 'lucide-react';
 import HistoryView from '../components/HistoryView';
+import AnalyticsPage from './AnalyticsPage';
+import PlaybooksPage from './PlaybooksPage';
+
+const StatPill = ({ label, value, color }) => (
+    <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 16, padding: '1.5rem', textAlign: 'center' }}>
+        <div style={{ fontSize: '2rem', fontWeight: 900, letterSpacing: '-0.04em', color, lineHeight: 1 }}>{value}</div>
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '0.375rem' }}>{label}</div>
+    </div>
+);
 
 const OverviewTab = ({ user, navigate }) => (
     <div className="animate-fade-in">
         {/* Header Section */}
-        <div style={{ padding: '4rem 0', marginBottom: '3rem' }}>
-            <h1 className="text-display" style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', marginBottom: '1rem', fontWeight: 800, letterSpacing: '-0.05em', color: 'var(--text)' }}>
+        <div style={{ padding: '3.5rem 0 3rem' }}>
+            <div style={{ fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '1rem' }}>
+                Conversational Deal Intelligence
+            </div>
+            <h1 style={{ fontSize: 'clamp(2.25rem, 4vw, 3.25rem)', marginBottom: '1rem', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1.05 }}>
                 Welcome back{user?.name ? `, ${user.name}` : ''}.
             </h1>
-            <p style={{ color: 'var(--text-dim)', fontSize: '1.25rem', marginBottom: '2.5rem', fontWeight: 500, maxWidth: '600px' }}>
-                Your AI-powered deal intelligence is ready. Boost your conversion rates with real-time coaching.
+            <p style={{ color: 'var(--text-dim)', fontSize: '1.125rem', marginBottom: '2.5rem', fontWeight: 500, maxWidth: '560px' }}>
+                Your AI persuasion system is active. Every conversation is being analyzed, coached, and turned into behavioral intelligence.
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
-                <button 
-                    className="btn btn-primary interactive" 
+                <button
+                    className="btn btn-primary interactive"
                     onClick={() => navigate('/call-brief')}
-                    style={{ height: '56px', padding: '0 2.5rem', fontSize: '1rem', borderRadius: '12px' }}
+                    style={{ height: '52px', padding: '0 2.25rem', fontSize: '0.9375rem', borderRadius: '12px' }}
                 >
-                    <Phone size={18} /> Start New Call
+                    <Phone size={17} /> Start New Session
                 </button>
-                <button 
-                    className="btn btn-outline interactive" 
+                <button
+                    className="btn btn-outline interactive"
                     onClick={() => {}}
-                    style={{ height: '56px', padding: '0 2rem', fontSize: '1rem', borderRadius: '12px' }}
+                    style={{ height: '52px', padding: '0 1.75rem', fontSize: '0.9375rem', borderRadius: '12px' }}
                 >
-                    View Analytics
+                    View Intelligence
                 </button>
             </div>
         </div>
 
-        {/* Bento Grid Features */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
+        {/* Stats Row — responsive via CSS */}
+        <div className="ov-stats-grid">
+            <StatPill label="Close Rate"       value="37%" color="#22c55e" />
+            <StatPill label="Objections Filed" value="148" color="#6366f1" />
+            <StatPill label="Stalled Deals"    value="41%" color="#f59e0b" />
+            <StatPill label="High Risk"        value="22%" color="#ef4444" />
+        </div>
+
+        {/* Intelligence Modules — responsive via CSS */}
+        <div className="ov-modules-grid">
             <div className="card card-hover" style={{ padding: '2rem' }}>
-                <div style={{ background: 'var(--accent-dim)', width: '48px', height: '48px', borderRadius: 'var(--r-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                    <ShieldCheck size={22} color="var(--accent)" />
+                <div style={{ background: 'rgba(99,102,241,0.1)', width: '44px', height: '44px', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                    <ShieldCheck size={20} color="#6366f1" />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>Deal Health</h3>
-                <p style={{ fontSize: '0.9375rem' }}>Analyze prospect intent and risk factors automatically across your conversations.</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Deal Risk Engine</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>Detect hesitation, resistance, and trust failure in real-time. Every deal risk is scored and surfaced.</p>
             </div>
             <div className="card card-hover" style={{ padding: '2rem' }}>
-                <div style={{ background: 'var(--accent-dim)', width: '48px', height: '48px', borderRadius: 'var(--r-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                    <TrendingUp size={22} color="var(--accent)" />
+                <div style={{ background: 'rgba(34,197,94,0.1)', width: '44px', height: '44px', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                    <TrendingUp size={20} color="#22c55e" />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>Performance</h3>
-                <p style={{ fontSize: '0.9375rem' }}>Track your objections-handled ratio and closing effectiveness in real-time.</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Strategy Intelligence</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>Track which persuasion strategies close deals. ROI reframe, risk reversal, controlled challenge — measured.</p>
             </div>
             <div className="card card-hover" style={{ padding: '2rem' }}>
-                <div style={{ background: 'var(--accent-dim)', width: '48px', height: '48px', borderRadius: 'var(--r-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                    <MessageSquare size={22} color="var(--accent)" />
+                <div style={{ background: 'rgba(168,85,247,0.1)', width: '44px', height: '44px', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
+                    <MessageSquare size={20} color="#a855f7" />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>AI Coaching</h3>
-                <p style={{ fontSize: '0.9375rem' }}>Get instant suggestions for next-best-questions and value propositions.</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Behavioral Coaching</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>AI identifies missed moments, weak responses, and high-leverage opportunities you didn't take.</p>
             </div>
         </div>
 
-        {/* Recent Activity */}
-        <div style={{ marginTop: '4rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <History size={20} color="var(--text-dim)" /> Recent Sessions
+        {/* Recent Sessions placeholder */}
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                    <History size={18} color="var(--text-dim)" /> Recent Sessions
                 </h2>
-                <button className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.8125rem' }}>View all history</button>
+                <button className="btn btn-outline" style={{ padding: '0.4rem 0.875rem', fontSize: '0.8rem' }}>View all</button>
             </div>
-            <div className="card" style={{ padding: '6rem 2rem', textAlign: 'center', background: 'var(--surface)' }}>
-                <div style={{ marginBottom: '1.5rem', opacity: 0.1 }}><History size={64} /></div>
-                <p style={{ fontWeight: 600, fontSize: '1.125rem', color: 'var(--text)' }}>Quiet for now...</p>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginTop: '0.5rem' }}>Your deal intelligence will populate here once you start your first call.</p>
+            <div className="card" style={{ padding: '5rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
+                <div style={{ marginBottom: '1.25rem', opacity: 0.1 }}><History size={56} /></div>
+                <p style={{ fontWeight: 700, fontSize: '1rem' }}>No sessions yet</p>
+                <p style={{ fontSize: '0.8375rem', color: 'var(--text-dim)', marginTop: '0.375rem' }}>Start a call to activate your intelligence layer.</p>
             </div>
         </div>
     </div>
@@ -121,15 +141,16 @@ const Dashboard = () => {
     };
 
     const navItems = [
-        { id: 'overview', label: 'Overview', icon: LayoutGrid },
-        { id: 'history', label: 'Call History', icon: History },
-        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-        { id: 'playbooks', label: 'Playbooks', icon: Target },
-        { id: 'settings', label: 'Settings', icon: Settings },
+        { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
+        { id: 'history',    label: 'Session History', icon: History },
+        { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
+        { id: 'playbooks',  label: 'Playbooks',      icon: Target },
+        { id: 'settings',   label: 'Settings',       icon: Settings },
     ];
 
     return (
         <div className="db-layout">
+            {/* Sidebar — desktop only */}
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
                     <div className="db-logo-icon" style={{ background: 'var(--accent)' }}>
@@ -163,37 +184,54 @@ const Dashboard = () => {
                         </div>
                         <div className="db-user-details">
                             <span className="db-user-name">{user?.email?.split('@')[0]}</span>
-                            <span className="db-user-role">Sales Pro</span>
+                            <span className="db-user-role">Closer Intelligence</span>
                         </div>
                     </div>
                     <button onClick={handleLogout} className="db-logout-btn interactive">
-                        <LogOut size={14} /> Log out
+                        <LogOut size={14} /> <span className="db-logout-label">Log out</span>
                     </button>
                 </div>
             </aside>
 
+            {/* Main content */}
             <main className="db-main">
-                {activeTab === 'overview' && <OverviewTab user={user} navigate={navigate} />}
-                {activeTab === 'history' && <HistoryView />}
-                {activeTab === 'settings' && <SettingsTab user={user} />}
-                {activeTab !== 'overview' && activeTab !== 'history' && activeTab !== 'settings' && (
-                    <div className="animate-fade-in" style={{ padding: '4rem 0', textAlign: 'center' }}>
-                        <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>{navItems.find(i => i.id === activeTab)?.label}</h2>
-                        <p style={{ color: 'var(--text-dim)' }}>This module is currently being optimized for high-performance sales teams.</p>
-                    </div>
-                )}
+                {activeTab === 'overview'  && <OverviewTab user={user} navigate={navigate} />}
+                {activeTab === 'history'   && <HistoryView />}
+                {activeTab === 'analytics' && <AnalyticsPage />}
+                {activeTab === 'playbooks' && <PlaybooksPage />}
+                {activeTab === 'settings'  && <SettingsTab user={user} />}
             </main>
 
+            {/* Bottom tab bar — mobile only */}
+            <nav className="db-bottom-nav">
+                {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeTab === item.id;
+                    return (
+                        <button
+                            key={item.id}
+                            onClick={() => setActiveTab(item.id)}
+                            className={`db-bottom-tab ${isActive ? 'active' : ''}`}
+                        >
+                            <Icon size={20} strokeWidth={isActive ? 2.5 : 1.75} />
+                            <span>{item.label}</span>
+                        </button>
+                    );
+                })}
+            </nav>
+
             <style>{`
+                /* ── Layout ── */
                 .db-layout {
                     display: flex;
                     min-height: 100vh;
                     background: var(--bg);
                 }
 
+                /* ── Sidebar ── */
                 .db-sidebar {
-                    width: 280px;
-                    min-width: 280px;
+                    width: 260px;
+                    min-width: 260px;
                     background: var(--bg);
                     border-right: 1px solid var(--border);
                     display: flex;
@@ -202,18 +240,16 @@ const Dashboard = () => {
                     top: 0;
                     height: 100vh;
                     z-index: 100;
-                    padding: 2rem 1.5rem;
+                    padding: 2rem 1.25rem;
                 }
-
                 .db-sidebar-logo {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    padding: 0 0.75rem;
-                    margin-bottom: 3rem;
+                    padding: 0 0.5rem;
+                    margin-bottom: 2.5rem;
                     cursor: pointer;
                 }
-
                 .db-logo-icon {
                     width: 32px;
                     height: 32px;
@@ -221,22 +257,20 @@ const Dashboard = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+                    flex-shrink: 0;
+                    box-shadow: 0 4px 12px rgba(99,102,241,0.25);
                 }
-
                 .db-logo-text {
                     font-size: 1.25rem;
                     font-weight: 800;
                     letter-spacing: -0.05em;
                 }
-
                 .db-nav {
                     display: flex;
                     flex-direction: column;
-                    gap: 0.25rem;
+                    gap: 0.2rem;
                     flex: 1;
                 }
-
                 .db-nav-item {
                     display: flex;
                     align-items: center;
@@ -251,119 +285,153 @@ const Dashboard = () => {
                     text-align: left;
                     width: 100%;
                 }
-
-                .db-nav-item:hover {
-                    background: var(--surface);
-                    color: var(--text);
-                }
-
-                .db-nav-item.active {
-                    background: rgba(99, 102, 241, 0.05);
-                    color: var(--accent);
-                }
-
-                .db-nav-label {
-                    font-size: 0.9375rem;
-                    font-weight: 500;
-                }
-
-                .db-nav-item.active .db-nav-label {
-                    font-weight: 700;
-                }
+                .db-nav-item:hover { background: var(--surface); color: var(--text); }
+                .db-nav-item.active { background: rgba(99,102,241,0.07); color: var(--accent); }
+                .db-nav-label { font-size: 0.9rem; font-weight: 500; }
+                .db-nav-item.active .db-nav-label { font-weight: 700; }
 
                 .db-user-section {
                     margin-top: auto;
-                    padding-top: 2rem;
+                    padding-top: 1.5rem;
                     border-top: 1px solid var(--border);
                 }
-
                 .db-user-info {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    margin-bottom: 1.25rem;
-                    padding: 0 0.5rem;
+                    margin-bottom: 1rem;
+                    padding: 0 0.25rem;
                 }
-
                 .db-user-avatar {
-                    width: 38px;
-                    height: 38px;
+                    width: 36px; height: 36px;
                     border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: 800;
-                    font-size: 0.875rem;
+                    display: flex; align-items: center; justify-content: center;
+                    font-weight: 800; font-size: 0.875rem; flex-shrink: 0;
                 }
-
-                .db-user-details {
-                    display: flex;
-                    flex-direction: column;
-                    min-width: 0;
-                }
-
+                .db-user-details { display: flex; flex-direction: column; min-width: 0; }
                 .db-user-name {
-                    font-size: 0.875rem;
-                    font-weight: 700;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                    font-size: 0.875rem; font-weight: 700;
+                    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
                 }
-
-                .db-user-role {
-                    font-size: 0.75rem;
-                    color: var(--text-dim);
-                }
-
+                .db-user-role { font-size: 0.72rem; color: var(--text-dim); }
                 .db-logout-btn {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                    width: 100%;
+                    display: flex; align-items: center; justify-content: center;
+                    gap: 0.5rem; width: 100%;
                     background: var(--surface);
                     border: 1px solid var(--border);
                     color: var(--text);
-                    padding: 0.625rem;
+                    padding: 0.6rem;
                     border-radius: var(--r-md);
-                    font-size: 0.8125rem;
-                    font-weight: 600;
+                    font-size: 0.8125rem; font-weight: 600;
+                    cursor: pointer; transition: all 0.2s;
                 }
-
                 .db-logout-btn:hover {
                     background: rgba(239,68,68,0.06);
                     color: #dc2626;
                     border-color: rgba(239,68,68,0.15);
                 }
 
+                /* ── Main ── */
                 .db-main {
                     flex: 1;
-                    padding: 4rem 6rem;
-                    max-width: 1400px;
+                    padding: 3.5rem 5rem;
+                    min-width: 0;
                     background: var(--surface);
                 }
 
-                @media (max-width: 1200px) {
-                    .db-main {
-                        padding: 3rem 4rem;
-                    }
+                /* ── Bottom nav — hidden on desktop ── */
+                .db-bottom-nav { display: none; }
+
+                /* ── Overview responsive helpers ── */
+                .ov-stats-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 0.875rem;
+                    margin-bottom: 2rem;
+                }
+                .ov-modules-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 1.125rem;
+                    margin-bottom: 2.25rem;
                 }
 
+                /* ── 1200px ── */
+                @media (max-width: 1200px) {
+                    .db-main { padding: 3rem 3.5rem; }
+                }
+
+                /* ── 1024px — icon-only sidebar ── */
                 @media (max-width: 1024px) {
                     .db-sidebar {
-                        width: 80px;
-                        min-width: 80px;
-                        padding: 2rem 0.75rem;
+                        width: 72px;
+                        min-width: 72px;
+                        padding: 1.75rem 0.625rem;
                     }
-                    .db-logo-text, .db-nav-label, .db-user-details, .db-logout-btn span {
-                        display: none;
+                    .db-logo-text,
+                    .db-nav-label,
+                    .db-user-details,
+                    .db-logout-label { display: none; }
+                    .db-sidebar-logo,
+                    .db-nav-item,
+                    .db-user-info { justify-content: center; padding: 0.75rem; }
+                    .db-main { padding: 2rem 2.5rem; }
+                    .ov-stats-grid { grid-template-columns: repeat(2, 1fr); }
+                    .ov-modules-grid { grid-template-columns: repeat(2, 1fr); }
+                }
+
+                /* ── 640px — mobile ── */
+                @media (max-width: 640px) {
+                    .db-layout {
+                        flex-direction: column;
+                        padding-bottom: 70px;
                     }
-                    .db-sidebar-logo, .db-nav-item, .db-user-info {
-                        justify-content: center;
-                        padding: 0.75rem;
-                    }
+                    .db-sidebar { display: none; }
                     .db-main {
-                        padding: 2rem 3rem;
+                        padding: 1.25rem 1rem;
+                        min-height: calc(100dvh - 70px);
+                    }
+                    .db-bottom-nav {
+                        display: flex;
+                        position: fixed;
+                        bottom: 0; left: 0; right: 0;
+                        height: 70px;
+                        background: var(--bg);
+                        border-top: 1px solid var(--border);
+                        z-index: 200;
+                        padding: 0 0.25rem;
+                        padding-bottom: env(safe-area-inset-bottom, 0px);
+                    }
+                    .db-bottom-tab {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.25rem;
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        color: var(--text-muted);
+                        padding: 0.5rem 0.125rem;
+                        transition: color 0.2s;
+                    }
+                    .db-bottom-tab.active { color: var(--accent); }
+                    .db-bottom-tab span {
+                        font-size: 0.56rem;
+                        font-weight: 700;
+                        letter-spacing: 0.04em;
+                        text-transform: uppercase;
+                    }
+                    .ov-stats-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 0.625rem;
+                        margin-bottom: 1.5rem;
+                    }
+                    .ov-modules-grid {
+                        grid-template-columns: 1fr;
+                        gap: 0.75rem;
+                        margin-bottom: 1.75rem;
                     }
                 }
             `}</style>
@@ -372,3 +440,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
