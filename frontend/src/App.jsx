@@ -15,6 +15,7 @@ import Footer from './components/Footer';
 import CrowdSection from './components/CrowdSection';
 import CrowdCanvasSection from './components/CrowdCanvasSection';
 import ThreeBackground from './components/ThreeBackground';
+import SmoothScroll from './components/SmoothScroll';
 
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
@@ -52,6 +53,7 @@ function LandingPage() {
 function App() {
     return (
         <AuthProvider>
+            <SmoothScroll />
             <BrowserRouter>
                 <div className="app-root">
                     <Routes>
