@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Layers, Target, Terminal } from 'lucide-react';
 import './HowItWorks.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -9,66 +10,61 @@ const STEPS = [
     {
         num: '01',
         tag: 'Phase One',
-        title: 'Activation',
+        title: 'ACTIVATION',
+        icon: <Layers size={24} />,
         sub: 'The intelligence layer activates as the conversation begins. Hexagon instantly maps the psychological path to the close.',
     },
     {
         num: '02',
         tag: 'Phase Two',
-        title: 'Detection',
+        title: 'DETECTION',
+        icon: <Target size={24} />,
         sub: 'Patterns reveal what logic usually hides. Surface hidden objections and buyer intent signals before they are voiced.',
     },
     {
         num: '03',
         tag: 'Phase Three',
-        title: 'Strategic Guidance',
+        title: 'STRATEGIC PROTOCOL',
+        icon: <Terminal size={24} />,
         sub: 'Receive tactical persuasion frameworks for difficult moments. Stay ahead of hesitation with elite response protocols.',
     }
 ];
 
 const HowItWorks = () => {
     const sectionRef = useRef(null);
-    const pathRef = useRef(null);
     const stepsRef = useRef([]);
 
     useEffect(() => {
         let ctx = gsap.context(() => {
-            // Animate the SVG path
-            const path = pathRef.current;
-            if (path) {
-                const len = path.getTotalLength();
-                gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-                gsap.to(path, {
-                    strokeDashoffset: 0,
+            // Horizontal bar animation
+            gsap.fromTo('.hiw__progress-fill', 
+                { width: '0%' },
+                { 
+                    width: '100%', 
                     ease: 'none',
                     scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: 'top 60%',
-                        end: 'bottom 60%',
-                        scrub: 1.5,
+                        trigger: '.hiw__grid',
+                        start: 'top 80%',
+                        end: 'bottom 20%',
+                        scrub: 1
                     }
-                });
-            }
+                }
+            );
 
-            // Steps fade in
+            // Steps animation
             stepsRef.current.forEach((step, i) => {
                 gsap.fromTo(step,
-                    { y: 50, opacity: 0 },
+                    { y: 60, opacity: 0, scale: 0.95 },
                     {
-                        y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-                        scrollTrigger: { trigger: step, start: 'top 80%' }
+                        y: 0, opacity: 1, scale: 1, duration: 1.2, ease: 'power4.out',
+                        scrollTrigger: { 
+                            trigger: step, 
+                            start: 'top 85%',
+                            toggleActions: 'play none none reverse'
+                        }
                     }
                 );
             });
-
-            // Header
-            gsap.fromTo('.hiw__header',
-                { y: 30, opacity: 0 },
-                {
-                    y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-                    scrollTrigger: { trigger: '.hiw__header', start: 'top 80%' }
-                }
-            );
         }, sectionRef);
 
         return () => ctx.revert();
@@ -78,10 +74,12 @@ const HowItWorks = () => {
         <section className="hiw__section" id="how-it-works" ref={sectionRef}>
             <div className="container">
                 <div className="hiw__header">
-                    <span className="eyebrow eyebrow-accent">The Methodology</span>
+                    <div className="hiw__eyebrow-box">
+                        <span className="eyebrow eyebrow-accent">The Methodology</span>
+                    </div>
                     <h2 className="section-title">
-                        Three steps to<br />
-                        <span className="italic-accent">every close.</span>
+                        THREE PHASES TO<br />
+                        <span className="text-accent">ABSOLUTE CLOSURE.</span>
                     </h2>
                     <p className="hiw__subtitle">
                         From activation to close — Hexagon handles the analysis
@@ -89,34 +87,32 @@ const HowItWorks = () => {
                     </p>
                 </div>
 
-                <div className="hiw__timeline" ref={sectionRef}>
-                    {/* Animated SVG path */}
-                    <div className="hiw__svg-wrap">
-                        <svg viewBox="0 0 1000 900" preserveAspectRatio="none">
-                            <path
-                                ref={pathRef}
-                                d="M 500 0 C 500 200, 100 300, 500 450 C 900 600, 500 700, 500 900"
-                                fill="none"
-                                stroke="rgba(220, 38, 38, 0.4)"
-                                strokeWidth="9"
-                                strokeLinecap="round"
-                                strokeDasharray="12 20"
-                            />
-                        </svg>
+                <div className="hiw__content">
+                    <div className="hiw__progress-bar">
+                        <div className="hiw__progress-fill" />
                     </div>
 
-                    <div className="hiw__steps">
-                        {STEPS.map((s, i) => (
-                            <div
-                                key={i}
-                                className={`hiw__step ${i % 2 === 0 ? 'hiw__step--left' : 'hiw__step--right'}`}
-                                ref={el => (stepsRef.current[i] = el)}
+                    <div className="hiw__grid">
+                        {STEPS.map((step, i) => (
+                            <div 
+                                key={i} 
+                                className="hiw__card" 
+                                ref={el => stepsRef.current[i] = el}
                             >
-                                <div className="hiw__step-card">
-                                    <span className="hiw__step-num">{s.num}</span>
-                                    <span className="hiw__step-tag">{s.tag}</span>
-                                    <h3 className="hiw__step-title">{s.title}</h3>
-                                    <p className="hiw__step-sub">{s.sub}</p>
+                                <div className="hiw__card-top">
+                                    <span className="hiw__card-num">{step.num}</span>
+                                    <div className="hiw__card-icon">{step.icon}</div>
+                                </div>
+                                
+                                <div className="hiw__card-body">
+                                    <span className="hiw__card-tag">{step.tag}</span>
+                                    <h3 className="hiw__card-title">{step.title}</h3>
+                                    <p className="hiw__card-sub">{step.sub}</p>
+                                </div>
+                                
+                                <div className="hiw__card-footer">
+                                    <div className="hiw__card-dot" />
+                                    <div className="hiw__card-line" />
                                 </div>
                             </div>
                         ))}

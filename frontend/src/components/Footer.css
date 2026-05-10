@@ -45,7 +45,9 @@
     letter-spacing: -0.04em;
 }
 
-.ft__logo-dot { color: var(--accent); }
+.ft__logo-dot {
+    color: var(--accent);
+}
 
 .ft__brand-desc {
     font-size: 0.875rem;
@@ -86,7 +88,9 @@
     display: inline-block;
 }
 
-.ft__col-links a:hover { color: var(--text); }
+.ft__col-links a:hover {
+    color: var(--text);
+}
 
 /* Bottom bar */
 .ft__bottom {
@@ -115,7 +119,9 @@
     transition: color 0.18s ease;
 }
 
-.ft__bottom-links a:hover { color: var(--text); }
+.ft__bottom-links a:hover {
+    color: var(--text);
+}
 
 @media (max-width: 900px) {
     .ft__top {
@@ -123,11 +129,15 @@
         gap: 3rem;
     }
 
-    .ft__brand { flex: none; }
+    .ft__brand {
+        flex: none;
+    }
 }
 
 @media (max-width: 680px) {
-    .ft__links-grid { grid-template-columns: repeat(2, 1fr); }
+    .ft__links-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
     .ft__bottom {
         flex-direction: column;

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prosto+One&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ══════════════════════════════════════════════════
    HEXAGON.AI — LUXURY WHITE DESIGN SYSTEM
@@ -18,11 +18,11 @@
   --text-muted:   #a8a8a8;
   --text-inv:     #ffffff;
 
-  /* ── Brand Accent — luxury red ── */
-  --accent:       #dc2626;
-  --accent-dim:   rgba(220, 38, 38, 0.08);
-  --accent-glow:  rgba(220, 38, 38, 0.2);
-  --accent-mid:   #ef4444;
+  /* ── Brand Accent — Strategic Navy ── */
+  --accent:       #1e40af;   /* Deep Sapphire Navy */
+  --accent-dim:   rgba(30, 64, 175, 0.08);
+  --accent-glow:  rgba(30, 64, 175, 0.2);
+  --accent-mid:   #3b82f6;   /* Electric Blue highlight */
 
   /* ── Borders ── */
   --border:       rgba(0, 0, 0, 0.07);
@@ -36,8 +36,9 @@
   --shadow-lg:    0 12px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
   --shadow-xl:    0 24px 80px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
   --shadow-card:  0 0 0 1px var(--border), var(--shadow-sm);
-  --shadow-card-hover: 0 0 0 1px var(--border-hover), var(--shadow-lg);
-  --shadow-accent:0 8px 30px rgba(220, 38, 38, 0.25), 0 2px 8px rgba(220, 38, 38, 0.15);
+  --shadow-card-hover: 0 10px 40px rgba(30, 64, 175, 0.12), 0 0 0 1px rgba(30, 64, 175, 0.1);
+  --shadow-accent:0 8px 30px rgba(30, 64, 175, 0.25), 0 2px 8px rgba(30, 64, 175, 0.15);
+  --shadow-premium: 0 20px 50px rgba(30, 64, 175, 0.15), 0 0 0 1px rgba(30, 64, 175, 0.05);
 
   /* ── Radii ── */
   --r-sm:   6px;
@@ -48,8 +49,9 @@
   --r-full: 9999px;
 
   /* ── Type Scale ── */
-  --font-display: 'Archivo Black', 'Syne', 'Inter', system-ui, sans-serif;
+  --font-display: 'Prosto One', cursive;
   --font-body:    'Inter', system-ui, sans-serif;
+  --font-serif:   'Cormorant Garamond', serif;
 }
 
 /* ══ RESET & BASE ═══════════════════════════════════ */
@@ -78,8 +80,9 @@ button { font-family: inherit; }
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--text);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 p { color: var(--text-dim); line-height: 1.7; }
@@ -122,9 +125,9 @@ section {
 }
 
 .btn-primary:hover {
-  background: #1a1a1a;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
 }
 
 /* Outline = subtle border */
@@ -135,12 +138,12 @@ section {
 }
 
 .btn-outline:hover {
-  border-color: var(--text);
-  color: var(--text);
-  background: var(--surface);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
 }
 
-/* Accent = violet */
+/* Accent = Navy */
 .btn-accent {
   background: var(--accent);
   color: #fff;
@@ -150,8 +153,8 @@ section {
 
 .btn-accent:hover {
   background: var(--accent-mid);
-  transform: translateY(-1px);
-  box-shadow: 0 12px 40px rgba(220, 38, 38, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(30, 64, 175, 0.4);
 }
 
 /* ══ CARDS ═════════════════════════════════════════ */
@@ -274,3 +277,96 @@ section {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+/* ══ UTILS ═══════════════════════════════════════════ */
+.u-show-mobile { display: none; }
+.u-hide-mobile { display: block; }
+
+@media (max-width: 800px) {
+  .u-show-mobile { display: block; }
+  .u-hide-mobile { display: none; }
+}
+
+.text-accent { color: var(--accent); }
+.italic-accent { 
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent);
+  text-transform: none;
+}
+
+/* ── Awwwards Link Underline ── */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Apply to common links */
+.nb__link, 
+.nb__drawer-link,
+.ft__col-links a,
+.ft__bottom-links a,
+.hero__cta-meta span,
+.hiw__card-num,
+.hiw__card-tag,
+.arch__layer-tag,
+.arch__layer-num {
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  display: inline-block; /* Crucial for ::after positioning */
+  color: inherit;
+}
+
+.nb__link::after, 
+.nb__drawer-link::after,
+.ft__col-links a::after,
+.ft__bottom-links a::after,
+.hero__cta-meta span::after,
+.hiw__card-num::after,
+.hiw__card-tag::after,
+.arch__layer-tag::after,
+.arch__layer-num::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.nb__link:hover::after, 
+.nb__drawer-link:hover::after,
+.ft__col-links a:hover::after,
+.ft__bottom-links a:hover::after,
+.hero__cta-meta span:hover::after,
+.hiw__card-num:hover::after,
+.hiw__card-tag:hover::after,
+.arch__layer-tag:hover::after,
+.arch__layer-num:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}

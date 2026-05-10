@@ -3,12 +3,13 @@
     position: relative;
     width: 100%;
     min-height: 80vh;
-    background: var(--bg);
+    background: transparent;
     overflow: hidden;
     padding-top: 6rem;
     border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
+    z-index: 1;
 }
 
 .cc__content {
