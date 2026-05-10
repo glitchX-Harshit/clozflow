@@ -265,7 +265,7 @@ const WorkspacePanel = () => {
     const { saving, saved, save } = useSave(updateUser);
     const set = (k) => (e) => setForm(p => ({ ...p, [k]: e.target.value }));
 
-    const styles = ['Calm Authority', 'Controlled Challenge', 'Perspective Shift', 'Minimal Sharp', 'Consultative'];
+    const styles = ['Calm Authority', 'Controlled Challenge', 'Perspective Shift', 'Minimal Sharp', 'Strategic'];
 
     return (
         <SectionCard title="Workspace Settings" sub="Personalise your sales environment and AI defaults.">
@@ -338,8 +338,8 @@ const AiPanel = () => {
     return (
         <SectionCard title="AI Preferences" sub="Controls how Hexagon AI responds in your sessions.">
             <Picker label="Response Length" field="ai_response_length" opts={[{ value: 'short', label: 'Short' }, { value: 'balanced', label: 'Balanced' }, { value: 'detailed', label: 'Detailed' }]} />
-            <Picker label="Tone" field="ai_tone" opts={[{ value: 'calm', label: 'Calm' }, { value: 'assertive', label: 'Assertive' }, { value: 'tactical', label: 'Tactical' }]} />
-            <Picker label="Objection Pressure" field="ai_objection_pressure" opts={[{ value: 'soft', label: 'Soft' }, { value: 'balanced', label: 'Balanced' }, { value: 'aggressive', label: 'Aggressive' }]} />
+            <Picker label="Tone" field="ai_tone" opts={[{ value: 'calm', label: 'Calm' }, { value: 'strategic', label: 'Strategic' }, { value: 'tactical', label: 'Tactical' }]} />
+            <Picker label="Objection Pressure" field="ai_objection_pressure" opts={[{ value: 'soft', label: 'Soft' }, { value: 'balanced', label: 'Balanced' }, { value: 'high_intensity', label: 'High Intensity' }]} />
             <Picker label="Reasoning Speed" field="ai_speed" opts={[{ value: 'fast', label: 'Fast' }, { value: 'balanced', label: 'Balanced' }, { value: 'high_reasoning', label: 'Deep Reasoning' }]} />
             <SaveBtn saving={saving} saved={saved} onClick={() => save(form)} />
         </SectionCard>

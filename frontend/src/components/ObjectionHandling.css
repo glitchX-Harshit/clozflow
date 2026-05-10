@@ -1,7 +1,9 @@
 /* ══ OBJECTION HANDLING ══════════════════════════════ */
 .obj__section {
     background: var(--bg);
-    padding: 9rem 0;
+    padding: 10rem 0;
+    position: relative;
+    z-index: 10;
 }
 
 .obj__header {

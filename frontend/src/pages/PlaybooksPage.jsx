@@ -179,7 +179,7 @@ const PlaybooksPage = () => {
                     Tactical Playbooks
                 </h1>
                 <p style={{ color:'var(--text-dim)', fontSize:'1rem', maxWidth:560, margin:0 }}>
-                    Elite closer operating manual. Psychological breakdowns, response comparisons, and tactical frameworks.
+                    Tactical frameworks decoded from elite sessions. The psychological response protocols for every difficult moment.
                 </p>
             </div>
 

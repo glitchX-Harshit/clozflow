@@ -33,9 +33,9 @@ const Navbar = ({ onSignup, onLogin }) => {
                 <div className="nb__inner">
                     {/* Logo */}
                     <a href="#" className="nb__logo">
-                        <span className="nb__mark" aria-hidden="true">K</span>
+                        <span className="nb__mark" aria-hidden="true">H</span>
                         <span className="nb__wordmark">
-                            hexagon<span className="nb__dot">.</span>ai
+                            Hexagon
                         </span>
                     </a>
 
@@ -58,7 +58,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                             magnetStrength={0.35}
                         />
                         <MagButton
-                            label="Get started"
+                            label="Enter Workspace"
                             variant="dark"
                             onClick={onSignup}
                             className="nb__cta-mag"
@@ -93,7 +93,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                         onClick={() => { onLogin(); close(); }}
                     />
                     <MagButton
-                        label="Get started"
+                        label="Enter Workspace"
                         variant="dark"
                         fullWidth
                         magnetStrength={0.25}

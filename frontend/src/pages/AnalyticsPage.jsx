@@ -23,10 +23,10 @@ const OBJECTIONS = [
 ];
 
 const ENERGY = [
-    { emotion: 'Hesitation', pct: 68, color: '#f59e0b', dir: 'up',   note: 'Most common first 8 min' },
-    { emotion: 'Skepticism', pct: 54, color: '#ef4444', dir: 'down', note: 'Drops with social proof' },
-    { emotion: 'Curiosity',  pct: 72, color: '#6366f1', dir: 'up',   note: 'Peaks mid-conversation' },
-    { emotion: 'Urgency',    pct: 38, color: '#22c55e', dir: 'down', note: 'Rarely created proactively' },
+    { emotion: 'Hesitation', pct: 68, color: '#f59e0b', dir: 'up',   note: 'Signals trust failure' },
+    { emotion: 'Skepticism', pct: 54, color: '#ef4444', dir: 'down', note: 'Drops with strategic proof' },
+    { emotion: 'Curiosity',  pct: 72, color: '#6366f1', dir: 'up',   note: 'Intent peak detected' },
+    { emotion: 'Certainty',  pct: 38, color: '#22c55e', dir: 'down', note: 'Critical momentum drop' },
     { emotion: 'Resistance', pct: 45, color: '#f97316', dir: 'up',   note: 'Triggered by price mention' },
 ];
 
@@ -103,10 +103,10 @@ const AnalyticsPage = () => {
                     Intelligence Command Center
                 </span>
                 <h1 style={{ fontSize: 'clamp(2rem,4vw,2.875rem)', fontWeight: 900, letterSpacing: '-0.05em', margin: '1rem 0 0.625rem', lineHeight: 1.05 }}>
-                    Global Sales Intelligence
+                    Global Behavioral Intelligence
                 </h1>
                 <p style={{ color: 'var(--text-dim)', fontSize: '1rem', maxWidth: 580 }}>
-                    Executive-level behavioral analytics across all conversations — platform-wide, not per-call.
+                    Psychologically aware analytics across all conversations — platform‑wide, not per‑call.
                 </p>
             </div>
 
@@ -174,7 +174,7 @@ const AnalyticsPage = () => {
 
             {/* 3 — OBJECTION PATTERNS */}
             <div className="g-card">
-                <Shell label="Pattern Recognition" title="Top Objection Patterns" Icon={Flame} accent="#ef4444">
+                <Shell label="Pattern Recognition" title="Patterns of Momentum Loss" Icon={Flame} accent="#ef4444">
                     <div className="ana-obj-grid" style={{ marginBottom: '1.5rem' }}>
                         {OBJECTIONS.map((o,i) => (
                             <div key={i} style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem', borderTop:`3px solid ${o.color}` }}>

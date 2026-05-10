@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLSTICE — Seasonal AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --spring-bg: #c5ceac;
+    --spring-accent: #8a9a6a;
+    --summer-bg: #e8d5b7;
+    --summer-accent: #c49a6c;
+    --autumn-bg: #d4a574;
+    --autumn-accent: #8b5e3c;
+    --winter-bg: #bfc8d6;
+    --winter-accent: #6a7b8a;
+    --text-dark: #1a1a1a;
+    --text-mid: #3a3a3a;
+    --text-light: #6a6a6a;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar { display: none; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--spring-bg);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  canvas#three-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  /* Navigation */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: multiply;
+  }
+  
+  .logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  
+  .nav-links a {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: opacity 0.3s;
+    cursor: pointer;
+  }
+  
+  .nav-links a:hover { opacity: 0.6; }
+  
+  /* Page Indicators */
+  .page-indicators {
+    position: fixed;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-dark);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .indicator.active {
+    background: var(--text-dark);
+    transform: scale(1.3);
+  }
+  
+  /* Sections */
+  section {
+    position: relative;
+    min-height: 100vh;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    padding: 120px 48px 80px;
+  }
+  
+  .section-content {
+    max-width: 520px;
+    opacity: 0;
+    transform: translateY(60px);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .section-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 5.5vw, 72px);
+    font-weight: 500;
+    line-height: 1.05;
+    margin-bottom: 28px;
+    color: var(--text-dark);
+  }
+  
+  .section-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-mid);
+    margin-bottom: 32px;
+    max-width: 400px;
+    font-weight: 300;
+  }
+  
+  .tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    padding: 8px 20px;
+    border: 1.5px solid var(--text-dark);
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: var(--text-dark);
+    background: transparent;
+    cursor: default;
+    transition: all 0.3s;
+  }
+  
+  .tag:hover {
+    background: var(--text-dark);
+    color: white;
+  }
+  
+  /* Section-specific positioning */
+  #section-spring .section-content { align-self: flex-end; }
+  #section-summer .section-content { margin-left: auto; text-align: right; }
+  #section-summer .tags { justify-content: flex-end; }
+  #section-autumn .section-content { align-self: flex-end; }
+  #section-winter .section-content { margin-left: auto; text-align: right; }
+  #section-winter .tags { justify-content: flex-end; }
+  
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    opacity: 1;
+    transition: opacity 0.6s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .scroll-indicator.hidden { opacity: 0; }
+  
+  .scroll-line {
+    width: 1px;
+    height: 24px;
+    background: var(--text-mid);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+  
+  /* CTA Section */
+  #section-cta {
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  #section-cta .section-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  #section-cta .tags { justify-content: center; }
+  
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 40px;
+    background: var(--text-dark);
+    color: white;
+    border: none;
+    border-radius: 48px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 12px;
+  }
+  
+  .cta-button:hover {
+    transform: scale(1.05);
+    gap: 18px;
+  }
+  
+  .cta-button svg {
+    transition: transform 0.4s;
+  }
+  
+  .cta-button:hover svg {
+    transform: translateX(4px);
+  }
+  
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .feature-card {
+    padding: 36px 28px;
+    border: 1px solid rgba(26,26,26,0.12);
+    border-radius: 16px;
+    text-align: left;
+    transition: all 0.4s;
+  }
+  
+  .feature-card:hover {
+    background: rgba(26,26,26,0.04);
+  }
+  
+  .feature-icon {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .feature-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .feature-card p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-light);
+    font-weight: 300;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: 13px; }
+    section { padding: 100px 24px 60px; }
+    #section-summer .section-content,
+    #section-winter .section-content { margin-left: 0; text-align: left; }
+    #section-summer .tags,
+    #section-winter .tags { justify-content: flex-start; }
+    .page-indicators { right: 16px; }
+    .features-grid { grid-template-columns: 1fr; }
+    #section-cta .section-content { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="three-canvas"></canvas>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">SOLSTICE</div>
+  <ul class="nav-links">
+    <li><a data-section="0">Seasons</a></li>
+    <li><a data-section="1">Matter</a></li>
+    <li><a data-section="2">Cycles</a></li>
+    <li><a data-section="3">Archive</a></li>
+  </ul>
+</nav>
+
+<!-- Page Indicators -->
+<div class="page-indicators">
+  <div class="indicator active" data-index="0"></div>
+  <div class="indicator" data-index="1"></div>
+  <div class="indicator" data-index="2"></div>
+  <div class="indicator" data-index="3"></div>
+  <div class="indicator" data-index="4"></div>
+</div>
+
+<!-- Scroll Indicator -->
+<div class="scroll-indicator">
+  <div class="scroll-line"></div>
+  SCROLL
+</div>
+
+<!-- Spring Section -->
+<section id="section-spring" data-season="spring" data-bg="#c5ceac">
+  <div class="section-content">
+    <div class="section-label">01 — SPRING</div>
+    <h2 class="section-title">Awakening<br>of form.</h2>
+    <p class="section-desc">New geometries emerge from silence. The surface breathes with soft organic textures, alive with potential energy.</p>
+    <div class="tags">
+      <span class="tag">Growth</span>
+      <span class="tag">Renewal</span>
+      <span class="tag">Bloom</span>
+    </div>
+  </div>
+</section>
+
+<!-- Summer Section -->
+<section id="section-summer" data-season="summer" data-bg="#e8d5b7">
+  <div class="section-content">
+    <div class="section-label">02 — SUMMER</div>
+    <h2 class="section-title">Peak<br>radiance.</h2>
+    <p class="section-desc">Full spectrum intelligence at its zenith. Data flows converge into brilliant patterns of insight and clarity.</p>
+    <div class="tags">
+      <span class="tag">Intensity</span>
+      <span class="tag">Clarity</span>
+      <span class="tag">Power</span>
+    </div>
+  </div>
+</section>
+
+<!-- Autumn Section -->
+<section id="section-autumn" data-season="autumn" data-bg="#d4a574">
+  <div class="section-content">
+    <div class="section-label">03 — AUTUMN</div>
+    <h2 class="section-title">Harvest<br>of insight.</h2>
+    <p class="section-desc">Models mature and shed complexity. What remains is essential — refined knowledge distilled through cycles of learning.</p>
+    <div class="tags">
+      <span class="tag">Wisdom</span>
+      <span class="tag">Depth</span>
+      <span class="tag">Yield</span>
+    </div>
+  </div>
+</section>
+
+<!-- Winter Section -->
+<section id="section-winter" data-season="winter" data-bg="#bfc8d6">
+  <div class="section-content">
+    <div class="section-label">04 — WINTER</div>
+    <h2 class="section-title">Stillness<br>before shift.</h2>
+    <p class="section-desc">The architecture rests. Beneath the surface, neural pathways consolidate, preparing for the next evolution.</p>
+    <div class="tags">
+      <span class="tag">Rest</span>
+      <span class="tag">Latent</span>
+      <span class="tag">Potential</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section id="section-cta" data-season="cta" data-bg="#c5ceac">
+  <div class="section-content">
+    <div class="section-label">THE CYCLE CONTINUES</div>
+    <h2 class="section-title">Intelligence that<br>evolves with time.</h2>
+    <p class="section-desc" style="max-width: 480px; margin-left: auto; margin-right: auto;">Solstice is the AI platform that understands context isn't static — it's seasonal. Your data, your models, your insights — all in perpetual bloom.</p>
+    <div style="display:flex; justify-content:center; margin-bottom: 48px;">
+      <button class="cta-button">
+        Begin your cycle
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">◎</div>
+        <h4>Adaptive Models</h4>
+        <p>Neural architectures that shift with your data's seasonal patterns.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⬡</div>
+        <h4>Cycle Analytics</h4>
+        <p>Temporal intelligence that reveals hidden rhythms in enterprise data.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">◈</div>
+        <h4>Perpetual Learning</h4>
+        <p>Continuous refinement through natural cycles of growth and rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.183.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.183.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ---- Three.js Setup ----
+const canvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 6);
+
+// ---- Lighting ----
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+ambientLight.name = 'ambientLight';
+scene.add(ambientLight);
+
+const mainLight = new THREE.DirectionalLight(0xffffff, 1.8);
+mainLight.position.set(5, 8, 6);
+mainLight.name = 'mainLight';
+scene.add(mainLight);
+
+const fillLight = new THREE.DirectionalLight(0xc5ceac, 0.6);
+fillLight.position.set(-4, -2, 4);
+fillLight.name = 'fillLight';
+scene.add(fillLight);
+
+const rimLight = new THREE.DirectionalLight(0xffffff, 0.8);
+rimLight.position.set(0, 5, -5);
+rimLight.name = 'rimLight';
+scene.add(rimLight);
+
+// ---- Season Color Palettes ----
+const seasonColors = {
+  spring: {
+    material: new THREE.Color(0xc5ceac),
+    materialDark: new THREE.Color(0x8a9a6a),
+    env: new THREE.Color(0xd5debb),
+    light: new THREE.Color(0xe8eedd),
+    fillLight: new THREE.Color(0xc5ceac)
+  },
+  summer: {
+    material: new THREE.Color(0xe8d5b7),
+    materialDark: new THREE.Color(0xc49a6c),
+    env: new THREE.Color(0xf0e0c8),
+    light: new THREE.Color(0xfff5e6),
+    fillLight: new THREE.Color(0xe8d5b7)
+  },
+  autumn: {
+    material: new THREE.Color(0xd4a574),
+    materialDark: new THREE.Color(0x8b5e3c),
+    env: new THREE.Color(0xddb088),
+    light: new THREE.Color(0xf5d4b0),
+    fillLight: new THREE.Color(0xd4a574)
+  },
+  winter: {
+    material: new THREE.Color(0xbfc8d6),
+    materialDark: new THREE.Color(0x6a7b8a),
+    env: new THREE.Color(0xd0d8e4),
+    light: new THREE.Color(0xe8edf4),
+    fillLight: new THREE.Color(0xbfc8d6)
+  }
+};
+
+// ---- Create Torus Knot (organic shape) ----
+const torusGeo = new THREE.TorusKnotGeometry(1.3, 0.48, 256, 64, 2, 3);
+const torusMat = new THREE.MeshPhysicalMaterial({
+  color: 0xc5ceac,
+  metalness: 0.1,
+  roughness: 0.15,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.08,
+  reflectivity: 0.9,
+  envMapIntensity: 1.5,
+  sheen: 0.3,
+  sheenRoughness: 0.2,
+  sheenColor: new THREE.Color(0xe8eedd),
+});
+const torusKnot = new THREE.Mesh(torusGeo, torusMat);
+torusKnot.name = 'mainTorus';
+scene.add(torusKnot);
+
+// ---- Environment Map (simple gradient) ----
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+const envScene = new THREE.Scene();
+const envGeo = new THREE.SphereGeometry(10, 32, 32);
+const envMat = new THREE.MeshBasicMaterial({ 
+  color: 0xd5debb, 
+  side: THREE.BackSide 
+});
+const envMesh = new THREE.Mesh(envGeo, envMat);
+envMesh.name = 'envMesh';
+envScene.add(envMesh);
+
+const topLight = new THREE.PointLight(0xffffff, 8, 20);
+topLight.position.set(0, 5, 0);
+topLight.name = 'envTopLight';
+envScene.add(topLight);
+
+const bottomLight = new THREE.PointLight(0xc5ceac, 4, 20);
+bottomLight.position.set(0, -5, 0);
+bottomLight.name = 'envBottomLight';
+envScene.add(bottomLight);
+
+function updateEnvMap() {
+  const envMap = pmremGenerator.fromScene(envScene, 0.04).texture;
+  torusMat.envMap = envMap;
+  torusMat.needsUpdate = true;
+}
+updateEnvMap();
+
+// ---- Floating Particles ----
+const particleCount = 80;
+const particlesGeo = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleSpeeds = [];
+
+for (let i = 0; i < particleCount; i++) {
+  particlePositions[i * 3] = (Math.random() - 0.5) * 16;
+  particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 16;
+  particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 2;
+  particleSpeeds.push({
+    x: (Math.random() - 0.5) * 0.003,
+    y: (Math.random() - 0.5) * 0.003 + 0.002,
+    z: (Math.random() - 0.5) * 0.001,
+  });
+}
+
+particlesGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+const particlesMat = new THREE.PointsMaterial({
+  color: 0x3a3a3a,
+  size: 0.03,
+  transparent: true,
+  opacity: 0.4,
+  sizeAttenuation: true,
+});
+const particles = new THREE.Points(particlesGeo, particlesMat);
+particles.name = 'floatingParticles';
+scene.add(particles);
+
+// ---- Scroll Tracking ----
+let scrollProgress = 0;
+let currentSeason = 'spring';
+let targetRotX = 0, targetRotY = 0, targetScale = 1;
+let currentRotX = 0, currentRotY = 0, currentScale = 1;
+let targetPosX = 0.8, targetPosY = 0;
+let currentPosX = 0.8, currentPosY = 0;
+
+const sections = document.querySelectorAll('section');
+const indicators = document.querySelectorAll('.indicator');
+const scrollIndicator = document.querySelector('.scroll-indicator');
+const sectionContents = document.querySelectorAll('.section-content');
+
+// Season shapes: define different TorusKnot params per season via morph
+const seasonShapes = {
+  spring: { rotSpeedX: 0.15, rotSpeedY: 0.25, wobble: 0.02, posX: 0.8, posY: 0 },
+  summer: { rotSpeedX: 0.2, rotSpeedY: -0.3, wobble: 0.03, posX: -0.8, posY: 0.2 },
+  autumn: { rotSpeedX: -0.15, rotSpeedY: 0.2, wobble: 0.025, posX: 0.8, posY: -0.1 },
+  winter: { rotSpeedX: 0.1, rotSpeedY: -0.15, wobble: 0.015, posX: -0.8, posY: 0 },
+};
+
+function updateOnScroll() {
+  const scrollY = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  scrollProgress = Math.min(scrollY / docHeight, 1);
+  
+  // Find current section
+  let activeIndex = 0;
+  sections.forEach((section, i) => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.5) activeIndex = i;
+  });
+  
+  // Update indicators
+  indicators.forEach((ind, i) => {
+    ind.classList.toggle('active', i === activeIndex);
+  });
+  
+  // Hide scroll indicator after first scroll
+  if (scrollY > 100) {
+    scrollIndicator.classList.add('hidden');
+  } else {
+    scrollIndicator.classList.remove('hidden');
+  }
+  
+  // Determine season
+  const seasonNames = ['spring', 'summer', 'autumn', 'winter', 'spring'];
+  const newSeason = seasonNames[activeIndex] || 'spring';
+  
+  if (newSeason !== currentSeason) {
+    currentSeason = newSeason;
+    transitionSeason(currentSeason);
+  }
+  
+  // Section content visibility
+  sectionContents.forEach((content) => {
+    const rect = content.parentElement.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight * 0.7 && rect.bottom > window.innerHeight * 0.2;
+    content.classList.toggle('visible', isVisible);
+  });
+  
+  // 3D object positioning based on section
+  const shape = seasonShapes[currentSeason] || seasonShapes.spring;
+  targetPosX = shape.posX;
+  targetPosY = shape.posY;
+}
+
+let colorTransitionProgress = 0;
+let colorTransitionFrom = { ...seasonColors.spring };
+let colorTransitionTo = { ...seasonColors.spring };
+let isTransitioning = false;
+
+function transitionSeason(season) {
+  const colors = seasonColors[season];
+  if (!colors) return;
+  
+  // Set body background
+  const section = document.querySelector(`[data-season="${season}"]`);
+  if (section) {
+    document.body.style.backgroundColor = section.dataset.bg;
+  }
+  
+  // Smooth material color transition
+  colorTransitionFrom = {
+    material: torusMat.color.clone(),
+    env: envMat.color.clone(),
+    fillLight: fillLight.color.clone(),
+    sheenColor: torusMat.sheenColor.clone(),
+  };
+  colorTransitionTo = {
+    material: colors.material.clone(),
+    env: colors.env.clone(),
+    fillLight: colors.fillLight.clone(),
+    sheenColor: colors.light.clone(),
+  };
+  colorTransitionProgress = 0;
+  isTransitioning = true;
+}
+
+window.addEventListener('scroll', updateOnScroll, { passive: true });
+
+// Nav links and indicators click
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    const idx = parseInt(link.dataset.section);
+    if (sections[idx]) sections[idx].scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+indicators.forEach(ind => {
+  ind.addEventListener('click', () => {
+    const idx = parseInt(ind.dataset.index);
+    if (sections[idx]) sections[idx].scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ---- Mouse Parallax ----
+let mouseX = 0, mouseY = 0;
+window.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+// ---- Animation ----
+const clock = new THREE.Clock();
+
+function animate() {
+  const elapsed = clock.getElapsedTime();
+  const delta = clock.getDelta();
+  
+  // Color transition
+  if (isTransitioning) {
+    colorTransitionProgress += 0.015;
+    if (colorTransitionProgress >= 1) {
+      colorTransitionProgress = 1;
+      isTransitioning = false;
+    }
+    const t = smoothstep(colorTransitionProgress);
+    torusMat.color.lerpColors(colorTransitionFrom.material, colorTransitionTo.material, t);
+    torusMat.sheenColor.lerpColors(colorTransitionFrom.sheenColor, colorTransitionTo.sheenColor, t);
+    envMat.color.lerpColors(colorTransitionFrom.env, colorTransitionTo.env, t);
+    fillLight.color.lerpColors(colorTransitionFrom.fillLight, colorTransitionTo.fillLight, t);
+    
+    if (colorTransitionProgress % 0.1 < 0.02) {
+      updateEnvMap();
+    }
+  }
+  
+  // Smooth position interpolation
+  const lerpFactor = 0.03;
+  currentPosX += (targetPosX - currentPosX) * lerpFactor;
+  currentPosY += (targetPosY - currentPosY) * lerpFactor;
+  
+  // Organic rotation
+  const shape = seasonShapes[currentSeason] || seasonShapes.spring;
+  torusKnot.rotation.x = elapsed * shape.rotSpeedX + Math.sin(elapsed * 0.5) * shape.wobble;
+  torusKnot.rotation.y = elapsed * shape.rotSpeedY + Math.cos(elapsed * 0.3) * shape.wobble;
+  torusKnot.rotation.z = Math.sin(elapsed * 0.2) * 0.05;
+  
+  // Breathing scale
+  const breathe = 1 + Math.sin(elapsed * 0.8) * 0.02;
+  torusKnot.scale.setScalar(breathe);
+  
+  // Position with mouse parallax
+  torusKnot.position.x = currentPosX + mouseX * 0.15;
+  torusKnot.position.y = currentPosY + mouseY * 0.1 + Math.sin(elapsed * 0.4) * 0.1;
+  
+  // Camera subtle movement
+  camera.position.x = mouseX * 0.08;
+  camera.position.y = mouseY * 0.05;
+  camera.lookAt(0, 0, 0);
+  
+  // Particles
+  const positions = particles.geometry.attributes.position.array;
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] += particleSpeeds[i].x;
+    positions[i * 3 + 1] += particleSpeeds[i].y;
+    positions[i * 3 + 2] += particleSpeeds[i].z;
+    
+    if (positions[i * 3 + 1] > 8) positions[i * 3 + 1] = -8;
+    if (positions[i * 3] > 8) positions[i * 3] = -8;
+    if (positions[i * 3] < -8) positions[i * 3] = 8;
+  }
+  particles.geometry.attributes.position.needsUpdate = true;
+  particles.rotation.y = elapsed * 0.02;
+  
+  renderer.render(scene, camera);
+}
+
+function smoothstep(t) {
+  return t * t * (3 - 2 * t);
+}
+
+renderer.setAnimationLoop(animate);
+
+// ---- Resize ----
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ---- Initial state ----
+updateOnScroll();
+setTimeout(() => {
+  sectionContents[0]?.classList.add('visible');
+}, 300);
+</script>
+</body>
+</html>

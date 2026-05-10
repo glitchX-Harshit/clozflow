@@ -10,32 +10,32 @@ const FEATURES_DATA = [
     {
         id: 1,
         num: '01',
-        title: "Real-time Intent Detection",
-        desc: "Our proprietary engine listens for subtle acoustic cues and semantic shifts to detect objections before they're fully voiced.",
+        title: "Behavioral Intent Detection",
+        desc: "See where conversations lose momentum before deals disappear by detecting subtle acoustic cues and semantic shifts.",
         icon: <Ear size={22} />,
-        tag: 'Detection'
+        tag: 'Analytics'
     },
     {
         id: 2,
         num: '02',
-        title: "Zero Scramble",
-        desc: "Stay calm under pressure. Suggestions appear instantly, giving you the perfect script for any curveball thrown your way.",
+        title: "Strategic Guidance",
+        desc: "Strategic responses designed for emotionally complex moments. No scrambling — just confident, effective responses.",
         icon: <Zap size={22} />,
-        tag: 'Speed'
+        tag: 'Guidance'
     },
     {
         id: 3,
         num: '03',
-        title: "Winning Playbook",
-        desc: "Curated from millions of top-performing calls to ensure you always have the best rebuttal at your fingertips.",
+        title: "Psychological Frameworks",
+        desc: "Psychological response frameworks used during high-pressure objections, curated from millions of elite sessions.",
         icon: <Shield size={22} />,
-        tag: 'Strategy'
+        tag: 'Playbooks'
     },
     {
         id: 4,
         num: '04',
         title: "Seamless Integration",
-        desc: "Connect with your existing sales stack in seconds. No complex setup, no browser extensions — it just works.",
+        desc: "The intelligence layer activates across your existing sales stack in seconds. No friction, no complex setup.",
         icon: <Layers size={22} />,
         tag: 'Integration'
     }
@@ -93,10 +93,10 @@ const Features = () => {
         <section className="feat__section" id="features" ref={sectionRef}>
             <div className="container">
                 <div className="feat__header section-header text-center">
-                    <span className="eyebrow eyebrow-accent">The Engine</span>
+                    <span className="eyebrow eyebrow-accent">The Architecture</span>
                     <h2 className="section-title">
-                        Everything you need<br />
-                        to <span className="italic-accent">close faster.</span>
+                        Designed for the<br />
+                        psychology of the <span className="italic-accent">deal.</span>
                     </h2>
                 </div>
 

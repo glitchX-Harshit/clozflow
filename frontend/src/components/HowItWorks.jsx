@@ -8,21 +8,21 @@ gsap.registerPlugin(ScrollTrigger);
 const STEPS = [
     {
         num: '01',
-        tag: 'Step One',
-        title: 'Connect & Listen',
-        sub: 'Open your sales call in any platform. hexagon.ai instantly begins listening and analyzing the conversation in real-time, no setup required.',
+        tag: 'Phase One',
+        title: 'Activation',
+        sub: 'The intelligence layer activates as the conversation begins. Hexagon instantly maps the psychological path to the close.',
     },
     {
         num: '02',
-        tag: 'Step Two',
-        title: 'Detect Insights',
-        sub: 'Our AI engine surfaces hidden objections and buyer intent signals 4× faster than human perception, all while you stay focused on the call.',
+        tag: 'Phase Two',
+        title: 'Detection',
+        sub: 'Patterns reveal what logic usually hides. Surface hidden objections and buyer intent signals before they are voiced.',
     },
     {
         num: '03',
-        tag: 'Step Three',
-        title: 'Close the Deal',
-        sub: 'Get perfect, battle-tested counter scripts instantly projected on your screen. No scrambling — just confident, effective responses.',
+        tag: 'Phase Three',
+        title: 'Strategic Guidance',
+        sub: 'Receive tactical persuasion frameworks for difficult moments. Stay ahead of hesitation with elite response protocols.',
     }
 ];
 
@@ -78,13 +78,13 @@ const HowItWorks = () => {
         <section className="hiw__section" id="how-it-works" ref={sectionRef}>
             <div className="container">
                 <div className="hiw__header">
-                    <span className="eyebrow eyebrow-accent">How it works</span>
+                    <span className="eyebrow eyebrow-accent">The Methodology</span>
                     <h2 className="section-title">
                         Three steps to<br />
                         <span className="italic-accent">every close.</span>
                     </h2>
                     <p className="hiw__subtitle">
-                        From connect to close — hexagon.ai handles the analysis
+                        From activation to close — Hexagon handles the analysis
                         so you can stay fully present with your prospect.
                     </p>
                 </div>

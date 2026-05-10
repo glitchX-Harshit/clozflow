@@ -34,24 +34,24 @@ const OverviewTab = ({ user, navigate }) => (
         {/* Header Section */}
         <div style={{ padding: '3.5rem 0 3rem' }}>
             <div style={{ fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '1rem' }}>
-                Conversational Deal Intelligence
+                Behavioral Deal Intelligence
             </div>
             <h1 style={{ fontSize: 'clamp(2.25rem, 4vw, 3.25rem)', marginBottom: '1rem', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1.05 }}>
                 Welcome back{user?.name ? `, ${user.name}` : ''}.
             </h1>
             <p style={{ color: 'var(--text-dim)', fontSize: '1.125rem', marginBottom: '2.5rem', fontWeight: 500, maxWidth: '560px' }}>
-                Your AI persuasion system is active. Every conversation is being analyzed, coached, and turned into behavioral intelligence.
+                The intelligence layer is active. Decoding hesitation, mapping momentum, and identifying the psychological path to the close.
             </p>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <MagButton
-                    label="Start New Session"
+                    label="Start Strategic Mode"
                     variant="dark"
                     icon={<Phone size={17} />}
                     onClick={() => navigate('/call-brief')}
                     magnetStrength={0.3}
                 />
                 <MagButton
-                    label="View Intelligence"
+                    label="Analyze Conversations"
                     variant="outline"
                     onClick={() => {}}
                     magnetStrength={0.3}
@@ -61,10 +61,10 @@ const OverviewTab = ({ user, navigate }) => (
 
         {/* Stats Row — responsive via CSS */}
         <div className="ov-stats-grid">
-            <StatPill label="Close Rate"       value="37%" color="#22c55e" />
-            <StatPill label="Objections Filed" value="148" color="#6366f1" />
-            <StatPill label="Stalled Deals"    value="41%" color="#f59e0b" />
-            <StatPill label="High Risk"        value="22%" color="#ef4444" />
+            <StatPill label="Close Velocity"       value="37%" color="#22c55e" />
+            <StatPill label="Psychological Leverage" value="148" color="#6366f1" />
+            <StatPill label="Momentum Index"    value="41%" color="#f59e0b" />
+            <StatPill label="High Intensity"        value="22%" color="#ef4444" />
         </div>
 
         {/* Intelligence Modules — responsive via CSS */}
@@ -73,22 +73,22 @@ const OverviewTab = ({ user, navigate }) => (
                 <div style={{ background: 'rgba(99,102,241,0.1)', width: '44px', height: '44px', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                     <ShieldCheck size={20} color="#6366f1" />
                 </div>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Deal Risk Engine</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>Detect hesitation, resistance, and trust failure in real-time. Every deal risk is scored and surfaced.</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Risk Mitigation</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>Detect hesitation and trust failure in real-time. Every deal risk is mapped against behavioral benchmarks.</p>
             </div>
             <div className="card card-hover" style={{ padding: '2rem' }}>
                 <div style={{ background: 'rgba(34,197,94,0.1)', width: '44px', height: '44px', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                     <TrendingUp size={20} color="#22c55e" />
                 </div>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Strategy Intelligence</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>Track which persuasion strategies close deals. ROI reframe, risk reversal, controlled challenge — measured.</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Strategic Influence</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>Track which persuasion frameworks close deals. Controlled challenge and perspective shifts — measured.</p>
             </div>
             <div className="card card-hover" style={{ padding: '2rem' }}>
                 <div style={{ background: 'rgba(168,85,247,0.1)', width: '44px', height: '44px', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                     <MessageSquare size={20} color="#a855f7" />
                 </div>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Behavioral Coaching</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>AI identifies missed moments, weak responses, and high-leverage opportunities you didn't take.</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, marginBottom: '0.625rem' }}>Behavioral Patterning</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>AI identifies missed moments and high-leverage opportunities that logic usually hides.</p>
             </div>
         </div>
 
@@ -102,8 +102,8 @@ const OverviewTab = ({ user, navigate }) => (
             </div>
             <div className="card" style={{ padding: '5rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
                 <div style={{ marginBottom: '1.25rem', opacity: 0.1 }}><History size={56} /></div>
-                <p style={{ fontWeight: 700, fontSize: '1rem' }}>No sessions yet</p>
-                <p style={{ fontSize: '0.8375rem', color: 'var(--text-dim)', marginTop: '0.375rem' }}>Start a call to activate your intelligence layer.</p>
+                <p style={{ fontWeight: 700, fontSize: '1rem' }}>No conversations analyzed yet.</p>
+                <p style={{ fontSize: '0.8375rem', color: 'var(--text-dim)', marginTop: '0.375rem' }}>The intelligence layer activates once conversations begin.</p>
             </div>
         </div>
     </div>

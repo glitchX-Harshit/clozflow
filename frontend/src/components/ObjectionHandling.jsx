@@ -6,9 +6,9 @@ import './ObjectionHandling.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const OBJECTIONS = [
-    { type: 'warning', label: '💰 Budget Concern', text: '"$5,000 is way over what we allocated for this quarter."', footer: 'High-probability objection' },
-    { type: 'danger',  label: '🧩 Complexity Risk', text: '"We tried another AI tool last year and it was impossible to onboard."', footer: 'Onboarding focus needed' },
-    { type: 'error',   label: '🔗 Integration Gap', text: '"If this doesn\'t sync with HubSpot, it\'s a non-starter."', footer: 'Native integration available' },
+    { type: 'warning', label: '💰 Budget Concern', text: '"$5,000 is way over what we allocated for this quarter."', footer: 'Probability: High Resistance' },
+    { type: 'danger',  label: '🧩 Complexity Risk', text: '"We tried another AI tool last year and it was impossible to onboard."', footer: 'Focus: Trust Rebuild' },
+    { type: 'error',   label: '🔗 Integration Gap', text: '"If this doesn\'t sync with HubSpot, it\'s a non-starter."', footer: 'Signal: Immediate Friction' },
 ];
 
 const ObjectionHandling = () => {
@@ -58,14 +58,14 @@ const ObjectionHandling = () => {
         <section className="obj__section" id="objections" ref={sectionRef}>
             <div className="container">
                 <div className="obj__header">
-                    <span className="eyebrow eyebrow-accent">Objection Handling</span>
+                    <span className="eyebrow eyebrow-accent">Friction Detection</span>
                     <h2 className="section-title">
-                        Surface hidden friction<br />
-                        <span className="italic-accent">before you lose the deal.</span>
+                        The difference between interest and commitment<br />
+                        <span className="italic-accent">is usually emotional clarity.</span>
                     </h2>
                     <p className="obj__header-sub">
-                        hexagon.ai detects subtle tonality shifts and hesitation patterns,
-                        alerting you to objections the second they surface.
+                        Most objection handling is reactive. Hexagon helps you stay ahead 
+                        of hesitation by decoding behavioral signals in real‑time.
                     </p>
                 </div>
 

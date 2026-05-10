@@ -27,8 +27,8 @@ const Integrations = () => (
                         <span className="italic-accent">your stack.</span>
                     </h2>
                     <p className="int__desc">
-                        hexagon.ai connects natively with the tools your team
-                        already uses. From CRMs to video calls — we're everywhere your deals happen.
+                        The intelligence layer is platform agnostic. Hexagon connects 
+                        natively with the environments where your conversations happen.
                     </p>
                     <MagButton label="See all integrations" variant="dark" magnetStrength={0.35} />
                 </div>

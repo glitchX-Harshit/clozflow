@@ -268,9 +268,9 @@ const HistoryView = () => {
     if (calls.length === 0) return (
         <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:20, padding:'6rem 2rem', textAlign:'center' }}>
             <div style={{ marginBottom:'1.5rem', opacity:0.1 }}><Clock size={64} /></div>
-            <h3 style={{ fontWeight:800, fontSize:'1.5rem', marginBottom:'0.75rem' }}>No sessions yet</h3>
+            <h3 style={{ fontWeight:800, fontSize:'1.5rem', marginBottom:'0.75rem' }}>No conversations analyzed yet</h3>
             <p style={{ fontSize:'0.9375rem', color:'var(--text-dim)', maxWidth:'380px', margin:'0 auto' }}>
-                Your deep-session intelligence will populate here after your first coached conversation.
+                Every conversation leaves behavioral signals behind. The intelligence layer activates once conversations begin.
             </p>
         </div>
     );

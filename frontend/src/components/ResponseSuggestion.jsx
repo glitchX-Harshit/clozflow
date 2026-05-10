@@ -7,17 +7,17 @@ const ResponseSuggestion = () => (
         <div className="container">
             <div className="resp__layout">
                 <div className="resp__text">
-                    <span className="eyebrow eyebrow-accent">AI Response Engine</span>
+                    <span className="eyebrow eyebrow-accent">Strategic Guidance</span>
                     <h2 className="section-title">
-                        The perfect<br />
-                        <span className="italic-accent">answer. Always.</span>
+                        Strategic responses designed for<br />
+                        <span className="italic-accent">emotionally complex moments.</span>
                     </h2>
                     <p className="resp__desc">
-                        Never be caught off-guard. Hexagon surfaces the ideal
-                        rebuttal in under 200ms — tested across millions of 
-                        high-stakes conversations.
+                        Sales conversations break when confidence disappears. Hexagon 
+                        provides the psychological response frameworks needed to 
+                        maintain momentum in high‑stakes moments.
                     </p>
-                    <MagButton label="See it in action" variant="dark" magnetStrength={0.35} />
+                    <MagButton label="See the Intelligence Layer" variant="dark" magnetStrength={0.35} />
                 </div>
 
                 <div className="resp__visual">
@@ -28,14 +28,14 @@ const ResponseSuggestion = () => (
                     <div className="resp__card resp__card--primary">
                         <div className="resp__card-label resp__card-label--accent">
                             <Zap size={11} />
-                            Hexagon rebuttal · confidence 97%
+                            Hexagon rebuttal · confidence 98%
                         </div>
                         <p>
                             "Switching costs are a real concern — I respect that. We actually offer a white-glove 
                             migration service that most clients complete in under 48 hours. Can I walk you through 
                             how we handled it for [similar company]?"
                         </p>
-                        <div className="resp__card-foot">Strategy: Empathize → Diffuse → Redirect</div>
+                        <div className="resp__card-foot">Strategy: Psychological Reframing</div>
                     </div>
                 </div>
             </div>

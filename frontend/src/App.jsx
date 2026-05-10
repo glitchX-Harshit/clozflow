@@ -14,20 +14,22 @@ import Pricing from './components/Pricing';
 import Footer from './components/Footer';
 import CrowdSection from './components/CrowdSection';
 import CrowdCanvasSection from './components/CrowdCanvasSection';
+import ThreeBackground from './components/ThreeBackground';
 
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import CallBriefing from './pages/CallBriefing';
 import LiveCall from './pages/LiveCall';
 import PostCallSummary from './pages/PostCallSummary';
-
 function LandingPage() {
     const navigate = useNavigate();
 
     return (
-        <main>
-            <Navbar
-                onGetStarted={() => navigate('/dashboard')}
+        <main style={{ position: 'relative' }}>
+            <ThreeBackground />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                <Navbar
+                    onGetStarted={() => navigate('/dashboard')}
                 onSignup={() => navigate('/auth', { state: { view: 'signup' } })}
                 onLogin={() => navigate('/auth', { state: { view: 'login' } })}
             />
@@ -42,6 +44,7 @@ function LandingPage() {
             <CrowdSection />
             <CrowdCanvasSection />
             <Footer />
+            </div>
         </main>
     );
 }
