@@ -2,7 +2,6 @@ import { useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Float, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
-import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -107,18 +106,6 @@ const ThreeBackground = () => {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        const lenis = new Lenis({
-            lerp: 0.1,
-            smoothWheel: true,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-
-        requestAnimationFrame(raf);
-
         // Visibility Logic - using a more robust check
         let ctx = gsap.context(() => {
             const triggerElement = document.querySelector('.crowd__section');
@@ -136,7 +123,6 @@ const ThreeBackground = () => {
         }, containerRef);
 
         return () => {
-            lenis.destroy();
             ctx.revert();
         };
     }, []);
