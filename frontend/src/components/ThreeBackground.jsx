@@ -1,56 +1,64 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Float, MeshTransmissionMaterial, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
+import { Environment, Float, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
 import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Highly optimized shape component
+gsap.registerPlugin(ScrollTrigger);
+
+// Simplified Shape to debug visibility
 const Shape = () => {
     const meshRef = useRef();
     const { viewport, mouse } = useThree();
 
-    // Responsively scale the model based on viewport width
-    const isMobile = viewport.width < 5; // viewport.width is in threejs units
-    const responsiveScale = isMobile ? 0.75 : 1.4;
+    const isMobile = viewport.width < 5; 
+    const responsiveScale = isMobile ? 0.8 : 1.5;
 
     useFrame((state, delta) => {
         if (!meshRef.current) return;
+        meshRef.current.rotation.x += delta * 0.2;
+        meshRef.current.rotation.y += delta * 0.25;
         
-        // Gentle, smooth rotation using delta for consistent speed regardless of FPS
-        meshRef.current.rotation.x += delta * 0.1;
-        meshRef.current.rotation.y += delta * 0.15;
+        const targetX = (mouse.x * viewport.width) / 10;
+        const targetY = (mouse.y * viewport.height) / 10;
+        meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
+        meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
+
+        // LIGHTER VIBRANT TECH PALETTE
+        const time = state.clock.getElapsedTime();
+        const phase = (Math.sin(time * 0.3) + 1) / 2;
         
-        // Lightweight parallax effect
-        const targetX = (mouse.x * viewport.width) / 12;
-        const targetY = (mouse.y * viewport.height) / 12;
+        const cobalt = new THREE.Color('#3b82f6'); 
+        const cyan = new THREE.Color('#00f2ff'); 
+        const sky = new THREE.Color('#7dd3fc'); 
+        const teal = new THREE.Color('#00d4ff');
         
-        meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.03;
-        meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.03;
+        let mixedColor;
+        if (phase < 0.33) {
+            mixedColor = cobalt.clone().lerp(cyan, phase * 3);
+        } else if (phase < 0.66) {
+            mixedColor = cyan.clone().lerp(sky, (phase - 0.33) * 3);
+        } else {
+            mixedColor = sky.clone().lerp(teal, (phase - 0.66) * 3);
+        }
+        
+        meshRef.current.material.color = mixedColor;
+        meshRef.current.material.emissive = mixedColor;
+        meshRef.current.material.emissiveIntensity = 0.4;
     });
 
     return (
-        <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.5}>
+        <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
             <mesh ref={meshRef} position={[0, 0, 0]} scale={responsiveScale}>
-                {/* Optimized geometry segments */}
-                <torusKnotGeometry args={[1, 0.35, 96, 24]} />
-                <MeshTransmissionMaterial 
-                    backside
-                    samples={4} 
-                    thickness={0.6} 
-                    chromaticAberration={0.08}
-                    anisotropy={0.5}
-                    distortion={0.4}
-                    distortionScale={0.5}
-                    temporalDistortion={0.1}
-                    iridescence={0.3}
-                    iridescenceIOR={1.1}
-                    iridescenceThicknessRange={[0, 1000]}
-                    color="#ffffff" 
-                    attenuationDistance={0.7}
-                    attenuationColor="#ff4d4d" 
-                    transparent
-                    roughness={0.02}
-                    ior={1.45}
+                <torusKnotGeometry args={[1, 0.35, 128, 32]} />
+                <meshStandardMaterial 
+                    color="#1e40af" 
+                    roughness={0.1} 
+                    metalness={0.8}
+                    emissive="#1e40af"
+                    emissiveIntensity={0.2}
                 />
             </mesh>
         </Float>
@@ -59,16 +67,16 @@ const Shape = () => {
 
 const ParticleSystem = () => {
     const { viewport } = useThree();
-    const count = viewport.width < 5 ? 30 : 50; // Fewer particles on mobile
+    const count = 40;
     const mesh = useRef();
     
     const particles = useMemo(() => {
         const temp = [];
         for (let i = 0; i < count; i++) {
-            const x = (Math.random() - 0.5) * 25;
-            const y = (Math.random() - 0.5) * 25;
-            const z = (Math.random() - 0.5) * 15;
-            temp.push({ pos: new THREE.Vector3(x, y, z), speed: Math.random() * 0.005 + 0.002 });
+            const x = (Math.random() - 0.5) * 20;
+            const y = (Math.random() - 0.5) * 20;
+            const z = (Math.random() - 0.5) * 10;
+            temp.push({ pos: new THREE.Vector3(x, y, z), speed: Math.random() * 0.01 + 0.005 });
         }
         return temp;
     }, [count]);
@@ -77,11 +85,10 @@ const ParticleSystem = () => {
 
     useFrame(() => {
         if (!mesh.current) return;
-        particles.forEach((p, i) => {
-            p.pos.y += p.speed;
-            if (p.pos.y > 12) p.pos.y = -12;
-            
-            dummy.position.copy(p.pos);
+        particles.forEach((particle, i) => {
+            particle.pos.y += particle.speed;
+            if (particle.pos.y > 10) particle.pos.y = -10;
+            dummy.position.copy(particle.pos);
             dummy.updateMatrix();
             mesh.current.setMatrixAt(i, dummy.matrix);
         });
@@ -89,59 +96,87 @@ const ParticleSystem = () => {
     });
 
     return (
-        <instancedMesh ref={mesh} args={[null, null, count]} frustumCulled={false}>
-            <sphereGeometry args={[0.012, 6, 6]} />
-            <meshBasicMaterial color="#ff4d4d" transparent opacity={0.25} />
+        <instancedMesh ref={mesh} args={[null, null, count]}>
+            <sphereGeometry args={[0.02, 8, 8]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={0.3} />
         </instancedMesh>
     );
 };
 
 const ThreeBackground = () => {
+    const containerRef = useRef(null);
+
     useEffect(() => {
-        const lenis = new Lenis();
+        const lenis = new Lenis({
+            lerp: 0.1,
+            smoothWheel: true,
+        });
+
         function raf(time) {
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
+
         requestAnimationFrame(raf);
+
+        // Visibility Logic - using a more robust check
+        let ctx = gsap.context(() => {
+            const triggerElement = document.querySelector('.crowd__section');
+            if (triggerElement) {
+                gsap.to(containerRef.current, {
+                    opacity: 0,
+                    scrollTrigger: {
+                        trigger: triggerElement,
+                        start: 'top 80%',
+                        end: 'bottom 20%',
+                        toggleActions: 'play reverse play reverse'
+                    }
+                });
+            }
+        }, containerRef);
+
         return () => {
             lenis.destroy();
+            ctx.revert();
         };
     }, []);
 
     return (
-        <div className="three-bg-wrapper" style={{ 
-            position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            width: '100vw', 
-            height: '100vh', 
-            zIndex: 0, 
-            pointerEvents: 'none',
-            background: 'var(--bg)'
-        }}>
+        <div 
+            ref={containerRef}
+            className="three-bg-fixed-container"
+            style={{ 
+                position: 'fixed', 
+                top: 0, 
+                left: 0, 
+                width: '100vw', 
+                height: '100vh', 
+                zIndex: 0, 
+                pointerEvents: 'none',
+                opacity: 1
+            }}
+        >
             <Canvas 
                 camera={{ position: [0, 0, 8], fov: 45 }} 
                 gl={{ 
                     antialias: true,
                     alpha: true,
                     powerPreference: "high-performance",
-                    stencil: false,
-                    depth: true
+                    preserveDrawingBuffer: true
                 }}
                 dpr={[1, 2]}
             >
                 <AdaptiveDpr pixelated />
                 <AdaptiveEvents />
                 
-                <ambientLight intensity={1.8} /> 
-                <spotLight position={[15, 25, 15]} angle={0.5} penumbra={1} intensity={4} castShadow={false} />
-                <pointLight position={[-15, -15, -10]} intensity={2.5} color="#ff4d4d" />
+                <ambientLight intensity={1} /> 
+                <pointLight position={[10, 10, 10]} intensity={2.5} color="#3b82f6" />
+                <pointLight position={[-10, -10, 5]} intensity={1.5} color="#1e40af" />
                 
                 <Shape />
                 <ParticleSystem />
                 
-                <Environment preset="studio" />
+                <Environment preset="city" />
             </Canvas>
         </div>
     );

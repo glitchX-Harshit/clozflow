@@ -1,10 +1,10 @@
 /* ══════════════════════════════════════════════════════
    MAG-BUTTON — Awwwards-grade hover animation
    ─ Magnetic pull
-   ─ Liquid fill (radial reveal, brand RED accent)
+   ─ Liquid fill (radial reveal, brand NAVY accent)
    ─ Split-text slide
    ─ Ultra-smooth spring transitions
-══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════ */
 
 .mag-btn {
     position: relative;
@@ -66,9 +66,9 @@
 }
 
 /* ══ LIQUID FILL BLOB ══════════════════════════════
-   ALL variants fill with brand red (--accent = #dc2626)
+   ALL variants fill with brand navy (--accent)
    for a unified, bold identity.
-══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════ */
 .mag-fill {
     --ox: 50%;
     --oy: 50%;
@@ -96,12 +96,12 @@
         opacity   0.08s ease;
 }
 
-/* Accent variant uses a deeper red fill */
+/* Accent variant uses a deeper navy fill */
 .mag-btn--accent .mag-fill {
     background: radial-gradient(
         circle at var(--ox) var(--oy),
-        #b91c1c 0%,
-        #b91c1c 100%
+        #172554 0%, /* midnight navy */
+        #172554 100%
     );
 }
 
@@ -111,7 +111,7 @@
     opacity: 1;
 }
 
-/* ══ TEXT — flip to white when red fills ═══════════ */
+/* ══ TEXT — flip to white when navy fills ═══════════ */
 .mag-inner {
     position: relative;
     z-index: 1;
@@ -165,13 +165,13 @@
     color: #fff;
 }
 
-/* ══ RED GLOW lift — all variants ══════════════════ */
+/* ══ NAVY GLOW lift — all variants ══════════════════ */
 .mag-btn--dark.is-hovered,
 .mag-btn--outline.is-hovered,
 .mag-btn--accent.is-hovered {
     box-shadow:
-        0 24px 60px rgba(220, 38, 38, 0.30),
-        0  8px 20px rgba(220, 38, 38, 0.18);
+        0 24px 60px rgba(30, 64, 175, 0.30),
+        0  8px 20px rgba(30, 64, 175, 0.18);
 }
 
 /* ══ Active press ══════════════════════════════════ */

@@ -16,40 +16,20 @@ const Hero = ({ onGetStarted }) => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            gsap.set(headRef.current, { force3D: true, willChange: 'transform' });
-
             const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.2 } });
 
-            // Stagger the title lines from below with clip reveal
             tl.fromTo('.hero__line',
                 { y: '110%', rotationX: -8 },
                 { y: '0%', rotationX: 0, stagger: 0.1, duration: 1.5 }, 0.4)
-
-            // Subtitle and description fade in
               .fromTo(subRef.current,
                 { y: 24, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.9 }, 1.2)
-
+                { y: 0, opacity: 1 }, 1.2)
               .fromTo(actionsRef.current,
                 { y: 16, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8 }, 1.4)
-
-            // Bottom strip slides in
+                { y: 0, opacity: 1 }, 1.4)
               .fromTo(stripRef.current,
                 { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.8 }, 1.6);
-
-            // Scroll parallax for the title
-            gsap.to(headRef.current, {
-                y: '10%',
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: heroRef.current,
-                    start: 'top top',
-                    end: 'bottom top',
-                    scrub: 1,
-                }
-            });
+                { y: 0, opacity: 1 }, 1.6);
         }, heroRef);
 
         return () => ctx.revert();
@@ -65,7 +45,10 @@ const Hero = ({ onGetStarted }) => {
                     {/* Row 1 — Left aligned */}
                     <div className="hero__row hero__row--1">
                         <div className="hero__overflow">
-                            <span className="hero__line">CONVERSATIONS</span>
+                            <span className="hero__line">
+                                <span className="u-hide-mobile">CONVERSATIONS</span>
+                                <span className="u-show-mobile">CONVO</span>
+                            </span>
                         </div>
                     </div>
 
