@@ -1,4 +1,5 @@
 import { Check, Zap, Shield, Star } from 'lucide-react';
+import MagButton from './MagButton';
 import './Pricing.css';
 
 const STARTER = [
@@ -21,12 +22,12 @@ const Pricing = () => (
     <section className="pr__section" id="pricing">
         <div className="container">
             <div className="pr__header">
-                <span className="eyebrow eyebrow-accent">Investment</span>
+                <span className="eyebrow eyebrow-accent">Access</span>
                 <h2 className="section-title">
-                    Transparent pricing.<br />
-                    <span className="italic-accent">Massive return.</span>
+                    Select your<br />
+                    <span className="italic-accent">intelligence tier.</span>
                 </h2>
-                <p className="pr__subtitle">No contracts. No setup fees. Cancel anytime.</p>
+                <p className="pr__subtitle">The behavioral layer for elite strategic closers.</p>
             </div>
 
             <div className="pr__cards">
@@ -34,18 +35,18 @@ const Pricing = () => (
                 <div className="pr__card">
                     <div className="pr__tag">
                         <Zap size={13} />
-                        Starter
+                        Individual
                     </div>
                     <div className="pr__price-row">
                         <span className="pr__curr">$</span>
                         <span className="pr__num">49</span>
                         <span className="pr__per">/mo</span>
                     </div>
-                    <p className="pr__tagline">For solo closers who want the edge.</p>
+                    <p className="pr__tagline">For the solo strategic closer.</p>
                     <ul className="pr__feats">
                         {STARTER.map((f, i) => <li key={i}><Check size={14} />{f}</li>)}
                     </ul>
-                    <button className="btn btn-outline pr__cta">Start Free Trial</button>
+                    <MagButton label="Enter Workspace" variant="outline" fullWidth magnetStrength={0.3} />
                 </div>
 
                 {/* Pro — inverted */}
@@ -55,34 +56,34 @@ const Pricing = () => (
                     </div>
                     <div className="pr__tag">
                         <Shield size={13} />
-                        Professional
+                        Strategic Team
                     </div>
                     <div className="pr__price-row">
                         <span className="pr__curr">$</span>
                         <span className="pr__num">129</span>
                         <span className="pr__per">/user/mo</span>
                     </div>
-                    <p className="pr__tagline">For teams who need the full arsenal.</p>
+                    <p className="pr__tagline">For teams scaling psychological leverage.</p>
                     <ul className="pr__feats">
                         {PRO.map((f, i) => <li key={i}><Check size={14} />{f}</li>)}
                     </ul>
-                    <button className="btn pr__cta pr__cta--primary">Get Started</button>
+                    <MagButton label="Enter Workspace" variant="dark" fullWidth magnetStrength={0.3} />
                 </div>
 
                 {/* Enterprise */}
                 <div className="pr__card">
-                    <div className="pr__tag">Enterprise</div>
+                    <div className="pr__tag">Intelligence Layer</div>
                     <div className="pr__price-row">
                         <span className="pr__num" style={{ fontSize: '2.5rem' }}>Custom</span>
                     </div>
-                    <p className="pr__tagline">For large teams with specific needs.</p>
+                    <p className="pr__tagline">For organizations requiring custom behavioral models.</p>
                     <ul className="pr__feats">
-                        <li><Check size={14} />Everything in Pro</li>
-                        <li><Check size={14} />SSO & SAML</li>
-                        <li><Check size={14} />Dedicated CSM</li>
-                        <li><Check size={14} />Custom AI Training</li>
+                        <li><Check size={14} />Everything in Team</li>
+                        <li><Check size={14} />Custom Behavioral Training</li>
+                        <li><Check size={14} />SSO & Protocol Security</li>
+                        <li><Check size={14} />Dedicated Strategic Lead</li>
                     </ul>
-                    <button className="btn btn-outline pr__cta">Contact Sales</button>
+                    <MagButton label="Contact Strategy" variant="outline" fullWidth magnetStrength={0.3} />
                 </div>
             </div>
 

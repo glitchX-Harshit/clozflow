@@ -7,14 +7,14 @@ const Footer = () => (
                 {/* Brand */}
                 <div className="ft__brand">
                     <div className="ft__logo">
-                        <div className="ft__logo-mark">K</div>
+                        <div className="ft__logo-mark">H</div>
                         <span className="ft__logo-text">
-                            hexagon<span className="ft__logo-dot">.</span>ai
+                            Hexagon
                         </span>
                     </div>
                     <p className="ft__brand-desc">
-                        Precision intelligence for elite sales professionals.
-                        Close more. Faster. Consistently.
+                        Behavioral intelligence for elite strategic closers.
+                        Decisive. Minimalist. Intelligent.
                     </p>
                 </div>
 
@@ -51,7 +51,7 @@ const Footer = () => (
             </div>
 
             <div className="ft__bottom">
-                <p className="ft__copy">© 2025 Hexagon.ai — All rights reserved.</p>
+                <p className="ft__copy">© 2025 Hexagon — All rights reserved.</p>
                 <div className="ft__bottom-links">
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>

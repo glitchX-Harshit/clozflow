@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { gsap } from 'gsap';
+import MagButton from './MagButton';
 import './Signup.css';
 
 const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
@@ -114,9 +115,14 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
 
                     {error && <div style={{ color: '#ef4444', marginBottom: '1rem', fontSize: '0.8125rem', textAlign: 'center', fontWeight: 600 }}>{error}</div>}
 
-                    <button className="su-submit interactive" type="submit" disabled={loading}>
-                        {loading ? 'Authenticating...' : 'Sign In'}
-                    </button>
+                    <MagButton
+                        label={loading ? 'Authenticating...' : 'Sign In'}
+                        type="submit"
+                        disabled={loading}
+                        variant="dark"
+                        fullWidth
+                        magnetStrength={0.3}
+                    />
                 </form>
 
                 <p className="su-login-prompt">

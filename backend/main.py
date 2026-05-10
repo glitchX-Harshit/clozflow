@@ -6,12 +6,15 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from database import engine, Base
 from routers import auth, calls
+from routers import user as user_router
 from routers.auth import get_current_user
 from models import User
 from fastapi import Depends
+import os
 
 # Initialize Database tables
 Base.metadata.create_all(bind=engine)
@@ -35,6 +38,11 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(calls.router)
+app.include_router(user_router.router)
+
+# Serve uploaded avatars
+os.makedirs("static/avatars", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 import json
 from pydantic import BaseModel

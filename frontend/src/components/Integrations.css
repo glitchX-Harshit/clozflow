@@ -1,6 +1,6 @@
 /* ══ INTEGRATIONS ════════════════════════════════════ */
 .int__section {
-    background: var(--surface);
+    background: transparent;
     padding: 9rem 0;
     position: relative;
 }

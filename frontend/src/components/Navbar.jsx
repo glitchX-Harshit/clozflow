@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import MagButton from './MagButton';
 import './Navbar.css';
 
 const LINKS = [
@@ -32,9 +33,9 @@ const Navbar = ({ onSignup, onLogin }) => {
                 <div className="nb__inner">
                     {/* Logo */}
                     <a href="#" className="nb__logo">
-                        <span className="nb__mark" aria-hidden="true">K</span>
+                        <span className="nb__mark" aria-hidden="true">H</span>
                         <span className="nb__wordmark">
-                            hexagon<span className="nb__dot">.</span>ai
+                            Hexagon
                         </span>
                     </a>
 
@@ -49,12 +50,20 @@ const Navbar = ({ onSignup, onLogin }) => {
 
                     {/* Actions */}
                     <div className="nb__actions">
-                        <button className="nb__login" onClick={onLogin}>
-                            Log in
-                        </button>
-                        <button className="nb__cta btn btn-primary" onClick={onSignup}>
-                            Get started
-                        </button>
+                        <MagButton
+                            label="Log in"
+                            variant="outline"
+                            onClick={onLogin}
+                            className="nb__login-mag"
+                            magnetStrength={0.35}
+                        />
+                        <MagButton
+                            label="Enter Workspace"
+                            variant="dark"
+                            onClick={onSignup}
+                            className="nb__cta-mag"
+                            magnetStrength={0.35}
+                        />
                         <button
                             className="nb__hamburger"
                             onClick={() => setMobileOpen(o => !o)}
@@ -76,12 +85,20 @@ const Navbar = ({ onSignup, onLogin }) => {
                     ))}
                 </div>
                 <div className="nb__drawer-actions">
-                    <button className="btn btn-outline" style={{width:'100%', justifyContent:'center'}} onClick={() => { onLogin(); close(); }}>
-                        Log in
-                    </button>
-                    <button className="btn btn-primary" style={{width:'100%', justifyContent:'center'}} onClick={() => { onSignup(); close(); }}>
-                        Get started
-                    </button>
+                    <MagButton
+                        label="Log in"
+                        variant="outline"
+                        fullWidth
+                        magnetStrength={0.25}
+                        onClick={() => { onLogin(); close(); }}
+                    />
+                    <MagButton
+                        label="Enter Workspace"
+                        variant="dark"
+                        fullWidth
+                        magnetStrength={0.25}
+                        onClick={() => { onSignup(); close(); }}
+                    />
                 </div>
             </div>
         </>

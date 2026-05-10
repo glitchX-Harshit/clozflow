@@ -5,6 +5,8 @@
 .resp__section {
     background: var(--surface);
     padding: 9rem 0;
+    position: relative;
+    z-index: 10;
 }
 
 .resp__layout {

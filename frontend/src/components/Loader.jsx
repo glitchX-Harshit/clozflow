@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import './Loader.css';
 
-/* A real sales objection → hexagon.ai responds */
-const OBJECTION = `"We don't have budget for this right now."`;
-const RESPONSE = `Surfacing best response... 94% confidence.`;
+/* A real strategic moment → Hexagon responds */
+const OBJECTION = `"Pricing seems a bit high compared to our current setup."`;
+const RESPONSE = `Detecting hesitation... Mapping ROI reframe. 98% certainty.`;
 
 const typeInto = (el, text, speed = 28) =>
     new Promise(resolve => {
@@ -108,7 +108,7 @@ const Loader = ({ onComplete }) => {
                 {/* hexagon.ai response — right */}
                 <div className="ld-bubble ld-hexagonai" style={{ display: 'none' }}>
                     <div className="ld-bubble-who hexagon">
-                        <span className="ld-bwdot">✦</span> hexagon.ai
+                        <span className="ld-bwdot">✦</span> Hexagon
                     </div>
                     <p ref={respRef}></p>
                 </div>
@@ -117,10 +117,8 @@ const Loader = ({ onComplete }) => {
 
             {/* Brand line at bottom */}
             <div className="ld-brand" ref={brandRef}>
-                <span className="ld-brand-nx">hexagon</span>
-                <span className="ld-brand-dot">.</span>
-                <span className="ld-brand-ai">ai</span>
-                <span className="ld-brand-tag">— AI Sales Assistant</span>
+                <span className="ld-brand-nx">Hexagon</span>
+                <span className="ld-brand-tag">— Behavioral Intelligence Layer</span>
             </div>
 
         </div>

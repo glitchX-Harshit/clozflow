@@ -10,6 +10,7 @@ import {
     Briefcase,
     Zap
 } from 'lucide-react';
+import MagButton from '../components/MagButton';
 import './CallBriefing.css';
 
 const CallBriefing = () => {
@@ -132,10 +133,16 @@ const CallBriefing = () => {
 
                     {error && <div className="cb-error">{error}</div>}
 
-                    <button className="cb-submit interactive" type="submit" disabled={loading}>
-                        <Sparkles size={18} />
-                        {loading ? 'Initializing Engine...' : 'Launch Intelligence Session'}
-                    </button>
+                    <MagButton
+                        label={loading ? 'Initializing Engine...' : 'Launch Intelligence Session'}
+                        type="submit"
+                        disabled={loading}
+                        variant="dark"
+                        fullWidth
+                        icon={<Sparkles size={18} />}
+                        magnetStrength={0.25}
+                        className="cb-submit-mag"
+                    />
                     
                     <div className="cb-footnote">
                         <CheckCircle2 size={14} color="#10b981" />

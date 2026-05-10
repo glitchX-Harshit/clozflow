@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Target, Users, TrendingUp, Handshake } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import MagButton from './MagButton';
 import './UseCases.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -125,9 +126,7 @@ const UseCases = () => {
                             <span className="uc__preview-label">Live Example</span>
                             <p className="uc__preview-text">{persona.preview}</p>
                         </div>
-                        <button className="btn btn-primary" style={{ marginTop: '0.5rem' }}>
-                            Learn more →
-                        </button>
+                        <MagButton label="Learn more" variant="dark" magnetStrength={0.35} className="uc__cta" />
                     </div>
                 </div>
             </div>

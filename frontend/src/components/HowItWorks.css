@@ -1,7 +1,7 @@
 /* ══ HOW IT WORKS ════════════════════════════════════ */
 .hiw__section {
   padding: 10rem 0;
-  background: var(--bg);
+  background: transparent;
   position: relative;
 }
 
@@ -75,8 +75,8 @@
 /* Step card */
 .hiw__step-card {
   max-width: 380px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
   padding: 2.5rem 2.75rem;
@@ -98,9 +98,9 @@
   right: 1.75rem;
   font-family: var(--font-display);
   font-size: 5rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
-  opacity: 0.06;
+  opacity: 0.05;
   line-height: 1;
   letter-spacing: -0.06em;
   user-select: none;
@@ -123,7 +123,7 @@
 
 .hiw__step-title {
   font-size: 1.625rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.15;
   margin-bottom: 0.875rem;

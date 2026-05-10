@@ -1,6 +1,6 @@
 /* ══ PRICING ═════════════════════════════════════════ */
 .pr__section {
-    background: var(--bg);
+    background: transparent;
     padding: 10rem 0;
     position: relative;
 }

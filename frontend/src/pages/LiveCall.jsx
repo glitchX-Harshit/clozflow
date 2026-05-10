@@ -147,7 +147,7 @@ const LiveCall = () => {
                     <div className="db-logo-icon" style={{ background: 'var(--accent)' }}>
                         <Zap size={18} color="white" strokeWidth={2.5} />
                     </div>
-                    <span className="db-logo-text">hexagon.ai</span>
+                    <span className="db-logo-text">Hexagon</span>
                 </div>
 
                 <nav className="db-nav">
@@ -192,7 +192,7 @@ const LiveCall = () => {
                     
                     {!isListening ? (
                         <button className="btn btn-primary interactive shadow-sm" onClick={handleStart} style={{ padding: '0 2rem', height: '56px', borderRadius: '12px', fontSize: '1rem' }}>
-                            <Mic size={18} /> Start Monitoring
+                            <Mic size={18} /> Start Strategic Mode
                         </button>
                     ) : (
                         <div style={{ display: 'flex', gap: '1rem' }}>
@@ -260,7 +260,7 @@ const LiveCall = () => {
                     {/* MIDDLE PANEL - AI COACH */}
                     <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                         <div className="db-panel-header" style={{ marginBottom: '2rem' }}>
-                            <span className="db-panel-title">Suggested Intelligence</span>
+                            <span className="db-panel-title">Strategic Guidance</span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
                                 <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
                                 <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>AI ACTIVE</span>
@@ -271,13 +271,13 @@ const LiveCall = () => {
                             {!isListening ? (
                                 <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><Zap size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Engine Idle</h4>
-                                    <p style={{ fontSize: '0.9375rem', maxWidth: '300px', margin: '0 auto' }}>Strategic suggestions will appear here once audio analysis begins.</p>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Intelligence Layer Standby</h4>
+                                    <p style={{ fontSize: '0.9375rem', maxWidth: '300px', margin: '0 auto' }}>Strategic guidance will appear here once analysis begins.</p>
                                 </div>
                             ) : !latestSuggestion ? (
                                 <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><BrainCircuit size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Listening for Cues...</h4>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Analyzing Patterns...</h4>
                                 </div>
                             ) : (
                                 <div className="animate-fade-in" style={{ textAlign: 'left' }}>

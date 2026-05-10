@@ -1,0 +1,181 @@
+/* ══════════════════════════════════════════════════════
+   MAG-BUTTON — Awwwards-grade hover animation
+   ─ Magnetic pull
+   ─ Liquid fill (radial reveal, brand RED accent)
+   ─ Split-text slide
+   ─ Ultra-smooth spring transitions
+══════════════════════════════════════════════════════ */
+
+.mag-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    overflow: hidden;
+
+    padding: 0.9rem 2.2rem;
+    border-radius: var(--r-full);
+    min-width: 120px;
+
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    white-space: nowrap;
+
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    /* Magnetic spring */
+    transition:
+        transform    0.62s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow   0.38s cubic-bezier(0.23, 1, 0.32, 1);
+
+    isolation: isolate;
+}
+
+.mag-btn--full { width: 100%; }
+
+/* ── Variants ──────────────────────────────────────── */
+.mag-btn--dark {
+    background: var(--text);
+    color: var(--bg);
+}
+
+.mag-btn--outline {
+    background: transparent;
+    color: var(--text);
+    box-shadow: inset 0 0 0 1.5px rgba(0,0,0,0.18);
+}
+
+.mag-btn--accent {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: var(--shadow-accent);
+}
+
+/* ── Disabled ──────────────────────────────────────── */
+.mag-btn--disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ══ LIQUID FILL BLOB ══════════════════════════════
+   ALL variants fill with brand red (--accent = #dc2626)
+   for a unified, bold identity.
+══════════════════════════════════════════════════════ */
+.mag-fill {
+    --ox: 50%;
+    --oy: 50%;
+
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    border-radius: inherit;
+    transform: scale(0);
+    opacity: 0;
+    transform-origin: var(--ox) var(--oy);
+
+    /* Radial burst from exact cursor position */
+    background: radial-gradient(
+        circle at var(--ox) var(--oy),
+        var(--accent) 0%,
+        var(--accent) 100%
+    );
+
+    /* Butter-smooth spring reveal */
+    transition:
+        transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity   0.08s ease;
+}
+
+/* Accent variant uses a deeper red fill */
+.mag-btn--accent .mag-fill {
+    background: radial-gradient(
+        circle at var(--ox) var(--oy),
+        #b91c1c 0%,
+        #b91c1c 100%
+    );
+}
+
+/* ── Reveal on hover ── */
+.mag-btn.is-hovered .mag-fill {
+    transform: scale(3.2);
+    opacity: 1;
+}
+
+/* ══ TEXT — flip to white when red fills ═══════════ */
+.mag-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 1.1em;
+    color: inherit;
+    transition:
+        transform 0.62s cubic-bezier(0.23, 1, 0.32, 1),
+        color     0.28s ease;
+}
+
+.mag-btn--dark.is-hovered .mag-inner,
+.mag-btn--outline.is-hovered .mag-inner {
+    color: #fff;
+}
+
+/* ══ SPLIT TEXT (slide up on hover) ════════════════ */
+.mag-label {
+    display: block;
+    line-height: 1.1;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Default label slides OUT upward */
+.mag-label--default { transform: translateY(0%); }
+.mag-btn.is-hovered .mag-label--default { transform: translateY(-105%); }
+
+/* Hover label slides IN from below */
+.mag-label--hover {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    transform: translateY(110%);
+}
+.mag-btn.is-hovered .mag-label--hover { transform: translateY(0%); }
+
+/* ══ ICON ══════════════════════════════════════════ */
+.mag-icon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    transition:
+        transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+        color     0.28s ease;
+}
+
+.mag-btn.is-hovered .mag-icon {
+    transform: translateX(4px) rotate(5deg);
+    color: #fff;
+}
+
+/* ══ RED GLOW lift — all variants ══════════════════ */
+.mag-btn--dark.is-hovered,
+.mag-btn--outline.is-hovered,
+.mag-btn--accent.is-hovered {
+    box-shadow:
+        0 24px 60px rgba(220, 38, 38, 0.30),
+        0  8px 20px rgba(220, 38, 38, 0.18);
+}
+
+/* ══ Active press ══════════════════════════════════ */
+.mag-btn:active:not(.mag-btn--disabled) {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s ease !important;
+}

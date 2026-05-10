@@ -117,6 +117,21 @@
     padding: 0.5rem 1.2rem;
 }
 
+/* MagButton overrides for compact navbar sizing */
+.nb__login-mag {
+    min-width: 0 !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+    border-radius: var(--r-full) !important;
+}
+
+.nb__cta-mag {
+    min-width: 0 !important;
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.875rem !important;
+    border-radius: var(--r-full) !important;
+}
+
 /* Hamburger */
 .nb__hamburger {
     display: none;
@@ -190,6 +205,8 @@
     .nb__links { display: none; }
     .nb__hamburger { display: flex; }
     .nb__login { display: none; }
+    .nb__login-mag { display: none; }
+    .nb__cta-mag { display: none; }
 }
 
 @media (max-width: 560px) {
