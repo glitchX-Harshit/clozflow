@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -16,6 +17,7 @@ import CrowdSection from './components/CrowdSection';
 import CrowdCanvasSection from './components/CrowdCanvasSection';
 import ThreeBackground from './components/ThreeBackground';
 import SmoothScroll from './components/SmoothScroll';
+import Loader from './components/Loader';
 
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
@@ -50,10 +52,19 @@ function LandingPage() {
     );
 }
 
+let hasLoaded = false;
+
 function App() {
+    const [showLoader, setShowLoader] = useState(!hasLoaded);
+
+    useEffect(() => {
+        hasLoaded = true;
+    }, []);
+
     return (
         <AuthProvider>
             <SmoothScroll />
+            {showLoader && <Loader onComplete={() => setShowLoader(false)} />}
             <BrowserRouter>
                 <div className="app-root">
                     <Routes>
