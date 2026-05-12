@@ -1,168 +1,44 @@
 /* ================================================================
-   LOADER — Conversation Reveal
+   LOADER — Minimal Awwwards Counter (White Background)
 ================================================================= */
-.ld-root {
+.loader-overlay {
     position: fixed;
     inset: 0;
-    z-index: 9999;
-    background: #fcf9ee;
+    z-index: 999999;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    padding: 2rem;
+    pointer-events: all;
 }
 
-/* ── Waveform ── */
-.ld-wave {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    height: 36px;
-    opacity: 0;
+.loader-pixels {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
 }
 
-.ld-wave-bar {
-    width: 2.5px;
-    height: 100%;
-    background: #ff5e00;
-    border-radius: 10px;
-    transform-origin: center;
-    will-change: transform;
-}
-
-.ld-listening {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.25);
-    margin-left: 1rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    animation: ld-blink 1.2s step-end infinite;
-}
-
-@keyframes ld-blink {
-
-    0%,
-    100% {
-        opacity: 0.2;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
-}
-
-/* ── Chat area ── */
-.ld-chat {
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
+.loader-pixel {
+    background: #ffffff;
     width: 100%;
-    max-width: 480px;
+    height: 100%;
+    /* Slight scale to prevent any grid seam lines */
+    transform: scale(1.05);
+    transform-origin: center;
 }
 
-/* ── Bubble shared ── */
-.ld-bubble {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    max-width: 88%;
-}
-
-.ld-bubble p {
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.55;
-    font-weight: 500;
+.loader-counter {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    z-index: 1;
+    color: #111111;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    min-height: 1.6em;
-}
-
-.ld-bubble-who {
-    font-size: 0.65rem;
+    font-size: clamp(4rem, 12vw, 12rem); /* Massive typography, very Awwwards */
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-/* ── Prospect bubble (left aligned) ── */
-.ld-prospect {
-    align-self: flex-start;
-}
-
-.ld-prospect .ld-bubble-who {
-    color: rgba(0, 0, 0, 0.3);
-}
-
-.ld-prospect p {
-    color: rgba(0, 0, 0, 0.5);
-    font-style: italic;
-}
-
-/* ── hexagon.ai bubble (right aligned, orange accent) ── */
-.ld-hexagonai {
-    transform-origin: bottom right;
-    align-self: flex-end;
-    align-items: flex-end;
-}
-
-.ld-bubble-who.hexagon {
-    color: #ff5e00;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.ld-bwdot {
-    font-size: 0.7rem;
-}
-
-.ld-nxai p {
-    color: #111;
-    font-weight: 600;
-    text-align: right;
-}
-
-/* ── Brand line ── */
-.ld-brand {
-    display: flex;
-    align-items: baseline;
-    gap: 0;
-    opacity: 0;
-}
-
-.ld-brand-nx {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #111;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-}
-
-.ld-brand-dot {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: #ff5e00;
-    margin: 0 1px;
-}
-
-.ld-brand-ai {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: rgba(0, 0, 0, 0.3);
-}
-
-.ld-brand-tag {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.2);
-    margin-left: 1rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    align-self: center;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    will-change: transform, opacity;
 }
