@@ -84,7 +84,7 @@ const SecurityPanel = () => {
                     <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#22c55e', background: 'rgba(34,197,94,0.1)', padding: '0.25rem 0.6rem', borderRadius: 99, textTransform: 'uppercase' }}>Active</span>
                 </div>
                 <button
-                    onClick={() => { logout(); navigate('/'); }}
+                    onClick={async () => { await logout(); navigate('/'); }}
                     style={{ marginTop: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '0.7rem 1.25rem', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text)' }}
                 >
                     <LogOut size={15} /> Log out all devices
@@ -182,7 +182,7 @@ const DangerPanel = () => {
                 setModal(null); setConfirm('');
             } else if (modal === 'account') {
                 await authFetch('/api/user/delete-account', { method: 'DELETE' });
-                logout(); navigate('/');
+                await logout(); navigate('/');
             }
         } finally { setLoading(false); }
     };

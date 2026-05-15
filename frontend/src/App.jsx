@@ -24,29 +24,29 @@ import Dashboard from './pages/Dashboard';
 import CallBriefing from './pages/CallBriefing';
 import LiveCall from './pages/LiveCall';
 import PostCallSummary from './pages/PostCallSummary';
+
 function LandingPage() {
     const navigate = useNavigate();
-
     return (
         <main style={{ position: 'relative' }}>
             <ThreeBackground />
             <div style={{ position: 'relative', zIndex: 1 }}>
                 <Navbar
                     onGetStarted={() => navigate('/dashboard')}
-                onSignup={() => navigate('/auth', { state: { view: 'signup' } })}
-                onLogin={() => navigate('/auth', { state: { view: 'login' } })}
-            />
-            <Hero onGetStarted={() => navigate('/dashboard')} />
-            <HowItWorks />
-            <Features />
-            <Integrations />
-            <ObjectionHandling />
-            <ResponseSuggestion />
-            <UseCases />
-            <Pricing />
-            <CrowdSection />
-            <CrowdCanvasSection />
-            <Footer />
+                    onSignup={() => navigate('/auth', { state: { view: 'signup' } })}
+                    onLogin={() => navigate('/auth', { state: { view: 'login' } })}
+                />
+                <Hero onGetStarted={() => navigate('/dashboard')} />
+                <HowItWorks />
+                <Features />
+                <Integrations />
+                <ObjectionHandling />
+                <ResponseSuggestion />
+                <UseCases />
+                <Pricing />
+                <CrowdSection />
+                <CrowdCanvasSection />
+                <Footer />
             </div>
         </main>
     );
@@ -68,8 +68,11 @@ function App() {
             <BrowserRouter>
                 <div className="app-root">
                     <Routes>
-                        <Route path="/" element={<LandingPage />} />
-                        <Route path="/auth" element={<AuthPage />} />
+                        <Route path="/"              element={<LandingPage />} />
+                        {/* Auth pages — includes /auth/callback for OAuth redirect */}
+                        <Route path="/auth"          element={<AuthPage />} />
+                        <Route path="/auth/callback" element={<AuthPage />} />
+                        {/* Protected routes */}
                         <Route path="/dashboard" element={
                             <ProtectedRoute><Dashboard /></ProtectedRoute>
                         } />

@@ -1,0 +1,141 @@
+project: HEXAGON_AUTH_SYSTEM_V1
+
+goal:
+  Add real Supabase authentication to Hexagon using:
+    - Google OAuth
+    - GitHub OAuth
+  Replace fake/static login flow with real session-based authentication.
+  Persist logged-in users across refresh.
+  Redirect authenticated users directly to dashboard.
+  Maintain premium SaaS aesthetic.
+
+stack:
+  frontend: React + Vite
+  backend: Supabase Auth
+  auth_methods:
+    - Google
+    - GitHub
+
+tasks:
+
+  - task: install_dependencies
+    steps:
+      - run:
+          command: npm install @supabase/supabase-js
+
+  - task: create_supabase_client
+    file: src/lib/supabase.js
+    content: |
+      import { createClient } from '@supabase/supabase-js'
+
+      export const supabase = createClient(
+        import.meta.env.VITE_SUPABASE_URL,
+        import.meta.env.VITE_SUPABASE_ANON_KEY
+      )
+
+  - task: setup_env_variables
+    file: .env
+    content: |
+      VITE_SUPABASE_URL=YOUR_SUPABASE_URL
+      VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+
+  - task: google_login_handler
+    file: src/pages/Login.jsx
+    content: |
+      const handleGoogleLogin = async () => {
+        await supabase.auth.signInWithOAuth({
+          provider: 'google'
+        })
+      }
+
+  - task: github_login_handler
+    file: src/pages/Login.jsx
+    content: |
+      const handleGithubLogin = async () => {
+        await supabase.auth.signInWithOAuth({
+          provider: 'github'
+        })
+      }
+
+  - task: add_login_buttons
+    requirements:
+      - Add premium rounded OAuth buttons
+      - Add Google icon
+      - Add GitHub icon
+      - Hover animations
+      - Maintain dark minimal SaaS aesthetic
+      - Keep spacing balanced
+      - Mobile responsive
+
+  - task: session_persistence
+    file: src/App.jsx
+    content: |
+      import { useEffect, useState } from 'react'
+      import { supabase } from './lib/supabase'
+
+      function App() {
+        const [session, setSession] = useState(null)
+
+        useEffect(() => {
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session)
+          })
+
+          const {
+            data: { subscription },
+          } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session)
+          })
+
+          return () => subscription.unsubscribe()
+        }, [])
+      }
+
+  - task: protected_dashboard
+    requirements:
+      - Redirect unauthenticated users to login page
+      - Redirect authenticated users to dashboard
+      - Prevent manual dashboard access without login
+
+  - task: user_profile_support
+    requirements:
+      - Store:
+          - email
+          - full_name
+          - avatar_url
+          - provider
+      - Use Supabase session user metadata
+      - Connect to settings page
+
+  - task: logout_functionality
+    file: src/components/Sidebar.jsx
+    content: |
+      const handleLogout = async () => {
+        await supabase.auth.signOut()
+      }
+
+  - task: premium_loading_states
+    requirements:
+      - Add smooth loading spinner during OAuth redirect
+      - Add soft transitions
+      - Prevent white flashes
+      - Maintain premium UX
+
+design_language:
+  style:
+    - modern SaaS
+    - minimal luxury
+    - soft shadows
+    - smooth motion
+    - premium spacing
+    - psychologically clean UI
+
+future_ready:
+  later_additions:
+    - Apple Login
+    - Facebook Login
+    - User avatars
+    - Saved analytics
+    - Saved playbooks
+    - Team workspaces
+    - AI preference memory

@@ -1,83 +1,122 @@
 import { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-const API = 'http://localhost:8000';
-
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser]                   = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading]             = useState(true);
 
-    // Fetch the full profile (called on mount and after updates)
-    const fetchProfile = useCallback(async (token) => {
-        try {
-            const res = await fetch(`${API}/api/user/me`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const userData = await res.json();
-                setUser(userData);
-                setIsAuthenticated(true);
-                return userData;
-            } else {
-                localStorage.removeItem('token');
-                setIsAuthenticated(false);
-            }
-        } catch (e) {
-            console.error('Profile fetch failed', e);
-        }
-        return null;
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            fetchProfile(token).finally(() => setLoading(false));
-        } else {
-            setLoading(false);
-        }
-    }, [fetchProfile]);
-
-    const login = async (token, basicUserData) => {
-        localStorage.setItem('token', token);
-        // Immediately fetch full profile so all fields are available
-        const fullProfile = await fetchProfile(token);
-        if (!fullProfile) {
-            // Fallback to basic data if profile fetch fails
-            setUser(basicUserData);
-            setIsAuthenticated(true);
-        }
+    // ── Normalise a Supabase user object into our app's user shape ────────────
+    const normaliseUser = (supaUser) => {
+        if (!supaUser) return null;
+        const meta = supaUser.user_metadata || {};
+        return {
+            id:          supaUser.id,
+            email:       supaUser.email,
+            full_name:   meta.full_name || meta.name || '',
+            avatar_url:  meta.avatar_url || meta.picture || '',
+            provider:    supaUser.app_metadata?.provider || 'email',
+        };
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
+    // ── On mount: read existing session, then subscribe to auth changes ───────
+    useEffect(() => {
+        // Get current session immediately (handles page refresh)
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session?.user) {
+                setUser(normaliseUser(session.user));
+                setIsAuthenticated(true);
+            }
+            setLoading(false);
+        });
+
+        // Subscribe to future auth state changes (login, logout, token refresh)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (_event, session) => {
+                if (session?.user) {
+                    setUser(normaliseUser(session.user));
+                    setIsAuthenticated(true);
+                } else {
+                    setUser(null);
+                    setIsAuthenticated(false);
+                }
+            }
+        );
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    // ── OAuth sign-in helpers (Google / GitHub) ───────────────────────────────
+    const loginWithGoogle = async () => {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: `${window.location.origin}/auth/callback` },
+        });
+        if (error) throw error;
+    };
+
+    const loginWithGithub = async () => {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'github',
+            options: { redirectTo: `${window.location.origin}/auth/callback` },
+        });
+        if (error) throw error;
+    };
+
+    // ── Email / password sign-in (legacy support) ─────────────────────────────
+    const loginWithEmail = async (email, password) => {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        return data;
+    };
+
+    // ── Email / password sign-up ──────────────────────────────────────────────
+    const signupWithEmail = async (email, password, fullName) => {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: { data: { full_name: fullName } },
+        });
+        if (error) throw error;
+        return data;
+    };
+
+    // ── Logout ────────────────────────────────────────────────────────────────
+    const logout = async () => {
+        await supabase.auth.signOut();
         setUser(null);
         setIsAuthenticated(false);
     };
 
-    // Call this after a successful PATCH /api/user/update to sync state globally
+    // ── Optimistic local update (Settings page patches) ───────────────────────
     const updateUser = (updatedFields) => {
         setUser(prev => ({ ...prev, ...updatedFields }));
     };
 
-    // Re-fetch full profile from server (use after avatar upload)
-    const refreshProfile = async () => {
-        const token = localStorage.getItem('token');
-        if (token) await fetchProfile(token);
-    };
+    // ── Re-read user from current session ─────────────────────────────────────
+    const refreshProfile = useCallback(async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) setUser(normaliseUser(session.user));
+    }, []);
 
     return (
         <AuthContext.Provider value={{
             user,
             isAuthenticated,
             loading,
-            login,
+            loginWithGoogle,
+            loginWithGithub,
+            loginWithEmail,
+            signupWithEmail,
             logout,
             updateUser,
             refreshProfile,
+            // Legacy alias — some components still call login(token, data)
+            login: loginWithEmail,
         }}>
             {children}
         </AuthContext.Provider>
