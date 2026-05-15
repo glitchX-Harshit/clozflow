@@ -2,126 +2,151 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)]()
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5-purple.svg)](https://vitejs.dev/)
+[![Version](https://img.shields.io/badge/version-2.0.0-orange.svg)]()
+[![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=black)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100.0-05998b.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
 
 </div>
 
-# ✦ hexagon.ai — AI Sales Assistant
+<br />
 
-<p align="center">
-  <strong>An intelligent, real-time AI agent that handles clients on your behalf, detecting objections and providing high-accuracy reasoning to close deals.</strong>
-</p>
-
-<p align="center">
-  <a href="#about-the-project">About the Project</a> •
-  <a href="#key-features">Key Features</a> •
-  <a href="#tech-stack">Tech Stack</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#project-structure">Project Structure</a>
-</p>
+<div align="center">
+  <h1 align="center">✦ hexagon.ai</h1>
+  <p align="center">
+    <strong>The Future of High-Stakes Sales Intelligence</strong>
+    <br />
+    A real-time, RAG-powered AI orchestrator that detects objections, applies psychological persuasion strategies, and closes deals.
+  </p>
+</div>
 
 ---
 
-## About the Project
+## 💎 The Vision
 
-**hexagon.ai** is not just a call recorder. It is a live, real-time AI sales partner designed for high-pressure environments. By listening to client interactions continuously, hexagon.ai analyzes sentiment, detects key objections (pricing, competitors, timelines), and surfaces the most effective counter-responses instantly. 
+**hexagon.ai** is not a simple call logger—it's a high-fidelity **Sales Co-Pilot**. It listens to live conversations, processes them through a multi-layered AI pipeline, and provides actionable, psychologically-backed responses in real-time.
 
-Designed with an "Awwwards-winning" aesthetic, the application features an engaging, minimal, and premium UI with seamless animations and interactive elements.
+Built for high-pressure environments where every word counts, Hexagon combines ultra-low latency transcription with a sophisticated **Persuasion Engine** that rotates through advanced sales frameworks (The Social Proof Push, The Scarcity Lever, Future Pacing) to steer conversations toward a close.
 
-## Key Features
+---
 
-- **Live Objection Detection:** Instantly flags pricing concerns, competitor mentions, and hesitation.
-- **Real-Time Reasoning:** Processes conversation context to suggest high-converting responses with a 94% success rate.
-- **Premium User Experience:** Built with a sophisticated `cream` and `dark` mode aesthetic, featuring fluid scrub animations, magnetic buttons, and "scratch-to-reveal" interactions.
-- **Interactive Data Visualization:** Implements physics-based (Matter.js) layout elements and GSAP-powered parallax scrolling.
-- **Seamless Integrations:** Works across your existing CRM and communication platforms (Salesforce, HubSpot, Zoom, Slack).
+## 🚀 Key Capabilities
 
-## Tech Stack
+- **🧠 Multi-Layered Persuasion Engine:** Dynamically switches between 7+ sales strategies based on conversation sentiment and prospect hesitation.
+- **⚡ Real-Time RAG (FAISS):** Instantly retrieves company-specific knowledge, case studies, and technical specs from a vector-embedded knowledge base.
+- **🎯 Objection Detection:** proprietary algorithms flag pricing concerns, competitor comparisons, and "hidden" hesitations before they derail the deal.
+- **✨ Awwwards-Level UI:** A premium React dashboard featuring GSAP animations, glassmorphism, and a sophisticated "Cream & Dark" aesthetic.
+- **🔄 Live WebSocket Pipeline:** Seamless integration between Deepgram (Audio), FastAPI (Logic), and React (UI) for sub-500ms latency.
 
-The application relies on a modern, high-performance frontend architecture:
+---
 
-* **Framework:** [React](https://reactjs.org/) (via Vite)
-* **Animation & Interactions:**
-  * [GSAP](https://greensock.com/gsap/) (ScrollTrigger, Timelines)
-  * [Matter.js](https://brm.io/matter-js/) (2D Physics Engine)
-* **Styling Tools:** Custom CSS with modern properties (Backdrop filters, clip-paths, grid)
-* **Icons:** [Lucide React](https://lucide.dev/)
-* **Typography:** `Plus Jakarta Sans`, `Cormorant Garamond`, and `Caveat` (for hand-drawn annotations).
+## 🛠 Tech Stack
 
-## Getting Started
+### Frontend
+- **Framework:** React 18 (Vite)
+- **Animation:** GSAP (ScrollTrigger & Physics)
+- **Physics:** Matter.js for interactive UI elements
+- **State Management:** React Context API + Custom Hooks
+- **Icons:** Lucide React
 
-To get a local copy up and running, follow these simple steps.
+### Backend
+- **Core:** FastAPI (Python 3.10+)
+- **AI/ML:** OpenAI GPT-4o, Deepgram (Streaming Speech-to-Text)
+- **Vector DB:** FAISS for RAG (Retrieval-Augmented Generation)
+- **Database:** SQLite (SQLAlchemy ORM)
+- **Communication:** WebSockets for real-time data streaming
+
+---
+
+## 📂 Project Structure
+
+```text
+hexagon/
+├── 📂 backend/               # FastAPI Backend Logic
+│   ├── 📄 main.py            # Entry point & WebSocket orchestrator
+│   ├── 📂 services/          # Core AI & Business logic
+│   │   ├── 🧠 sales_ai_engine.py      # Main AI decision maker
+│   │   ├── 🎭 persuasion_engine.py   # Strategy rotation logic
+│   │   ├── 🔍 conversation_analyzer.py # Sentiment & Intent detection
+│   │   └── 🎙️ deepgram_stream.py      # Real-time transcription service
+│   ├── 📂 routers/           # API endpoints (Auth, Analytics, Leads)
+│   ├── 📂 data/              # JSON-based playbooks & static assets
+│   ├── 📄 models.py          # Database schemas
+│   └── 📄 requirements.txt   # Python dependencies
+├── 📂 frontend/              # React + Vite Frontend
+│   ├── 📂 src/
+│   │   ├── 📂 components/    # Reusable UI (Dashboard, Hero, Loader)
+│   │   ├── 📂 context/       # Auth & Global State
+│   │   ├── 📂 pages/         # View compositions
+│   │   └── 📄 index.css      # Premium design system tokens
+│   └── 📄 package.json       # JS dependencies
+├── 📂 rag/                   # Retrieval-Augmented Generation
+│   ├── 📄 rag_engine.py      # FAISS integration & Query logic
+│   └── 📄 faiss_index.bin    # Vectorized knowledge base
+├── 📂 yaml_folder/           # Strategy Configurations
+│   ├── 📄 pschofancy_v2.yaml # Psychological triggers
+│   └── 📄 uxFunnel.yaml      # UI/UX interaction maps
+├── 📂 test/                  # QA & Simulation
+│   ├── 📄 simulator.py       # Live call simulation script
+│   └── 📄 scenarios.json     # Test cases for sales objections
+└── 📄 README.md              # Documentation
+```
+
+---
+
+## ⚡ Getting Started
 
 ### Prerequisites
-
-* Node.js (v18 or higher recommended)
-* npm or yarn
+- Python 3.10+
+- Node.js 18+
+- OpenAI API Key
+- Deepgram API Key
 
 ### Installation
 
-1. Clone the repository:
-   ```sh
+1. **Clone the Repository**
+   ```bash
    git clone https://github.com/glitchX-Harshit/sales-XAM-.git
+   cd Hexagon
    ```
-2. Navigate to the frontend directory:
-   ```sh
-   cd sales-XAM-/frontend
+
+2. **Setup Backend**
+   ```bash
+   cd backend
+   python -m venv .venv
+   source .venv/bin/activate # or .venv\Scripts\activate on Windows
+   pip install -r requirements.txt
+   python main.py
    ```
-3. Install NPM packages:
-   ```sh
+
+3. **Setup Frontend**
+   ```bash
+   cd ../frontend
    npm install
-   ```
-4. Start the development server:
-   ```sh
    npm run dev
    ```
-5. Open your browser and navigate to the address shown in your terminal (usually `http://localhost:5173`).
 
-## Project Structure
+---
 
-```text
-sales-XAM-/
-├── backend/
-│   ├── main.py              // FastAPI application entry point
-│   ├── services/
-│   │   ├── sales_ai_engine.py      // Core AI orchestrator
-│   │   ├── persuasion_engine.py    // AI Persuasion Strategy engine
-│   │   ├── conversation_analyzer.py // Intent & Topic detection
-│   │   ├── suggestion_manager.py   // Suggestion history & deduplication
-│   │   ├── deepgram_stream.py      // Real-time audio transcription
-│   │   └── websocket_service.py    // Live WebSocket management
-│   ├── data/                   // Strategy playbooks and JSON data
-│   └── routers/                // API route definitions
-├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       │   ├── Dashboard.jsx       // Real-time AI sales dashboard
-│       │   ├── Hero.jsx            // Landing page hero with scratch canvas
-│       │   ├── ObjectionHandling.jsx // Objection detection visualization
-│       │   ├── ResponseSuggestion.jsx // AI-generated response interface
-│       │   └── ...
-│       ├── App.jsx                 // Global layout and view management
-│       └── main.jsx                // React entry point
-└── README.md                       
-```
+## 🎯 Contributing
 
-## AI Pipeline & Persuasion Engine
+We welcome contributions from the community! Whether it's a bug fix, a new sales strategy, or a UI enhancement, feel free to open a PR.
 
-The backend features a sophisticated AI pipeline that processes live conversations:
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-1.  **Transcription**: Uses **Deepgram** for ultra-low latency, real-time audio-to-text conversion.
-2.  **Analysis**: The `conversation_analyzer` detects the prospect's **Intent** and **Topic** using custom LLM prompts.
-3.  **Strategy Selection**: The `persuasion_engine` rotates between 7 high-level sales strategies (e.g., *Future Pacing*, *The Social Proof Push*, *The Scarcity Lever*) to keep the conversation dynamic.
-4.  **Generation**: Suggests verbatim responses and "Next Best Questions" for the salesperson, optimized for closing deals.
-5.  **Deduplication**: The `suggestion_manager` ensures the AI never repeats the same advice twice during a call.
+---
 
-## Contact
+## 📄 License
 
-**Harshit (glitchX-Harshit)**  
-Project Link: [https://github.com/glitchX-Harshit/sales-XAM-](https://github.com/glitchX-Harshit/sales-XAM-)
+Distributed under the MIT License. See `LICENSE` for more information.
 
+---
 
-ux funnel done
+<div align="center">
+  <sub>Built with ❤️ by <b>Harshit</b> and the Hexagon Team</sub>
+</div>
