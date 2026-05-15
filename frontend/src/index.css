@@ -1,12 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Prosto+One&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500;1,600&display=swap');
 
 /* ══════════════════════════════════════════════════
    HEXAGON.AI — LUXURY WHITE DESIGN SYSTEM
    Editorial · Premium · Non-Generic
+   Updated to Roboto Font
 ══════════════════════════════════════════════════ */
 
 :root {
-  /* ── Backgrounds ── */
+  /* ... (keeping other variables same) */
   --bg:           #ffffff;
   --surface:      #f9f9f9;
   --surface-2:    #f3f2f0;
@@ -49,8 +50,8 @@
   --r-full: 9999px;
 
   /* ── Type Scale ── */
-  --font-display: 'Prosto One', cursive;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-display: 'Roboto', sans-serif;
+  --font-body:    'Roboto', sans-serif;
   --font-serif:   'Cormorant Garamond', serif;
 }
 
