@@ -10,30 +10,94 @@ from rag.rag_engine import RAGEngine
 
 # Client is initialized per-instance inside __init__ so env vars are loaded first
 
-# ─── STEP 3: Response Energy Pool ─────────────────────────────────────────────
-RESPONSE_ENERGIES = [
-    "calm_authority",
-    "controlled_challenge",
-    "perspective_shift",
-    "sharp_minimal",
-    "status_pressure",
-]
-
+# ─── psychofancy_v2: Response Energy Definitions (refined) ───────────────────
+# (No random selection — energy is keyword-routed, no extra calls)
 ENERGY_DEFINITIONS = {
-    "calm_authority":      "grounded, experienced, confident without forcing",
-    "controlled_challenge":"gently challenge assumptions, expose weak logic calmly",
-    "perspective_shift":   "reframe the situation, redirect thinking",
-    "sharp_minimal":       "fewer words, high conviction, direct impact",
-    "status_pressure":     "imply positioning/status/perception importance, subtly elevate standards",
+    "calm_authority":    "grounded, socially intelligent, outcome-focused, never emotional",
+    "soft_challenge":    "calm pressure, subtle perspective shifts, expose weak assumptions gently",
+    "emotional_clarity": "clarify uncertainty, avoid emotional narration, reduce confusion without sounding therapeutic",
+    "relaxed_guidance":  "conversational, socially smooth, naturally intelligent",
+    "composed_confidence": "calm, high-status, unfazed by ego energy",
 }
 
-# ─── STEP 6: Banned questioning patterns ──────────────────────────────────────
+# ─── followbackQuestion §3/§5: GPT Detox + interview-mode + question-addiction removal ─
 BANNED_PATTERNS = [
     "what specific",
     "what are your",
     "can you elaborate",
     "help me understand",
+    "key performance indicators",
+    "implementation efficiency",
+    "optimize your workflow",
+    "our solution helps",
+    "value proposition",
+    "what metrics",
+    "what pain points",
+    "i understand your concern",
+    "you seem to feel",
+    "i hear hesitation",
+    "it sounds like you're",
+    "feels like you're",
+    "there's a gap",
+    # followbackQuestion §5 — GPT interview starters
+    "what are your top priorities",
+    "what outcomes would",
+    "what's holding you back",
+    "what would convince you",
+    "what's your current",
 ]
+
+# ─── followbackQuestion §3: Question-suppression keywords ────────────────────
+# When these appear in prospect text, next_question is suppressed
+_SUPPRESS_QUESTION_KEYWORDS = [
+    "later",
+    "expensive",
+    "hype",
+    "already have",
+    "not convinced",
+    "don't need",
+    "doing fine",
+    "we already",
+    "prove",
+]
+
+# Energies that should default to no follow-up question
+_NO_QUESTION_ENERGIES = {"calm_authority", "soft_challenge"}
+
+# ─── psychofancy_v2 §7: Humanization phrases — split by injection weight ──────
+# Primary softeners: ~15% frequency (conversational direction)
+HUMANIZATION_PHRASES = [
+    "Honestly,",
+    "Usually,",
+    "Most teams",
+    "A lot of the time,",
+    "That's normally where",
+]
+# Passive softeners: demoted to ≤5% — kept separate to enforce rate cap
+_PASSIVE_SOFTENERS = [
+    "Feels like",
+    "It sounds like",
+]
+
+
+def _detect_response_energy(text: str) -> str:
+    """psychofancy_v1 §4 — Lightweight keyword emotional router.
+    No NLP, no embeddings, no extra API calls. Pure keyword matching."""
+    text_lower = text.lower()
+
+    if any(w in text_lower for w in ["not sure", "maybe", "hesitate", "later"]):
+        return "emotional_clarity"
+
+    if any(w in text_lower for w in ["already", "we already", "don't need", "doing fine"]):
+        return "soft_challenge"
+
+    if any(w in text_lower for w in ["hype", "why should", "prove", "different"]):
+        return "calm_authority"
+
+    if any(w in text_lower for w in ["we're the best", "top company", "industry leader", "biggest"]):
+        return "composed_confidence"
+
+    return "relaxed_guidance"
 
 
 class SalesAIEngine:
@@ -116,36 +180,40 @@ class SalesAIEngine:
                 self.last_strategies.pop(0)
 
     # ──────────────────────────────────────────────────────────────────────────
-    # STEP 5 — Upgraded smart_fallback
+    # psychofancy_v2: smart_fallback — v2 directional examples
     # ──────────────────────────────────────────────────────────────────────────
 
     def smart_fallback(self, text: str = "") -> dict:
         text = text.lower()
 
         pricing = [
-            "If the price feels high, the value usually isn't fully clear yet.",
-            "Most pricing hesitation comes from uncertainty around outcomes.",
+            "Price usually feels heavy when the outcome still feels uncertain.",
+            "Most pricing hesitation comes from uncertainty around outcomes, not the number itself.",
             "The bigger cost is usually staying with what isn't fully working.",
         ]
         authority = [
             "When decisions slow down, there's usually one unresolved concern underneath.",
-            "Sounds like alignment matters here more than timing.",
             "Most delayed decisions come down to confidence, not process.",
+            "Alignment usually matters more than timing here.",
         ]
         hesitation = [
-            "Usually there's one real hesitation underneath everything else.",
-            "Being unsure is normal when the outcome still feels uncertain.",
-            "Sounds like something still isn't fully clicking yet.",
+            "Usually when something gets pushed to later, there's still one concern that hasn't settled yet.",
+            "Usually when someone sees value but still hesitates, the real issue is risk, not interest.",
+            "When something keeps getting delayed, it's rarely about time.",
         ]
         dismissive = [
-            "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
+            "Most teams already have tools. Few feel fully confident in them.",
             "Most teams don't look for change unless something underneath isn't scaling properly.",
-            "Doing things internally works — until growth exposes the gaps.",
+            "If the current setup was solving everything perfectly, this conversation probably wouldn't exist.",
+        ]
+        skepticism = [
+            "Honestly, skepticism usually comes after hearing too many promises that changed nothing.",
+            "Skepticism makes sense when outcomes have felt uncertain before.",
         ]
         generic = [
-            "Feels like there's one important thing not fully aligned yet.",
+            "Usually hesitation points to one core concern that hasn't fully been resolved.",
             "Something underneath this still seems unresolved.",
-            "Usually hesitation points to one core concern.",
+            "Most of the time, the real hesitation is one thing — not several.",
         ]
 
         if any(w in text for w in ["price", "expensive", "budget", "cost"]):
@@ -156,6 +224,8 @@ class SalesAIEngine:
             msg = random.choice(dismissive)
         elif any(w in text for w in ["not sure", "maybe", "later", "hesitate"]):
             msg = random.choice(hesitation)
+        elif any(w in text for w in ["hype", "prove", "why should", "different"]):
+            msg = random.choice(skepticism)
         else:
             msg = random.choice(generic)
 
@@ -201,8 +271,8 @@ class SalesAIEngine:
             print("[AI_INFO] No LLM client configured — using fallback.")
             return self.smart_fallback(text)
 
-        # ── STEP 3: Pick response energy before the LLM call ──────────────────
-        response_energy = random.choice(RESPONSE_ENERGIES)
+        # ── psychofancy_v1 §4: Keyword-routed emotional energy (no random, no extra calls) ─
+        response_energy = _detect_response_energy(text)
         energy_description = ENERGY_DEFINITIONS[response_energy]
         print(f"[ENERGY] {response_energy} — {energy_description}")
 
@@ -257,64 +327,106 @@ class SalesAIEngine:
             "hesitation": "Diagnose root cause first, then guide toward next step.",
         }.get(intent or "", "Lead the conversation forward with insight or reframe.")
 
-        # ── STEP 2 + STEP 4: New core system prompt ───────────────────────────
-        system_content = f"""You are "Hexagon CloserBrain" — a high-level B2B sales intelligence engine.
+        # ── followbackQuestion §3: Question-suppression filter (no extra calls) ─
+        text_lower = text.lower()
+        avoid_question = (
+            response_energy in _NO_QUESTION_ENERGIES
+            or any(w in text_lower for w in _SUPPRESS_QUESTION_KEYWORDS)
+        )
+        print(f"[QUESTION_FILTER] avoid_question={avoid_question} (energy={response_energy})")
 
-Your role is not to simply answer objections.
-Your role is to guide conversations toward clarity, confidence, and decisions.
+        # ── psychofancy_v2 + followbackQuestion §1/§2/§7/§9: Full system prompt ─
+        system_content = f"""You are Hexagon — a socially intelligent conversational sales AI.
+
+You are socially aware, NOT emotionally therapeutic.
+You do NOT sound like a therapist, motivational guru, chatbot, consultant, or scripted salesperson.
+
+You sound like:
+- a socially sharp closer
+- psychologically aware without trying too hard
+- conversationally smooth
+- naturally persuasive
+- calm and human
 
 RESPONSE STYLE:
-- calm authority
-- confident
-- conversational
-- slightly sharp
-- never needy
-- never overly polite
+Your responses should:
+- redirect perspective
+- subtly expose hidden hesitation
+- create conversational movement
+- sound calm and human
 
-GOOD RESPONSES:
-- shift perspective
-- create clarity
-- expose weak assumptions
-- subtly create tension when needed
-- sound socially intelligent
+Avoid:
+- emotional narration
+- over-validating feelings
+- sounding like a therapist
+- passive observations
+- sounding overly complete or polished
 
-BAD RESPONSES:
-- over-explaining
-- feature dumping
-- sounding desperate
-- generic sales phrasing
-- repetitive questioning
+Prefer:
+- social observations
+- conversational insight
+- compressed psychology
+- subtle tension
+- directional phrasing
 
-RESPONSE STRUCTURE:
-- Start with an insight, observation, reframe, assumption, or challenge.
-- Then optionally ask ONE focused question.
+IDEAL RESPONSE FORMULA:
+  observation + psychological insight + subtle directional tension
 
-CONVERSATION RULES:
-- guide instead of react
-- avoid interview-mode behavior
-- avoid asking broad discovery questions repeatedly
-- move the conversation forward naturally
-- build on previous context
+NOT:
+  emotion reflection + interview question
 
-AVOID PHRASES:
-- "What specific..."
-- "I understand your concern"
-- "Let's explore"
-- "Our solution helps"
-- "This can improve"
+GOOD RESPONSES (directional, not reflective):
+  hesitation:    "Usually when something gets pushed to later, there's still one concern that hasn't settled yet."
+  pricing:       "Price usually feels heavy when the outcome still feels uncertain."
+  skepticism:    "Honestly, skepticism usually comes after hearing too many promises that changed nothing."
+  mixed interest:"Usually when someone sees value but still hesitates, the real issue is risk, not interest."
+  dismissive:    "Most teams already have tools. Few feel fully confident in them."
+  pricing good:  "Usually the real question is whether the outcome feels predictable enough yet."
+  hesitation good:"Most hesitation shows up when certainty still feels incomplete."
+  skepticism good:"People usually stop calling it hype once something starts changing operationally."
+  ego good:      "Most teams already have tools. Few feel fully confident in what those tools are actually producing."
 
-RESPONSE ENERGY: {response_energy}
-({energy_description})
+BAD RESPONSES (never sound like this):
+  "Feels like you're not sure about this."
+  "It sounds like you're hesitant."
+  "I hear hesitation in what you're saying."
+  "What specific metrics are you optimizing?"
+  "Can you elaborate further?"
+  "What are your top priorities?"
+  "What's holding you back?"
+  "What would convince you?"
+  "Our implementation process improves efficiency."
 
-RESPONSE LENGTH:
-- 1–2 sentences
-- high signal only
-- compressed persuasion preferred
+— CRITICAL CONVERSATION RULE (followbackQuestion §1) —
+Do NOT end every response with a question.
+Socially intelligent people:
+  - sometimes make an observation and stop
+  - sometimes let tension sit
+  - sometimes redirect perspective without asking anything
+  - sometimes stop after one strong insight
+Avoid constant conversational probing.
+
+CONVERSATIONAL PACING RULES (followbackQuestion §7):
+- Avoid sounding too eager.
+- Do not try to push every conversation aggressively.
+- Let strong observations breathe.
+- Calm confidence is stronger than constant questioning.
+- Stopping after one sharp insight often creates more impact.
+
+RESPONSE COMPRESSION RULES:
+- Strong responses often sound observational, not informational.
+- Avoid explaining too much. Avoid sounding overly complete.
+- 1 strong sentence is often enough.
+- One sharp insight is stronger than long logic.
+- Compressed insight feels more human.
+
+CURRENT RESPONSE ENERGY: {response_energy}
+{energy_description}
 
 INTENT BEHAVIOR:
 {intent_behavior}
 
-RAG INSIGHTS (HINTS ONLY):
+RAG INSIGHTS (HINTS ONLY — do not repeat verbatim):
 {rag_context}
 
 CURRENT DEAL STATE:
@@ -339,12 +451,34 @@ OUTPUT JSON:
 
         prev_context = list(self.message_buffer[:-1])
 
+        # followbackQuestion §2/§9: Rhythm distribution + length rules injected per-call
+        question_instruction = (
+            'Set "next_question" to "" (empty string). Do NOT include a question in the response field.'
+            if avoid_question else
+            'A question is allowed ONLY if prospect shows genuine curiosity, confusion, or buying intent.'
+        )
+
         prompt = f"""
 Conversation Buffer:
 {json.dumps(prev_context)}
 
 LATEST PROSPECT MESSAGE:
 "{text}"
+
+RESPONSE RHYTHM RULE (followbackQuestion §2):
+Choose ONE of these ending styles naturally — do NOT always ask a question:
+  - observation only          → 35% of responses
+  - observation + tension     → 30% of responses
+  - observation + soft question → 25% of responses
+  - direct challenge          → 10% of responses
+
+FOR THIS RESPONSE:
+{question_instruction}
+
+RESPONSE LENGTH RULE (followbackQuestion §9):
+- 1 strong sentence is often enough.
+- Avoid overexplaining or stacking logic.
+- Compressed insight feels more human than complete answers.
 
 Output strictly conforming JSON.
 """
@@ -383,15 +517,35 @@ Output strictly conforming JSON.
                     print("[BLOCKED] Duplicate response prevented")
                     return self.smart_fallback(text)
 
-                # ── STEP 6: Post-processing — ban generic questioning ──────────
+                # ── psychofancy_v1 §6: GPT Detox — ban corporate/generic patterns ─
                 response_lower = suggested_resp.lower()
                 if any(p in response_lower for p in BANNED_PATTERNS):
-                    print("[REWRITE_TRIGGER] Generic questioning detected")
+                    print("[REWRITE_TRIGGER] GPT-detox: banned pattern detected, using fallback")
                     return self.smart_fallback(text)
+
+                # ── psychofancy_v2 §7: Humanization layer — split rates ───────
+                # Primary softeners: ~15% rate (directional, conversational)
+                # Passive softeners ("Feels like", "It sounds like"): ≤5% rate
+                all_phrases = list(HUMANIZATION_PHRASES)
+                if random.random() < 0.05:          # 5% — passive softeners allowed
+                    all_phrases.extend(_PASSIVE_SOFTENERS)
+
+                if random.random() < 0.15:
+                    softener = random.choice(all_phrases)
+                    first_word = suggested_resp.split()[0].lower().rstrip(",") if suggested_resp else ""
+                    blocked = [p.lower().rstrip(",") for p in HUMANIZATION_PHRASES + _PASSIVE_SOFTENERS]
+                    if first_word not in blocked:
+                        suggested_resp = f"{softener} {suggested_resp[0].lower()}{suggested_resp[1:]}"
+                        data["response"] = suggested_resp
+                        print(f"[HUMANIZE] Softener injected: '{softener}'") 
 
                 self.push_response_history(suggested_resp, data.get("strategy"))
 
-                if self.deal_state["stage"] == "closing":
+                # followbackQuestion §3: Enforce question suppression in output
+                if avoid_question:
+                    data["next_question"] = ""
+                    print("[QUESTION_FILTER] next_question suppressed")
+                elif self.deal_state["stage"] == "closing":
                     data["next_question"] = "If this solves your problem, is there anything stopping you from moving forward today?"
 
                 # Output Normalization for existing frontend fields

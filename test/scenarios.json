@@ -1,32 +1,98 @@
 [
   {
-    "name": "Ego + Dismissive",
+    "name": "Indian Business Owner + Existing Vendor Bias",
     "messages": [
-      "we already have tools for this so i don’t see why we need another one"
+      "bhai honestly we already have a guy handling all this",
+      "it’s not perfect but it’s working decent enough for now",
+      "switching everything again feels unnecessary headache"
     ]
   },
   {
-    "name": "Aggressive Skeptic",
+    "name": "Budget Pressure + ROI Doubt",
     "messages": [
-      "give me one real reason this isn’t just hype"
+      "see the thing is budget is already tight this quarter",
+      "if i spend this much i need to clearly see where the return is coming from",
+      "otherwise internally everyone will question why we even invested in this"
     ]
   },
   {
-    "name": "Price Resistance",
+    "name": "Indian Founder Skepticism",
     "messages": [
-      "wait that's more expensive than i expected"
+      "bro nowadays every AI company sounds smart in demos",
+      "once payment is done support becomes slow and results disappear",
+      "so what exactly makes this different from the usual AI hype?"
     ]
   },
   {
-    "name": "Soft Delay",
+    "name": "Team Resistance + Operational Fear",
     "messages": [
-      "maybe we can revisit this later or something"
+      "implementation is the real problem honestly",
+      "my team already resists small process changes",
+      "if this becomes complicated nobody will actually use it properly"
     ]
   },
   {
-    "name": "Mixed Interest + Hesitation",
+    "name": "Polite Delay + Hidden No",
     "messages": [
-      "i mean i do see some value here but i'm still not fully convinced"
+      "haan looks interesting no doubt",
+      "let me discuss internally once and we’ll reconnect later",
+      "right now there are too many things happening from our side"
+    ]
+  },
+  {
+    "name": "Ego + Control + Status",
+    "messages": [
+      "we’ve scaled without these kinds of systems till now",
+      "most external tools create more dependency than actual results",
+      "why should i change something that’s already running fine?"
+    ]
+  },
+  {
+    "name": "Price Shock + Internal Comparison",
+    "messages": [
+      "wait this is way above what i expected",
+      "for this amount i could literally hire another employee internally",
+      "help me understand why this would make more sense financially"
+    ]
+  },
+  {
+    "name": "Analytical CTO Type",
+    "messages": [
+      "i’m less interested in the pitch and more interested in actual operational impact",
+      "how exactly does this improve conversion quality practically?",
+      "because theory always sounds cleaner than real execution"
+    ]
+  },
+  {
+    "name": "Fast Talking Founder",
+    "messages": [
+      "yeah yeah i get the concept but tell me directly what changes after using this",
+      "because if results take 6 months then realistically nobody has patience for that",
+      "we need something that impacts revenue fast"
+    ]
+  },
+  {
+    "name": "Trust Issue After Bad Experience",
+    "messages": [
+      "we invested into another software before also",
+      "initially everything sounded amazing but adoption became zero after few weeks",
+      "that’s why now we’re a little careful before committing again"
+    ]
+  },
+  {
+    "name": "Hard Negotiator",
+    "messages": [
+      "look straight up if i’m paying premium then i expect premium level outcomes",
+      "otherwise there’s no shortage of cheaper tools in the market",
+      "so convince me why this deserves that pricing"
+    ]
+  },
+  {
+    "name": "Emotionally Detached Buyer",
+    "messages": [
+      "honestly i’m not emotionally sold on this yet",
+      "logically some parts make sense but something still feels incomplete",
+      "i’m trying to figure out whether this is actually necessary right now"
     ]
   }
 ]

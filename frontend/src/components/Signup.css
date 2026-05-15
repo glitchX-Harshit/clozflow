@@ -220,3 +220,59 @@
     .su-card { padding: 2rem 1.5rem; }
     .su-back { top: 1.25rem; left: 1.25rem; }
 }
+
+/* ── OAuth Buttons ──────────────────────────────────────────────────────── */
+.su-oauth-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
+}
+
+.su-oauth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    letter-spacing: -0.01em;
+}
+
+.su-oauth-btn:hover:not(:disabled) {
+    background: var(--surface);
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.su-oauth-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.su-oauth-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Divider row */
+.su-divider-row {
+    margin-bottom: 1.25rem;
+}
+
+/* Spinner for OAuth loading state */
+@keyframes su-spin {
+    to { transform: rotate(360deg); }
+}
+.su-oauth-spin {
+    animation: su-spin 0.9s linear infinite;
+}
