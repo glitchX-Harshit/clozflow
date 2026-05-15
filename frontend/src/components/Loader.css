@@ -35,7 +35,7 @@
     right: 3rem;
     z-index: 1;
     color: #111111;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(4rem, 12vw, 12rem); /* Massive typography, very Awwwards */
     font-weight: 800;
     line-height: 1;
