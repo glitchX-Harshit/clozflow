@@ -17,7 +17,7 @@ function AIOrb() {
         <Float speed={2} rotationIntensity={1} floatIntensity={2}>
             <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
                 <MeshDistortMaterial
-                    color="#ff5e00"
+                    color="#3b82f6"
                     attach="material"
                     distort={0.4}
                     speed={2}
@@ -67,7 +67,7 @@ const InteractiveScene = () => {
         >
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} color="#ffffff" />
-            <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#ff5e00" />
+            <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#3b82f6" />
 
             <AIOrb />
             <Particles />

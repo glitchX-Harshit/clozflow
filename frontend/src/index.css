@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Pacifico&display=swap');
 
 /* ══════════════════════════════════════════════════
    HEXAGON.AI — LUXURY WHITE DESIGN SYSTEM
    Editorial · Premium · Non-Generic
-   Updated to Roboto Font
+   Updated to Outfit & Inter Fonts
 ══════════════════════════════════════════════════ */
 
 :root {
@@ -50,9 +50,9 @@
   --r-full: 9999px;
 
   /* ── Type Scale ── */
-  --font-display: 'Roboto', sans-serif;
-  --font-body:    'Roboto', sans-serif;
-  --font-serif:   'Cormorant Garamond', serif;
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-serif:   'Pacifico', cursive;
 }
 
 /* ══ RESET & BASE ═══════════════════════════════════ */
