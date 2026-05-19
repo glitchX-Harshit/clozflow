@@ -109,11 +109,6 @@ const HowItWorks = () => {
                                     <h3 className="hiw__card-title">{step.title}</h3>
                                     <p className="hiw__card-sub">{step.sub}</p>
                                 </div>
-                                
-                                <div className="hiw__card-footer">
-                                    <div className="hiw__card-dot" />
-                                    <div className="hiw__card-line" />
-                                </div>
                             </div>
                         ))}
                     </div>
