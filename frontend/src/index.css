@@ -62,12 +62,17 @@
   padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden; 
+}
 
 body {
   font-family: var(--font-body);
   background-color: var(--bg);
   color: var(--text);
+  width: 100%;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
