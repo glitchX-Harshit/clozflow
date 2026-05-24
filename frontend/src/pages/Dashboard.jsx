@@ -14,13 +14,15 @@ import {
     ChevronRight,
     TrendingUp,
     ShieldCheck,
-    MessageSquare
+    MessageSquare,
+    Search
 } from 'lucide-react';
 import HistoryView from '../components/HistoryView';
 import AnalyticsPage from './AnalyticsPage';
 import PlaybooksPage from './PlaybooksPage';
 import SettingsShell from './SettingsShell';
 import MagButton from '../components/MagButton';
+import LeadFinder from './LeadFinder';
 
 const StatPill = ({ label, value, color }) => (
     <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 16, padding: '1.5rem', textAlign: 'center' }}>
@@ -143,6 +145,7 @@ const Dashboard = () => {
 
     const navItems = [
         { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
+        { id: 'leads',      label: 'Lead Finder',   icon: Search },
         { id: 'history',    label: 'Session History', icon: History },
         { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
         { id: 'playbooks',  label: 'Playbooks',      icon: Target },
@@ -200,6 +203,7 @@ const Dashboard = () => {
             {/* Main content */}
             <main className="db-main">
                 {activeTab === 'overview'  && <OverviewTab user={user} navigate={navigate} />}
+                {activeTab === 'leads'     && <LeadFinder />}
                 {activeTab === 'history'   && <HistoryView />}
                 {activeTab === 'analytics' && <AnalyticsPage />}
                 {activeTab === 'playbooks' && <PlaybooksPage />}
@@ -240,8 +244,10 @@ const Dashboard = () => {
                     border-right: 1px solid var(--border);
                     display: flex;
                     flex-direction: column;
-                    position: sticky;
+                    position: fixed;
                     top: 0;
+                    left: 0;
+                    bottom: 0;
                     height: 100vh;
                     z-index: 100;
                     padding: 2rem 1.25rem;
@@ -341,6 +347,8 @@ const Dashboard = () => {
                     padding: 3.5rem 5rem;
                     min-width: 0;
                     background: var(--surface);
+                    margin-left: 260px;
+                    min-height: 100vh;
                 }
 
                 /* ── Bottom nav — hidden on desktop ── */
@@ -379,7 +387,7 @@ const Dashboard = () => {
                     .db-sidebar-logo,
                     .db-nav-item,
                     .db-user-info { justify-content: center; padding: 0.75rem; }
-                    .db-main { padding: 2rem 2.5rem; }
+                    .db-main { padding: 2rem 2.5rem; margin-left: 72px; }
                     .ov-stats-grid { grid-template-columns: repeat(2, 1fr); }
                     .ov-modules-grid { grid-template-columns: repeat(2, 1fr); }
                 }
@@ -388,12 +396,14 @@ const Dashboard = () => {
                 @media (max-width: 640px) {
                     .db-layout {
                         flex-direction: column;
-                        padding-bottom: 70px;
+                        min-height: 100vh;
                     }
                     .db-sidebar { display: none; }
                     .db-main {
                         padding: 1.25rem 1rem;
-                        min-height: calc(100dvh - 70px);
+                        margin-left: 0;
+                        min-height: calc(100vh - 70px);
+                        padding-bottom: 90px;
                     }
                     .db-bottom-nav {
                         display: flex;

@@ -13,6 +13,26 @@
     background: var(--surface);
     padding: 2rem 1rem;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.cb-overlay::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cb-overlay::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.cb-overlay::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: var(--r-full);
+    border: 2px solid var(--surface);
+}
+
+.cb-overlay::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .cb-overlay::before {
@@ -57,11 +77,13 @@
     width: 100%;
     max-width: 680px;
     margin-top: 5.5rem;
+    margin-bottom: 5.5rem;
     background: var(--bg);
     border: 1px solid var(--border-strong);
     border-radius: var(--r-2xl);
     padding: 3rem 2.75rem;
     box-shadow: var(--shadow-xl);
+    transition: all 0.3s ease;
 }
 
 .cb-head {
@@ -209,6 +231,49 @@
 }
 
 @media (max-width: 768px) {
-    .cb-card  { padding: 2.5rem 1.75rem; margin-top: 4.5rem; }
+    .cb-card  { padding: 2.5rem 1.75rem; margin-top: 4.5rem; margin-bottom: 4.5rem; }
     .cb-head  { flex-direction: column; gap: 0.875rem; align-items: center; text-align: center; }
+}
+
+/* ── Vertical Responsiveness for Sleek Screens ── */
+@media (max-height: 850px) {
+    .cb-card {
+        margin-top: 3.5rem;
+        margin-bottom: 3.5rem;
+        padding: 2.5rem 2.25rem;
+    }
+    .cb-head {
+        margin-bottom: 2rem;
+    }
+    .cb-form {
+        gap: 1rem;
+    }
+}
+
+@media (max-height: 700px) {
+    .cb-card {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        padding: 2rem 1.75rem;
+    }
+    .cb-head {
+        margin-bottom: 1.5rem;
+    }
+    .cb-form {
+        gap: 0.85rem;
+    }
+}
+
+@media (max-height: 600px) {
+    .cb-card {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem 1.25rem;
+    }
+    .cb-head {
+        margin-bottom: 1rem;
+    }
+    .cb-form {
+        gap: 0.75rem;
+    }
 }

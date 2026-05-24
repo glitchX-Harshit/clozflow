@@ -7,6 +7,7 @@ from typing import Any
 from openai import AsyncOpenAI
 from difflib import SequenceMatcher
 from rag.rag_engine import RAGEngine
+from ml.evaluation.learning_filter import filter_and_log_interaction
 
 # Client is initialized per-instance inside __init__ so env vars are loaded first
 
@@ -67,11 +68,11 @@ _NO_QUESTION_ENERGIES = {"calm_authority", "soft_challenge"}
 # ─── psychofancy_v2 §7: Humanization phrases — split by injection weight ──────
 # Primary softeners: ~15% frequency (conversational direction)
 HUMANIZATION_PHRASES = [
-    "Honestly,",
-    "Usually,",
-    "Most teams",
-    "A lot of the time,",
-    "That's normally where",
+    "In practice,",
+    "Operationally,",
+    "The reality is,",
+    "From what we've seen,",
+    "Looking at the numbers,"
 ]
 # Passive softeners: demoted to ≤5% — kept separate to enforce rate cap
 _PASSIVE_SOFTENERS = [
@@ -187,33 +188,33 @@ class SalesAIEngine:
         text = text.lower()
 
         pricing = [
-            "Price usually feels heavy when the outcome still feels uncertain.",
-            "Most pricing hesitation comes from uncertainty around outcomes, not the number itself.",
-            "The bigger cost is usually staying with what isn't fully working.",
+            "Nobody wants to defend a risky expense internally if the outcome still feels unclear.",
+            "Budget approvals usually stall when the operational return isn't obvious yet.",
+            "The heavier cost is usually the operational friction of staying with what you have.",
         ]
         authority = [
-            "When decisions slow down, there's usually one unresolved concern underneath.",
-            "Most delayed decisions come down to confidence, not process.",
-            "Alignment usually matters more than timing here.",
+            "When internal decisions slow down, there's usually a specific operational concern driving the delay.",
+            "It's hard to get partner approval without a clear roadmap for implementation.",
+            "Board alignment usually comes down to predictable revenue and smooth adoption.",
         ]
         hesitation = [
-            "Usually when something gets pushed to later, there's still one concern that hasn't settled yet.",
-            "Usually when someone sees value but still hesitates, the real issue is risk, not interest.",
-            "When something keeps getting delayed, it's rarely about time.",
+            "Most hesitation points to a fear of staff resistance or complicated rollouts.",
+            "When timelines get pushed, it's rarely about the calendar—it's usually an unresolved operational risk.",
+            "Delaying usually means the risk of change still feels higher than the pain of staying the same.",
         ]
         dismissive = [
-            "Most teams already have tools. Few feel fully confident in them.",
-            "Most teams don't look for change unless something underneath isn't scaling properly.",
-            "If the current setup was solving everything perfectly, this conversation probably wouldn't exist.",
+            "Most teams have tools, but very few are actually fully adopted by the staff.",
+            "If your current setup was scaling perfectly without bottlenecks, we probably wouldn't be talking.",
+            "Internal solutions often work until customer flow or data complexity outgrows them.",
         ]
         skepticism = [
-            "Honestly, skepticism usually comes after hearing too many promises that changed nothing.",
-            "Skepticism makes sense when outcomes have felt uncertain before.",
+            "Skepticism makes sense—most tools fail after rollout because teams never fully adopt them.",
+            "People usually stop calling it hype once it actually removes friction from their daily operations.",
         ]
         generic = [
-            "Usually hesitation points to one core concern that hasn't fully been resolved.",
-            "Something underneath this still seems unresolved.",
-            "Most of the time, the real hesitation is one thing — not several.",
+            "There's usually an underlying operational bottleneck driving this.",
+            "Implementation is where the real friction happens.",
+            "Most teams underestimate the cost of internal misalignment.",
         ]
 
         if any(w in text for w in ["price", "expensive", "budget", "cost"]):
@@ -229,6 +230,18 @@ class SalesAIEngine:
         else:
             msg = random.choice(generic)
 
+        # ML Adaptive Learning Guardrails Layer
+        filter_and_log_interaction(
+            message=text,
+            response=msg,
+            strategy="PERSPECTIVE_SHIFT",
+            confidence=0.7,
+            emotional_state="neutral",
+            is_fallback=True,
+            api_error=False,
+            is_repetitive=False
+        )
+        
         return {
             "intent": "fallback_guidance",
             "stage": self.deal_state["stage"],
@@ -556,6 +569,19 @@ Output strictly conforming JSON.
                 data["deal_stage"] = data.get("stage", "")
 
                 print(f"[AI_RESPONSE] OK | {data.get('strategy', 'NONE')} | {suggested_resp[:60]}...")
+                
+                # ML Adaptive Learning Guardrails Layer
+                filter_and_log_interaction(
+                    message=text,
+                    response=suggested_resp,
+                    strategy=data.get('strategy', 'NONE'),
+                    confidence=data.get('confidence', 0.9), # Groq doesn't provide logits confidence, default to high if valid
+                    emotional_state=response_energy,
+                    is_fallback=False,
+                    api_error=False,
+                    is_repetitive=False # Handled by earlier deduplication check
+                )
+                
                 return data
 
             except asyncio.TimeoutError:

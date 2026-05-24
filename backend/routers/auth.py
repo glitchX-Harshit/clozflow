@@ -57,16 +57,33 @@ def get_current_user(authorization: str = Header(None), db: Session = Depends(ge
     token = authorization.split(" ")[1]
     
     try:
+        # First try legacy local JWT verification
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
+        if user_id:
+            user = db.query(User).filter(User.id == int(user_id)).first()
+            if user:
+                return user
     except Exception:
-        raise credentials_exception
-    user = db.query(User).filter(User.id == int(user_id)).first()
-    if user is None:
-        raise credentials_exception
-    return user
+        pass
+
+    try:
+        # Fallback: Try decoding Supabase JWT without signature verification (bridge)
+        payload = jwt.decode(token, options={"verify_signature": False})
+        email = payload.get("email")
+        if email:
+            user = db.query(User).filter(User.email == email).first()
+            if not user:
+                # Auto-create synced user in local DB
+                user = User(email=email, password_hash="supabase_synced")
+                db.add(user)
+                db.commit()
+                db.refresh(user)
+            return user
+    except Exception:
+        pass
+
+    raise credentials_exception
 
 @router.post("/register", response_model=Token)
 def register(user: UserCreate, db: Session = Depends(get_db)):

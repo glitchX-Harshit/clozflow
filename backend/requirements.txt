@@ -2,10 +2,6 @@ fastapi
 uvicorn
 websockets
 python-dotenv
-fastapi
-uvicorn
-websockets
-python-dotenv
 sqlalchemy
 asyncpg
 deepgram-sdk
@@ -15,3 +11,4 @@ pydantic-settings
 passlib[bcrypt]
 PyJWT
 reportlab==4.1.0
+httpx

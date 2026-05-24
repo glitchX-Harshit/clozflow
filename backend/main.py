@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from database import engine, Base
 from routers import auth, calls
 from routers import user as user_router
+from routers import leads as leads_router
 from routers.auth import get_current_user
 from models import User
 from fastapi import Depends
@@ -39,6 +40,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(calls.router)
 app.include_router(user_router.router)
+app.include_router(leads_router.router)
 
 # Serve uploaded avatars
 os.makedirs("static/avatars", exist_ok=True)

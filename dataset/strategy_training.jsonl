@@ -1,0 +1,301 @@
+{"message": "this feels expensive", "strategy": "ROI_REFRAME"}
+{"message": "the price seems too high", "strategy": "ROI_REFRAME"}
+{"message": "that's out of our budget", "strategy": "ROI_REFRAME"}
+{"message": "it costs too much", "strategy": "ROI_REFRAME"}
+{"message": "we can't justify the price", "strategy": "ROI_REFRAME"}
+{"message": "what's the ROI on this?", "strategy": "ROI_REFRAME"}
+{"message": "the investment is significant", "strategy": "ROI_REFRAME"}
+{"message": "that number is too big for us", "strategy": "ROI_REFRAME"}
+{"message": "we don't have that kind of budget", "strategy": "ROI_REFRAME"}
+{"message": "is there a cheaper option?", "strategy": "ROI_REFRAME"}
+{"message": "it's a lot of money for what we get", "strategy": "ROI_REFRAME"}
+{"message": "we're cost-sensitive right now", "strategy": "ROI_REFRAME"}
+{"message": "pricing doesn't match our expectations", "strategy": "ROI_REFRAME"}
+{"message": "our competitors offer it cheaper", "strategy": "ROI_REFRAME"}
+{"message": "can you lower the price?", "strategy": "ROI_REFRAME"}
+{"message": "we're watching our spend closely", "strategy": "ROI_REFRAME"}
+{"message": "budget is tight this quarter", "strategy": "ROI_REFRAME"}
+{"message": "seems overpriced for a startup", "strategy": "ROI_REFRAME"}
+{"message": "not sure the value justifies the cost", "strategy": "ROI_REFRAME"}
+{"message": "finance won't approve this number", "strategy": "ROI_REFRAME"}
+{"message": "what's your best price?", "strategy": "ROI_REFRAME"}
+{"message": "we need a discount to move forward", "strategy": "ROI_REFRAME"}
+{"message": "do you offer annual billing savings?", "strategy": "ROI_REFRAME"}
+{"message": "cost is the main concern right now", "strategy": "ROI_REFRAME"}
+{"message": "the total cost of ownership is unclear", "strategy": "ROI_REFRAME"}
+{"message": "we're spending too much on tools already", "strategy": "ROI_REFRAME"}
+{"message": "can't see the return on this", "strategy": "ROI_REFRAME"}
+{"message": "it feels expensive compared to alternatives", "strategy": "ROI_REFRAME"}
+{"message": "we have a fixed budget cap", "strategy": "ROI_REFRAME"}
+{"message": "price is a blocker for us", "strategy": "ROI_REFRAME"}
+{"message": "the price point feels off for this ROI claim", "strategy": "ROI_REFRAME"}
+{"message": "how do you justify the cost at our scale", "strategy": "ROI_REFRAME"}
+{"message": "what's the payback period on this", "strategy": "ROI_REFRAME"}
+{"message": "we're burning money on tools already", "strategy": "ROI_REFRAME"}
+{"message": "hard to see how this pays for itself", "strategy": "ROI_REFRAME"}
+{"message": "this would eat a big chunk of our budget", "strategy": "ROI_REFRAME"}
+{"message": "annual plan feels risky given the price", "strategy": "ROI_REFRAME"}
+{"message": "need to see savings first before spending more", "strategy": "ROI_REFRAME"}
+{"message": "financial pressures mean we're careful", "strategy": "ROI_REFRAME"}
+{"message": "we're optimizing for profitability not tools", "strategy": "ROI_REFRAME"}
+{"message": "not sure we can afford this right now", "strategy": "ROI_REFRAME"}
+{"message": "the cost-benefit isn't clear to me", "strategy": "ROI_REFRAME"}
+{"message": "need to see measurable ROI before committing", "strategy": "ROI_REFRAME"}
+{"message": "current tools cost a fraction of this", "strategy": "ROI_REFRAME"}
+{"message": "why would I pay this when free tools exist", "strategy": "ROI_REFRAME"}
+{"message": "we're down-sizing our software spend", "strategy": "ROI_REFRAME"}
+{"message": "investors are watching our burn rate", "strategy": "ROI_REFRAME"}
+{"message": "I keep coming back to the cost", "strategy": "ROI_REFRAME"}
+{"message": "can we do a smaller proof of concept first", "strategy": "ROI_REFRAME"}
+{"message": "is there a pilot pricing option", "strategy": "ROI_REFRAME"}
+{"message": "our CFO is going to ask about payback period", "strategy": "ROI_REFRAME"}
+{"message": "the monthly fee adds up fast", "strategy": "ROI_REFRAME"}
+{"message": "that's a significant line item for us", "strategy": "ROI_REFRAME"}
+{"message": "we're tightening belts across the board", "strategy": "ROI_REFRAME"}
+{"message": "budget approval is going to be tough", "strategy": "ROI_REFRAME"}
+{"message": "we cancelled similar subscriptions last month", "strategy": "ROI_REFRAME"}
+{"message": "I need to show clear financial return", "strategy": "ROI_REFRAME"}
+{"message": "our finance team scrutinizes every new expense", "strategy": "ROI_REFRAME"}
+{"message": "is there a freemium or trial option", "strategy": "ROI_REFRAME"}
+{"message": "we're not in a spending mode right now", "strategy": "ROI_REFRAME"}
+{"message": "maybe revisit later", "strategy": "RISK_REVERSAL"}
+{"message": "let's circle back next quarter", "strategy": "RISK_REVERSAL"}
+{"message": "not the right time", "strategy": "RISK_REVERSAL"}
+{"message": "we're not ready yet", "strategy": "RISK_REVERSAL"}
+{"message": "we'll revisit this in a few months", "strategy": "RISK_REVERSAL"}
+{"message": "let us think about it", "strategy": "RISK_REVERSAL"}
+{"message": "we need more time to decide", "strategy": "RISK_REVERSAL"}
+{"message": "timing isn't right for us", "strategy": "RISK_REVERSAL"}
+{"message": "let's reconnect after the holidays", "strategy": "RISK_REVERSAL"}
+{"message": "we're in a freeze period", "strategy": "RISK_REVERSAL"}
+{"message": "we just started a new initiative", "strategy": "RISK_REVERSAL"}
+{"message": "too busy to look at this now", "strategy": "RISK_REVERSAL"}
+{"message": "we're mid-project and can't switch", "strategy": "RISK_REVERSAL"}
+{"message": "maybe next fiscal year", "strategy": "RISK_REVERSAL"}
+{"message": "our team is stretched thin right now", "strategy": "RISK_REVERSAL"}
+{"message": "let's put this on hold", "strategy": "RISK_REVERSAL"}
+{"message": "we have bigger priorities this month", "strategy": "RISK_REVERSAL"}
+{"message": "come back in Q3", "strategy": "RISK_REVERSAL"}
+{"message": "we'll definitely look at this later", "strategy": "RISK_REVERSAL"}
+{"message": "give us a couple of weeks", "strategy": "RISK_REVERSAL"}
+{"message": "I'd rather wait and see", "strategy": "RISK_REVERSAL"}
+{"message": "we're evaluating this slowly", "strategy": "RISK_REVERSAL"}
+{"message": "it's not urgent for us", "strategy": "RISK_REVERSAL"}
+{"message": "let's not rush into anything", "strategy": "RISK_REVERSAL"}
+{"message": "we're still in planning mode", "strategy": "RISK_REVERSAL"}
+{"message": "now isn't a good moment", "strategy": "RISK_REVERSAL"}
+{"message": "we'd rather wait until we grow", "strategy": "RISK_REVERSAL"}
+{"message": "too early to commit", "strategy": "RISK_REVERSAL"}
+{"message": "let me check with my team first", "strategy": "RISK_REVERSAL"}
+{"message": "we need to finish what we started", "strategy": "RISK_REVERSAL"}
+{"message": "we want to defer until after funding", "strategy": "RISK_REVERSAL"}
+{"message": "let's see how Q4 goes first", "strategy": "RISK_REVERSAL"}
+{"message": "we want to wait for market clarity", "strategy": "RISK_REVERSAL"}
+{"message": "everything is on pause until we raise", "strategy": "RISK_REVERSAL"}
+{"message": "we're waiting for leadership to settle first", "strategy": "RISK_REVERSAL"}
+{"message": "not a good time internally", "strategy": "RISK_REVERSAL"}
+{"message": "we're in a strategic pivot and can't add tools", "strategy": "RISK_REVERSAL"}
+{"message": "come back after our restructure", "strategy": "RISK_REVERSAL"}
+{"message": "we need to stabilize before adding new vendors", "strategy": "RISK_REVERSAL"}
+{"message": "decisions are frozen right now", "strategy": "RISK_REVERSAL"}
+{"message": "we have a hiring freeze that affects this", "strategy": "RISK_REVERSAL"}
+{"message": "check in with us in a couple months", "strategy": "RISK_REVERSAL"}
+{"message": "we're waiting on a major contract", "strategy": "RISK_REVERSAL"}
+{"message": "once our new team is in place we can revisit", "strategy": "RISK_REVERSAL"}
+{"message": "not a priority this sprint", "strategy": "RISK_REVERSAL"}
+{"message": "we're mid-merger and can't commit", "strategy": "RISK_REVERSAL"}
+{"message": "reach back out in January", "strategy": "RISK_REVERSAL"}
+{"message": "product roadmap changes are happening", "strategy": "RISK_REVERSAL"}
+{"message": "we're in a wait-and-watch mode", "strategy": "RISK_REVERSAL"}
+{"message": "things are a bit uncertain so let's hold off", "strategy": "RISK_REVERSAL"}
+{"message": "we'll think about it", "strategy": "RISK_REVERSAL"}
+{"message": "sounds interesting, send me a follow-up", "strategy": "RISK_REVERSAL"}
+{"message": "let's not rush into a decision", "strategy": "RISK_REVERSAL"}
+{"message": "I want to look at other options first", "strategy": "RISK_REVERSAL"}
+{"message": "we're happy to keep talking but no commitment now", "strategy": "RISK_REVERSAL"}
+{"message": "give us another quarter to evaluate", "strategy": "RISK_REVERSAL"}
+{"message": "I'll put it in the roadmap for later", "strategy": "RISK_REVERSAL"}
+{"message": "we evaluate tools once a year", "strategy": "RISK_REVERSAL"}
+{"message": "our annual planning is in December", "strategy": "RISK_REVERSAL"}
+{"message": "we've put vendor evaluations on hold", "strategy": "RISK_REVERSAL"}
+{"message": "we're still recovering from a major project", "strategy": "RISK_REVERSAL"}
+{"message": "let's reconnect after the product launch", "strategy": "RISK_REVERSAL"}
+{"message": "we're heads down on delivery right now", "strategy": "RISK_REVERSAL"}
+{"message": "the team doesn't have bandwidth", "strategy": "RISK_REVERSAL"}
+{"message": "our onboarding capacity is limited right now", "strategy": "RISK_REVERSAL"}
+{"message": "we already have tools", "strategy": "STATUS_GAP"}
+{"message": "we have something similar internally", "strategy": "STATUS_GAP"}
+{"message": "our current setup works fine", "strategy": "STATUS_GAP"}
+{"message": "we built our own solution", "strategy": "STATUS_GAP"}
+{"message": "we're already using a competitor", "strategy": "STATUS_GAP"}
+{"message": "we're happy with what we have", "strategy": "STATUS_GAP"}
+{"message": "we don't need another tool", "strategy": "STATUS_GAP"}
+{"message": "we're already set up for this", "strategy": "STATUS_GAP"}
+{"message": "our team handles this manually", "strategy": "STATUS_GAP"}
+{"message": "we've got this covered", "strategy": "STATUS_GAP"}
+{"message": "we're doing fine without it", "strategy": "STATUS_GAP"}
+{"message": "we use spreadsheets and it works", "strategy": "STATUS_GAP"}
+{"message": "we've been doing this for years our way", "strategy": "STATUS_GAP"}
+{"message": "I don't see why we need this", "strategy": "STATUS_GAP"}
+{"message": "we have a system in place already", "strategy": "STATUS_GAP"}
+{"message": "our stack already covers this", "strategy": "STATUS_GAP"}
+{"message": "we're an industry leader and know what we need", "strategy": "STATUS_GAP"}
+{"message": "we tried something like this before", "strategy": "STATUS_GAP"}
+{"message": "we already evaluated tools like this", "strategy": "STATUS_GAP"}
+{"message": "I think what we do today is good enough", "strategy": "STATUS_GAP"}
+{"message": "we're too big to change direction now", "strategy": "STATUS_GAP"}
+{"message": "we're too established to need this", "strategy": "STATUS_GAP"}
+{"message": "we have our own proprietary system", "strategy": "STATUS_GAP"}
+{"message": "don't think we need another platform", "strategy": "STATUS_GAP"}
+{"message": "our competitors don't use this either", "strategy": "STATUS_GAP"}
+{"message": "we've already invested in a different direction", "strategy": "STATUS_GAP"}
+{"message": "we prefer to keep things simple", "strategy": "STATUS_GAP"}
+{"message": "we built something similar ourselves", "strategy": "STATUS_GAP"}
+{"message": "our processes already work well", "strategy": "STATUS_GAP"}
+{"message": "I don't see a gap this fills for us", "strategy": "STATUS_GAP"}
+{"message": "we're the market leader we set the pace", "strategy": "STATUS_GAP"}
+{"message": "we've won awards for our current approach", "strategy": "STATUS_GAP"}
+{"message": "no one does this better than us internally", "strategy": "STATUS_GAP"}
+{"message": "we've been innovating for decades", "strategy": "STATUS_GAP"}
+{"message": "we don't need to copy what others do", "strategy": "STATUS_GAP"}
+{"message": "we're ahead of where our competitors are", "strategy": "STATUS_GAP"}
+{"message": "we already went through a digital transformation", "strategy": "STATUS_GAP"}
+{"message": "we run tighter operations than you might think", "strategy": "STATUS_GAP"}
+{"message": "our retention rate is already excellent", "strategy": "STATUS_GAP"}
+{"message": "we just hired a team to handle this in-house", "strategy": "STATUS_GAP"}
+{"message": "we built a custom workflow last year", "strategy": "STATUS_GAP"}
+{"message": "we handle this better with our own processes", "strategy": "STATUS_GAP"}
+{"message": "we have a BI team that does this already", "strategy": "STATUS_GAP"}
+{"message": "we have consultants advising us on this", "strategy": "STATUS_GAP"}
+{"message": "we've outgrown generic tools", "strategy": "STATUS_GAP"}
+{"message": "we're already piloting something similar", "strategy": "STATUS_GAP"}
+{"message": "we have a vendor we're happy with", "strategy": "STATUS_GAP"}
+{"message": "our internal data team handles this", "strategy": "STATUS_GAP"}
+{"message": "we use Salesforce and it does all of this", "strategy": "STATUS_GAP"}
+{"message": "our CRM already has these features", "strategy": "STATUS_GAP"}
+{"message": "we have a homegrown system that works", "strategy": "STATUS_GAP"}
+{"message": "our engineering team built something for this", "strategy": "STATUS_GAP"}
+{"message": "we outsource this and it's working", "strategy": "STATUS_GAP"}
+{"message": "I honestly don't see what's missing", "strategy": "STATUS_GAP"}
+{"message": "we've tried three tools like this and didn't switch", "strategy": "STATUS_GAP"}
+{"message": "our team prefers what they know", "strategy": "STATUS_GAP"}
+{"message": "we invested heavily in our current stack", "strategy": "STATUS_GAP"}
+{"message": "we're not looking to replace what's working", "strategy": "STATUS_GAP"}
+{"message": "need partner approval", "strategy": "DECISION_CONTROL"}
+{"message": "my boss needs to sign off on this", "strategy": "DECISION_CONTROL"}
+{"message": "this goes above my pay grade", "strategy": "DECISION_CONTROL"}
+{"message": "I need to check with the board", "strategy": "DECISION_CONTROL"}
+{"message": "our CFO has to approve all purchases", "strategy": "DECISION_CONTROL"}
+{"message": "I can't make this call alone", "strategy": "DECISION_CONTROL"}
+{"message": "I'll loop in my team and get back to you", "strategy": "DECISION_CONTROL"}
+{"message": "we have a committee for these decisions", "strategy": "DECISION_CONTROL"}
+{"message": "I need buy-in from other stakeholders", "strategy": "DECISION_CONTROL"}
+{"message": "let me run it by my manager", "strategy": "DECISION_CONTROL"}
+{"message": "our procurement process takes a while", "strategy": "DECISION_CONTROL"}
+{"message": "we need legal review before anything", "strategy": "DECISION_CONTROL"}
+{"message": "I don't have signing authority", "strategy": "DECISION_CONTROL"}
+{"message": "multiple people are involved in this decision", "strategy": "DECISION_CONTROL"}
+{"message": "my VP needs to weigh in", "strategy": "DECISION_CONTROL"}
+{"message": "I'm just the evaluator not the decision maker", "strategy": "DECISION_CONTROL"}
+{"message": "I'll need to align the team first", "strategy": "DECISION_CONTROL"}
+{"message": "our CTO handles all technology decisions", "strategy": "DECISION_CONTROL"}
+{"message": "we work by consensus here", "strategy": "DECISION_CONTROL"}
+{"message": "this needs executive sponsorship", "strategy": "DECISION_CONTROL"}
+{"message": "I'm not authorized to commit to this", "strategy": "DECISION_CONTROL"}
+{"message": "the leadership team decides this", "strategy": "DECISION_CONTROL"}
+{"message": "I'll need my co-founder on a call", "strategy": "DECISION_CONTROL"}
+{"message": "we run all vendor decisions through procurement", "strategy": "DECISION_CONTROL"}
+{"message": "I'd need to cc my department head", "strategy": "DECISION_CONTROL"}
+{"message": "I'll need three quotes before we proceed", "strategy": "DECISION_CONTROL"}
+{"message": "internal approval can take weeks", "strategy": "DECISION_CONTROL"}
+{"message": "my partner is skeptical and needs convincing", "strategy": "DECISION_CONTROL"}
+{"message": "there's a decision matrix we follow", "strategy": "DECISION_CONTROL"}
+{"message": "the board needs to approve this first", "strategy": "DECISION_CONTROL"}
+{"message": "I'll have to pitch this upstairs", "strategy": "DECISION_CONTROL"}
+{"message": "I need written approval from finance", "strategy": "DECISION_CONTROL"}
+{"message": "this triggers a vendor review process", "strategy": "DECISION_CONTROL"}
+{"message": "we need a business case for this", "strategy": "DECISION_CONTROL"}
+{"message": "I'm not the right person to approve this", "strategy": "DECISION_CONTROL"}
+{"message": "my partner handles financial decisions", "strategy": "DECISION_CONTROL"}
+{"message": "there's a purchasing committee I need to go through", "strategy": "DECISION_CONTROL"}
+{"message": "can we do a joint call with my director?", "strategy": "DECISION_CONTROL"}
+{"message": "I'll need legal to review the contract", "strategy": "DECISION_CONTROL"}
+{"message": "the decision isn't mine alone to make", "strategy": "DECISION_CONTROL"}
+{"message": "I'll need to put a proposal together for management", "strategy": "DECISION_CONTROL"}
+{"message": "our CEO is the final call on this", "strategy": "DECISION_CONTROL"}
+{"message": "I need alignment across departments", "strategy": "DECISION_CONTROL"}
+{"message": "we follow a 3-bid process", "strategy": "DECISION_CONTROL"}
+{"message": "we have a vendor management office", "strategy": "DECISION_CONTROL"}
+{"message": "this requires sign-off from two people", "strategy": "DECISION_CONTROL"}
+{"message": "I need a clear recommendation before escalating", "strategy": "DECISION_CONTROL"}
+{"message": "my co-founder will want to evaluate this too", "strategy": "DECISION_CONTROL"}
+{"message": "we have a shared decision framework", "strategy": "DECISION_CONTROL"}
+{"message": "I need to get security approval first", "strategy": "DECISION_CONTROL"}
+{"message": "our IT team has to vet all new software", "strategy": "DECISION_CONTROL"}
+{"message": "GDPR compliance review is required before onboarding", "strategy": "DECISION_CONTROL"}
+{"message": "our data privacy officer needs to sign off", "strategy": "DECISION_CONTROL"}
+{"message": "I report to a steering committee on this", "strategy": "DECISION_CONTROL"}
+{"message": "let me set up a call with all the right people", "strategy": "DECISION_CONTROL"}
+{"message": "I'll need my investors to weigh in", "strategy": "DECISION_CONTROL"}
+{"message": "there are three of us who make technology decisions", "strategy": "DECISION_CONTROL"}
+{"message": "I'll schedule an internal review meeting first", "strategy": "DECISION_CONTROL"}
+{"message": "sounds like AI hype", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I've heard this pitch before", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "every tool claims to use AI now", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we're not convinced AI adds real value", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "this seems overhyped", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "prove it actually works", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what makes you different from the rest?", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I'll believe it when I see results", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we've tried AI tools before and they didn't deliver", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I'm skeptical of AI promises", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "this sounds like a sales pitch", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "not convinced this is any different", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "show me the data", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "where's the proof?", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we need evidence before committing", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "AI hype is real and we've been burned before", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "hard to trust vendor claims at face value", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I need to see a case study first", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "sounds impressive but I need substance", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "AI seems like a buzzword right now", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I want to talk to a reference customer", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we don't jump on trends", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what actual results have you seen?", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "does this actually work in practice?", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I'm a show-me type of person", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "the demo looked good but demos always do", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "our board is skeptical of AI investment", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I've seen too many AI solutions underdeliver", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "let's see a pilot result before we commit", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I need third-party validation", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I've been misled by AI vendors before", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we had a bad experience with a similar tool", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "this sounds too good to be true", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I'd need customer references to trust this", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "AI is oversold in our industry", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "where's the independent research?", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I want to see metrics from real deployments", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what problem does this actually solve", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we've been burned by hype before", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "let's be honest AI rarely does what it claims", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I'd like to run a test before committing", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what's the real accuracy rate", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I trust numbers not demos", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "your competitors said the same thing", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "is there a G2 or Gartner report on this", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "the tech sounds right but I need proof", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "we want to validate before we expand", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I want to understand the failure modes", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what happens when it gets it wrong", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "how long until we see actual results", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what's the real-world error rate on this", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "can I speak to someone who uses it daily", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I'm going to research your competitors first", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "show me a live demo with real data", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what do unbiased reviews say about this", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I need to see before I believe", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "how is this different from what we saw six months ago", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "I've read some mixed reviews online", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "is the AI actually trained on our industry", "strategy": "DIAGNOSTIC_QUESTION"}
+{"message": "what specific metrics improved for clients", "strategy": "DIAGNOSTIC_QUESTION"}
