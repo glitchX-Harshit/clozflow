@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, Clock, MessageCircle, Zap, FileText, ChevronRight, Loader2, ArrowLeft, Target, Activity, Lightbulb, Gavel, AlertTriangle } from 'lucide-react';
+import { Download, Clock, MessageCircle, Zap, FileText, ChevronRight, Loader2, ArrowLeft, Target, Activity, Lightbulb, Gavel, AlertTriangle, Trash2 } from 'lucide-react';
 
 // ── Mock session data for demo ────────────────────────────────────────────────
 const MOCK_SESSION_DETAIL = {
@@ -245,6 +245,25 @@ const HistoryView = () => {
         }
     };
 
+    const handleDelete = async (e, callId) => {
+        e.stopPropagation(); // prevent opening details
+        if (!window.confirm("Are you sure you want to delete this session log? This action cannot be undone.")) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:8000/calls/${callId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to delete history item');
+            
+            // Remove from state immediately
+            setCalls(prev => prev.filter(c => c.id !== callId));
+        } catch (err) {
+            alert('Error deleting session: ' + err.message);
+        }
+    };
+
     if (loading) return (
         <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'400px', gap:'1rem' }}>
             <Loader2 className="animate-spin" size={32} color="var(--accent)" />
@@ -287,34 +306,55 @@ const HistoryView = () => {
 
             <div style={{ display:'flex', flexDirection:'column', gap:'0.875rem' }}>
                 {calls.map(call => (
-                    <button
+                    <div
                         key={call.id}
-                        onClick={() => setSelected(call.id)}
                         style={{
-                            width:'100%', textAlign:'left', background:'var(--bg)', border:'1px solid var(--border)',
-                            borderRadius:18, padding:'1.75rem 2rem',
-                            cursor:'pointer', transition:'all 0.2s',
-                            display:'flex', alignItems:'center', gap:'1.5rem',
+                            display:'flex', alignItems:'center', background:'var(--bg)', border:'1px solid var(--border)',
+                            borderRadius:18, transition:'all 0.2s', width:'100%', position: 'relative'
                         }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(99,102,241,0.1)'; }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(99,102,241,0.06)'; }}
                         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
                     >
-                        <div style={{ width:52, height:52, borderRadius:14, background:'var(--surface)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'var(--accent)' }}>
-                            <FileText size={22} />
-                        </div>
-                        <div style={{ flex:1 }}>
-                            <div style={{ display:'flex', alignItems:'center', gap:'0.75rem', marginBottom:'0.375rem' }}>
-                                <span style={{ fontWeight:800, fontSize:'1.0625rem' }}>Session #{call.id}</span>
-                                <span style={{ padding:'0.2rem 0.625rem', background:'var(--accent-dim)', color:'var(--accent)', borderRadius:99, fontSize:'0.65rem', fontWeight:800, letterSpacing:'0.08em', textTransform:'uppercase' }}>Analyzed</span>
+                        <button
+                            onClick={() => setSelected(call.id)}
+                            style={{
+                                flex:1, textAlign:'left', background:'transparent', border:'none',
+                                padding:'1.75rem 2rem', cursor:'pointer',
+                                display:'flex', alignItems:'center', gap:'1.5rem', width:'100%', fontFamily: 'inherit'
+                            }}
+                        >
+                            <div style={{ width:52, height:52, borderRadius:14, background:'var(--surface)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'var(--accent)' }}>
+                                <FileText size={22} />
                             </div>
-                            <div style={{ display:'flex', gap:'1rem', color:'var(--text-dim)', fontSize:'0.8125rem', flexWrap:'wrap' }}>
-                                <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Clock size={13} />{new Date(call.timestamp).toLocaleDateString()} · {new Date(call.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
-                                <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><MessageCircle size={13} />{call.message_count} messages</span>
-                                <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Zap size={13} />{call.insight_count} AI insights</span>
+                            <div style={{ flex:1 }}>
+                                <div style={{ display:'flex', alignItems:'center', gap:'0.75rem', marginBottom:'0.375rem' }}>
+                                    <span style={{ fontWeight:800, fontSize:'1.0625rem', color: 'var(--text)' }}>Session #{call.id}</span>
+                                    <span style={{ padding:'0.2rem 0.625rem', background:'var(--accent-dim)', color:'var(--accent)', borderRadius:99, fontSize:'0.65rem', fontWeight:800, letterSpacing:'0.08em', textTransform:'uppercase' }}>Analyzed</span>
+                                </div>
+                                <div style={{ display:'flex', gap:'1rem', color:'var(--text-dim)', fontSize:'0.8125rem', flexWrap:'wrap' }}>
+                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Clock size={13} />{new Date(call.timestamp).toLocaleDateString()} · {new Date(call.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><MessageCircle size={13} />{call.message_count} messages</span>
+                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Zap size={13} />{call.insight_count} AI insights</span>
+                                </div>
                             </div>
-                        </div>
-                        <ChevronRight size={18} color="var(--text-muted)" />
-                    </button>
+                        </button>
+
+                        {/* Separate Delete Button */}
+                        <button
+                            onClick={(e) => handleDelete(e, call.id)}
+                            title="Delete session log"
+                            style={{
+                                background:'transparent', border:'none', padding:'1rem',
+                                color:'var(--text-muted)', cursor:'pointer', marginRight:'1.5rem',
+                                display:'flex', alignItems:'center', justifyContent:'center',
+                                borderRadius:'10px', transition:'all 0.2s', flexShrink:0
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent'; }}
+                        >
+                            <Trash2 size={16} />
+                        </button>
+                    </div>
                 ))}
             </div>
         </div>
