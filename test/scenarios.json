@@ -1,98 +1,130 @@
 [
   {
-    "name": "Indian Business Owner + Existing Vendor Bias",
+    "name": "Bakery Owner + Existing Vendor Bias",
     "messages": [
-      "bhai honestly we already have a guy handling all this",
-      "it’s not perfect but it’s working decent enough for now",
-      "switching everything again feels unnecessary headache"
+      "bhai honestly our cousin already handles our website stuff",
+      "it’s not very modern but customers still place orders somehow",
+      "changing everything again just sounds like extra headache for the shop"
     ]
   },
   {
-    "name": "Budget Pressure + ROI Doubt",
+    "name": "Budget Pressure + ROI Fear",
     "messages": [
-      "see the thing is budget is already tight this quarter",
-      "if i spend this much i need to clearly see where the return is coming from",
-      "otherwise internally everyone will question why we even invested in this"
+      "see margins are already tight in bakery business",
+      "if i spend this much on a website i need to clearly see what business it actually brings",
+      "otherwise my family will just say we wasted money on design"
     ]
   },
   {
-    "name": "Indian Founder Skepticism",
+    "name": "Founder Skepticism + AI Distrust",
     "messages": [
-      "bro nowadays every AI company sounds smart in demos",
-      "once payment is done support becomes slow and results disappear",
-      "so what exactly makes this different from the usual AI hype?"
+      "bro nowadays everyone says AI AI and promises growth",
+      "after payment most agencies stop caring properly",
+      "so what actually makes your service different from normal hype?"
     ]
   },
   {
-    "name": "Team Resistance + Operational Fear",
+    "name": "Operational Fear + Staff Resistance",
     "messages": [
-      "implementation is the real problem honestly",
-      "my team already resists small process changes",
-      "if this becomes complicated nobody will actually use it properly"
+      "implementation is the main tension honestly",
+      "my staff already struggles using basic software properly",
+      "if this becomes complicated nobody here will actually use it"
     ]
   },
   {
-    "name": "Polite Delay + Hidden No",
+    "name": "Polite Delay + Hidden Rejection",
     "messages": [
-      "haan looks interesting no doubt",
-      "let me discuss internally once and we’ll reconnect later",
-      "right now there are too many things happening from our side"
+      "haan honestly the design looks good no doubt",
+      "let me discuss once with my brother because we handle decisions together",
+      "right now wedding season orders are already creating too much chaos here"
     ]
   },
   {
-    "name": "Ego + Control + Status",
+    "name": "Ego + Self-Made Business Pride",
     "messages": [
-      "we’ve scaled without these kinds of systems till now",
-      "most external tools create more dependency than actual results",
-      "why should i change something that’s already running fine?"
+      "we built this bakery without fancy systems till now",
+      "most outside services create dependency more than actual growth",
+      "why should i change something that’s already running fine enough?"
     ]
   },
   {
-    "name": "Price Shock + Internal Comparison",
+    "name": "Price Shock + Employee Comparison",
     "messages": [
-      "wait this is way above what i expected",
-      "for this amount i could literally hire another employee internally",
-      "help me understand why this would make more sense financially"
+      "wait this pricing is honestly much higher than i expected",
+      "for this amount i could literally hire one more worker inside the bakery",
+      "help me understand why this financially makes more sense"
     ]
   },
   {
-    "name": "Analytical CTO Type",
+    "name": "Analytical Local Business Owner",
     "messages": [
-      "i’m less interested in the pitch and more interested in actual operational impact",
-      "how exactly does this improve conversion quality practically?",
-      "because theory always sounds cleaner than real execution"
+      "i’m less interested in modern design words and more interested in actual customer increase",
+      "how exactly does this website improve orders practically?",
+      "because presentation always sounds cleaner than reality"
     ]
   },
   {
-    "name": "Fast Talking Founder",
+    "name": "Fast Decision Maker + Revenue Focus",
     "messages": [
-      "yeah yeah i get the concept but tell me directly what changes after using this",
-      "because if results take 6 months then realistically nobody has patience for that",
-      "we need something that impacts revenue fast"
+      "haan okay i understand the concept but directly tell me what changes after this",
+      "because realistically nobody here waits 6 months for results",
+      "if this impacts sales fast then only it becomes interesting"
     ]
   },
   {
-    "name": "Trust Issue After Bad Experience",
+    "name": "Trust Issues From Previous Agency",
     "messages": [
-      "we invested into another software before also",
-      "initially everything sounded amazing but adoption became zero after few weeks",
-      "that’s why now we’re a little careful before committing again"
+      "we already worked with one freelancer before also",
+      "starting was amazing but after few weeks support became almost dead",
+      "that’s why now we’re careful before trusting again"
     ]
   },
   {
-    "name": "Hard Negotiator",
+    "name": "Hard Negotiator + Value Pressure",
     "messages": [
-      "look straight up if i’m paying premium then i expect premium level outcomes",
-      "otherwise there’s no shortage of cheaper tools in the market",
-      "so convince me why this deserves that pricing"
+      "look if i’m paying premium then i expect serious business impact",
+      "cheap website people are already available everywhere",
+      "so convince me why your work deserves this pricing"
     ]
   },
   {
     "name": "Emotionally Detached Buyer",
     "messages": [
-      "honestly i’m not emotionally sold on this yet",
-      "logically some parts make sense but something still feels incomplete",
-      "i’m trying to figure out whether this is actually necessary right now"
+      "logically some things make sense honestly",
+      "but emotionally i still don’t feel fully convinced yet",
+      "i’m still trying to understand whether this is actually necessary for us right now"
+    ]
+  },
+  {
+    "name": "Social Media Dependency Objection",
+    "messages": [
+      "most of our customers already come from Instagram and word of mouth",
+      "so i’m not understanding why we suddenly need a proper website also",
+      "is this actually going to add something new or just look professional?"
+    ]
+  },
+  {
+    "name": "Local Competition Pressure",
+    "messages": [
+      "other bakeries around us don’t even have proper websites honestly",
+      "still they’re running fine and getting regular customers",
+      "so what exactly changes for us if we invest into this?"
+    ]
+  },
+  {
+    "name": "Fear of Technology Complexity",
+    "messages": [
+      "bro we are bakery people not tech people",
+      "if every small thing needs technical understanding then it becomes difficult for us",
+      "we need something simple otherwise nobody here will maintain it"
+    ]
+  },
+  {
+    "name": "Family Business Decision Dynamics",
+    "messages": [
+      "final decisions here don’t happen alone honestly",
+      "my father will ask directly how this improves revenue before approving anything",
+      "if i can’t explain the practical benefit clearly then he’ll reject it immediately"
     ]
   }
 ]

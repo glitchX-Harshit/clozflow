@@ -49,3 +49,20 @@ class CallLog(Base):
     timestamp       = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="call_logs")
+
+
+class Lead(Base):
+    __tablename__ = "leads"
+    id                = Column(Integer, primary_key=True, index=True)
+    business_name     = Column(String, index=True)
+    category          = Column(String, nullable=True)
+    city              = Column(String, nullable=True)
+    phone_number      = Column(String, nullable=True)
+    website           = Column(String, nullable=True)
+    instagram         = Column(String, nullable=True)
+    google_rating     = Column(String, nullable=True)      # stored as string for flexibility
+    ai_summary        = Column(Text, nullable=True)
+    likely_pain_point = Column(Text, nullable=True)
+    outreach_angle    = Column(Text, nullable=True)
+    lead_score        = Column(Integer, default=0)
+    created_at        = Column(DateTime, default=datetime.utcnow)

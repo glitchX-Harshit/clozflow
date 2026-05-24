@@ -55,20 +55,22 @@
 
 .hiw__card {
   position: relative;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
   padding: 3rem;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
 .hiw__card:hover {
-  border-color: var(--accent);
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-premium);
+  border-color: rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
 }
 
 .hiw__card-top {
@@ -79,11 +81,9 @@
 
 .hiw__card-num {
   font-family: var(--font-display);
-  font-size: 4.5rem;
-  line-height: 0.8;
-  color: var(--text);
-  letter-spacing: -0.05em;
-  opacity: 0.15;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-muted);
 }
 
 .hiw__card-icon {
@@ -92,9 +92,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: var(--surface-2);
-  color: var(--accent);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text);
+  transition: background 0.3s ease;
+}
+
+.hiw__card:hover .hiw__card-icon {
+  background: var(--text);
+  color: #ffffff;
 }
 
 .hiw__card-tag {
@@ -109,37 +115,17 @@
 
 .hiw__card-title {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.02em;
   color: var(--text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .hiw__card-sub {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text-dim);
-  line-height: 1.7;
-}
-
-.hiw__card-footer {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.hiw__card-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-}
-
-.hiw__card-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
+  line-height: 1.6;
 }
 
 /* ── RESPONSIVE ── */

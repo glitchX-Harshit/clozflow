@@ -30,6 +30,9 @@ export const AuthProvider = ({ children }) => {
             if (session?.user) {
                 setUser(normaliseUser(session.user));
                 setIsAuthenticated(true);
+                localStorage.setItem('token', session.access_token);
+            } else {
+                localStorage.removeItem('token');
             }
             setLoading(false);
         });
@@ -40,9 +43,11 @@ export const AuthProvider = ({ children }) => {
                 if (session?.user) {
                     setUser(normaliseUser(session.user));
                     setIsAuthenticated(true);
+                    localStorage.setItem('token', session.access_token);
                 } else {
                     setUser(null);
                     setIsAuthenticated(false);
+                    localStorage.removeItem('token');
                 }
             }
         );

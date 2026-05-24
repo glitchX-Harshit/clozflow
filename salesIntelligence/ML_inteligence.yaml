@@ -1,0 +1,276 @@
+project: HEXAGON_ORCHESTRATION_INTELLIGENCE
+
+goal:
+  Build clean modular ML orchestration layer
+  separated completely from core backend logic.
+
+purpose:
+  Improve:
+    - scalability
+    - maintainability
+    - organization
+    - orchestration intelligence
+
+  Reduce:
+    - API cost
+    - latency
+    - oversized prompts
+    - chaotic architecture
+
+folder_structure:
+
+  root:
+    - frontend/
+    - backend/
+    - ml/
+    - dataset/
+    - models/
+    - logs/
+
+  ml:
+    description: >
+      All orchestration intelligence, prediction logic,
+      vectorization, training and ML utilities stay isolated here.
+
+    folders:
+      - ml/training/
+      - ml/inference/
+      - ml/vectorizers/
+      - ml/utils/
+      - ml/config/
+      - ml/evaluation/
+
+    files:
+
+      - ml/training/train_strategy_model.py
+
+      - ml/inference/predict_strategy.py
+
+      - ml/vectorizers/vectorizer.py
+
+      - ml/utils/preprocess.py
+
+      - ml/config/labels.py
+
+      - ml/evaluation/evaluate_model.py
+
+  dataset:
+    description: >
+      Structured conversational behavioral dataset.
+
+    files:
+      - dataset/strategy_training.jsonl
+
+  models:
+    description: >
+      Exported trained ML models.
+
+    files:
+      - models/strategy_model.pkl
+      - models/vectorizer.pkl
+
+  logs:
+    description: >
+      Learning logs and future adaptive memory.
+
+    files:
+      - logs/conversation_learning.jsonl
+
+architecture_flow:
+
+  runtime:
+    - user_message
+    - ml_prediction_engine
+    - rag_retrieval
+    - compressed_prompt_builder
+    - llm_response_generation
+    - response_logging
+
+  explanation:
+
+    ml_prediction_engine:
+      purpose:
+        Predict:
+          - conversational_strategy
+          - emotional_state
+          - hesitation_pattern
+
+      latency_target:
+        "<50ms"
+
+    rag_retrieval:
+      purpose:
+        Retrieve:
+          - top relevant insight
+          - successful conversational pattern
+
+      rules:
+        - max_chunks: 2
+        - avoid_large_contexts: true
+
+    compressed_prompt_builder:
+      purpose:
+        Build lightweight prompts.
+
+      include_only:
+        - latest_message
+        - predicted_strategy
+        - short_memory
+        - emotional_state
+        - tiny_rag_context
+
+      target_token_size:
+        "700-1200"
+
+    llm_response_generation:
+      purpose:
+        Generate natural conversational response ONLY.
+
+      llm_should_not:
+        - classify_strategy
+        - infer_psychology
+        - decide_conversation_flow
+
+      handled_by_ml:
+        true
+
+dataset_generation:
+
+  target_examples:
+    minimum: 100
+    ideal: 300
+
+  categories:
+
+    pricing:
+      strategy: ROI_REFRAME
+
+    delay:
+      strategy: RISK_REVERSAL
+
+    ego:
+      strategy: STATUS_GAP
+
+    authority:
+      strategy: DECISION_CONTROL
+
+    skepticism:
+      strategy: DIAGNOSTIC_QUESTION
+
+  example_entries:
+
+    - |
+      {"message":"this feels expensive","strategy":"ROI_REFRAME"}
+
+    - |
+      {"message":"we already have tools","strategy":"STATUS_GAP"}
+
+    - |
+      {"message":"maybe revisit later","strategy":"RISK_REVERSAL"}
+
+    - |
+      {"message":"need partner approval","strategy":"DECISION_CONTROL"}
+
+    - |
+      {"message":"sounds like AI hype","strategy":"DIAGNOSTIC_QUESTION"}
+
+ml_stack:
+
+  dependencies:
+    - scikit-learn
+    - pandas
+    - joblib
+    - xgboost
+
+  install_command:
+    pip install scikit-learn pandas joblib xgboost
+
+feature_extraction:
+
+  method:
+    TfidfVectorizer
+
+  file:
+    ml/vectorizers/vectorizer.py
+
+  purpose:
+    Convert conversational text into lightweight vector embeddings.
+
+model_training:
+
+  file:
+    ml/training/train_strategy_model.py
+
+  models:
+
+    primary:
+      XGBoost
+
+    fallback:
+      LogisticRegression
+
+  inputs:
+    - prospect_message
+
+  outputs:
+    - strategy_prediction
+
+model_export:
+
+  export_to:
+    - models/strategy_model.pkl
+    - models/vectorizer.pkl
+
+  library:
+    joblib
+
+live_inference:
+
+  file:
+    ml/inference/predict_strategy.py
+
+  runtime_flow:
+    - preprocess_message
+    - vectorize_message
+    - predict_strategy
+    - return_prediction
+
+  expected_outputs:
+    - ROI_REFRAME
+    - RISK_REVERSAL
+    - STATUS_GAP
+    - DECISION_CONTROL
+    - DIAGNOSTIC_QUESTION
+
+backend_integration:
+
+  backend_file:
+    backend/ml_router.py
+
+  responsibilities:
+    - receive_message
+    - call_ml_prediction
+    - call_rag
+    - build_compressed_prompt
+    - send_to_llm
+
+important_rules:
+
+  - Keep ML isolated from frontend.
+  - Keep ML isolated from RAG storage.
+  - Do NOT train custom LLMs.
+  - Use ML only for orchestration intelligence.
+  - Prioritize low latency.
+  - Preserve conversational naturalness.
+  - Avoid giant prompts.
+  - Avoid replaying full transcripts.
+
+future_scaling:
+
+  future_modules:
+    - response_ranking
+    - adaptive_memory
+    - reinforcement_feedback
+    - industry_specific_models
+    - emotional_scoring
+    - deal_probability_prediction

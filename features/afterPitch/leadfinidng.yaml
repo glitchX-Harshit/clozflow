@@ -1,0 +1,146 @@
+feature: HEXAGON_LEAD_FINDER
+
+objective:
+  Allow users to discover, analyze, and instantly interact
+  with business leads directly from the platform.
+
+frontend:
+
+  page_name: Lead Finder
+
+  layout:
+
+    top_section:
+      search_bar:
+        placeholder: "Find bakery shops in Delhi"
+
+      filters:
+        - business_category
+        - city
+        - rating
+        - website_presence
+        - instagram_presence
+
+      search_button:
+        text: "Search Leads"
+
+  lead_results_grid:
+
+    card_style:
+      - premium_ui
+      - minimal_design
+      - fast_loading
+      - glassmorphism_optional
+
+    lead_card_fields:
+      - business_name
+      - category
+      - city
+      - google_rating
+      - phone_number
+      - website
+      - instagram
+      - ai_summary
+      - likely_pain_point
+      - lead_score
+
+    lead_card_actions:
+      - open_live_copilot
+      - copy_contact
+      - save_lead
+      - generate_outreach
+
+backend:
+
+  lead_collection_engine:
+
+    provider:
+      - google_places_api
+
+    responsibilities:
+      - fetch_businesses
+      - fetch_phone_numbers
+      - fetch_websites
+      - fetch_google_ratings
+      - fetch_locations
+      - normalize_results
+      - remove_duplicate_leads
+
+  ai_enrichment_layer:
+
+    objective:
+      Transform raw business data into actionable sales intelligence.
+
+    ai_analysis:
+      - business_presence_analysis
+      - operational_pain_point_detection
+      - outreach_angle_generation
+      - probable_objection_prediction
+      - lead_quality_estimation
+
+    example_output:
+      ai_summary: >
+        This bakery has strong local reviews
+        but weak online ordering infrastructure.
+
+      likely_pain_point: >
+        Manual customer handling and inconsistent follow-up.
+
+      outreach_angle: >
+        Focus on operational simplicity and customer retention.
+
+  lead_scoring_engine:
+
+    scoring_factors:
+      - online_presence
+      - review_quality
+      - business_activity
+      - website_quality
+      - responsiveness_probability
+
+    score_range:
+      min: 1
+      max: 100
+
+database:
+
+  leads_table:
+    - id
+    - business_name
+    - category
+    - city
+    - phone_number
+    - website
+    - instagram
+    - google_rating
+    - ai_summary
+    - likely_pain_point
+    - lead_score
+    - created_at
+
+user_flow:
+
+  - user_searches_business_type
+  - system_fetches_leads
+  - ai_enriches_leads
+  - lead_cards_rendered
+  - user_selects_lead
+  - launch_live_copilot
+
+future_expansion:
+
+  upcoming_features:
+    - browser_calling
+    - direct_phone_calling
+    - realtime_ai_teleprompting
+    - whatsapp_integration
+    - automated_outreach_sequences
+
+important_rules:
+
+  - prioritize_fast_search_results
+  - keep_ui_clean_and_premium
+  - avoid_crm_complexity
+  - focus_on_realtime_sales_execution
+  - maintain_low_latency
+  - optimize_for_founder_and_smb_usage
