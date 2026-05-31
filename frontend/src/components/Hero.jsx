@@ -46,8 +46,8 @@ const Hero = ({ onGetStarted }) => {
                     <div className="hero__row hero__row--1">
                         <div className="hero__overflow">
                             <span className="hero__line">
-                                <span className="u-hide-mobile">BAAT CHEET</span>
-                                <span className="u-show-mobile">BAAT-CHEET</span>
+                                <span className="u-hide-mobile">ZABAAN SE PEHLE</span>
+                                <span className="u-show-mobile">ZABAAN SE PEHLE</span>
                             </span>
                         </div>
                     </div>
@@ -56,31 +56,33 @@ const Hero = ({ onGetStarted }) => {
                     <div className="hero__row hero__row--2">
                         <div className="hero__desc-inset" ref={subRef}>
                             <p className="hero__desc-text">
-                                The behavioral intelligence layer that catches when they say <em>"budget issue hai"</em> but the real concern is trust. Hexagon listens beyond the words.
+                                The behavioral intelligence layer that
+                                listens beyond words during high‑pressure
+                                sales conversations.
                             </p>
                         </div>
                         <div className="hero__overflow">
-                            <span className="hero__line">DECODE</span>
+                            <span className="hero__line">DIMAAG</span>
                         </div>
                     </div>
 
                     {/* Row 3 — Split alignment */}
                     <div className="hero__row hero__row--3">
                         <div className="hero__overflow">
-                            <span className="hero__line">DEAL APNI</span>
+                            <span className="hero__line">PADHO</span>
                         </div>
                         <div className="hero__overflow">
-                            <span className="hero__line hero__line--outline">HOGI,</span>
+                            <span className="hero__line hero__line--outline">BEFORE</span>
                         </div>
                     </div>
 
                     {/* Row 4 — Centered with elegant italic */}
                     <div className="hero__row hero__row--4">
                         <div className="hero__overflow">
-                            <span className="hero__line">BOSS</span>
+                            <span className="hero__line">PRICING</span>
                         </div>
                         <div className="hero__overflow">
-                            <span className="hero__line hero__line--italic">BINA PRICE KATE.</span>
+                            <span className="hero__line hero__line--italic">DOES.</span>
                         </div>
                     </div>
                 </div>
