@@ -16,6 +16,15 @@ import {
     ArrowRight,
     CheckCircle2,
     Users,
+    Target,
+    Crosshair,
+    Link2,
+    TrendingUp,
+    BarChart3,
+    ShoppingBag,
+    Palette,
+    Bot,
+    Megaphone,
 } from 'lucide-react';
 import './LeadFinder.css';
 
@@ -28,11 +37,36 @@ const EXAMPLES = [
     'Find bakery shops in Delhi',
     'Find gyms in Mumbai',
     'Find dentists in Pune',
-    'Find car wash in Hyderabad',
+    'Find salons in Hyderabad',
     'Find coaching centers in Jaipur',
     'Find restaurants in Bangalore',
-    'Find lawyers in Chennai',
-    'Find salons in Lucknow',
+    'Find clinics in Chennai',
+    'Find boutiques in Lucknow',
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   OFFER PRESETS
+   ══════════════════════════════════════════════════════════════════ */
+const OFFER_PRESETS = [
+    { label: 'Website Development', icon: Globe },
+    { label: 'Video Editing',       icon: Palette },
+    { label: 'AI Automation',       icon: Bot },
+    { label: 'Marketing Agency',    icon: Megaphone },
+    { label: 'SEO Services',        icon: TrendingUp },
+    { label: 'CRM Software',        icon: BarChart3 },
+    { label: 'Recruitment',         icon: Users },
+    { label: 'Consulting',          icon: ShoppingBag },
+];
+
+/* ══════════════════════════════════════════════════════════════════
+   SEARCH MODE OPTIONS
+   ══════════════════════════════════════════════════════════════════ */
+const SEARCH_MODES = [
+    { label: 'High-Fit Leads',        value: 'high_fit_leads' },
+    { label: 'Top Businesses',        value: 'top_businesses' },
+    { label: 'Growth Opportunities',  value: 'growth_opportunities' },
+    { label: 'Underserved Businesses',value: 'underserved_businesses' },
+    { label: 'Local SMBs',            value: 'local_smbs' },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -48,13 +82,19 @@ const FILTER_OPTIONS = [
    HELPERS
    ══════════════════════════════════════════════════════════════════ */
 const scoreColor = (score) => {
-    if (score >= 70) return '#22c55e';
-    if (score >= 45) return '#f59e0b';
+    if (score >= 75) return '#22c55e';
+    if (score >= 50) return '#f59e0b';
     return '#ef4444';
 };
 const scoreTier = (score) => {
-    if (score >= 70) return 'high';
-    if (score >= 45) return 'mid';
+    if (score >= 75) return 'high';
+    if (score >= 50) return 'mid';
+    return 'low';
+};
+
+const buyingColor = (prob) => {
+    if (prob === 'High') return 'high';
+    if (prob === 'Medium') return 'mid';
     return 'low';
 };
 
@@ -95,8 +135,12 @@ const SkeletonCard = () => (
    ══════════════════════════════════════════════════════════════════ */
 const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
     const [copied, setCopied] = useState(false);
-    const score = lead.lead_score || 0;
+
+    /* Use opportunity_score when available, fall back to lead_score */
+    const score = lead.opportunity_score ?? lead.lead_score ?? 0;
     const tier = scoreTier(score);
+    const signals = lead.opportunity_signals || [];
+    const visibleSignals = signals.slice(0, 4);
 
     const handleCopyClick = () => {
         onCopy(lead);
@@ -116,11 +160,38 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
                         </span>
                     )}
                 </div>
-                <div className={`lf__score lf__score--${tier}`}>
-                    <span className="lf__score-value">{score}</span>
-                    <span className="lf__score-label">Score</span>
+                <div className="lf__score-group">
+                    <div className={`lf__score lf__score--${tier}`}>
+                        <span className="lf__score-value">{score}</span>
+                        <span className="lf__score-label">Opportunity</span>
+                    </div>
+                    {lead.buying_probability && (
+                        <span className={`lf__buying-badge lf__buying-badge--${buyingColor(lead.buying_probability)}`}>
+                            {lead.buying_probability}
+                        </span>
+                    )}
                 </div>
             </div>
+
+            {/* Opportunity Reason Banner */}
+            {lead.opportunity_reason && (
+                <div className={`lf__opportunity-reason lf__opportunity-reason--${tier}`}>
+                    <Crosshair size={13} className="lf__opportunity-reason-icon" />
+                    <span>{lead.opportunity_reason}</span>
+                </div>
+            )}
+
+            {/* Opportunity Signals Pills */}
+            {visibleSignals.length > 0 && (
+                <div className="lf__signals">
+                    {visibleSignals.map((signal, idx) => (
+                        <span key={idx} className="lf__signal-pill">
+                            <span className="lf__signal-dot" />
+                            {signal}
+                        </span>
+                    ))}
+                </div>
+            )}
 
             {/* Meta — Location + Rating */}
             <div className="lf__card-meta">
@@ -172,6 +243,18 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
                 {lead.ai_summary && (
                     <p className="lf__ai-summary">{lead.ai_summary}</p>
                 )}
+                {lead.opportunity_summary && (
+                    <div className="lf__ai-opportunity">
+                        <Target size={12} className="lf__ai-opportunity-icon" />
+                        <span>{lead.opportunity_summary}</span>
+                    </div>
+                )}
+                {lead.service_fit_reason && (
+                    <div className="lf__ai-fit">
+                        <Link2 size={12} className="lf__ai-fit-icon" />
+                        <span>{lead.service_fit_reason}</span>
+                    </div>
+                )}
                 {lead.likely_pain_point && (
                     <div className="lf__ai-pain">
                         <AlertTriangle size={12} className="lf__ai-pain-icon" />
@@ -219,6 +302,11 @@ const LeadFinder = () => {
     const [savedLeads, setSavedLeads] = useState([]);
     const [viewMode, setViewMode] = useState('discover'); // 'discover' or 'saved'
 
+    /* ── New: Offer & Mode state ────────────────────── */
+    const [userOffer, setUserOffer] = useState('');
+    const [customOffer, setCustomOffer] = useState('');
+    const [searchMode, setSearchMode] = useState('high_fit_leads');
+
     /* ── Toast helper ────────────────────────────────── */
     const showToast = useCallback((msg, icon) => {
         setToast({ msg, icon });
@@ -248,6 +336,32 @@ const LeadFinder = () => {
         );
     };
 
+    /* ── Offer helpers ───────────────────────────────── */
+    const handleSelectPreset = (label) => {
+        if (userOffer === label) {
+            setUserOffer('');
+        } else {
+            setUserOffer(label);
+            setCustomOffer('');
+        }
+    };
+
+    const handleCustomOfferChange = (e) => {
+        const val = e.target.value;
+        setCustomOffer(val);
+        setUserOffer(val);
+    };
+
+    const handleCustomOfferFocus = () => {
+        /* If a preset was selected, clear it so user can type freely */
+        if (OFFER_PRESETS.some((p) => p.label === userOffer)) {
+            setUserOffer(customOffer);
+        }
+    };
+
+    /* Determine effective offer string */
+    const effectiveOffer = userOffer.trim() || '';
+
     /* ── Search ──────────────────────────────────────── */
     const handleSearch = async (searchQuery) => {
         const q = (searchQuery || query).trim();
@@ -258,10 +372,19 @@ const LeadFinder = () => {
         if (searchQuery) setQuery(searchQuery);
 
         try {
+            const body = {
+                query: q,
+                filters: activeFilters,
+                search_mode: searchMode,
+            };
+            if (effectiveOffer) {
+                body.user_offer = effectiveOffer;
+            }
+
             const resp = await fetch(`${API_BASE}/leads/search`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: q, filters: activeFilters }),
+                body: JSON.stringify(body),
             });
 
             if (!resp.ok) throw new Error('Search failed');
@@ -389,6 +512,9 @@ const LeadFinder = () => {
     /* ── Active filter count ─────────────────────────── */
     const filterCount = Object.keys(activeFilters).length;
 
+    /* ── Active search mode label ────────────────────── */
+    const activeModeLabel = SEARCH_MODES.find((m) => m.value === searchMode)?.label || 'High-Fit Leads';
+
     return (
         <div className="lf">
             {/* ── Header ── */}
@@ -424,6 +550,47 @@ const LeadFinder = () => {
             {/* ── Discover View ── */}
             {viewMode === 'discover' && (
                 <div className="animate-fade-in" style={{ marginTop: '2rem' }}>
+
+                    {/* ── Offer Configuration Section ── */}
+                    <div className="lf__offer-section">
+                        <div className="lf__offer-header">
+                            <ShoppingBag size={14} className="lf__offer-header-icon" />
+                            <span className="lf__offer-header-label">Your Offer</span>
+                            {effectiveOffer && (
+                                <span className="lf__offer-indicator">
+                                    <Target size={10} />
+                                    Scoring leads for: <strong>{effectiveOffer}</strong>
+                                </span>
+                            )}
+                        </div>
+                        <div className="lf__offer-chips">
+                            {OFFER_PRESETS.map((preset) => {
+                                const Icon = preset.icon;
+                                const isActive = userOffer === preset.label;
+                                return (
+                                    <button
+                                        key={preset.label}
+                                        className={`lf__offer-chip ${isActive ? 'active' : ''}`}
+                                        onClick={() => handleSelectPreset(preset.label)}
+                                    >
+                                        <Icon size={12} />
+                                        {preset.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        <div className="lf__offer-custom-wrap">
+                            <input
+                                className="lf__offer-custom"
+                                type="text"
+                                placeholder="Or type your custom offer…"
+                                value={OFFER_PRESETS.some((p) => p.label === userOffer) ? '' : customOffer}
+                                onChange={handleCustomOfferChange}
+                                onFocus={handleCustomOfferFocus}
+                            />
+                        </div>
+                    </div>
+
                     {/* Search Bar */}
                     <div className="lf__search-section">
                         <div className="lf__search-bar">
@@ -470,6 +637,24 @@ const LeadFinder = () => {
                                 );
                             })}
                         </div>
+
+                        {/* Search Mode Selector */}
+                        <div className="lf__mode-section">
+                            <span className="lf__mode-label">
+                                <BarChart3 size={11} /> Search Mode
+                            </span>
+                            <div className="lf__mode-chips">
+                                {SEARCH_MODES.map((mode) => (
+                                    <button
+                                        key={mode.value}
+                                        className={`lf__mode-chip ${searchMode === mode.value ? 'active' : ''}`}
+                                        onClick={() => setSearchMode(mode.value)}
+                                    >
+                                        {mode.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Loading State */}
@@ -484,12 +669,20 @@ const LeadFinder = () => {
                         <>
                             <div className="lf__results-meta">
                                 <span className="lf__results-count">
-                                    Found <strong>{leads.length}</strong> leads
+                                    Found <strong>{leads.length}</strong> opportunities
+                                    {effectiveOffer && (
+                                        <span className="lf__results-offer-context"> for {effectiveOffer}</span>
+                                    )}
                                 </span>
-                                <span className="lf__results-badge">
-                                    <span className="lf__results-badge-dot" />
-                                    AI Enriched
-                                </span>
+                                <div className="lf__results-badges">
+                                    <span className="lf__results-badge">
+                                        <span className="lf__results-badge-dot" />
+                                        AI Enriched
+                                    </span>
+                                    <span className="lf__results-mode-badge">
+                                        {activeModeLabel}
+                                    </span>
+                                </div>
                             </div>
                             <div className="lf__grid">
                                 {leads.map((lead, idx) => {
