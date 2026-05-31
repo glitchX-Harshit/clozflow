@@ -1,0 +1,185 @@
+feature: LEAD_OPPORTUNITY_ENGINE_V1
+
+problem:
+  Current lead finder displays only top Google Places results.
+  These results are often large brands, franchises, or businesses
+  that are unlikely to purchase the user's service.
+
+goal:
+  Transform lead finder from a directory into an opportunity engine.
+
+current_flow:
+
+  - user_searches_business
+  - google_places_returns_top_results
+  - results_displayed
+
+new_flow:
+
+  - user_defines_offer
+  - system_fetches_large_candidate_pool
+  - lead_analysis_engine_runs
+  - opportunity_scores_generated
+  - highest_opportunity_leads_displayed
+
+offer_configuration:
+
+  examples:
+    - Website Development
+    - Video Editing
+    - AI Automation
+    - Marketing Agency
+    - SEO Services
+    - CRM Software
+    - Recruitment
+    - Consulting
+
+lead_collection:
+
+  source:
+    - google_places_api
+
+  target_results:
+    minimum: 50
+    ideal: 100
+
+  responsibilities:
+    - fetch_businesses
+    - fetch_ratings
+    - fetch_review_counts
+    - fetch_website
+    - fetch_phone
+    - fetch_location
+
+lead_filtering:
+
+  remove_if:
+    - large_enterprise_brand
+    - national_franchise
+    - duplicate_business
+    - permanently_closed
+
+opportunity_scoring:
+
+  score_range:
+    min: 0
+    max: 100
+
+  scoring_factors:
+
+    digital_presence:
+      weight: 25
+
+    website_quality:
+      weight: 20
+
+    social_presence:
+      weight: 15
+
+    review_activity:
+      weight: 10
+
+    business_growth_signals:
+      weight: 15
+
+    service_offer_fit:
+      weight: 15
+
+offer_specific_analysis:
+
+  website_development:
+
+    positive_signals:
+      - no_website
+      - outdated_website
+      - active_reviews
+      - active_instagram
+
+  video_editing:
+
+    positive_signals:
+      - active_social_media
+      - low_content_quality
+      - frequent_posting
+
+  ai_automation:
+
+    positive_signals:
+      - manual_workflows
+      - appointment_based_business
+      - customer_followup_dependency
+
+  marketing_agency:
+
+    positive_signals:
+      - weak_social_presence
+      - low_engagement
+      - inconsistent_content
+
+lead_card:
+
+  display:
+
+    - business_name
+    - category
+    - city
+    - rating
+    - website
+    - opportunity_score
+    - opportunity_reason
+
+  example:
+
+    business:
+      Sweet Crumbs Bakery
+
+    score:
+      91
+
+    reason:
+      Active business with strong reviews,
+      active Instagram presence,
+      but no professional website.
+
+search_modes:
+
+  - top_businesses
+  - growth_opportunities
+  - underserved_businesses
+  - local_smbs
+  - high_fit_leads
+
+default_mode:
+  high_fit_leads
+
+sorting:
+
+  primary:
+    opportunity_score
+
+  secondary:
+    business_activity
+
+ai_output:
+
+  generate:
+
+    - opportunity_summary
+    - likely_pain_points
+    - buying_probability
+    - service_fit_reason
+
+future_extensions:
+
+  - lead_research_reports
+  - strategy_generation
+  - competitor_gap_analysis
+  - live_copilot_launch
+
+success_metric:
+
+  user_should_not_ask:
+    "Who are the biggest businesses?"
+
+  user_should_ask:
+    "Who is most likely to buy my service?"

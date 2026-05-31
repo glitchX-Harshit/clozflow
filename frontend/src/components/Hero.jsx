@@ -46,8 +46,8 @@ const Hero = ({ onGetStarted }) => {
                     <div className="hero__row hero__row--1">
                         <div className="hero__overflow">
                             <span className="hero__line">
-                                <span className="u-hide-mobile">CONVERSATIONS</span>
-                                <span className="u-show-mobile">CONVO</span>
+                                <span className="u-hide-mobile">ZABAAN SE PEHLE</span>
+                                <span className="u-show-mobile">ZABAAN SE PEHLE</span>
                             </span>
                         </div>
                     </div>
@@ -62,14 +62,14 @@ const Hero = ({ onGetStarted }) => {
                             </p>
                         </div>
                         <div className="hero__overflow">
-                            <span className="hero__line">DECIDE</span>
+                            <span className="hero__line">DIMAAG</span>
                         </div>
                     </div>
 
                     {/* Row 3 — Split alignment */}
                     <div className="hero__row hero__row--3">
                         <div className="hero__overflow">
-                            <span className="hero__line">DEALS</span>
+                            <span className="hero__line">PADHO</span>
                         </div>
                         <div className="hero__overflow">
                             <span className="hero__line hero__line--outline">BEFORE</span>

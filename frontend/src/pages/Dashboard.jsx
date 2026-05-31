@@ -15,7 +15,9 @@ import {
     TrendingUp,
     ShieldCheck,
     MessageSquare,
-    Search
+    Search,
+    Loader2,
+    FileText
 } from 'lucide-react';
 import HistoryView from '../components/HistoryView';
 import AnalyticsPage from './AnalyticsPage';
@@ -31,7 +33,7 @@ const StatPill = ({ label, value, color }) => (
     </div>
 );
 
-const OverviewTab = ({ user, navigate }) => (
+const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) => (
     <div className="animate-fade-in">
         {/* Header Section */}
         <div style={{ padding: '3.5rem 0 3rem' }}>
@@ -55,7 +57,7 @@ const OverviewTab = ({ user, navigate }) => (
                 <MagButton
                     label="Analyze Conversations"
                     variant="outline"
-                    onClick={() => {}}
+                    onClick={onViewAll}
                     magnetStrength={0.3}
                 />
             </div>
@@ -94,19 +96,57 @@ const OverviewTab = ({ user, navigate }) => (
             </div>
         </div>
 
-        {/* Recent Sessions placeholder */}
-        <div>
+        {/* Recent Sessions */}
+        <div style={{ marginTop: '2.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
                     <History size={18} color="var(--text-dim)" /> Recent Sessions
                 </h2>
-                <MagButton label="View all" variant="outline" magnetStrength={0.2} />
+                <MagButton label="View all" variant="outline" onClick={onViewAll} magnetStrength={0.2} />
             </div>
-            <div className="card" style={{ padding: '5rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
-                <div style={{ marginBottom: '1.25rem', opacity: 0.1 }}><History size={56} /></div>
-                <p style={{ fontWeight: 700, fontSize: '1rem' }}>No conversations analyzed yet.</p>
-                <p style={{ fontSize: '0.8375rem', color: 'var(--text-dim)', marginTop: '0.375rem' }}>The intelligence layer activates once conversations begin.</p>
-            </div>
+            
+            {loadingCalls ? (
+                <div className="card" style={{ padding: '3rem 2rem', textAlign: 'center', background: 'var(--bg)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Loader2 className="animate-spin" size={24} color="var(--accent)" />
+                </div>
+            ) : recentCalls && recentCalls.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                    {recentCalls.map(call => (
+                        <div
+                            key={call.id}
+                            onClick={onViewAll}
+                            className="card card-hover"
+                            style={{
+                                width: '100%', textAlign: 'left', background: 'var(--bg)', border: '1px solid var(--border)',
+                                borderRadius: 16, padding: '1.25rem 1.5rem', cursor: 'pointer', transition: 'all 0.2s',
+                                display: 'flex', alignItems: 'center', gap: '1.25rem'
+                            }}
+                        >
+                            <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--accent-dim)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <FileText size={18} />
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
+                                    <span style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--text)' }}>Session #{call.id}</span>
+                                    <span style={{ padding: '0.15rem 0.5rem', background: 'var(--accent-dim)', color: 'var(--accent)', borderRadius: 99, fontSize: '0.55rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Analyzed</span>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem', color: 'var(--text-dim)', fontSize: '0.78rem', flexWrap: 'wrap' }}>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Clock size={11} />{new Date(call.timestamp).toLocaleDateString()}</span>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><MessageSquare size={11} />{call.message_count} messages</span>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Zap size={11} />{call.insight_count} insights</span>
+                                </div>
+                            </div>
+                            <ChevronRight size={16} color="var(--text-muted)" />
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="card" style={{ padding: '4rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
+                    <div style={{ marginBottom: '1.25rem', opacity: 0.1 }}><History size={56} /></div>
+                    <p style={{ fontWeight: 700, fontSize: '1rem' }}>No conversations analyzed yet.</p>
+                    <p style={{ fontSize: '0.8375rem', color: 'var(--text-dim)', marginTop: '0.375rem' }}>The intelligence layer activates once conversations begin.</p>
+                </div>
+            )}
         </div>
     </div>
 );
@@ -137,11 +177,37 @@ const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('overview');
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [recentCalls, setRecentCalls] = useState([]);
+    const [loadingCalls, setLoadingCalls] = useState(true);
 
     const handleLogout = () => {
         logout();
         navigate('/');
     };
+
+    useEffect(() => {
+        const fetchRecentCalls = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const headers = {};
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const res = await fetch('http://localhost:8000/calls/', { headers });
+                if (res.ok) {
+                    const data = await res.json();
+                    setRecentCalls(data.slice(0, 3)); // show top 3 most recent sessions
+                }
+            } catch (err) {
+                console.error('Failed to fetch recent calls:', err);
+            } finally {
+                setLoadingCalls(false);
+            }
+        };
+        
+        if (activeTab === 'overview') {
+            fetchRecentCalls();
+        }
+    }, [activeTab]);
 
     const navItems = [
         { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
@@ -202,7 +268,15 @@ const Dashboard = () => {
 
             {/* Main content */}
             <main className="db-main">
-                {activeTab === 'overview'  && <OverviewTab user={user} navigate={navigate} />}
+                {activeTab === 'overview'  && (
+                    <OverviewTab 
+                        user={user} 
+                        navigate={navigate} 
+                        recentCalls={recentCalls}
+                        loadingCalls={loadingCalls}
+                        onViewAll={() => setActiveTab('history')}
+                    />
+                )}
                 {activeTab === 'leads'     && <LeadFinder />}
                 {activeTab === 'history'   && <HistoryView />}
                 {activeTab === 'analytics' && <AnalyticsPage />}

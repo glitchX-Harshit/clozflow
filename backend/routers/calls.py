@@ -78,3 +78,20 @@ def download_call_report(
     except Exception as e:
         print(f"❌ PDF Generation Error: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate report")
+
+@router.delete("/{call_id}")
+def delete_call_log(
+    call_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Deletes a specific call log for the current authenticated user.
+    """
+    call_log = db.query(CallLog).filter(CallLog.id == call_id, CallLog.user_id == current_user.id).first()
+    if not call_log:
+        raise HTTPException(status_code=404, detail="Call record not found")
+        
+    db.delete(call_log)
+    db.commit()
+    return {"message": "Call log deleted"}

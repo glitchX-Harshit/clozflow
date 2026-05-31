@@ -1,9 +1,10 @@
 """
 Lead Finder API Router
 ──────────────────────
-POST /leads/search          — Search for business leads
+POST /leads/search          — Search for business leads (with opportunity scoring)
 POST /leads/{lead_id}/save  — Save a lead to the database
 GET  /leads/saved           — Get saved leads for current user
+DELETE /leads/saved/{id}    — Delete a saved lead
 """
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -22,6 +23,8 @@ router = APIRouter(prefix="/leads", tags=["leads"])
 class LeadSearchRequest(BaseModel):
     query: str
     filters: Optional[Dict] = None
+    user_offer: str = ""            # NEW: what service the user sells
+    search_mode: str = "high_fit_leads"  # NEW: search mode
 
 class LeadSaveRequest(BaseModel):
     business_name: str
@@ -49,6 +52,13 @@ class LeadResponse(BaseModel):
     lead_score: int
     outreach_angle: str = ""
     address: str = ""
+    # NEW opportunity fields
+    opportunity_score: int = 0
+    opportunity_reason: str = ""
+    opportunity_signals: list = []
+    buying_probability: str = ""
+    opportunity_summary: str = ""
+    service_fit_reason: str = ""
 
     class Config:
         from_attributes = True
@@ -58,13 +68,18 @@ class LeadResponse(BaseModel):
 
 @router.post("/search", response_model=List[LeadResponse])
 async def search_leads_endpoint(request: LeadSearchRequest):
-    """Search for business leads using natural language query."""
+    """Search for business leads using natural language query with opportunity scoring."""
     from services.lead_engine import search_leads
 
     if not request.query or len(request.query.strip()) < 2:
         raise HTTPException(status_code=400, detail="Search query is too short")
 
-    results = await search_leads(request.query, request.filters)
+    results = await search_leads(
+        request.query,
+        request.filters,
+        user_offer=request.user_offer,
+        search_mode=request.search_mode,
+    )
     return results
 
 
