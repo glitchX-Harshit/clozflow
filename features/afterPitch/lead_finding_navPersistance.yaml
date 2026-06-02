@@ -1,0 +1,157 @@
+lead_finder_navigation_persistence:
+
+objective:
+Preserve lead finder state when navigating
+to research, outreach, or live copilot pages.
+
+problem:
+
+```
+current:
+
+  lead_search
+  ->
+  open_lead
+  ->
+  return_back
+  ->
+  search_results_lost
+
+desired:
+
+  lead_search
+  ->
+  open_lead
+  ->
+  return_back
+  ->
+  state_restored
+```
+
+persist:
+
+```
+search_query
+
+search_results
+
+filters
+
+selected_lead
+
+current_page
+
+scroll_position
+```
+
+storage:
+
+```
+frontend_store:
+
+  recommended:
+    zustand
+```
+
+lead_finder_store:
+
+```
+fields:
+
+  search_query
+
+  search_results
+
+  selected_lead
+
+  filters
+
+  scroll_position
+
+  last_updated
+```
+
+navigation_behavior:
+
+```
+leaving_lead_finder:
+
+  save_state:
+    true
+
+returning_to_lead_finder:
+
+  restore_state:
+    true
+
+  refetch_leads:
+    false
+```
+
+page_mount_behavior:
+
+```
+if_cached_results_exist:
+
+  use_cached_results
+
+else:
+
+  perform_search
+```
+
+scroll_restoration:
+
+```
+enabled:
+  true
+
+save_on_leave:
+  true
+
+restore_on_return:
+  true
+```
+
+cache_expiration:
+
+```
+duration_minutes:
+  30
+```
+
+user_experience:
+
+```
+preserve:
+
+  - search_results
+  - selected_lead
+  - pagination
+  - scroll_position
+```
+
+success_criteria:
+
+```
+user_opens_research
+
+user_returns
+
+result:
+  same_leads_visible
+
+user_opens_outreach
+
+user_returns
+
+result:
+  same_search_state_visible
+
+user_scrolls_to_lead_50
+
+user_returns
+
+result:
+  lead_50_still_visible
+```

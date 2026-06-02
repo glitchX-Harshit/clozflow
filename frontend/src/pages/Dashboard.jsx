@@ -19,6 +19,7 @@ import {
     Loader2,
     FileText
 } from 'lucide-react';
+import { useDashboardStore } from '../store/useDashboardStore';
 import HistoryView from '../components/HistoryView';
 import AnalyticsPage from './AnalyticsPage';
 import PlaybooksPage from './PlaybooksPage';
@@ -111,9 +112,9 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) =
                 </div>
             ) : recentCalls && recentCalls.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-                    {recentCalls.map(call => (
+                    {recentCalls.map((call, idx) => (
                         <div
-                            key={call.id}
+                            key={call.id || `call-${idx}`}
                             onClick={onViewAll}
                             className="card card-hover"
                             style={{
@@ -174,7 +175,7 @@ const SettingsTab = ({ user }) => (
 );
 
 const Dashboard = () => {
-    const [activeTab, setActiveTab] = useState('overview');
+    const { activeTab, setActiveTab } = useDashboardStore();
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const [recentCalls, setRecentCalls] = useState([]);

@@ -27,6 +27,7 @@ import {
     Megaphone,
     Send,
 } from 'lucide-react';
+import { useLeadFinderStore } from '../store/useLeadFinderStore';
 import './LeadFinder.css';
 
 const API_BASE = 'http://localhost:8000';
@@ -297,19 +298,49 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) =>
    ══════════════════════════════════════════════════════════════════ */
 const LeadFinder = () => {
     const navigate = useNavigate();
-    const [query, setQuery] = useState('');
-    const [leads, setLeads] = useState([]);
+    const {
+        query, setQuery,
+        leads, setLeads,
+        searched, setSearched,
+        activeFilters, setActiveFilters,
+        userOffer, setUserOffer,
+        customOffer, setCustomOffer,
+        searchMode, setSearchMode,
+        viewMode, setViewMode,
+        scrollPosition, setScrollPosition,
+        lastUpdated
+    } = useLeadFinderStore();
+
     const [loading, setLoading] = useState(false);
-    const [searched, setSearched] = useState(false);
-    const [activeFilters, setActiveFilters] = useState({});
     const [toast, setToast] = useState(null);
     const [savedLeads, setSavedLeads] = useState([]);
-    const [viewMode, setViewMode] = useState('discover'); // 'discover' or 'saved'
 
-    /* ── New: Offer & Mode state ────────────────────── */
-    const [userOffer, setUserOffer] = useState('');
-    const [customOffer, setCustomOffer] = useState('');
-    const [searchMode, setSearchMode] = useState('high_fit_leads');
+    // Check cache expiration (30 mins)
+    useEffect(() => {
+        if (searched && lastUpdated) {
+            const age = Date.now() - lastUpdated;
+            if (age > 30 * 60 * 1000) {
+                // Cache expired, clear state
+                setLeads([]);
+                setSearched(false);
+            }
+        }
+    }, [searched, lastUpdated, setLeads, setSearched]);
+
+    // Restore scroll position
+    useEffect(() => {
+        if (searched && scrollPosition > 0) {
+            // Wait a tick for rendering, then scroll
+            const timer = setTimeout(() => {
+                if (window.lenis) {
+                    window.lenis.scrollTo(scrollPosition, { immediate: true });
+                } else {
+                    window.scrollTo(0, scrollPosition);
+                }
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [searched, scrollPosition]);
 
     /* ── Toast helper ────────────────────────────────── */
     const showToast = useCallback((msg, icon) => {
@@ -418,7 +449,16 @@ const LeadFinder = () => {
     };
 
     /* ── Actions ─────────────────────────────────────── */
+    const saveScrollState = () => {
+        if (window.lenis) {
+            setScrollPosition(window.lenis.scroll || window.scrollY);
+        } else {
+            setScrollPosition(window.scrollY);
+        }
+    };
+
     const handleStartCall = (lead) => {
+        saveScrollState();
         navigate('/call-brief', {
             state: {
                 prefill: {
@@ -432,6 +472,7 @@ const LeadFinder = () => {
     };
 
     const handleOutreach = (lead) => {
+        saveScrollState();
         navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
     };
 
