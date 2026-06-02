@@ -913,6 +913,19 @@
     border-color: rgba(245, 158, 11, 0.5) !important;
 }
 
+.lf__action-btn--outreach {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: #ffffff;
+    border-color: #1e40af;
+}
+
+.lf__action-btn--outreach:hover {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
 /* ── Loading Skeletons ──────────────────────────────────────────── */
 .lf__skeleton-grid {
     display: grid;

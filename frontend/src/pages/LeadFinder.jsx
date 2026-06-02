@@ -25,6 +25,7 @@ import {
     Palette,
     Bot,
     Megaphone,
+    Send,
 } from 'lucide-react';
 import './LeadFinder.css';
 
@@ -133,7 +134,7 @@ const SkeletonCard = () => (
 /* ══════════════════════════════════════════════════════════════════
    LEAD CARD COMPONENT
    ══════════════════════════════════════════════════════════════════ */
-const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
+const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) => {
     const [copied, setCopied] = useState(false);
 
     /* Use opportunity_score when available, fall back to lead_score */
@@ -267,6 +268,9 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
             <div className="lf__card-actions">
                 <button className="lf__action-btn lf__action-btn--primary" onClick={() => onStartCall(lead)}>
                     <Zap size={13} /> Live Copilot
+                </button>
+                <button className="lf__action-btn lf__action-btn--outreach" onClick={() => onOutreach(lead)}>
+                    <Send size={13} /> Outreach
                 </button>
                 <button 
                     className={`lf__action-btn ${copied ? 'lf__action-btn--copied' : ''}`} 
@@ -425,6 +429,10 @@ const LeadFinder = () => {
                 },
             },
         });
+    };
+
+    const handleOutreach = (lead) => {
+        navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
     };
 
     const fallbackCopyText = (text, callback) => {
@@ -695,6 +703,7 @@ const LeadFinder = () => {
                                             onCopy={handleCopy}
                                             onSave={handleSave}
                                             isSaved={isSaved}
+                                            onOutreach={handleOutreach}
                                         />
                                     );
                                 })}
@@ -762,6 +771,7 @@ const LeadFinder = () => {
                                         onCopy={handleCopy}
                                         onSave={handleSave}
                                         isSaved={true}
+                                        onOutreach={handleOutreach}
                                     />
                                 ))}
                             </div>
