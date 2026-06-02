@@ -41,10 +41,10 @@ const OUTREACH_GOALS = [
 ];
 
 const OUTREACH_STRATEGIES = [
-    { value: 'curiosity',     label: 'Curiosity',     desc: 'Start conversation through observation.', icon: Target },
-    { value: 'insight',       label: 'Insight',       desc: 'Share a business insight.', icon: Sparkles },
-    { value: 'opportunity',   label: 'Opportunity',   desc: 'Highlight a growth opportunity.', icon: Zap },
-    { value: 'problem',       label: 'Problem',       desc: 'Surface a hidden issue.', icon: Shield },
+    { value: 'curiosity',     label: 'Curiosity',     desc: 'Observation driven conversation starter', icon: Target },
+    { value: 'insight',       label: 'Insight',       desc: 'Business insight driven opener', icon: Sparkles },
+    { value: 'opportunity',   label: 'Opportunity',   desc: 'Growth opportunity angle', icon: Zap },
+    { value: 'problem',       label: 'Problem',       desc: 'Hidden issue discovery', icon: Shield },
 ];
 
 const scoreLevel = (score) => {
@@ -357,12 +357,16 @@ const OutreachStudioPage = () => {
                                 {/* Strategic Context */}
                                 <div className="osp__strategic-context">
                                     <div className="osp__context-block">
-                                        <span className="osp__context-label">Opportunity Insight</span>
-                                        <p className="osp__context-text">{generatedMessage.opportunity_insight}</p>
+                                        <span className="osp__context-label">Opportunity Angle</span>
+                                        <p className="osp__context-text">{generatedMessage.opportunity_angle}</p>
                                     </div>
                                     <div className="osp__context-block">
-                                        <span className="osp__context-label">Why This Matters</span>
-                                        <p className="osp__context-text">{generatedMessage.why_this_matters}</p>
+                                        <span className="osp__context-label">Observation</span>
+                                        <p className="osp__context-text">{generatedMessage.observation}</p>
+                                    </div>
+                                    <div className="osp__context-block">
+                                        <span className="osp__context-label">Curiosity Angle</span>
+                                        <p className="osp__context-text">{generatedMessage.curiosity_angle}</p>
                                     </div>
                                 </div>
 
@@ -392,12 +396,12 @@ const OutreachStudioPage = () => {
 
                                 <div className="osp__strategic-context" style={{ marginTop: '1.5rem', marginBottom: '2rem' }}>
                                     <div className="osp__context-block">
-                                        <span className="osp__context-label">Follow-Up If They Reply</span>
-                                        <p className="osp__context-text" style={{ fontStyle: 'italic' }}>{generatedMessage.followup_message}</p>
+                                        <span className="osp__context-label">Likely Reply</span>
+                                        <p className="osp__context-text" style={{ fontStyle: 'italic' }}>{generatedMessage.likely_reply}</p>
                                     </div>
                                     <div className="osp__context-block">
-                                        <span className="osp__context-label">Transition To Call</span>
-                                        <p className="osp__context-text" style={{ fontStyle: 'italic' }}>{generatedMessage.call_transition}</p>
+                                        <span className="osp__context-label">Next Move</span>
+                                        <p className="osp__context-text" style={{ fontStyle: 'italic' }}>{generatedMessage.next_move}</p>
                                     </div>
                                 </div>
 

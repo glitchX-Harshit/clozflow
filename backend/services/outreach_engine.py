@@ -1,5 +1,5 @@
 """
-Outreach Message Generation Engine V2
+Outreach Message Generation Engine V3
 ────────────────────────────────────
 • generate_outreach_message()   → AI-powered strategic outreach via Groq
 • detect_available_channels()   → Determine reachable channels from lead data
@@ -18,39 +18,32 @@ except ImportError:
 
 CHANNEL_CONFIG = {
     "whatsapp": {
-        "tone": "conversational, personal, concise",
+        "tone": "casual",
+        "style": "SHORT",
+        "max_words": 50,
+    },
+    "instagram": {
+        "tone": "friendly",
         "style": "SHORT",
         "max_words": 60,
     },
-    "instagram": {
-        "tone": "casual, friendly, curiosity_driven",
-        "style": "SHORT",
-        "max_words": 80,
-    },
     "linkedin": {
-        "tone": "professional, business_focused, authority",
+        "tone": "professional",
         "style": "MEDIUM",
-        "max_words": 150,
+        "max_words": 100,
     },
     "email": {
-        "tone": "detailed, consultative, research_based",
-        "style": "LONG",
-        "max_words": 300,
+        "tone": "consultative",
+        "style": "MEDIUM",
+        "max_words": 150,
     },
 }
 
 STRATEGY_CONFIG = {
-    "curiosity": "Start conversation through observation. Make them wonder what you found.",
-    "insight": "Share a business insight based on their specific situation.",
-    "opportunity": "Highlight a specific growth opportunity you've identified.",
-    "problem": "Surface a hidden issue or bottleneck in their current setup.",
-}
-
-GOAL_CONTEXT = {
-    "start_conversation": "Open a dialogue. Do NOT pitch.",
-    "book_call": "Get them to agree to a short call or meeting.",
-    "follow_up": "Re-engage after a previous touchpoint.",
-    "re_engage": "Reignite interest with a cold lead.",
+    "curiosity": "Observation driven conversation starter",
+    "insight": "Business insight driven opener",
+    "opportunity": "Growth opportunity angle",
+    "problem": "Hidden issue discovery",
 }
 
 SCORING_WEIGHTS = {
@@ -82,7 +75,7 @@ def _score_message(message: str, lead_data: dict, channel: str) -> Dict:
     curiosity = 50
     if "?" in message:
         curiosity += 30
-    if len(message.split()) < 60:
+    if len(message.split()) < 40:
         curiosity += 20
     curiosity = min(100, curiosity)
 
@@ -149,7 +142,7 @@ def _build_outreach_prompt(
     channel_cfg = CHANNEL_CONFIG.get(channel, CHANNEL_CONFIG["whatsapp"])
     strategy_cfg = STRATEGY_CONFIG.get(outreach_strategy, STRATEGY_CONFIG["curiosity"])
     
-    return f"""You are an expert AI outreach strategist. Your goal is to create conversation opportunities based on business angles, NOT just generate generic messages.
+    return f"""You are an expert AI outreach strategist. Your goal is to generate human outreach that earns replies. NOT pitches, NOT mini sales letters, NOT consultant reports.
 
 ═══ LEAD RESEARCH DATA ═══
 Business Name: {lead_data.get('business_name', 'Unknown')}
@@ -161,42 +154,56 @@ Opportunity Summary: {lead_data.get('opportunity_summary', 'N/A')}
 
 ═══ OUTREACH CONFIGURATION ═══
 Channel: {channel.upper()} (Tone: {channel_cfg['tone']}, Length: {channel_cfg['style']})
-Goal: {outreach_goal.replace('_', ' ')}
 Strategy: {outreach_strategy.replace('_', ' ')} -> {strategy_cfg}
 Our Offer: {user_offer if user_offer else 'General business services'}
 
 ═══ REQUIRED PIPELINE ═══
-1. Find the strongest business angle (e.g., trust without discoverability, demand without conversion).
-2. Generate an Opportunity Insight (why this lead is worth contacting).
-3. Explain Why This Matters.
-4. Craft the Opening Message.
-5. Craft a Follow-up Message.
-6. Craft a Transition to Call.
+1. Find the strongest conversation angle (e.g., trust without discoverability).
+2. Generate an Observation from research.
+3. Generate a Curiosity Hook to create tension.
+4. Craft the Opening Message. (NEVER pitch, sell, or ask for a call here).
+5. Predict the Likely Reply from the prospect.
+6. Plan the Next Move (how to continue the conversation).
 
-═══ RULES ═══
-- Forbidden: selling immediately, mentioning services in first line, generic compliments, obvious pitching, AI-style openers (e.g., "noticed you don't have a website", "we help businesses grow").
-- Required: observation, curiosity, business context, conversation hook.
-- Good example openers: "one thing stood out while reviewing local businesses in your category", "the interesting part isn't your reviews, it's what happens before customers find them".
+═══ HUMAN CONVERSATION LAYER ═══
+- Goal: Earn a reply.
+- Never: sell_service, pitch_offer, explain_solution, book_call_immediately.
+- Style: conversational, observational, curiosity_driven, founder_like.
+- Avoid: consultant_language, corporate_language, linkedin_guru_language, ai_marketing_language.
+
+═══ FORBIDDEN PHRASES ═══
+Do not use: customer engagement, online visibility, digital transformation, significant potential, comprehensive information, tailored solution, drive more sales, growth opportunity, business optimization, maximize conversions, unlock growth, enhance brand presence, improve customer acquisition, strategic transformation.
+
+═══ FORBIDDEN OPENERS ═══
+Do not use: "noticed you dont have a website", "we help businesses grow", "we offer website development", "are you looking for more customers", "i help local businesses".
+
+═══ OPENING MESSAGE RULES ═══
+Maximum service mentions: 0
+Maximum pitching: 0
+Maximum call requests: 0
+Required structure: observation -> curiosity -> question
 
 Return ONLY valid JSON with these exact keys:
 {{
-  "opportunity_insight": "string",
-  "why_this_matters": "string",
+  "opportunity_angle": "string",
+  "observation": "string",
+  "curiosity_angle": "string",
   "opening_message": "string",
-  "followup_message": "string",
-  "call_transition": "string",
+  "likely_reply": "string",
+  "next_move": "string",
   "reasoning": "string",
   "personalization_points": ["array of strings"]
 }}"""
 
 def _generate_fallback_message(lead_data: dict, channel: str, outreach_strategy: str, user_offer: str) -> dict:
     return {
-        "opportunity_insight": f"Identified missing optimization for {lead_data.get('business_name', 'this business')}.",
-        "why_this_matters": "This limits their ability to capture local demand effectively.",
-        "opening_message": f"Hey! Was looking at local {lead_data.get('category', 'businesses')} and noticed something interesting about how people find you. Open to a quick thought?",
-        "followup_message": "Just circling back—I had a specific idea on how to improve your local discoverability.",
-        "call_transition": "Would you have 10 mins this week to see if this makes sense for you?",
-        "reasoning": "Fallback template based on curiosity hook.",
+        "opportunity_angle": f"Missing local discoverability despite good reputation.",
+        "observation": f"I was looking at {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')} and saw you have great reviews but are hard to find on maps.",
+        "curiosity_angle": "There's a gap between customer satisfaction and new customer acquisition.",
+        "opening_message": f"Hey! Was looking at local {lead_data.get('category', 'businesses')} and noticed something interesting about how people are finding you. Curious if you've seen the same thing?",
+        "likely_reply": "No, what did you find?",
+        "next_move": "Share the specific observation about their map ranking vs their competitors.",
+        "reasoning": "Fallback template using a standard observation-to-curiosity flow.",
         "personalization_points": ["Category", "Local search"]
     }
 

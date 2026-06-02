@@ -1,0 +1,365 @@
+outreach_studio_v3:
+
+objective:
+Generate human outreach that earns replies.
+Not pitches.
+Not mini sales letters.
+Not consultant reports.
+
+positioning:
+
+```
+product_type:
+  ai_outreach_strategist
+
+avoid:
+  ai_message_generator
+```
+
+remove:
+
+```
+- strategic_advisor
+- challenger
+- adaptive_intelligence
+- sales_persona_selector
+- persona_based_generation
+```
+
+ui:
+
+```
+remove_section:
+  sales_persona
+
+replace_with:
+
+  outreach_strategy:
+
+    title:
+      Outreach Strategy
+
+    options:
+
+      curiosity:
+
+        description:
+          Observation driven conversation starter
+
+      insight:
+
+        description:
+          Business insight driven opener
+
+      opportunity:
+
+        description:
+          Growth opportunity angle
+
+      problem:
+
+        description:
+          Hidden issue discovery
+```
+
+generation_pipeline:
+
+```
+step_1:
+  analyze_business
+
+step_2:
+  identify_strongest_opportunity_angle
+
+step_3:
+  generate_observation
+
+step_4:
+  generate_curiosity_hook
+
+step_5:
+  generate_opening_message
+
+step_6:
+  predict_likely_reply
+
+step_7:
+  generate_next_move
+```
+
+angle_engine:
+
+```
+objective:
+  Find strongest conversation angle before writing.
+
+examples:
+
+  salon:
+
+    - trust_without_discoverability
+    - strong_reviews_low_visibility
+
+  bakery:
+
+    - demand_without_conversion
+    - orders_without_system
+
+  dentist:
+
+    - reputation_without_patient_flow
+
+  gym:
+
+    - acquisition_without_retention
+
+  agency:
+
+    - growth_without_process
+
+  local_business:
+
+    - trust_exists_but_visibility_missing
+```
+
+human_conversation_layer:
+
+```
+objective:
+  Sound like a real founder or operator.
+
+first_touch_goal:
+
+  earn_reply
+
+never_goal:
+
+  - sell_service
+  - pitch_offer
+  - explain_solution
+  - book_call_immediately
+
+communication_style:
+
+  - conversational
+  - observational
+  - curiosity_driven
+  - founder_like
+
+avoid:
+
+  - consultant_language
+  - corporate_language
+  - linkedin_guru_language
+  - ai_marketing_language
+```
+
+forbidden_phrases:
+
+```
+- customer engagement
+- online visibility
+- digital transformation
+- significant potential
+- comprehensive information
+- tailored solution
+- drive more sales
+- growth opportunity
+- business optimization
+- maximize conversions
+- unlock growth
+- enhance brand presence
+- improve customer acquisition
+- strategic transformation
+```
+
+forbidden_openers:
+
+```
+- noticed you dont have a website
+- we help businesses grow
+- we offer website development
+- are you looking for more customers
+- i help local businesses
+```
+
+opening_message_structure:
+
+```
+step_1:
+
+  observation
+
+step_2:
+
+  curiosity
+
+step_3:
+
+  question
+```
+
+output_structure:
+
+```
+section_1:
+
+  title:
+    Opportunity Angle
+
+  objective:
+    Explain strongest business angle
+
+section_2:
+
+  title:
+    Observation
+
+  objective:
+    Human observation from research
+
+section_3:
+
+  title:
+    Curiosity Angle
+
+  objective:
+    Create conversation tension
+
+section_4:
+
+  title:
+    Opening Message
+
+  objective:
+    Generate first outreach
+
+section_5:
+
+  title:
+    Likely Reply
+
+  objective:
+    Predict prospect response
+
+section_6:
+
+  title:
+    Next Move
+
+  objective:
+    Continue conversation
+```
+
+opening_message_rules:
+
+```
+maximum_service_mentions:
+  0
+
+maximum_pitching:
+  0
+
+maximum_call_requests:
+  0
+
+required:
+
+  - observation
+  - curiosity
+  - context
+  - question
+```
+
+quality_validator:
+
+```
+reject_if:
+
+  - mentions_service_in_first_message
+  - asks_for_call_immediately
+  - sounds_like_marketing_copy
+  - sounds_like_consultant_report
+  - contains_corporate_language
+  - contains_linkedin_guru_language
+```
+
+reply_engine:
+
+```
+objective:
+  Think like a salesperson.
+
+sequence:
+
+  observation
+  ->
+  curiosity
+  ->
+  reply
+  ->
+  deeper_question
+  ->
+  conversation
+  ->
+  call
+```
+
+success_metric:
+
+```
+not:
+  generated_message
+
+but:
+  prospect_replied
+```
+
+future_v2:
+
+```
+support:
+
+  - whatsapp
+  - instagram
+  - linkedin
+  - email
+
+channel_adaptation:
+
+  whatsapp:
+    casual
+
+  instagram:
+    friendly
+
+  linkedin:
+    professional
+
+  email:
+    consultative
+```
+
+philosophy:
+
+```
+bad:
+
+  research
+  ->
+  pitch
+
+good:
+
+  research
+  ->
+  observation
+  ->
+  curiosity
+  ->
+  reply
+  ->
+  conversation
+  ->
+  call
+```

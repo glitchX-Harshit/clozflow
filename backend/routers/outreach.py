@@ -23,11 +23,12 @@ class OutreachGenerateRequest(BaseModel):
 
 
 class OutreachGenerateResponse(BaseModel):
-    opportunity_insight: str
-    why_this_matters: str
+    opportunity_angle: str
+    observation: str
+    curiosity_angle: str
     opening_message: str
-    followup_message: str
-    call_transition: str
+    likely_reply: str
+    next_move: str
     reasoning: str
     personalization_points: List[str]
     likely_response_rate: str                 
