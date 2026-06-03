@@ -25,7 +25,9 @@ import {
     Palette,
     Bot,
     Megaphone,
+    Send,
 } from 'lucide-react';
+import { useLeadFinderStore } from '../store/useLeadFinderStore';
 import './LeadFinder.css';
 
 const API_BASE = 'http://localhost:8000';
@@ -133,7 +135,7 @@ const SkeletonCard = () => (
 /* ══════════════════════════════════════════════════════════════════
    LEAD CARD COMPONENT
    ══════════════════════════════════════════════════════════════════ */
-const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
+const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) => {
     const [copied, setCopied] = useState(false);
 
     /* Use opportunity_score when available, fall back to lead_score */
@@ -268,6 +270,9 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
                 <button className="lf__action-btn lf__action-btn--primary" onClick={() => onStartCall(lead)}>
                     <Zap size={13} /> Live Copilot
                 </button>
+                <button className="lf__action-btn lf__action-btn--outreach" onClick={() => onOutreach(lead)}>
+                    <Send size={13} /> Outreach
+                </button>
                 <button 
                     className={`lf__action-btn ${copied ? 'lf__action-btn--copied' : ''}`} 
                     onClick={handleCopyClick} 
@@ -289,23 +294,165 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved }) => {
 
 
 /* ══════════════════════════════════════════════════════════════════
+   FINDING LEADS PROGRESS / ANIMATION
+   ══════════════════════════════════════════════════════════════════ */
+const FindingLeadsProgress = ({ query }) => {
+    const STATUSES = [
+        "Connecting to search endpoints...",
+        "Scanning database registries for businesses...",
+        "Crawling digital footprint (websites, social platforms)...",
+        "Analyzing SEO health, site speed, and technology stack...",
+        "Detecting opportunity signals and market gaps...",
+        "Calculating AI opportunity scores & buying probability...",
+        "Drafting customized outreach strategies & pain points...",
+        "Structuring enriched lead cards..."
+    ];
+
+    const [statusIndex, setStatusIndex] = useState(0);
+    const [progress, setProgress] = useState(5);
+
+    useEffect(() => {
+        const statusInterval = setInterval(() => {
+            setStatusIndex((prev) => {
+                if (prev < STATUSES.length - 1) {
+                    return prev + 1;
+                }
+                return prev;
+            });
+        }, 1100);
+
+        const progressInterval = setInterval(() => {
+            setProgress((prev) => {
+                const target = Math.min(95, ((statusIndex + 1) / STATUSES.length) * 100);
+                if (prev < target) {
+                    return Math.min(95, prev + Math.random() * 8 + 2);
+                } else if (prev < 95) {
+                    return Math.min(95, prev + Math.random() * 1);
+                }
+                return prev;
+            });
+        }, 300);
+
+        return () => {
+            clearInterval(statusInterval);
+            clearInterval(progressInterval);
+        };
+    }, [statusIndex]);
+
+    const getStepState = (stepIndex) => {
+        const currentStep = Math.floor(statusIndex / 2);
+        if (currentStep > stepIndex) return 'completed';
+        if (currentStep === stepIndex) return 'active';
+        return 'pending';
+    };
+
+    const displayName = query ? query.trim() : "target businesses";
+
+    return (
+        <div className="lf__loader-container">
+            {/* Left Column: Minimal AI Orbital Loader */}
+            <div className="lf__orbital">
+                <div className="lf__orbital-ring" />
+                <div className="lf__orbital-dot" />
+                <div className="lf__orbital-core">
+                    <Sparkles size={18} />
+                </div>
+            </div>
+
+            {/* Right Column: Status info & Progress Bar */}
+            <div className="lf__loader-info">
+                <div className="lf__loader-tag">
+                    <Bot size={11} /> AI Engine Active
+                </div>
+                <h3 className="lf__loader-title">
+                    Finding leads for: <span>"{displayName}"</span>
+                </h3>
+                
+                <div className="lf__loader-status-container">
+                    <div key={statusIndex} className="lf__loader-status">
+                        <span className="lf__loader-status-dot" />
+                        {STATUSES[statusIndex]}
+                    </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="lf__loader-bar-bg">
+                    <div 
+                        className="lf__loader-bar-fill" 
+                        style={{ width: `${progress}%` }} 
+                    />
+                </div>
+
+                {/* Step indicators */}
+                <div className="lf__loader-steps">
+                    {[
+                        { label: 'Search', icon: Search },
+                        { label: 'Analyze', icon: Globe },
+                        { label: 'AI Score', icon: Target },
+                        { label: 'Enrich', icon: Sparkles }
+                    ].map((step, idx) => {
+                        const state = getStepState(idx);
+                        return (
+                            <div key={idx} className={`lf__loader-step ${state}`}>
+                                <div className="lf__loader-step-dot" />
+                                <span className="lf__loader-step-label">{step.label}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ══════════════════════════════════════════════════════════════════
    MAIN LEAD FINDER PAGE
    ══════════════════════════════════════════════════════════════════ */
 const LeadFinder = () => {
     const navigate = useNavigate();
-    const [query, setQuery] = useState('');
-    const [leads, setLeads] = useState([]);
+    const {
+        query, setQuery,
+        leads, setLeads,
+        searched, setSearched,
+        activeFilters, setActiveFilters,
+        userOffer, setUserOffer,
+        customOffer, setCustomOffer,
+        searchMode, setSearchMode,
+        viewMode, setViewMode,
+        scrollPosition, setScrollPosition,
+        lastUpdated
+    } = useLeadFinderStore();
+
     const [loading, setLoading] = useState(false);
-    const [searched, setSearched] = useState(false);
-    const [activeFilters, setActiveFilters] = useState({});
     const [toast, setToast] = useState(null);
     const [savedLeads, setSavedLeads] = useState([]);
-    const [viewMode, setViewMode] = useState('discover'); // 'discover' or 'saved'
 
-    /* ── New: Offer & Mode state ────────────────────── */
-    const [userOffer, setUserOffer] = useState('');
-    const [customOffer, setCustomOffer] = useState('');
-    const [searchMode, setSearchMode] = useState('high_fit_leads');
+    // Check cache expiration (30 mins)
+    useEffect(() => {
+        if (searched && lastUpdated) {
+            const age = Date.now() - lastUpdated;
+            if (age > 30 * 60 * 1000) {
+                // Cache expired, clear state
+                setLeads([]);
+                setSearched(false);
+            }
+        }
+    }, [searched, lastUpdated, setLeads, setSearched]);
+
+    // Restore scroll position
+    useEffect(() => {
+        if (searched && scrollPosition > 0) {
+            // Wait a tick for rendering, then scroll
+            const timer = setTimeout(() => {
+                if (window.lenis) {
+                    window.lenis.scrollTo(scrollPosition, { immediate: true });
+                } else {
+                    window.scrollTo(0, scrollPosition);
+                }
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [searched, scrollPosition]);
 
     /* ── Toast helper ────────────────────────────────── */
     const showToast = useCallback((msg, icon) => {
@@ -414,7 +561,16 @@ const LeadFinder = () => {
     };
 
     /* ── Actions ─────────────────────────────────────── */
+    const saveScrollState = () => {
+        if (window.lenis) {
+            setScrollPosition(window.lenis.scroll || window.scrollY);
+        } else {
+            setScrollPosition(window.scrollY);
+        }
+    };
+
     const handleStartCall = (lead) => {
+        saveScrollState();
         navigate('/call-brief', {
             state: {
                 prefill: {
@@ -425,6 +581,11 @@ const LeadFinder = () => {
                 },
             },
         });
+    };
+
+    const handleOutreach = (lead) => {
+        saveScrollState();
+        navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
     };
 
     const fallbackCopyText = (text, callback) => {
@@ -659,9 +820,12 @@ const LeadFinder = () => {
 
                     {/* Loading State */}
                     {loading && (
-                        <div className="lf__skeleton-grid">
-                            {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
-                        </div>
+                        <>
+                            <FindingLeadsProgress query={query} />
+                            <div className="lf__skeleton-grid">
+                                {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+                            </div>
+                        </>
                     )}
 
                     {/* Results */}
@@ -695,6 +859,7 @@ const LeadFinder = () => {
                                             onCopy={handleCopy}
                                             onSave={handleSave}
                                             isSaved={isSaved}
+                                            onOutreach={handleOutreach}
                                         />
                                     );
                                 })}
@@ -762,6 +927,7 @@ const LeadFinder = () => {
                                         onCopy={handleCopy}
                                         onSave={handleSave}
                                         isSaved={true}
+                                        onOutreach={handleOutreach}
                                     />
                                 ))}
                             </div>

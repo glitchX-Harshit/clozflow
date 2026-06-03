@@ -1,0 +1,252 @@
+outreach_studio_v2:
+
+objective:
+Generate outreach based on business opportunity angles,
+not sales personas.
+
+remove:
+
+```
+- strategic_advisor
+- challenger
+- adaptive_intelligence
+- sales_persona_selector
+```
+
+ui_changes:
+
+```
+remove_section:
+  sales_persona
+
+replace_with:
+
+  outreach_strategy:
+
+    title:
+      Outreach Strategy
+
+    options:
+
+      curiosity:
+
+        description:
+          Start conversation through observation.
+
+      insight:
+
+        description:
+          Share a business insight.
+
+      opportunity:
+
+        description:
+          Highlight a growth opportunity.
+
+      problem:
+
+        description:
+          Surface a hidden issue.
+```
+
+generation_pipeline:
+
+```
+step_1:
+
+  analyze_business
+
+step_2:
+
+  generate_primary_angle
+
+step_3:
+
+  generate_opportunity_insight
+
+step_4:
+
+  generate_opening_message
+
+step_5:
+
+  generate_followup_message
+
+step_6:
+
+  generate_call_transition
+```
+
+primary_output:
+
+```
+title:
+  Opportunity Insight
+
+purpose:
+  Explain why this lead is worth contacting.
+```
+
+angle_engine:
+
+```
+objective:
+  Find the strongest business angle before
+  generating any message.
+
+example_angles:
+
+  salon:
+
+    trust_without_discoverability
+
+  bakery:
+
+    demand_without_conversion
+
+  dentist:
+
+    reputation_without_patient_flow
+
+  gym:
+
+    acquisition_without_retention
+
+  agency:
+
+    growth_without_process
+```
+
+generated_sections:
+
+```
+opportunity_insight:
+
+  required:
+    true
+
+why_this_matters:
+
+  required:
+    true
+
+opening_message:
+
+  required:
+    true
+
+followup_message:
+
+  required:
+    true
+
+call_transition:
+
+  required:
+    true
+```
+
+message_rules:
+
+```
+forbidden:
+
+  - sell_website_immediately
+  - mention_services_in_first_line
+  - generic_compliments
+  - obvious_pitching
+  - ai_style_openers
+
+required:
+
+  - observation
+  - curiosity
+  - business_context
+  - conversation_hook
+```
+
+bad_examples:
+
+```
+- "noticed you don't have a website"
+- "we help businesses grow"
+- "are you looking for more customers"
+- "we offer website development"
+```
+
+good_examples:
+
+```
+- "one thing stood out while reviewing local businesses in your category"
+
+- "you've already solved the trust problem, which most businesses struggle with"
+
+- "the interesting part isn't your reviews, it's what happens before customers find them"
+```
+
+output_structure:
+
+```
+section_1:
+
+  label:
+    Opportunity Insight
+
+section_2:
+
+  label:
+    Why This Matters
+
+section_3:
+
+  label:
+    Recommended Opening
+
+section_4:
+
+  label:
+    Follow-Up If They Reply
+
+section_5:
+
+  label:
+    Transition To Call
+```
+
+scoring:
+
+```
+personalization:
+  weight: 0.40
+
+curiosity:
+  weight: 0.25
+
+insight:
+  weight: 0.20
+
+spam_risk:
+  weight: 0.15
+```
+
+success_definition:
+
+```
+not:
+  generate_message
+
+but:
+  create_conversation_opportunity
+```
+
+future:
+
+outreach_studio_goal:
+
+```
+become:
+  ai_outreach_strategist
+
+avoid:
+  ai_message_generator
+```

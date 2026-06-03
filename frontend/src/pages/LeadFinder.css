@@ -492,19 +492,19 @@
 }
 
 .lf__card-name {
-    font-size: 1.05rem;
+    font-size: 1.25rem;
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.2;
     color: var(--text);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
 }
 
 .lf__card-category {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    font-size: 0.68rem;
+    gap: 0.35rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--accent);
     background: var(--accent-dim);
@@ -533,14 +533,14 @@
 }
 
 .lf__score-value {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 900;
     letter-spacing: -0.04em;
     line-height: 1;
 }
 
 .lf__score-label {
-    font-size: 0.56rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -556,9 +556,9 @@
 .lf__buying-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 999px;
-    font-size: 0.58rem;
+    font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -596,10 +596,10 @@
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
-    padding: 0.625rem 0.875rem;
+    padding: 0.75rem 1rem;
     border-radius: 12px;
-    margin-bottom: 0.75rem;
-    font-size: 0.78rem;
+    margin-bottom: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 600;
     line-height: 1.45;
     color: var(--text);
@@ -657,12 +657,12 @@
 .lf__signal-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.6rem;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
     background: rgba(34, 197, 94, 0.06);
     border: 1px solid rgba(34, 197, 94, 0.12);
     border-radius: 999px;
-    font-size: 0.64rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #16a34a;
     white-space: nowrap;
@@ -687,9 +687,9 @@
 .lf__meta-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.75rem;
-    font-weight: 500;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--text-dim);
 }
 
@@ -724,11 +724,11 @@
 .lf__contact-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.72rem;
+    gap: 0.35rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-dim);
-    padding: 0.25rem 0.625rem;
+    padding: 0.35rem 0.75rem;
     background: var(--surface);
     border-radius: 8px;
     transition: all 0.2s;
@@ -751,13 +751,13 @@
 .lf__ai-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.6rem;
+    gap: 0.35rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--accent);
-    margin-bottom: 0.375rem;
+    margin-bottom: 0.5rem;
 }
 
 .lf__ai-sparkle {
@@ -770,24 +770,24 @@
 }
 
 .lf__ai-summary {
-    font-size: 0.8125rem;
+    font-size: 0.95rem;
     color: var(--text-dim);
-    line-height: 1.55;
-    margin-bottom: 0.625rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
 }
 
 /* ── Opportunity Summary (AI section) ──────────────────────────── */
 .lf__ai-opportunity {
     display: flex;
     align-items: flex-start;
-    gap: 0.375rem;
-    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
     background: rgba(34, 197, 94, 0.04);
     border: 1px solid rgba(34, 197, 94, 0.08);
     border-radius: 10px;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--text-dim);
-    line-height: 1.5;
+    line-height: 1.55;
     margin-bottom: 0.5rem;
     animation: lf-ai-block-in 0.4s ease both;
     animation-delay: 0.1s;
@@ -803,14 +803,14 @@
 .lf__ai-fit {
     display: flex;
     align-items: flex-start;
-    gap: 0.375rem;
-    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
     background: var(--accent-dim);
     border: 1px solid rgba(30, 64, 175, 0.08);
     border-radius: 10px;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--text-dim);
-    line-height: 1.5;
+    line-height: 1.55;
     margin-bottom: 0.5rem;
     animation: lf-ai-block-in 0.4s ease both;
     animation-delay: 0.15s;
@@ -831,14 +831,14 @@
 .lf__ai-pain {
     display: flex;
     align-items: flex-start;
-    gap: 0.375rem;
-    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
     background: rgba(239, 68, 68, 0.04);
     border: 1px solid rgba(239, 68, 68, 0.08);
     border-radius: 10px;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: var(--text-dim);
-    line-height: 1.5;
+    line-height: 1.55;
 }
 
 .lf__ai-pain-icon {
@@ -858,12 +858,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.375rem;
+    gap: 0.5rem;
     flex: 1;
-    padding: 0.5rem 0.75rem;
+    padding: 0.625rem 0.875rem;
     border: 1px solid var(--border);
     border-radius: 10px;
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
     font-family: var(--font-body);
     cursor: pointer;
@@ -912,6 +912,230 @@
     background: rgba(245, 158, 11, 0.12) !important;
     border-color: rgba(245, 158, 11, 0.5) !important;
 }
+
+.lf__action-btn--outreach {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: #ffffff;
+    border-color: #1e40af;
+}
+
+.lf__action-btn--outreach:hover {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+/* ── Finding Leads Loader ───────────────────────────────────────── */
+.lf__loader-container {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    animation: lf-loader-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes lf-loader-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Minimal AI Orbital Loader */
+.lf__orbital {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lf__orbital-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid var(--surface-2);
+}
+
+.lf__orbital-dot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    border-top-color: var(--accent);
+    animation: lf-orbital-spin 1.2s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+}
+
+@keyframes lf-orbital-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.lf__orbital-core {
+    color: var(--accent);
+    animation: lf-core-pulse 2s ease-in-out infinite;
+}
+
+@keyframes lf-core-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Details on the right side */
+.lf__loader-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.lf__loader-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-dim);
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: fit-content;
+    margin-bottom: 0.5rem;
+}
+
+.lf__loader-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+}
+
+.lf__loader-title span {
+    color: var(--accent);
+}
+
+.lf__loader-status-container {
+    height: 20px;
+    margin-bottom: 0.875rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.lf__loader-status {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: absolute;
+    animation: lf-status-slide 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.lf__loader-status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    opacity: 0.8;
+}
+
+@keyframes lf-status-slide {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lf__loader-bar-bg {
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.lf__loader-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.3s ease-out;
+}
+
+.lf__loader-steps {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.875rem;
+}
+
+.lf__loader-step {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.lf__loader-step-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+}
+
+.lf__loader-step.completed .lf__loader-step-dot {
+    background: var(--accent);
+}
+
+.lf__loader-step.active .lf__loader-step-dot {
+    background: var(--accent);
+    transform: scale(1.2);
+}
+
+.lf__loader-step-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: var(--text-muted);
+    transition: color 0.3s;
+}
+
+.lf__loader-step.active .lf__loader-step-label {
+    color: var(--accent);
+    font-weight: 700;
+}
+.lf__loader-step.completed .lf__loader-step-label {
+    color: var(--text-dim);
+}
+
+/* Make sure mobile responsive behavior is clean */
+@media (max-width: 768px) {
+    .lf__loader-container {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+    .lf__loader-steps {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+}
+
 
 /* ── Loading Skeletons ──────────────────────────────────────────── */
 .lf__skeleton-grid {

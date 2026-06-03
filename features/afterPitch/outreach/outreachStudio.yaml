@@ -1,0 +1,394 @@
+feature:
+outreach_studio_v1
+
+objective:
+Transform researched leads into personalized outreach
+opportunities across multiple communication channels.
+
+placement:
+
+page:
+research_center
+
+location:
+below_live_copilot_button
+
+workflow:
+
+lead_found
+->
+research_completed
+->
+outreach_studio
+->
+prospect_reply
+->
+live_copilot
+
+ui:
+
+primary_button:
+
+```
+label:
+  Outreach Studio
+
+icon:
+  send
+
+position:
+  below_live_copilot
+```
+
+modal:
+
+title:
+Select Outreach Channel
+
+channels:
+
+```
+whatsapp:
+
+  icon:
+    whatsapp
+
+  available_when:
+    phone_number_exists
+
+instagram:
+
+  icon:
+    instagram
+
+  available_when:
+    instagram_profile_exists
+
+linkedin:
+
+  icon:
+    linkedin
+
+  available_when:
+    linkedin_profile_exists
+
+email:
+
+  icon:
+    email
+
+  available_when:
+    email_exists
+```
+
+channel_detection:
+
+auto_detect:
+true
+
+sources:
+
+```
+- google_places
+- website_analysis
+- social_profile_scan
+```
+
+output:
+
+```
+phone_number
+instagram_url
+linkedin_url
+email_address
+```
+
+availability_ui:
+
+available:
+
+```
+badge:
+  ready
+```
+
+unavailable:
+
+```
+badge:
+  not_found
+```
+
+outreach_goal_selector:
+
+title:
+Outreach Objective
+
+options:
+
+```
+start_conversation:
+
+  label:
+    Start Conversation
+
+book_call:
+
+  label:
+    Book Discovery Call
+
+follow_up:
+
+  label:
+    Follow Up
+
+re_engage:
+
+  label:
+    Re-engage Lead
+```
+
+message_generation:
+
+input:
+
+```
+- research_summary
+- business_analysis
+- detected_pain_points
+- sales_persona
+- selected_channel
+- outreach_goal
+```
+
+channel_behavior:
+
+whatsapp:
+
+```
+style:
+
+  - conversational
+  - personal
+  - concise
+
+length:
+  short
+```
+
+instagram:
+
+```
+style:
+
+  - casual
+  - friendly
+  - curiosity_driven
+
+length:
+  short
+```
+
+linkedin:
+
+```
+style:
+
+  - professional
+  - business_focused
+  - authority
+
+length:
+  medium
+```
+
+email:
+
+```
+style:
+
+  - detailed
+  - consultative
+  - research_based
+
+length:
+  long
+```
+
+sales_persona_support:
+
+strategic_advisor:
+
+```
+messaging:
+
+  - insight_first
+  - consultative
+  - opportunity_focused
+```
+
+challenger:
+
+```
+messaging:
+
+  - challenge_assumptions
+  - create_curiosity
+  - expose_blind_spots
+```
+
+adaptive_intelligence:
+
+```
+messaging:
+
+  - adapt_to_buyer_type
+  - dynamic_style
+```
+
+generated_output:
+
+title:
+Recommended Outreach
+
+sections:
+
+```
+message
+
+reasoning
+
+personalization_points
+
+likely_response_rate
+```
+
+message_quality:
+
+scoring:
+
+```
+personalization:
+  weight: 0.40
+
+relevance:
+  weight: 0.25
+
+conversation_probability:
+  weight: 0.20
+
+spam_risk:
+  weight: 0.15
+```
+
+display:
+
+```
+personalization_score
+
+conversation_score
+
+spam_risk
+```
+
+actions:
+
+copy_message:
+
+```
+enabled:
+  true
+```
+
+regenerate:
+
+```
+enabled:
+  true
+```
+
+edit_before_send:
+
+```
+enabled:
+  true
+```
+
+launch_live_copilot:
+
+```
+enabled:
+  true
+```
+
+reply_bridge:
+
+objective:
+Move user from outreach to conversation.
+
+workflow:
+
+```
+prospect_replies
+->
+launch_live_copilot
+->
+load_research_context
+->
+continue_sales_process
+```
+
+future_v2:
+
+whatsapp_send:
+
+```
+direct_integration
+```
+
+linkedin_send:
+
+```
+direct_integration
+```
+
+instagram_send:
+
+```
+direct_integration
+```
+
+outreach_sequences:
+
+```
+multi_step_followups
+```
+
+reply_analysis:
+
+```
+detect_interest_level
+```
+
+positioning:
+
+public_name:
+Outreach Studio
+
+avoid_names:
+
+```
+- cold_dm_generator
+- ai_message_writer
+- chatgpt_for_sales
+```
+
+success_metric:
+
+user_generates_message
+->
+prospect_replies
+->
+live_copilot_used
+->
+deal_progresses

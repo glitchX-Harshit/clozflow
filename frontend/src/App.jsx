@@ -24,6 +24,7 @@ import Dashboard from './pages/Dashboard';
 import CallBriefing from './pages/CallBriefing';
 import LiveCall from './pages/LiveCall';
 import PostCallSummary from './pages/PostCallSummary';
+import OutreachStudioPage from './pages/OutreachStudioPage';
 
 function LandingPage() {
     const navigate = useNavigate();
@@ -84,6 +85,9 @@ function App() {
                         } />
                         <Route path="/summary" element={
                             <ProtectedRoute><PostCallSummary /></ProtectedRoute>
+                        } />
+                        <Route path="/outreach-studio" element={
+                            <ProtectedRoute><OutreachStudioPage /></ProtectedRoute>
                         } />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
