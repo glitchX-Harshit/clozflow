@@ -926,6 +926,217 @@
     color: #ffffff;
 }
 
+/* ── Finding Leads Loader ───────────────────────────────────────── */
+.lf__loader-container {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    animation: lf-loader-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes lf-loader-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Minimal AI Orbital Loader */
+.lf__orbital {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lf__orbital-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid var(--surface-2);
+}
+
+.lf__orbital-dot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    border-top-color: var(--accent);
+    animation: lf-orbital-spin 1.2s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+}
+
+@keyframes lf-orbital-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.lf__orbital-core {
+    color: var(--accent);
+    animation: lf-core-pulse 2s ease-in-out infinite;
+}
+
+@keyframes lf-core-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Details on the right side */
+.lf__loader-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.lf__loader-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-dim);
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: fit-content;
+    margin-bottom: 0.5rem;
+}
+
+.lf__loader-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+}
+
+.lf__loader-title span {
+    color: var(--accent);
+}
+
+.lf__loader-status-container {
+    height: 20px;
+    margin-bottom: 0.875rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.lf__loader-status {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: absolute;
+    animation: lf-status-slide 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.lf__loader-status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    opacity: 0.8;
+}
+
+@keyframes lf-status-slide {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lf__loader-bar-bg {
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.lf__loader-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.3s ease-out;
+}
+
+.lf__loader-steps {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.875rem;
+}
+
+.lf__loader-step {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.lf__loader-step-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+}
+
+.lf__loader-step.completed .lf__loader-step-dot {
+    background: var(--accent);
+}
+
+.lf__loader-step.active .lf__loader-step-dot {
+    background: var(--accent);
+    transform: scale(1.2);
+}
+
+.lf__loader-step-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: var(--text-muted);
+    transition: color 0.3s;
+}
+
+.lf__loader-step.active .lf__loader-step-label {
+    color: var(--accent);
+    font-weight: 700;
+}
+.lf__loader-step.completed .lf__loader-step-label {
+    color: var(--text-dim);
+}
+
+/* Make sure mobile responsive behavior is clean */
+@media (max-width: 768px) {
+    .lf__loader-container {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+        padding: 1.25rem;
+    }
+    .lf__loader-steps {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+}
+
+
 /* ── Loading Skeletons ──────────────────────────────────────────── */
 .lf__skeleton-grid {
     display: grid;

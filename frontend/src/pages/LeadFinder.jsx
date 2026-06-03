@@ -294,6 +294,118 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) =>
 
 
 /* ══════════════════════════════════════════════════════════════════
+   FINDING LEADS PROGRESS / ANIMATION
+   ══════════════════════════════════════════════════════════════════ */
+const FindingLeadsProgress = ({ query }) => {
+    const STATUSES = [
+        "Connecting to search endpoints...",
+        "Scanning database registries for businesses...",
+        "Crawling digital footprint (websites, social platforms)...",
+        "Analyzing SEO health, site speed, and technology stack...",
+        "Detecting opportunity signals and market gaps...",
+        "Calculating AI opportunity scores & buying probability...",
+        "Drafting customized outreach strategies & pain points...",
+        "Structuring enriched lead cards..."
+    ];
+
+    const [statusIndex, setStatusIndex] = useState(0);
+    const [progress, setProgress] = useState(5);
+
+    useEffect(() => {
+        const statusInterval = setInterval(() => {
+            setStatusIndex((prev) => {
+                if (prev < STATUSES.length - 1) {
+                    return prev + 1;
+                }
+                return prev;
+            });
+        }, 1100);
+
+        const progressInterval = setInterval(() => {
+            setProgress((prev) => {
+                const target = Math.min(95, ((statusIndex + 1) / STATUSES.length) * 100);
+                if (prev < target) {
+                    return Math.min(95, prev + Math.random() * 8 + 2);
+                } else if (prev < 95) {
+                    return Math.min(95, prev + Math.random() * 1);
+                }
+                return prev;
+            });
+        }, 300);
+
+        return () => {
+            clearInterval(statusInterval);
+            clearInterval(progressInterval);
+        };
+    }, [statusIndex]);
+
+    const getStepState = (stepIndex) => {
+        const currentStep = Math.floor(statusIndex / 2);
+        if (currentStep > stepIndex) return 'completed';
+        if (currentStep === stepIndex) return 'active';
+        return 'pending';
+    };
+
+    const displayName = query ? query.trim() : "target businesses";
+
+    return (
+        <div className="lf__loader-container">
+            {/* Left Column: Minimal AI Orbital Loader */}
+            <div className="lf__orbital">
+                <div className="lf__orbital-ring" />
+                <div className="lf__orbital-dot" />
+                <div className="lf__orbital-core">
+                    <Sparkles size={18} />
+                </div>
+            </div>
+
+            {/* Right Column: Status info & Progress Bar */}
+            <div className="lf__loader-info">
+                <div className="lf__loader-tag">
+                    <Bot size={11} /> AI Engine Active
+                </div>
+                <h3 className="lf__loader-title">
+                    Finding leads for: <span>"{displayName}"</span>
+                </h3>
+                
+                <div className="lf__loader-status-container">
+                    <div key={statusIndex} className="lf__loader-status">
+                        <span className="lf__loader-status-dot" />
+                        {STATUSES[statusIndex]}
+                    </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="lf__loader-bar-bg">
+                    <div 
+                        className="lf__loader-bar-fill" 
+                        style={{ width: `${progress}%` }} 
+                    />
+                </div>
+
+                {/* Step indicators */}
+                <div className="lf__loader-steps">
+                    {[
+                        { label: 'Search', icon: Search },
+                        { label: 'Analyze', icon: Globe },
+                        { label: 'AI Score', icon: Target },
+                        { label: 'Enrich', icon: Sparkles }
+                    ].map((step, idx) => {
+                        const state = getStepState(idx);
+                        return (
+                            <div key={idx} className={`lf__loader-step ${state}`}>
+                                <div className="lf__loader-step-dot" />
+                                <span className="lf__loader-step-label">{step.label}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ══════════════════════════════════════════════════════════════════
    MAIN LEAD FINDER PAGE
    ══════════════════════════════════════════════════════════════════ */
 const LeadFinder = () => {
@@ -708,9 +820,12 @@ const LeadFinder = () => {
 
                     {/* Loading State */}
                     {loading && (
-                        <div className="lf__skeleton-grid">
-                            {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
-                        </div>
+                        <>
+                            <FindingLeadsProgress query={query} />
+                            <div className="lf__skeleton-grid">
+                                {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+                            </div>
+                        </>
                     )}
 
                     {/* Results */}
