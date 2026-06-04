@@ -259,6 +259,194 @@
     line-height: 1.5;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* V3 REASONING ENGINE — UI Components                                       */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── V3 Badges ── */
+.v3-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.v3-badge--alert {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #ef4444;
+}
+
+.v3-badge--concern {
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #b45309;
+}
+
+.v3-badge--goal {
+    background: #ede9fe;
+    border: 1px solid #ddd6fe;
+    color: #7c3aed;
+}
+
+.v3-badge--type {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #059669;
+}
+
+/* ── V3 Next Move Card ── */
+.v3-next-move {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.v3-next-move:hover {
+    border-color: rgba(99, 102, 241, 0.2);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.06);
+}
+
+/* ── V3 Coaching Tip ── */
+.v3-coaching-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #0369a1;
+    line-height: 1.4;
+}
+
+.v3-coaching-tip svg {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+/* ── V3 Reasoning Toggle ── */
+.v3-reasoning-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    width: fit-content;
+    font-family: inherit;
+}
+
+.v3-reasoning-toggle:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+
+/* ── V3 Reasoning Panel ── */
+.v3-reasoning-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.v3-reasoning-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.v3-reasoning-item:last-of-type {
+    border-bottom: none;
+}
+
+.v3-reasoning-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.v3-reasoning-value {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text);
+    text-align: right;
+    max-width: 60%;
+}
+
+/* ── V3 Quality Scores ── */
+.v3-quality-scores {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.v3-score-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.v3-score-label {
+    font-size: 0.675rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    min-width: 72px;
+    text-transform: capitalize;
+}
+
+.v3-score-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.v3-score-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.v3-score-value {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    min-width: 28px;
+    text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* Responsive                                                                 */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
 @media (max-width: 1400px) {
     .db-content-grid { grid-template-columns: 240px 1fr 280px; }
 }

@@ -24,10 +24,14 @@ class OutreachGenerateRequest(BaseModel):
 
 class OutreachGenerateResponse(BaseModel):
     opportunity_angle: str
+    opening_strategy: str = ""
+    generated_thought: str = ""
+    attention_hook: str = ""
     observation: str
     curiosity_angle: str
     opening_message: str
     likely_reply: str
+    reply_probability: str = ""
     next_move: str
     reasoning: str
     personalization_points: List[str]
@@ -75,7 +79,7 @@ async def generate_outreach_endpoint(request: OutreachGenerateRequest):
             detail=f"Invalid outreach_goal '{request.outreach_goal}'. Must be one of: {', '.join(valid_goals)}"
         )
 
-    valid_strategies = ["curiosity", "insight", "opportunity", "problem"]
+    valid_strategies = ["direct_observation", "curiosity_hook", "pattern_interrupt", "contrarian_observation", "founder_to_founder", "local_market_insight"]
     if request.outreach_strategy.lower() not in valid_strategies:
         raise HTTPException(
             status_code=400,

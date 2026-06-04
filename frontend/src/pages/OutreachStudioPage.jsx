@@ -41,10 +41,12 @@ const OUTREACH_GOALS = [
 ];
 
 const OUTREACH_STRATEGIES = [
-    { value: 'curiosity',     label: 'Curiosity',     desc: 'Observation driven conversation starter', icon: Target },
-    { value: 'insight',       label: 'Insight',       desc: 'Business insight driven opener', icon: Sparkles },
-    { value: 'opportunity',   label: 'Opportunity',   desc: 'Growth opportunity angle', icon: Zap },
-    { value: 'problem',       label: 'Problem',       desc: 'Hidden issue discovery', icon: Shield },
+    { value: 'direct_observation',    label: 'Direct Observation',   desc: 'Highlight something unusual or overlooked', icon: Target },
+    { value: 'curiosity_hook',        label: 'Curiosity Hook',       desc: 'Create curiosity with an intriguing observation', icon: Sparkles },
+    { value: 'pattern_interrupt',     label: 'Pattern Interrupt',    desc: 'Break the expected sales opener', icon: Zap },
+    { value: 'contrarian_observation',label: 'Contrarian',           desc: 'Challenge a common assumption', icon: Shield },
+    { value: 'founder_to_founder',    label: 'Founder to Founder',   desc: 'Operator talking to operator', icon: Brain },
+    { value: 'local_market_insight',  label: 'Local Insight',        desc: 'Compare against local competitors', icon: TrendingUp },
 ];
 
 const scoreLevel = (score) => {
@@ -71,7 +73,7 @@ const OutreachStudioPage = () => {
     const [channels, setChannels] = useState({});
     const [selectedChannel, setSelectedChannel] = useState(null);
     const [outreachGoal, setOutreachGoal] = useState('start_conversation');
-    const [outreachStrategy, setOutreachStrategy] = useState('curiosity');
+    const [outreachStrategy, setOutreachStrategy] = useState('curiosity_hook');
     const [generatedMessage, setGeneratedMessage] = useState(null);
     const [generating, setGenerating] = useState(false);
     const [detectingChannels, setDetectingChannels] = useState(true);
@@ -360,8 +362,32 @@ const OutreachStudioPage = () => {
                                         <span className="osp__context-label">Opportunity Angle</span>
                                         <p className="osp__context-text">{generatedMessage.opportunity_angle}</p>
                                     </div>
+                                    {generatedMessage.opening_strategy && (
+                                        <div className="osp__context-block">
+                                            <span className="osp__context-label">Opening Strategy</span>
+                                            <p className="osp__context-text" style={{ textTransform: 'capitalize' }}>
+                                                {generatedMessage.opening_strategy.replace(/_/g, ' ')}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {generatedMessage.generated_thought && (
+                                        <div className="osp__context-block">
+                                            <span className="osp__context-label">Generated Thought</span>
+                                            <p className="osp__context-text" style={{ color: 'var(--text-dim)', fontStyle: 'italic' }}>
+                                                {generatedMessage.generated_thought}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {generatedMessage.attention_hook && (
+                                        <div className="osp__context-block">
+                                            <span className="osp__context-label">Attention Hook</span>
+                                            <p className="osp__context-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>
+                                                "{generatedMessage.attention_hook}"
+                                            </p>
+                                        </div>
+                                    )}
                                     <div className="osp__context-block">
-                                        <span className="osp__context-label">Observation</span>
+                                        <span className="osp__context-label">Business Observation</span>
                                         <p className="osp__context-text">{generatedMessage.observation}</p>
                                     </div>
                                     <div className="osp__context-block">
@@ -396,8 +422,23 @@ const OutreachStudioPage = () => {
 
                                 <div className="osp__strategic-context" style={{ marginTop: '1.5rem', marginBottom: '2rem' }}>
                                     <div className="osp__context-block">
-                                        <span className="osp__context-label">Likely Reply</span>
-                                        <p className="osp__context-text" style={{ fontStyle: 'italic' }}>{generatedMessage.likely_reply}</p>
+                                        <span className="osp__context-label">
+                                            Likely Reply
+                                            {generatedMessage.reply_probability && (
+                                                <span style={{
+                                                    marginLeft: '0.5rem',
+                                                    fontSize: '0.65rem',
+                                                    padding: '0.15rem 0.5rem',
+                                                    background: generatedMessage.reply_probability === 'High' ? 'rgba(34,197,94,0.1)' : generatedMessage.reply_probability === 'Medium' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.08)',
+                                                    color: generatedMessage.reply_probability === 'High' ? '#16a34a' : generatedMessage.reply_probability === 'Medium' ? '#d97706' : '#dc2626',
+                                                    borderRadius: '999px',
+                                                    fontWeight: 700,
+                                                    textTransform: 'uppercase',
+                                                    letterSpacing: '0.04em',
+                                                }}>{generatedMessage.reply_probability} probability</span>
+                                            )}
+                                        </span>
+                                        <p className="osp__context-text" style={{ fontStyle: 'italic' }}>"{generatedMessage.likely_reply}"</p>
                                     </div>
                                     <div className="osp__context-block">
                                         <span className="osp__context-label">Next Move</span>
