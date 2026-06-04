@@ -1,0 +1,288 @@
+outreach_opening_strategy_v1:
+
+objective:
+Generate attention and curiosity before generating
+outreach messages.
+
+philosophy:
+
+```
+first_message_goal:
+  earn_attention
+
+second_goal:
+  earn_reply
+
+never_goal:
+  immediate_sale
+
+never_goal:
+  immediate_pitch
+```
+
+generation_pipeline:
+
+```
+step_1:
+  analyze_business
+
+step_2:
+  identify_strongest_opportunity_angle
+
+step_3:
+  select_opening_strategy
+
+step_4:
+  generate_attention_hook
+
+step_5:
+  generate_opening_message
+
+step_6:
+  predict_likely_reply
+```
+
+opening_strategy_engine:
+
+```
+modes:
+
+  direct_observation:
+
+    objective:
+      highlight something unusual
+
+    example:
+      one thing doesnt add up
+
+  curiosity_hook:
+
+    objective:
+      create curiosity
+
+    example:
+      this made me curious
+
+  pattern_interrupt:
+
+    objective:
+      break expected sales opener
+
+    example:
+      good news bad news
+
+  contrarian_observation:
+
+    objective:
+      challenge common assumption
+
+    example:
+      most businesses struggle with trust
+      you seem to have the opposite problem
+
+  founder_to_founder:
+
+    objective:
+      sound like operator talking to operator
+
+    example:
+      i noticed something interesting
+
+  local_market_insight:
+
+    objective:
+      compare against competitors
+
+    example:
+      compared to others nearby
+```
+
+strategy_selection:
+
+```
+based_on:
+
+  - business_type
+  - research_data
+  - reviews
+  - website_status
+  - social_presence
+```
+
+output_structure:
+
+```
+section_1:
+
+  title:
+    Opportunity Angle
+
+section_2:
+
+  title:
+    Opening Strategy
+
+section_3:
+
+  title:
+    Attention Hook
+
+section_4:
+
+  title:
+    Opening Message
+
+section_5:
+
+  title:
+    Likely Reply
+
+section_6:
+
+  title:
+    Next Move
+```
+
+language_engine:
+
+```
+objective:
+  sound_human
+
+reading_level:
+  simple
+
+tone:
+  conversational
+
+avoid:
+
+  - consultant_language
+  - corporate_language
+  - linkedin_guru_language
+  - marketing_jargon
+
+forbidden_phrases:
+
+  - online presence
+  - customer engagement
+  - digital transformation
+  - maximize growth
+  - strategic opportunity
+  - business optimization
+  - unlock growth
+  - enhance visibility
+```
+
+opening_message_rules:
+
+```
+no_hello:
+  true
+
+no_hi:
+  true
+
+no_introduction:
+  true
+
+no_service_pitch:
+  true
+
+no_call_request:
+  true
+
+required:
+
+  - observation
+  - tension
+  - curiosity
+  - question
+```
+
+attention_hook_patterns:
+
+```
+examples:
+
+  - one thing doesnt add up
+
+  - this might sound like a strange question
+
+  - i noticed something interesting
+
+  - i think you might have the opposite problem
+
+  - random observation
+
+  - this caught my attention
+
+  - i may be wrong but
+
+  - something stood out immediately
+```
+
+quality_validator:
+
+```
+reject_if:
+
+  - starts_with_hello
+  - starts_with_hi
+  - sounds_like_sales_pitch
+  - sounds_like_linkedin_post
+  - sounds_like_marketing_copy
+```
+
+likely_reply_engine:
+
+```
+generate:
+
+  - likely_reply
+  - reply_probability
+  - next_best_response
+```
+
+success_metric:
+
+```
+not:
+  message_generated
+
+but:
+  prospect_stops_scrolling
+
+then:
+  prospect_replies
+```
+
+future_v2:
+
+dynamic_ab_testing:
+
+```
+enabled:
+  true
+```
+
+store_best_performing_hooks:
+
+```
+enabled:
+  true
+```
+
+hook_performance_tracking:
+
+```
+enabled:
+  true
+```
+
+reply_rate_tracking:
+
+```
+enabled:
+  true
+```

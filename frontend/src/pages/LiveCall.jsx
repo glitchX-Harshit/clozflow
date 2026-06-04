@@ -8,11 +8,17 @@ import {
     BarChart3, 
     Target, 
     Clock, 
-    CheckCircle2, 
     TrendingUp, 
     BrainCircuit,
     Activity,
-    ArrowLeft
+    ArrowLeft,
+    Eye,
+    Shield,
+    HelpCircle,
+    Lightbulb,
+    MessageSquare,
+    ChevronDown,
+    ChevronUp,
 } from 'lucide-react';
 import './LiveCall.css';
 
@@ -43,6 +49,10 @@ const LiveCall = () => {
     const [dealStage, setDealStage] = useState('discovery');
     const [coachingTip, setCoachingTip] = useState(null);
     const [spinStage, setSpinStage] = useState('situation');
+    
+    // V3 reasoning state
+    const [reasoningData, setReasoningData] = useState(null);
+    const [showReasoning, setShowReasoning] = useState(false);
     
     // MICROPHONE WEBSOCKET STREAM
     const wsUrl = contextId ? `ws://localhost:8000/ws/audio?context_id=${contextId}` : 'ws://localhost:8000/ws/audio';
@@ -115,9 +125,27 @@ const LiveCall = () => {
                         strategy: analysis.strategy_used || coaching_tip || "Guidance",
                         persuasion: analysis.intent ? `Intent: ${analysis.intent}` : (analysis.persuasion_strategy || "Strategy"),
                         type: analysis.topic || objection_type || 'none',
-                        nextQuestion: next_best_question
+                        nextQuestion: next_best_question,
+                        // V3 fields
+                        hiddenConcern: analysis.hidden_concern,
+                        conversationGoal: analysis.conversation_goal,
+                        responseType: analysis.response_type,
+                        reasoningChain: analysis.reasoning_chain,
+                        qualityScores: analysis.quality_scores,
                     };
                     setSuggestionHistory(prev => [...prev, newSuggestion].slice(-10));
+                }
+
+                // V3: Store reasoning data
+                if (analysis.reasoning_chain || analysis.hidden_concern) {
+                    setReasoningData({
+                        hiddenConcern: analysis.hidden_concern,
+                        conversationGoal: analysis.conversation_goal,
+                        responseType: analysis.response_type,
+                        reasoningChain: analysis.reasoning_chain,
+                        qualityScores: analysis.quality_scores,
+                        coachingTip: analysis.coaching_tip,
+                    });
                 }
 
                 if (analysis.deal_stage) setDealStage(analysis.deal_stage);
@@ -138,6 +166,19 @@ const LiveCall = () => {
     };
     
     const latestSuggestion = suggestionHistory.length > 0 ? suggestionHistory[suggestionHistory.length - 1] : null;
+
+    // V3: Format hidden concern for display
+    const formatLabel = (str) => {
+        if (!str) return '';
+        return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    };
+
+    // V3: Quality score bar color
+    const getScoreColor = (score) => {
+        if (score >= 0.8) return '#10b981';
+        if (score >= 0.5) return '#f59e0b';
+        return '#ef4444';
+    };
 
     return (
         <div className="db-layout">
@@ -263,42 +304,125 @@ const LiveCall = () => {
                             <span className="db-panel-title">Strategic Guidance</span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
                                 <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
-                                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>AI ACTIVE</span>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>V3 ENGINE</span>
                             </div>
                         </div>
                         
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', padding: '0 1rem', minHeight: 0, overflowY: 'auto' }}>
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: latestSuggestion ? 'flex-start' : 'center', textAlign: latestSuggestion ? 'left' : 'center', padding: '0 1rem', minHeight: 0, overflowY: 'auto' }}>
                             {!isListening ? (
                                 <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><Zap size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Intelligence Layer Standby</h4>
-                                    <p style={{ fontSize: '0.9375rem', maxWidth: '300px', margin: '0 auto' }}>Strategic guidance will appear here once analysis begins.</p>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Reasoning Engine Standby</h4>
+                                    <p style={{ fontSize: '0.9375rem', maxWidth: '300px', margin: '0 auto' }}>V3 reasoning-first analysis will appear here once the session begins.</p>
                                 </div>
                             ) : !latestSuggestion ? (
                                 <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><BrainCircuit size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Analyzing Patterns...</h4>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Reasoning Engine Active...</h4>
                                 </div>
                             ) : (
-                                <div className="animate-fade-in" style={{ textAlign: 'left' }}>
-                                    {latestObjection?.type && (
-                                        <div style={{ display: 'inline-block', padding: '0.35rem 0.75rem', background: '#fef2f2', border: '1px solid #fecaca', color: '#ef4444', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800, marginBottom: '1.5rem', letterSpacing: '0.05em' }}>
-                                            {latestObjection.type.toUpperCase()} DETECTED
-                                        </div>
-                                    )}
-                                    <div style={{ display: 'inline-block', padding: '0.35rem 0.75rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 800, marginBottom: '1.5rem', letterSpacing: '0.05em' }}>
-                                        {latestSuggestion.strategy.toUpperCase()}
+                                <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                    {/* V3: Hidden Concern + Goal Badges */}
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                        {latestObjection?.type && (
+                                            <div className="v3-badge v3-badge--alert">
+                                                {latestObjection.type.toUpperCase()} DETECTED
+                                            </div>
+                                        )}
+                                        {reasoningData?.hiddenConcern && (
+                                            <div className="v3-badge v3-badge--concern">
+                                                <Shield size={12} />
+                                                {formatLabel(reasoningData.hiddenConcern)}
+                                            </div>
+                                        )}
+                                        {reasoningData?.conversationGoal && (
+                                            <div className="v3-badge v3-badge--goal">
+                                                <Target size={12} />
+                                                {formatLabel(reasoningData.conversationGoal)}
+                                            </div>
+                                        )}
+                                        {reasoningData?.responseType && (
+                                            <div className="v3-badge v3-badge--type">
+                                                <Lightbulb size={12} />
+                                                {formatLabel(reasoningData.responseType)}
+                                            </div>
+                                        )}
                                     </div>
-                                    <p style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.3, color: 'var(--text)', marginBottom: '2.5rem', letterSpacing: '-0.03em' }}>
+
+                                    {/* Main Response */}
+                                    <p style={{ fontSize: '1.6rem', fontWeight: 800, lineHeight: 1.35, color: 'var(--text)', letterSpacing: '-0.03em' }}>
                                         "{latestSuggestion.text}"
                                     </p>
+
+                                    {/* Next Question */}
                                     {latestSuggestion.nextQuestion && (
-                                        <div style={{ display: 'flex', gap: '1.125rem', padding: '1.5rem', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
-                                            <TrendingUp size={24} color="var(--accent)" strokeWidth={2.5} />
+                                        <div className="v3-next-move">
+                                            <TrendingUp size={20} color="var(--accent)" strokeWidth={2.5} />
                                             <div>
-                                                <div style={{ fontSize: '0.875rem', fontWeight: 800 }}>Next Strategic Move</div>
-                                                <div style={{ fontSize: '0.9375rem', color: 'var(--text-dim)', marginTop: '0.3rem', lineHeight: 1.4 }}>Ask: "{latestSuggestion.nextQuestion}"</div>
+                                                <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>Next Strategic Move</div>
+                                                <div style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginTop: '0.25rem', lineHeight: 1.4 }}>Ask: "{latestSuggestion.nextQuestion}"</div>
                                             </div>
+                                        </div>
+                                    )}
+
+                                    {/* V3: Coaching Tip */}
+                                    {reasoningData?.coachingTip && (
+                                        <div className="v3-coaching-tip">
+                                            <MessageSquare size={14} />
+                                            <span>{reasoningData.coachingTip}</span>
+                                        </div>
+                                    )}
+
+                                    {/* V3: Reasoning Chain Toggle */}
+                                    <button 
+                                        className="v3-reasoning-toggle"
+                                        onClick={() => setShowReasoning(!showReasoning)}
+                                    >
+                                        <Eye size={14} />
+                                        <span>AI Reasoning</span>
+                                        {showReasoning ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                    </button>
+
+                                    {showReasoning && reasoningData?.reasoningChain && (
+                                        <div className="v3-reasoning-panel animate-fade-in">
+                                            <div className="v3-reasoning-item">
+                                                <span className="v3-reasoning-label">Protecting</span>
+                                                <span className="v3-reasoning-value">{formatLabel(reasoningData.reasoningChain.what_are_they_protecting)}</span>
+                                            </div>
+                                            <div className="v3-reasoning-item">
+                                                <span className="v3-reasoning-label">Worried About</span>
+                                                <span className="v3-reasoning-value">{formatLabel(reasoningData.reasoningChain.what_are_they_worried_about)}</span>
+                                            </div>
+                                            <div className="v3-reasoning-item">
+                                                <span className="v3-reasoning-label">Missing Info</span>
+                                                <span className="v3-reasoning-value">{reasoningData.reasoningChain.what_information_am_i_missing}</span>
+                                            </div>
+                                            <div className="v3-reasoning-item">
+                                                <span className="v3-reasoning-label">Diagnose First?</span>
+                                                <span className="v3-reasoning-value">{reasoningData.reasoningChain.should_i_diagnose_first ? 'Yes' : 'No'}</span>
+                                            </div>
+
+                                            {/* V3: Quality Scores */}
+                                            {reasoningData.qualityScores && (
+                                                <div className="v3-quality-scores">
+                                                    <span className="v3-reasoning-label" style={{ marginBottom: '0.5rem', display: 'block' }}>Quality Scores</span>
+                                                    {Object.entries(reasoningData.qualityScores).map(([key, value]) => (
+                                                        <div key={key} className="v3-score-row">
+                                                            <span className="v3-score-label">{formatLabel(key)}</span>
+                                                            <div className="v3-score-bar-bg">
+                                                                <div 
+                                                                    className="v3-score-bar-fill" 
+                                                                    style={{ 
+                                                                        width: `${(value || 0) * 100}%`,
+                                                                        background: getScoreColor(value || 0),
+                                                                    }} 
+                                                                />
+                                                            </div>
+                                                            <span className="v3-score-value">{Math.round((value || 0) * 100)}%</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>

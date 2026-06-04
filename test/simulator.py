@@ -138,12 +138,13 @@ async def run_simulation():
         # Reset engine state between scenarios
         engine.message_buffer = []
         engine.response_history = []
-        engine.last_strategies = []
+        engine.last_goals = []
         engine.deal_state = {
             "stage": "discovery",
             "last_intent": None,
             "objections_handled": [],
-            "pressure_level": 1
+            "pressure_level": 1,
+            "hidden_concerns_identified": [],
         }
         engine._last_call_time = 0.0
 

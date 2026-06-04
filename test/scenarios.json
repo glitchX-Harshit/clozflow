@@ -1,130 +1,101 @@
 [
   {
-    "name": "Bakery Owner + Existing Vendor Bias",
+    "name": "Already Doing Fine",
     "messages": [
-      "bhai honestly our cousin already handles our website stuff",
-      "it’s not very modern but customers still place orders somehow",
-      "changing everything again just sounds like extra headache for the shop"
+      "honestly we're already doing pretty well without this",
+      "what exactly are you seeing that i'm not?"
     ]
   },
   {
-    "name": "Budget Pressure + ROI Fear",
+    "name": "No Urgency",
     "messages": [
-      "see margins are already tight in bakery business",
-      "if i spend this much on a website i need to clearly see what business it actually brings",
-      "otherwise my family will just say we wasted money on design"
+      "if things are running okay today then why should i touch anything right now?"
     ]
   },
   {
-    "name": "Founder Skepticism + AI Distrust",
+    "name": "Money Allocation",
     "messages": [
-      "bro nowadays everyone says AI AI and promises growth",
-      "after payment most agencies stop caring properly",
-      "so what actually makes your service different from normal hype?"
+      "if i had this budget available i'd probably invest it somewhere else first",
+      "why should this be the priority?"
     ]
   },
   {
-    "name": "Operational Fear + Staff Resistance",
+    "name": "Opportunity Cost",
     "messages": [
-      "implementation is the main tension honestly",
-      "my staff already struggles using basic software properly",
-      "if this becomes complicated nobody here will actually use it"
+      "what happens if i simply do nothing for the next 12 months?"
     ]
   },
   {
-    "name": "Polite Delay + Hidden Rejection",
+    "name": "Proof Request",
     "messages": [
-      "haan honestly the design looks good no doubt",
-      "let me discuss once with my brother because we handle decisions together",
-      "right now wedding season orders are already creating too much chaos here"
+      "how do i know this isn't just another good sounding idea?"
     ]
   },
   {
-    "name": "Ego + Self-Made Business Pride",
+    "name": "Trust Challenge",
     "messages": [
-      "we built this bakery without fancy systems till now",
-      "most outside services create dependency more than actual growth",
-      "why should i change something that’s already running fine enough?"
+      "why should i trust someone who understands websites more than my business?"
     ]
   },
   {
-    "name": "Price Shock + Employee Comparison",
+    "name": "Current System Defense",
     "messages": [
-      "wait this pricing is honestly much higher than i expected",
-      "for this amount i could literally hire one more worker inside the bakery",
-      "help me understand why this financially makes more sense"
+      "customers are already finding us somehow",
+      "what problem are we actually solving here?"
     ]
   },
   {
-    "name": "Analytical Local Business Owner",
+    "name": "ROI Compression",
     "messages": [
-      "i’m less interested in modern design words and more interested in actual customer increase",
-      "how exactly does this website improve orders practically?",
-      "because presentation always sounds cleaner than reality"
+      "how many actual customers would this realistically bring?"
     ]
   },
   {
-    "name": "Fast Decision Maker + Revenue Focus",
+    "name": "Cash Flow Pressure",
     "messages": [
-      "haan okay i understand the concept but directly tell me what changes after this",
-      "because realistically nobody here waits 6 months for results",
-      "if this impacts sales fast then only it becomes interesting"
+      "we don't really have spare money lying around for experiments right now"
     ]
   },
   {
-    "name": "Trust Issues From Previous Agency",
+    "name": "Competitive Reality",
     "messages": [
-      "we already worked with one freelancer before also",
-      "starting was amazing but after few weeks support became almost dead",
-      "that’s why now we’re careful before trusting again"
+      "our competitors aren't doing this either",
+      "why should we move first?"
     ]
   },
   {
-    "name": "Hard Negotiator + Value Pressure",
+    "name": "Decision Fatigue",
     "messages": [
-      "look if i’m paying premium then i expect serious business impact",
-      "cheap website people are already available everywhere",
-      "so convince me why your work deserves this pricing"
+      "i've got twenty things more important than this right now",
+      "why should this get my attention?"
     ]
   },
   {
-    "name": "Emotionally Detached Buyer",
+    "name": "Hidden Skeptic",
     "messages": [
-      "logically some things make sense honestly",
-      "but emotionally i still don’t feel fully convinced yet",
-      "i’m still trying to understand whether this is actually necessary for us right now"
+      "be honest",
+      "if this was your own money would you spend it on this today?"
     ]
   },
   {
-    "name": "Social Media Dependency Objection",
+    "name": "Founder Pressure",
     "messages": [
-      "most of our customers already come from Instagram and word of mouth",
-      "so i’m not understanding why we suddenly need a proper website also",
-      "is this actually going to add something new or just look professional?"
+      "if this fails i'm the one who has to explain it",
+      "why would i take that risk?"
     ]
   },
   {
-    "name": "Local Competition Pressure",
+    "name": "Practical Owner",
     "messages": [
-      "other bakeries around us don’t even have proper websites honestly",
-      "still they’re running fine and getting regular customers",
-      "so what exactly changes for us if we invest into this?"
+      "forget all the marketing words",
+      "what actually changes on monday morning?"
     ]
   },
   {
-    "name": "Fear of Technology Complexity",
+    "name": "Revenue Challenge",
     "messages": [
-      "bro we are bakery people not tech people",
-      "if every small thing needs technical understanding then it becomes difficult for us",
-      "we need something simple otherwise nobody here will maintain it"
-    ]
-  },
-  {
-    "name": "Family Business Decision Dynamics",
-    "messages": [
-      "final decisions here don’t happen alone honestly",
-      "my father will ask directly how this improves revenue before approving anything",
-      "if i can’t explain the practical benefit clearly then he’ll reject it immediately"
+      "show me where the money comes from",
+      "that's all i care about"
     ]
   }
 ]

@@ -8,6 +8,7 @@ Outreach Message Generation Engine V3
 
 import os
 import json
+import random
 from typing import Dict
 
 try:
@@ -18,40 +19,67 @@ except ImportError:
 
 CHANNEL_CONFIG = {
     "whatsapp": {
-        "tone": "casual",
+        "tone": "sharp and direct",
         "style": "SHORT",
         "max_words": 50,
     },
     "instagram": {
-        "tone": "friendly",
+        "tone": "professional but engaging",
         "style": "SHORT",
         "max_words": 60,
     },
     "linkedin": {
-        "tone": "professional",
+        "tone": "top-tier consultative sales",
         "style": "MEDIUM",
         "max_words": 100,
     },
     "email": {
-        "tone": "consultative",
+        "tone": "executive B2B sales",
         "style": "MEDIUM",
         "max_words": 150,
     },
 }
 
 STRATEGY_CONFIG = {
-    "curiosity": "Observation driven conversation starter",
-    "insight": "Business insight driven opener",
-    "opportunity": "Growth opportunity angle",
-    "problem": "Hidden issue discovery",
+    "direct_observation": "DIRECT OBSERVATION MODE: Point out a highly specific business or operational fact. Move beyond just 'reviews'—look at their offering, positioning, or market gaps. Be a sharp, consultative sales expert.",
+    "curiosity_hook": "CURIOSITY HOOK MODE: Create an irresistible information gap about a revenue or operational inefficiency you spotted. Hint at a specific growth lever.",
+    "pattern_interrupt": "PATTERN INTERRUPT MODE: Use a top-tier B2B sales pattern interrupt. Examples: 'Not sure if I'm reaching the right person, but...', 'Usually I'd pitch you on X, but honestly looking at your setup...', 'This is a cold outreach, feel free to hang up on me (digitally), but...' - Keep it extremely sharp, professional, and confident.",
+    "contrarian_observation": "CONTRARIAN MODE: Challenge a core assumption in their industry. Look at their business model and state something opposite to conventional wisdom.",
+    "founder_to_founder": "FOUNDER-TO-FOUNDER MODE: You are a successful founder talking to another successful founder. Talk about operations, scaling, or systems in 2 short, direct sentences.",
+    "local_market_insight": "LOCAL INSIGHT MODE: Use hyper-local context. Compare their operational setup (not just reviews) to broader local market trends.",
 }
 
+ANGLE_VECTORS = [
+    "Focus purely on pricing, margins, or premium positioning.",
+    "Focus purely on friction in their customer onboarding or booking flow.",
+    "Focus purely on how they compare visually or operationally to their top 3 local competitors.",
+    "Focus purely on customer retention and backend systems.",
+    "Focus purely on their untapped revenue potential or unmonetized traffic.",
+    "Focus purely on a mismatch between the quality of their work and their external perception.",
+]
+
 SCORING_WEIGHTS = {
-    "personalization": 0.40,
-    "curiosity": 0.25,
-    "insight": 0.20,
-    "spam_risk_inverse": 0.15,
+    "originality": 0.40,
+    "relevance": 0.25,
+    "curiosity": 0.20,
+    "human_sound": 0.15,
 }
+
+# Template phrases that must NEVER appear in hooks — V2 hook intelligence
+BANNED_HOOK_PHRASES = [
+    "something stood out immediately",
+    "one thing doesnt add up",
+    "one thing doesn't add up",
+    "i noticed something interesting",
+    "random observation",
+    "this caught my attention",
+    "this might sound strange",
+    "this might sound like a strange question",
+    "i may be wrong but",
+    "what's their secret",
+    "what's the secret",
+    "stars, no website",
+]
 
 def _score_message(message: str, lead_data: dict, channel: str) -> Dict:
     business_name = lead_data.get("business_name", "")
@@ -59,19 +87,31 @@ def _score_message(message: str, lead_data: dict, channel: str) -> Dict:
     city = lead_data.get("city", "")
     msg_lower = message.lower()
 
-    # Personalization score (0-100)
-    personalization = 0
-    if business_name and business_name.lower() in msg_lower:
-        personalization += 30
-    if category and category.lower() in msg_lower:
-        personalization += 20
-    if city and city.lower() in msg_lower:
-        personalization += 15
-    if lead_data.get("instagram") and lead_data["instagram"].lower() in msg_lower:
-        personalization += 15
-    personalization = min(100, personalization + 20) # base 20
+    # Originality score — penalize template reuse (0-100)
+    originality = 100
+    for phrase in BANNED_HOOK_PHRASES:
+        if phrase in msg_lower:
+            originality -= 30
+    # Penalize generic openers
+    generic_starts = ["hey!", "hey ", "hi!", "hi ", "hello", "hope you"]
+    for gs in generic_starts:
+        if msg_lower.startswith(gs):
+            originality -= 20
+    originality = max(0, originality)
 
-    # Curiosity score (Questions or short hooks)
+    # Relevance score — how much business context is woven in (0-100)
+    relevance = 0
+    if business_name and business_name.lower() in msg_lower:
+        relevance += 30
+    if category and category.lower() in msg_lower:
+        relevance += 20
+    if city and city.lower() in msg_lower:
+        relevance += 15
+    if lead_data.get("instagram") and lead_data["instagram"].lower() in msg_lower:
+        relevance += 15
+    relevance = min(100, relevance + 20)  # base 20
+
+    # Curiosity score (0-100)
     curiosity = 50
     if "?" in message:
         curiosity += 30
@@ -79,43 +119,41 @@ def _score_message(message: str, lead_data: dict, channel: str) -> Dict:
         curiosity += 20
     curiosity = min(100, curiosity)
 
-    # Insight score
-    insight = 40
-    insight_words = ["noticed", "found", "research", "competitors", "trend", "opportunity", "missing", "potential"]
-    matches = sum(1 for w in insight_words if w in msg_lower)
-    insight += min(60, matches * 15)
+    # Human sound score — penalize corporate/marketing language (0-100)
+    human_sound = 100
+    corporate_phrases = [
+        "online presence", "digital transformation", "customer engagement",
+        "unlock growth", "maximize visibility", "strategic opportunity",
+        "business optimization", "growth leverage", "scalable acquisition",
+        "tailored solution", "comprehensive information", "enhance brand",
+    ]
+    for cp in corporate_phrases:
+        if cp in msg_lower:
+            human_sound -= 15
+    human_sound = max(0, human_sound)
 
-    # Spam risk
+    # Spam risk (separate from weighted score)
     spam_signals = 0
     spam_keywords = ["buy now", "guaranteed", "free", "discount", "offer expires", "click here", "best price"]
     for kw in spam_keywords:
         if kw in msg_lower:
             spam_signals += 1
-            
-    if spam_signals == 0:
-        spam_risk = "Low"
-        spam_inverse = 100
-    elif spam_signals <= 1:
-        spam_risk = "Medium"
-        spam_inverse = 50
-    else:
-        spam_risk = "High"
-        spam_inverse = 10
+    spam_risk = "Low" if spam_signals == 0 else "Medium" if spam_signals <= 1 else "High"
 
     weighted_total = (
-        personalization * SCORING_WEIGHTS["personalization"] +
+        originality * SCORING_WEIGHTS["originality"] +
+        relevance * SCORING_WEIGHTS["relevance"] +
         curiosity * SCORING_WEIGHTS["curiosity"] +
-        insight * SCORING_WEIGHTS["insight"] +
-        spam_inverse * SCORING_WEIGHTS["spam_risk_inverse"]
+        human_sound * SCORING_WEIGHTS["human_sound"]
     )
     
     total_score = max(0, min(100, int(weighted_total)))
     likely_response_rate = "High" if total_score >= 75 else "Medium" if total_score >= 50 else "Low"
 
     return {
-        "personalization_score": personalization,
+        "personalization_score": relevance,
         "curiosity_score": curiosity,
-        "insight_score": insight,
+        "insight_score": originality,
         "likely_response_rate": likely_response_rate,
         "spam_risk": spam_risk,
     }
@@ -140,71 +178,119 @@ def _build_outreach_prompt(
     user_offer: str,
 ) -> str:
     channel_cfg = CHANNEL_CONFIG.get(channel, CHANNEL_CONFIG["whatsapp"])
-    strategy_cfg = STRATEGY_CONFIG.get(outreach_strategy, STRATEGY_CONFIG["curiosity"])
+    strategy_desc = STRATEGY_CONFIG.get(outreach_strategy, STRATEGY_CONFIG["curiosity_hook"])
+    random_angle = random.choice(ANGLE_VECTORS)
     
-    return f"""You are an expert AI outreach strategist. Your goal is to generate human outreach that earns replies. NOT pitches, NOT mini sales letters, NOT consultant reports.
+    return f"""You are an expert outreach strategist. Your ONLY job: make the prospect stop scrolling and reply. You are NOT selling. You are NOT pitching. You are starting a conversation.
+
+═══ PHILOSOPHY ═══
+First message goal: EARN ATTENTION.
+Second goal: EARN A REPLY.
+Never goal: immediate sale, immediate pitch, service explanation.
 
 ═══ LEAD RESEARCH DATA ═══
 Business Name: {lead_data.get('business_name', 'Unknown')}
 Category: {lead_data.get('category', 'Unknown')}
 City: {lead_data.get('city', 'Unknown')}
+Google Rating: {lead_data.get('google_rating', 'N/A')}
+Website: {lead_data.get('website', 'None')}
+Instagram: {lead_data.get('instagram', 'None')}
 AI Summary: {lead_data.get('ai_summary', 'N/A')}
 Pain Point: {lead_data.get('likely_pain_point', 'N/A')}
 Opportunity Summary: {lead_data.get('opportunity_summary', 'N/A')}
+Opportunity Signals: {lead_data.get('opportunity_signals', 'N/A')}
 
 ═══ OUTREACH CONFIGURATION ═══
-Channel: {channel.upper()} (Tone: {channel_cfg['tone']}, Length: {channel_cfg['style']})
-Strategy: {outreach_strategy.replace('_', ' ')} -> {strategy_cfg}
+Channel: {channel.upper()} (Tone: {channel_cfg['tone']}, Length: {channel_cfg['style']}, Max Words: {channel_cfg['max_words']})
+Goal: {outreach_goal.replace('_', ' ')}
 Our Offer: {user_offer if user_offer else 'General business services'}
 
-═══ REQUIRED PIPELINE ═══
-1. Find the strongest conversation angle (e.g., trust without discoverability).
-2. Generate an Observation from research.
-3. Generate a Curiosity Hook to create tension.
-4. Craft the Opening Message. (NEVER pitch, sell, or ask for a call here).
-5. Predict the Likely Reply from the prospect.
-6. Plan the Next Move (how to continue the conversation).
+═══ ENFORCED STRATEGY MODE: {outreach_strategy.upper()} ═══
+You MUST strictly follow this approach for your message:
+{strategy_desc}
+If you do not follow this exact mode, the message will fail. 
+DO NOT mix strategies. If it's pattern_interrupt, make it a true pattern interrupt. If it's founder_to_founder, sound like a founder.
 
-═══ HUMAN CONVERSATION LAYER ═══
-- Goal: Earn a reply.
-- Never: sell_service, pitch_offer, explain_solution, book_call_immediately.
-- Style: conversational, observational, curiosity_driven, founder_like.
-- Avoid: consultant_language, corporate_language, linkedin_guru_language, ai_marketing_language.
+═══ REQUIRED CREATIVE ANGLE ═══
+To ensure variety, you MUST build your entire message around this specific operational lens:
+"{random_angle}"
+Do NOT use the most obvious angle. Force your strategy through this specific lens.
+
+═══ HOOK INTELLIGENCE ENGINE (V2) ═══
+CRITICAL: Generate THOUGHTS, not templates. Every hook must be UNIQUE and derived from THIS business's specific context.
+
+Workflow:
+1. Analyze the business using ALL research data.
+2. Ask yourself: What is UNUSUAL about this business?
+3. Ask yourself: How do I apply the "{outreach_strategy.upper()}" mode to this insight?
+4. Convert that internal thought into an attention hook.
+5. Build the opening message around it, adhering STRICTLY to the Strategy Mode.
+6. Predict the likely reply and plan next move.
+
+═══ BANNED GENERIC PATTERNS (auto-reject if used) ═══
+NEVER use these exact phrases or formats — they are overused templates and sound like a bot:
+- "something stood out immediately"
+- "one thing doesn't add up"
+- "i noticed something interesting"
+- "random observation"
+- "this caught my attention"
+- "this might sound strange"
+- "i may be wrong but"
+- "[Rating] stars, no website. What's the secret?" (Do not use this exact format!)
+If you catch yourself using any of these, STOP and generate a new hook from business context.
+
+═══ TOP TIER SALES DIRECTIVE ═══
+- Do NOT just talk about their "reviews" or "stars". That is amateur level. Focus on operations, market gaps, revenue leaks, or their specific offering.
+- Sound like a highly paid, extremely confident, top-tier sales professional. You are peer-to-peer. You are not begging for attention.
+
+═══ LANGUAGE RULES ═══
+Reading level: SIMPLE. Tone: CONVERSATIONAL. Sound HUMAN.
+Avoid: consultant language, corporate language, linkedin guru language, marketing jargon.
 
 ═══ FORBIDDEN PHRASES ═══
-Do not use: customer engagement, online visibility, digital transformation, significant potential, comprehensive information, tailored solution, drive more sales, growth opportunity, business optimization, maximize conversions, unlock growth, enhance brand presence, improve customer acquisition, strategic transformation.
-
-═══ FORBIDDEN OPENERS ═══
-Do not use: "noticed you dont have a website", "we help businesses grow", "we offer website development", "are you looking for more customers", "i help local businesses".
+online presence, customer engagement, digital transformation, maximize growth, strategic opportunity, business optimization, unlock growth, enhance visibility, significant potential, comprehensive information, tailored solution, drive more sales, growth opportunity, maximize conversions, enhance brand presence, improve customer acquisition, strategic transformation.
 
 ═══ OPENING MESSAGE RULES ═══
-Maximum service mentions: 0
-Maximum pitching: 0
-Maximum call requests: 0
-Required structure: observation -> curiosity -> question
+- No hello. No hi. No introduction. No service pitch. No call request.
+- Ensure the message explicitly matches the {outreach_strategy.upper()} mode.
+- The message must feel like a real person writing it.
+
+═══ QUALITY CHECK ═══
+Reject your own output if it: starts with hello/hi, sounds like a sales pitch, sounds like a LinkedIn post, sounds like marketing copy, mentions your service, asks for a meeting.
+
+═══ SUCCESS METRIC ═══
+Not: message generated. But: prospect stops scrolling. Then: prospect replies.
 
 Return ONLY valid JSON with these exact keys:
 {{
-  "opportunity_angle": "string",
-  "observation": "string",
-  "curiosity_angle": "string",
-  "opening_message": "string",
-  "likely_reply": "string",
-  "next_move": "string",
-  "reasoning": "string",
-  "personalization_points": ["array of strings"]
+  "opportunity_angle": "The strongest angle you identified",
+  "opening_strategy": "{outreach_strategy}",
+  "generated_thought": "Your internal reasoning — what unusual thing did you notice about THIS specific business?",
+  "attention_hook": "The UNIQUE hook derived from your thought (NEVER a template phrase)",
+  "observation": "Your research-based observation",
+  "curiosity_angle": "The tension/curiosity element",
+  "opening_message": "The full opening message (max {channel_cfg['max_words']} words)",
+  "likely_reply": "Predicted prospect reply",
+  "reply_probability": "High or Medium or Low",
+  "next_move": "How to continue after they reply",
+  "reasoning": "Brief explanation of how you strictly applied the {outreach_strategy} mode",
+  "personalization_points": ["array of specific data points used"]
 }}"""
 
 def _generate_fallback_message(lead_data: dict, channel: str, outreach_strategy: str, user_offer: str) -> dict:
     return {
-        "opportunity_angle": f"Missing local discoverability despite good reputation.",
-        "observation": f"I was looking at {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')} and saw you have great reviews but are hard to find on maps.",
-        "curiosity_angle": "There's a gap between customer satisfaction and new customer acquisition.",
-        "opening_message": f"Hey! Was looking at local {lead_data.get('category', 'businesses')} and noticed something interesting about how people are finding you. Curious if you've seen the same thing?",
-        "likely_reply": "No, what did you find?",
-        "next_move": "Share the specific observation about their map ranking vs their competitors.",
-        "reasoning": "Fallback template using a standard observation-to-curiosity flow.",
-        "personalization_points": ["Category", "Local search"]
+        "opportunity_angle": f"Operational inefficiency in local discoverability.",
+        "opening_strategy": outreach_strategy,
+        "generated_thought": "Business has a solid core offering but is losing out on high-intent local search traffic.",
+        "attention_hook": "I was about to pitch you, but then I noticed your local setup.",
+        "observation": f"Looking at {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')}, your core offering is strong, but your digital footprint is creating friction for buyers.",
+        "curiosity_angle": "There's a specific bottleneck preventing organic acquisition.",
+        "opening_message": f"Usually I'd just pitch you, but looking at your setup for {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')}, there's a specific bottleneck creating friction for your buyers. Open to a quick observation?",
+        "likely_reply": "Sure, what did you find?",
+        "reply_probability": "Medium",
+        "next_move": "Share the specific bottleneck about their map ranking or booking flow.",
+        "reasoning": "Fallback template using a strong pattern interrupt and consultative tone.",
+        "personalization_points": ["Category", "City location"]
     }
 
 async def generate_outreach_message(
@@ -215,9 +301,9 @@ async def generate_outreach_message(
     user_offer: str = "",
 ) -> dict:
     channel = channel.lower() if channel else "whatsapp"
-    outreach_strategy = outreach_strategy.lower() if outreach_strategy else "curiosity"
+    outreach_strategy = outreach_strategy.lower() if outreach_strategy else "curiosity_hook"
     
-    api_key = os.getenv("OPENAI_API_KEY", "")
+    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY") or os.getenv("OPENAI_API_KEY", "")
     
     if api_key and HAS_OPENAI:
         try:
@@ -229,7 +315,7 @@ async def generate_outreach_message(
             response = await client.chat.completions.create(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
-                temperature=0.7,
+                temperature=0.8,
                 max_tokens=800,
                 response_format={"type": "json_object"},
             )
