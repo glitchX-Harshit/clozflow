@@ -26,6 +26,8 @@ import LiveCall from './pages/LiveCall';
 import PostCallSummary from './pages/PostCallSummary';
 import OutreachStudioPage from './pages/OutreachStudioPage';
 
+import LiveCopilotPopup from './components/LiveCopilotPopup';
+
 function LandingPage() {
     const navigate = useNavigate();
     return (
@@ -68,6 +70,7 @@ function App() {
             {showLoader && <Loader onComplete={() => setShowLoader(false)} />}
             <BrowserRouter>
                 <div className="app-root">
+                    <LiveCopilotPopup />
                     <Routes>
                         <Route path="/"              element={<LandingPage />} />
                         {/* Auth pages — includes /auth/callback for OAuth redirect */}

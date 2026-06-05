@@ -10,6 +10,8 @@ import {
     Briefcase,
     Zap
 } from 'lucide-react';
+import useCopilotStore from '../store/copilotStore';
+import { openCopilotWindow } from '../utils/copilotWindow';
 import MagButton from '../components/MagButton';
 import './CallBriefing.css';
 
@@ -27,6 +29,15 @@ const CallBriefing = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Open copilot window immediately on user gesture to avoid browser blocker
+        let winRefs = null;
+        try {
+            winRefs = await openCopilotWindow();
+        } catch (winErr) {
+            console.warn('[Copilot] Could not auto-open on gesture:', winErr.message);
+        }
+
         setLoading(true);
         setError(null);
 
@@ -41,9 +52,21 @@ const CallBriefing = () => {
                 body: JSON.stringify(formData)
             });
 
-            if (!response.ok) throw new Error('Failed to create call context');
+            if (!response.ok) {
+                // If call starting fails, close the newly opened window
+                if (winRefs && winRefs.win) {
+                    try { winRefs.win.close(); } catch {}
+                }
+                throw new Error('Failed to create call context');
+            }
 
             const data = await response.json();
+
+            // Store references in Zustand so the Portal renders immediately in the new window
+            if (winRefs) {
+                useCopilotStore.getState().setExternalRefs(winRefs.win, winRefs.container);
+            }
+
             navigate('/live-call', { state: { contextId: data.context_id, callContext: formData } });
         } catch (err) {
             setError(err.message);
