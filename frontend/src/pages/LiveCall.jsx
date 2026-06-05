@@ -19,7 +19,10 @@ import {
     MessageSquare,
     ChevronDown,
     ChevronUp,
+    ExternalLink,
 } from 'lucide-react';
+import useCopilotStore from '../store/copilotStore';
+import { openCopilotWindow } from '../utils/copilotWindow';
 import './LiveCall.css';
 
 const LiveCall = () => {
@@ -50,9 +53,46 @@ const LiveCall = () => {
     const [coachingTip, setCoachingTip] = useState(null);
     const [spinStage, setSpinStage] = useState('situation');
     
-    // V3 reasoning state
     const [reasoningData, setReasoningData] = useState(null);
     const [showReasoning, setShowReasoning] = useState(false);
+
+    // Zustand copilot store integration
+    const {
+        isPopupVisible,
+        setListening,
+        pushSuggestion,
+        setReasoningData: setStoreReasoningData,
+        setExternalRefs,
+        resetCopilot,
+    } = useCopilotStore();
+
+    const latestSuggestion = suggestionHistory.length > 0 ? suggestionHistory[suggestionHistory.length - 1] : null;
+
+    const handlePopOut = async () => {
+        const refs = await openCopilotWindow();
+        if (refs) {
+            setExternalRefs(refs.win, refs.container);
+            // Sync current state to the store
+            setListening(isListening);
+            if (latestSuggestion) {
+                pushSuggestion(latestSuggestion);
+            }
+            if (reasoningData) {
+                setStoreReasoningData(reasoningData);
+            }
+        }
+    };
+
+    useEffect(() => {
+        // Auto-open copilot window when component mounts
+        if (!isPopupVisible) {
+            handlePopOut();
+        }
+        return () => {
+            resetCopilot();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resetCopilot]);
     
     // MICROPHONE WEBSOCKET STREAM
     const wsUrl = contextId ? `ws://localhost:8000/ws/audio?context_id=${contextId}` : 'ws://localhost:8000/ws/audio';
@@ -134,39 +174,46 @@ const LiveCall = () => {
                         qualityScores: analysis.quality_scores,
                     };
                     setSuggestionHistory(prev => [...prev, newSuggestion].slice(-10));
+                    pushSuggestion(newSuggestion);
                 }
 
                 // V3: Store reasoning data
                 if (analysis.reasoning_chain || analysis.hidden_concern) {
-                    setReasoningData({
+                    const rData = {
                         hiddenConcern: analysis.hidden_concern,
                         conversationGoal: analysis.conversation_goal,
                         responseType: analysis.response_type,
                         reasoningChain: analysis.reasoning_chain,
                         qualityScores: analysis.quality_scores,
                         coachingTip: analysis.coaching_tip,
-                    });
+                    };
+                    setReasoningData(rData);
+                    setStoreReasoningData(rData);
                 }
 
                 if (analysis.deal_stage) setDealStage(analysis.deal_stage);
                 if (analysis.coaching_tip) setCoachingTip(analysis.coaching_tip);
             }
         });
-        if (success) setIsListening(true);
+        if (success) {
+            setIsListening(true);
+            setListening(true);
+            if (!isPopupVisible) {
+                handlePopOut();
+            }
+        }
     };
 
     const handleStop = () => {
         stopRecording();
         setIsListening(false);
+        setListening(false);
     };
 
     const onExit = () => {
         stopRecording();
         navigate('/summary', { state: { dealHealthScore, suggestionHistory, callDuration } });
     };
-    
-    const latestSuggestion = suggestionHistory.length > 0 ? suggestionHistory[suggestionHistory.length - 1] : null;
-
     // V3: Format hidden concern for display
     const formatLabel = (str) => {
         if (!str) return '';
@@ -302,14 +349,60 @@ const LiveCall = () => {
                     <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                         <div className="db-panel-header" style={{ marginBottom: '2rem' }}>
                             <span className="db-panel-title">Strategic Guidance</span>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
-                                <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
-                                <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>V3 ENGINE</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                {!isPopupVisible && (
+                                    <button
+                                        className="btn-icon interactive"
+                                        onClick={handlePopOut}
+                                        title="Pop out copilot window"
+                                        style={{ 
+                                            background: 'rgba(255, 255, 255, 0.05)', 
+                                            border: '1px solid rgba(255, 255, 255, 0.1)', 
+                                            color: 'var(--text-dim)', 
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            padding: '6px',
+                                            borderRadius: '6px',
+                                            transition: 'all 0.15s ease',
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                                            e.currentTarget.style.color = 'var(--text)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                                            e.currentTarget.style.color = 'var(--text-dim)';
+                                        }}
+                                    >
+                                        <ExternalLink size={14} />
+                                    </button>
+                                )}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
+                                    <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
+                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>V3 ENGINE</span>
+                                </div>
                             </div>
                         </div>
                         
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: latestSuggestion ? 'flex-start' : 'center', textAlign: latestSuggestion ? 'left' : 'center', padding: '0 1rem', minHeight: 0, overflowY: 'auto' }}>
-                            {!isListening ? (
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: (latestSuggestion && !isPopupVisible) ? 'flex-start' : 'center', textAlign: (latestSuggestion && !isPopupVisible) ? 'left' : 'center', padding: '0 1rem', minHeight: 0, overflowY: 'auto' }}>
+                            {isPopupVisible ? (
+                                <div className="animate-fade-in" style={{ color: 'var(--text-dim)', textAlign: 'center', padding: '2rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                                    <div style={{ marginBottom: '1.5rem', opacity: 0.3, color: 'var(--accent)' }}><ExternalLink size={48} strokeWidth={1.5} /></div>
+                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Copilot Popped Out</h4>
+                                    <p style={{ fontSize: '0.875rem', maxWidth: '260px', margin: '0 auto 1.5rem auto', lineHeight: 1.5 }}>
+                                        Strategic recommendations are showing in the external Picture-in-Picture window.
+                                    </p>
+                                    <button 
+                                        className="btn btn-outline interactive"
+                                        onClick={() => useCopilotStore.getState().dockToPanel()}
+                                        style={{ fontSize: '0.8125rem', padding: '0.5rem 1.25rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer' }}
+                                    >
+                                        Dock Back to Panel
+                                    </button>
+                                </div>
+                            ) : !isListening ? (
                                 <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
                                     <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><Zap size={64} strokeWidth={1.5} /></div>
                                     <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Reasoning Engine Standby</h4>
