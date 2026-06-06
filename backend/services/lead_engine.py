@@ -561,7 +561,7 @@ Return ONLY valid JSON, no markdown or explanation."""
 
 async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
     """Enrich a single lead with AI analysis via Groq."""
-    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
 
     if not api_key or not HAS_OPENAI:
         return _mock_enrich(lead, user_offer)

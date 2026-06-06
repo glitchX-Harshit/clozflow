@@ -30,8 +30,7 @@ except ImportError:
                     os.environ.setdefault(_k.strip(), _v.strip())
         print(f"[ENV] Loaded manually: {ENV_PATH}")
 
-_groq_key = os.getenv("OPENAI_API_KEY", "")
-print(f"[ENV] OPENAI_API_KEY (Groq) loaded: {'YES (' + _groq_key[:8] + '...)' if _groq_key else 'NO - fallback will activate'}")
+
 
 sys.path.insert(0, BACKEND_SERVICES)
 sys.path.insert(0, PROJECT_ROOT)
@@ -120,10 +119,8 @@ def generate_pdf(scenario_name: str, report_data: list, filename: str):
 
 async def run_simulation():
     engine = SalesAIEngine(
-        call_context={
-            "business": "AI SaaS",
-            "goal": "increase conversions"
-        }
+        call_context={"client_name": "Acme Corp", "product": "Hexagon AI"},
+        mode="simulation"
     )
 
     scenarios_path = os.path.join(BASE_DIR, "scenarios.json")

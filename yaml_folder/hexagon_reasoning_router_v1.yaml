@@ -1,0 +1,340 @@
+project: HEXAGON_REASONING_ROUTER_V1
+
+goal:
+
+classify_beyond_surface_intent
+
+identify_hidden_concern
+
+identify_conversation_goal
+
+select_optimal_response_strategy
+
+reduce_unknown_classifications
+
+improve_sales_reasoning
+
+architecture:
+
+prospect_message
+
+->
+surface_intent
+
+->
+hidden_concern
+
+->
+conversation_goal
+
+->
+response_strategy
+
+->
+llm_generation
+
+reasoning_layers:
+
+layer_1_surface_intent:
+
+  categories:
+
+    - pricing
+    - trust
+    - roi
+    - delay
+    - authority
+    - status_quo
+    - risk
+    - curiosity
+    - rejection
+
+layer_2_hidden_concern:
+
+  categories:
+
+    pricing:
+
+      - affordability
+      - value_uncertainty
+      - cash_flow_pressure
+
+    trust:
+
+      - credibility_doubt
+      - vendor_fatigue
+      - fear_of_being_sold
+
+    roi:
+
+      - revenue_uncertainty
+      - proof_needed
+      - outcome_uncertainty
+
+    delay:
+
+      - low_priority
+      - avoidance
+      - lack_of_urgency
+
+    authority:
+
+      - needs_approval
+      - decision_not_owned
+
+    status_quo:
+
+      - comfort_with_current_system
+      - switching_cost_fear
+
+    risk:
+
+      - fear_of_failure
+      - blame_avoidance
+      - career_risk
+
+    curiosity:
+
+      - information_seeking
+      - exploration
+
+    rejection:
+
+      - hard_no
+      - soft_no
+
+layer_3_conversation_goal:
+
+determine_what_needs_to_happen_next
+
+goals:
+
+  trust_building
+
+  proof_delivery
+
+  value_clarification
+
+  risk_reduction
+
+  priority_creation
+
+  curiosity_expansion
+
+  commitment_testing
+
+  direct_answer
+
+  objection_handling
+
+  conversation_exit
+
+layer_4_response_strategy:
+
+mapping:
+
+  trust_building:
+
+    - evidence
+    - transparency
+    - founder_perspective
+
+  proof_delivery:
+
+    - case_study
+    - example
+    - comparison
+
+  value_clarification:
+
+    - roi_breakdown
+    - outcome_explanation
+
+  risk_reduction:
+
+    - risk_reversal
+    - small_next_step
+
+  priority_creation:
+
+    - opportunity_cost
+    - consequence_exploration
+
+  direct_answer:
+
+    - answer_first
+
+  objection_handling:
+
+    - acknowledge
+    - answer
+    - advance
+
+intent_examples:
+
+  "why should i trust you":
+
+    surface_intent:
+      trust
+
+    hidden_concern:
+      credibility_doubt
+
+    goal:
+      trust_building
+
+    strategy:
+      evidence
+
+  "that's expensive":
+
+    surface_intent:
+      pricing
+
+    hidden_concern:
+      value_uncertainty
+
+    goal:
+      value_clarification
+
+    strategy:
+      roi_breakdown
+
+  "what happens if i do nothing":
+
+    surface_intent:
+      risk
+
+    hidden_concern:
+      status_quo_evaluation
+
+    goal:
+      priority_creation
+
+    strategy:
+      consequence_exploration
+
+  "would you buy this yourself":
+
+    surface_intent:
+      trust
+
+    hidden_concern:
+      authenticity_test
+
+    goal:
+      trust_building
+
+    strategy:
+      founder_perspective
+
+routing_priority:
+
+  first:
+
+    detect_direct_question
+
+  second:
+
+    detect_hidden_concern
+
+  third:
+
+    determine_goal
+
+  fourth:
+
+    determine_strategy
+
+  fifth:
+
+    generate_response
+
+response_generation_rules:
+
+  never:
+
+    ask_question_without_reason
+
+    diagnose_everything
+
+    route_unknown_to_generic_question
+
+  always:
+
+    identify_hidden_concern
+
+    answer_when_answer_required
+
+    advance_conversation
+
+unknown_handling:
+
+  current_behavior:
+
+    unknown
+      ->
+    diagnose
+      ->
+    generic_question
+
+  replace_with:
+
+    unknown
+      ->
+    confidence_scoring
+
+      if confidence > 0.6:
+
+        use_best_match
+
+      else:
+
+        use_clarifying_question
+
+analytics:
+
+  track:
+
+    surface_intent
+
+    hidden_concern
+
+    goal
+
+    strategy
+
+    confidence
+
+    outcome
+
+metrics:
+
+  target:
+
+    unknown_rate:
+      less_than: 10_percent
+
+    routing_accuracy:
+      greater_than: 85_percent
+
+    strategy_accuracy:
+      greater_than: 80_percent
+
+future_expansion:
+
+  learn_from:
+
+    successful_calls
+
+    successful_simulations
+
+    approved_training_data
+
+  never_learn_from:
+
+    fallbacks
+
+    rejected_responses
+
+    low_confidence_routes

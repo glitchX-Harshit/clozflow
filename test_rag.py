@@ -3,7 +3,7 @@ import time
 from backend.services.sales_ai_engine import SalesAIEngine
 
 async def run_tests():
-    engine = SalesAIEngine()
+    engine = SalesAIEngine(mode="simulation")
     
     test_cases = [
         "too expensive",

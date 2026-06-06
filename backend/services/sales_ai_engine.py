@@ -8,6 +8,7 @@ from openai import AsyncOpenAI
 from difflib import SequenceMatcher
 from rag.rag_engine import RAGEngine
 from ml.evaluation.learning_filter import filter_and_log_interaction
+from backend.services.reasoning_router import reasoning_router
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # HEXAGON CONVERSATION ENGINE V3 — Reasoning-First Architecture
@@ -59,10 +60,16 @@ HIDDEN_CONCERN_MAP = {
         "default_goal": "identify_trust_gap",
         "keywords": ["hype", "prove", "why should", "different", "scam", "heard that before", "what makes you"],
     },
+    "direct_question": {
+        "hidden_concern": "missing_information",
+        "default_goal": "answer",
+        "keywords": ["how much", "what does it cost", "why should i", "what changes", "how many", "what is different", "how does this help"],
+    },
 }
 
 # ─── V3: Conversation Goals ──────────────────────────────────────────────────
 CONVERSATION_GOALS = {
+    "answer":                "Answer the direct question first",
     "diagnose":              "Understand root cause before prescribing anything",
     "clarify":               "Get prospect to articulate the real issue themselves",
     "isolate_concern":       "Narrow down the ONE thing blocking progress",
@@ -77,6 +84,8 @@ CONVERSATION_GOALS = {
 
 # ─── V3: Response Types ──────────────────────────────────────────────────────
 RESPONSE_TYPES = {
+    "direct_answer":            "Answer a question directly without avoiding it",
+    "objection_response":       "Directly address a stated concern or objection",
     "diagnostic_question":      "Ask a question that reveals the real issue",
     "perspective_shift":        "Reframe how they see the situation",
     "assumption_challenge":     "Challenge a belief they hold without being confrontational",
@@ -149,16 +158,10 @@ BANNED_PATTERNS = [
     "most businesses",
     "the reality is",
     "in practice,",
-]
-
-# ─── V3: Human Voice Phrases (replace consultant language) ────────────────────
-HUMAN_PHRASES = [
-    "Fair question.",
-    "That's interesting —",
-    "Let me ask you something.",
-    "Out of curiosity,",
-    "Maybe I'm looking at this wrong, but",
-    "Help me understand this —",
+    "fair question",
+    "out of curiosity",
+    "help me understand",
+    "let me ask you something",
 ]
 
 # ─── V3: Quality Scoring Weights (from YAML) ─────────────────────────────────
@@ -173,31 +176,14 @@ V3_SCORING_WEIGHTS = {
 
 def _detect_hidden_concern(text: str) -> dict:
     """V3 Reasoning Step 1: Identify what the prospect is really protecting."""
-    text_lower = text.lower()
-    best_match = None
-    best_score = 0
-
-    for concern_type, config in HIDDEN_CONCERN_MAP.items():
-        score = sum(1 for kw in config["keywords"] if kw in text_lower)
-        if score > best_score:
-            best_score = score
-            best_match = concern_type
-
-    if best_match:
-        return {
-            "type": best_match,
-            "hidden_concern": HIDDEN_CONCERN_MAP[best_match]["hidden_concern"],
-            "default_goal": HIDDEN_CONCERN_MAP[best_match]["default_goal"],
-            "confidence": min(1.0, best_score * 0.3),
-        }
-
+    route_data = reasoning_router.route(text)
     return {
-        "type": "unknown",
-        "hidden_concern": "unidentified_resistance",
-        "default_goal": "diagnose",
-        "confidence": 0.2,
+        "type": route_data["surface_intent"],
+        "hidden_concern": route_data["hidden_concern"],
+        "default_goal": route_data["conversation_goal"],
+        "strategy": route_data["response_strategy"],
+        "confidence": route_data["confidence"],
     }
-
 
 def _select_conversation_goal(hidden_concern: dict, deal_stage: str) -> str:
     """V3 Reasoning Step 3: Choose what we're trying to achieve with this response."""
@@ -205,27 +191,17 @@ def _select_conversation_goal(hidden_concern: dict, deal_stage: str) -> str:
         return "future_pace"
     return hidden_concern.get("default_goal", "diagnose")
 
-
-def _select_response_type(conversation_goal: str, concern_type: str) -> str:
+def _select_response_type(conversation_goal: str, concern_type: str, hidden_concern: dict = None) -> str:
     """V3 Reasoning Step 4: Choose the right response type for the goal."""
-    goal_to_response = {
-        "diagnose":             "diagnostic_question",
-        "clarify":              "diagnostic_question",
-        "isolate_concern":      "diagnostic_question",
-        "challenge_assumption": "assumption_challenge",
-        "define_success":       "perspective_shift",
-        "uncover_priority":     "diagnostic_question",
-        "quantify_problem":     "consequence_exploration",
-        "future_pace":          "future_projection",
-        "understand_gap":       "diagnostic_question",
-        "identify_trust_gap":   "risk_reversal",
-    }
-    return goal_to_response.get(conversation_goal, "diagnostic_question")
+    if hidden_concern and "strategy" in hidden_concern:
+        return hidden_concern["strategy"]
+    return "diagnostic_question"
 
 
 class SalesAIEngine:
-    def __init__(self, call_context: dict[str, Any] | None = None):
+    def __init__(self, call_context: dict[str, Any] | None = None, mode: str = "live"):
         self.call_context = call_context
+        self.mode = mode
         self.message_buffer: list[dict[str, Any]] = []
         self.response_history: list[str] = []
         self.last_goals: list[str] = []
@@ -239,21 +215,22 @@ class SalesAIEngine:
         }
 
         self.max_messages = 8
-        self.max_latency = 2.0
+        self.max_latency = 8.0
         self._last_call_time: float = 0.0
         self._cooldown_secs: float = 2.0
 
-        # Initialize Groq client
-        api_key = os.getenv("HEXAGON_SIMULATION_API_KEY") or os.getenv("OPENAI_API_KEY")
+        # Initialize Gemini client
+        api_key = os.getenv("GEMINI_API_KEY")
+
         if api_key:
             self.client = AsyncOpenAI(
                 api_key=api_key,
-                base_url="https://api.groq.com/openai/v1"
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
             )
-            print(f"[AI_CLIENT] Groq client initialized with key: {api_key[:8]}...")
+            print(f"[AI_CLIENT] Gemini client initialized for {self.mode} mode with key: {api_key[:8]}...")
         else:
             self.client = None
-            print("[AI_CLIENT] WARNING: API key not found — LLM calls will use fallback.")
+            print(f"[AI_CLIENT] WARNING: Gemini API key not found for {self.mode} mode — LLM calls will use fallback.")
 
         self.rag = RAGEngine()
         self.rag.load_index()
@@ -301,37 +278,41 @@ class SalesAIEngine:
         text_lower = text.lower()
         hidden = _detect_hidden_concern(text)
         goal = _select_conversation_goal(hidden, self.deal_state["stage"])
-        response_type = _select_response_type(goal, hidden["type"])
+        response_type = _select_response_type(goal, hidden["type"], hidden)
 
         # V3 fallback responses — diagnostic, not persuasive
         fallback_responses = {
             "budget": [
-                "Fair question. If this somehow paid for itself in three months, would budget still be the issue — or is it more about whether it actually works?",
-                "Out of curiosity — is the concern the cost itself, or more that you're not sure what the return looks like yet?",
+                "If we could prove the ROI made sense, would budget still be the main hurdle?",
+                "Is the concern the actual cost, or just making sure it pays off?",
             ],
             "doing_fine": [
-                "When you say things are going well — what are you measuring that by? Revenue, referrals, repeat customers?",
-                "That's interesting — most people who say that have one area that quietly bothers them. Anything like that for you?",
+                "Glad to hear things are stable. Is there any specific area you're still trying to optimize?",
+                "That's great. What's the main metric you're using to measure that success?",
             ],
             "not_interested": [
-                "Totally fair. Out of curiosity — what would have to change for something like this to become relevant?",
-                "Got it. Let me ask you something — if one of your competitors started doing this tomorrow, would that change anything?",
+                "No problem at all. Just curious, what would have to change for this to be relevant?",
+                "Got it. Is it just bad timing, or does this just not fit your current strategy?",
             ],
             "need_to_think": [
-                "Makes sense. Help me understand — is there a specific part you're still working through, or is it more of a general feeling?",
-                "Fair enough. Usually when someone says that, there's one thing that hasn't settled yet. Any idea what that is for you?",
+                "Makes total sense. What's the main thing you want to mull over?",
+                "Absolutely. Is there a specific part of this that isn't sitting right yet?",
             ],
             "already_have_vendor": [
-                "That makes sense. Out of curiosity — if your current setup is handling everything, what made you take this call?",
-                "Got it. Is there anything your current vendor doesn't do that you wish they did? Even something small.",
+                "Makes sense to stick with who you know. Are they handling everything you need right now?",
+                "Understood. Is there anything you wish your current setup did slightly better?",
             ],
             "trust_issue": [
-                "Fair question. What would you need to see to feel confident this isn't just another sales pitch?",
-                "I get it. What's the last thing someone promised you that didn't deliver?",
+                "I get the skepticism. What kind of proof would actually make you feel comfortable?",
+                "Totally fair. What's the biggest risk you see in moving forward with something like this?",
+            ],
+            "direct_question": [
+                "To give you the most accurate answer, could you share a bit more context on your current setup?",
+                "That depends on your specific use case. How are you currently handling this?",
             ],
             "unknown": [
-                "Help me understand this — what's the one thing that would make the biggest difference for your business right now?",
-                "Let me ask you something. If you could change one thing about how your business runs today, what would it be?",
+                "Could you elaborate a bit more on that?",
+                "I want to make sure I fully understand. Can you walk me through what you mean?",
             ],
         }
 
@@ -420,7 +401,7 @@ class SalesAIEngine:
 
         # Step 1: Identify hidden concern
         hidden = _detect_hidden_concern(text)
-        print(f"[V3_REASONING] Hidden concern: {hidden['type']} → {hidden['hidden_concern']}")
+        print(f"[V3_REASONING] Hidden concern: {hidden['type']} -> {hidden['hidden_concern']}")
 
         # Step 2: Track concerns
         if hidden["type"] != "unknown":
@@ -436,15 +417,11 @@ class SalesAIEngine:
             goal = random.choice(alt_goals) if alt_goals else goal
 
         # Step 4: Choose response type
-        response_type = _select_response_type(goal, hidden["type"])
-        print(f"[V3_REASONING] Goal: {goal} → Response type: {response_type}")
+        response_type = _select_response_type(goal, hidden["type"], hidden)
+        print(f"[V3_REASONING] Goal: {goal} -> Response type: {response_type}")
 
         # Step 5: Determine if we should ask a question
-        is_closing = self.deal_state["stage"] == "closing"
-        is_hard_rejection = hidden["type"] == "not_interested" and hidden["confidence"] > 0.5
-
-        # V3 rule: every response needs a question (except closing/hard rejection)
-        should_include_question = not is_closing and not is_hard_rejection
+        should_include_question = goal in ["diagnose", "clarify", "uncover_priority", "understand_gap"] or hidden["type"] == "unknown"
 
         # ── Build RAG context ────────────────────────────────────────────────
         rag_results = self.rag.retrieve(text)
@@ -477,6 +454,10 @@ class SalesAIEngine:
 ═══ CORE PHILOSOPHY ═══
 You do NOT pick a strategy and generate a response.
 You THINK first, then respond.
+Understand before persuading.
+Answer before diagnosing.
+Clarify only when needed.
+Questions are tools, not requirements.
 
 Success is NOT: prospect objects → AI reframes.
 Success IS: prospect objects → AI understands → AI diagnoses → AI guides.
@@ -484,7 +465,7 @@ Success IS: prospect objects → AI understands → AI diagnoses → AI guides.
 ═══ YOUR IDENTITY ═══
 You sound like: a founder, an operator, an experienced closer.
 You do NOT sound like: a consultant, a therapist, a LinkedIn creator, a motivational speaker.
-Reading level: SIMPLE. Tone: CONVERSATIONAL. Sound HUMAN.
+Reading level: SIMPLE. Tone: CONVERSATIONAL. Sound HUMAN natively (no injected filler phrases).
 
 ═══ REASONING ENGINE (you must do this before responding) ═══
 Before generating any response, answer these 4 questions internally:
@@ -498,14 +479,23 @@ Before generating any response, answer these 4 questions internally:
 3. What information am I missing?
    → Think: what don't I know yet that would change my approach?
 
-4. Should I diagnose before persuading?
-   → Default rule: IF information is missing → DO NOT persuade → ASK a diagnostic question.
+4. Should I clarify or answer first?
+   → Default rule: IF they ask a direct question → ANSWER IT. IF information is missing → ask a diagnostic question.
+
+═══ RESPONSE PRIORITY ═══
+1. answer_direct_questions_first
+2. address_objections_second
+3. diagnose_third
+4. create_curiosity_fourth
+5. advance_conversation_fifth
 
 ═══ CONVERSATION GOAL FOR THIS RESPONSE ═══
 Goal: {goal} — {CONVERSATION_GOALS.get(goal, '')}
 Response Type: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
 
 ═══ AVAILABLE RESPONSE TYPES ═══
+- direct_answer: Answer a question directly without avoiding it
+- objection_response: Directly address a stated concern or objection
 - diagnostic_question: Ask a question that reveals the real issue
 - perspective_shift: Reframe how they see the situation
 - assumption_challenge: Challenge a belief without being confrontational
@@ -514,7 +504,7 @@ Response Type: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
 - risk_reversal: Remove the perceived risk of taking action
 
 ═══ MANDATORY QUESTION ENGINE ═══
-{"Every response MUST end with one of: a diagnostic question, a reflection question, a clarification question, or a consequence question." if should_include_question else "This is a closing/rejection stage. A question is optional."}
+{"A question is recommended here to gain clarity." if should_include_question else "Questions are OPTIONAL. Do not force a question if the natural conversation progresses without one."}
 
 ═══ HIDDEN CONCERN MAPPING ═══
 - budget → hidden concern: uncertain ROI → goal: diagnose
@@ -523,16 +513,9 @@ Response Type: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
 - need_to_think → hidden concern: unresolved risk → goal: isolate concern
 - already_have_vendor → hidden concern: switching risk → goal: understand gap
 - trust_issue → hidden concern: fear of bad decision → goal: identify trust gap
+- direct_question → hidden concern: missing information → goal: answer
 
 ═══ LANGUAGE RULES ═══
-GOOD PHRASES (use these naturally):
-- "Fair question."
-- "That's interesting —"
-- "Let me ask you something."
-- "Out of curiosity,"
-- "Maybe I'm looking at this wrong, but"
-- "Help me understand this —"
-
 FORBIDDEN PHRASES (NEVER use):
 - operationally, implementation efficiency, optimize workflow
 - strategic alignment, value proposition, key metrics
@@ -541,19 +524,25 @@ FORBIDDEN PHRASES (NEVER use):
 - "the reality is", "in practice,"
 - "I understand your concern", "I hear hesitation"
 - "It sounds like you're", "Feels like you're"
+- "Fair question", "Out of curiosity", "Help me understand", "Let me ask you something"
 
 ═══ EXAMPLE TRANSFORMATIONS ═══
 BAD: "Budgets are usually tight when ROI is unclear."
-GOOD: "Fair question. If this somehow paid for itself in three months, would budget still be the issue — or is the real concern whether it works?"
+GOOD: "If this somehow paid for itself in three months, would budget still be the issue — or is the real concern whether it works?"
 
-BAD: "Most companies have unseen inefficiencies."
-GOOD: "When you say things are going well — what are you measuring that by? Revenue, referrals, repeat customers?"
+BAD (Direct Question):
+prospect: "How many customers will I get?"
+ai: "If you could change one thing about your business..."
+GOOD (Direct Question):
+prospect: "How many customers will I get?"
+ai: "I can't honestly promise a specific number. What I can do is help estimate the opportunity based on your current customer flow. How many new customers do you typically get each month?"
 
 ═══ RESPONSE RULES ═══
 - 1-2 sentences is ideal. 3 sentences max.
 - Compressed insight > long explanation.
 - Sound like a real person having a real conversation.
 - Never start with "I understand" or "It sounds like."
+- If answering a direct question, give the direct answer FIRST, then optionally ask a follow-up.
 
 ═══ QUALITY SCORING (optimize for this) ═══
 - Diagnosis weight: 0.35 — Does the response actually understand the real issue?
@@ -611,8 +600,8 @@ IDENTIFIED HIDDEN CONCERN: {hidden['hidden_concern']}
 CONVERSATION GOAL: {goal}
 RESPONSE TYPE TO USE: {response_type}
 
-CRITICAL RULE: Think before you respond. Diagnose before you persuade.
-If you don't have enough information, ask a diagnostic question.
+CRITICAL RULE: Think before you respond. Answer before you diagnose.
+If they asked a direct question, answer it directly. If information is missing, ask a diagnostic question.
 
 Output strictly conforming JSON.
 """
@@ -621,7 +610,7 @@ Output strictly conforming JSON.
             try:
                 llm_response = await asyncio.wait_for(
                     self.client.chat.completions.create(
-                        model="llama-3.3-70b-versatile",
+                        model="gemini-3.5-flash",
                         messages=[
                             {"role": "system", "content": system_content},
                             {"role": "user", "content": prompt},
@@ -661,16 +650,6 @@ Output strictly conforming JSON.
                 if any(phrase in response_lower for phrase in FORBIDDEN_LANGUAGE):
                     print("[REWRITE_TRIGGER] V3 Forbidden language detected, using fallback")
                     return self.smart_fallback(text)
-
-                # V3 Humanization — inject human phrases at ~15% rate
-                if random.random() < 0.15:
-                    phrase = random.choice(HUMAN_PHRASES)
-                    # Only inject if the response doesn't already start with a human phrase
-                    first_words = suggested_resp[:30].lower()
-                    if not any(hp.lower()[:10] in first_words for hp in HUMAN_PHRASES):
-                        suggested_resp = f"{phrase} {suggested_resp[0].lower()}{suggested_resp[1:]}"
-                        data["response"] = suggested_resp
-                        print(f"[HUMANIZE] V3 phrase injected: '{phrase}'")
 
                 self.push_response_history(suggested_resp, data.get("conversation_goal", goal))
 
