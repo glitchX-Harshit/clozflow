@@ -1,101 +1,157 @@
 [
-  {
-    "name": "Already Doing Fine",
-    "messages": [
-      "honestly we're already doing pretty well without this",
-      "what exactly are you seeing that i'm not?"
-    ]
-  },
-  {
-    "name": "No Urgency",
-    "messages": [
-      "if things are running okay today then why should i touch anything right now?"
-    ]
-  },
-  {
-    "name": "Money Allocation",
-    "messages": [
-      "if i had this budget available i'd probably invest it somewhere else first",
-      "why should this be the priority?"
-    ]
-  },
-  {
-    "name": "Opportunity Cost",
-    "messages": [
-      "what happens if i simply do nothing for the next 12 months?"
-    ]
-  },
-  {
-    "name": "Proof Request",
-    "messages": [
-      "how do i know this isn't just another good sounding idea?"
-    ]
-  },
-  {
-    "name": "Trust Challenge",
-    "messages": [
-      "why should i trust someone who understands websites more than my business?"
-    ]
-  },
-  {
-    "name": "Current System Defense",
-    "messages": [
-      "customers are already finding us somehow",
-      "what problem are we actually solving here?"
-    ]
-  },
-  {
-    "name": "ROI Compression",
-    "messages": [
-      "how many actual customers would this realistically bring?"
-    ]
-  },
-  {
-    "name": "Cash Flow Pressure",
-    "messages": [
-      "we don't really have spare money lying around for experiments right now"
-    ]
-  },
-  {
-    "name": "Competitive Reality",
-    "messages": [
-      "our competitors aren't doing this either",
-      "why should we move first?"
-    ]
-  },
-  {
-    "name": "Decision Fatigue",
-    "messages": [
-      "i've got twenty things more important than this right now",
-      "why should this get my attention?"
-    ]
-  },
-  {
-    "name": "Hidden Skeptic",
-    "messages": [
-      "be honest",
-      "if this was your own money would you spend it on this today?"
-    ]
-  },
-  {
-    "name": "Founder Pressure",
-    "messages": [
-      "if this fails i'm the one who has to explain it",
-      "why would i take that risk?"
-    ]
-  },
-  {
-    "name": "Practical Owner",
-    "messages": [
-      "forget all the marketing words",
-      "what actually changes on monday morning?"
-    ]
-  },
-  {
-    "name": "Revenue Challenge",
-    "messages": [
-      "show me where the money comes from",
-      "that's all i care about"
-    ]
-  }
+{
+"name": "Already Doing Fine",
+"messages": [
+"we're doing fine honestly",
+"why change anything?"
+]
+},
+
+{
+"name": "No Urgency",
+"messages": [
+"not really a priority right now",
+"why should i care?"
+]
+},
+
+{
+"name": "Money Allocation",
+"messages": [
+"i'd rather spend that money somewhere else",
+"why this first?"
+]
+},
+
+{
+"name": "Opportunity Cost",
+"messages": [
+"what if i do nothing?"
+]
+},
+
+{
+"name": "Proof Request",
+"messages": [
+"how do i know this actually works?"
+]
+},
+
+{
+"name": "Trust Challenge",
+"messages": [
+"why should i trust you?"
+]
+},
+
+{
+"name": "Current System Defense",
+"messages": [
+"customers already find us",
+"what's the actual problem?"
+]
+},
+
+{
+"name": "ROI Compression",
+"messages": [
+"how many customers will this bring?"
+]
+},
+
+{
+"name": "Cash Flow Pressure",
+"messages": [
+"we don't have budget right now",
+"why spend on this?"
+]
+},
+
+{
+"name": "Competitive Reality",
+"messages": [
+"nobody else is doing this",
+"why should we go first?"
+]
+},
+
+{
+"name": "Decision Fatigue",
+"messages": [
+"i have bigger problems right now",
+"why should this get attention?"
+]
+},
+
+{
+"name": "Hidden Skeptic",
+"messages": [
+"be honest",
+"would you buy this yourself?"
+]
+},
+
+{
+"name": "Founder Pressure",
+"messages": [
+"if this fails it's on me",
+"why take that risk?"
+]
+},
+
+{
+"name": "Practical Owner",
+"messages": [
+"skip the marketing talk",
+"what changes tomorrow?"
+]
+},
+
+{
+"name": "Revenue Challenge",
+"messages": [
+"show me where the money comes from",
+"that's all i care about"
+]
+},
+
+{
+"name": "Already Have Someone",
+"messages": [
+"we already have a guy for that",
+"why switch?"
+]
+},
+
+{
+"name": "Partner Approval",
+"messages": [
+"i need to discuss it first",
+"send me the details"
+]
+},
+
+{
+"name": "Price Shock",
+"messages": [
+"that's expensive",
+"why so much?"
+]
+},
+
+{
+"name": "Not Interested",
+"messages": [
+"not interested honestly",
+"let's leave it"
+]
+},
+
+{
+"name": "Quick Skeptic",
+"messages": [
+"sounds good on paper",
+"what's the catch?"
+]
+}
 ]

@@ -303,7 +303,7 @@ async def generate_outreach_message(
     channel = channel.lower() if channel else "whatsapp"
     outreach_strategy = outreach_strategy.lower() if outreach_strategy else "curiosity_hook"
     
-    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY") or os.getenv("OPENAI_API_KEY", "")
+    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
     
     if api_key and HAS_OPENAI:
         try:
