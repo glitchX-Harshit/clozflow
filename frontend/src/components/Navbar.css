@@ -24,43 +24,72 @@
     gap: 2rem;
 }
 
-/* ── Logo ── */
+/* ── Premium Logo ── */
 .nb__logo {
     display: flex;
     align-items: center;
     gap: 0.625rem;
     flex-shrink: 0;
     margin-right: auto;
+    text-decoration: none;
+    position: relative;
+    padding: 0.25rem 0;
+    border-radius: 12px;
 }
 
-.nb__mark {
-    width: 30px;
-    height: 30px;
-    background: var(--text);
-    color: var(--bg);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 0.875rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    flex-shrink: 0;
-    transition: transform 0.25s ease, background 0.25s ease;
+.nb__custom-mark {
+    width: 32px;
+    height: 32px;
+    transform-style: preserve-3d;
+    overflow: visible;
+    transform: rotate(90deg) scale(1.05); /* Permanent hovered state */
 }
 
-.nb__logo:hover .nb__mark {
-    transform: rotate(-8deg) scale(1.08);
-    background: var(--accent);
+.nb__hex-base {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120; /* Permanent hovered state */
+    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.6));
+}
+
+.nb__hex-inner {
+    transform-origin: center;
+    transform: scale(0.65) rotate(-90deg); /* Permanent hovered state */
+    opacity: 1;
+}
+
+.nb__hex-core {
+    transform-origin: center;
+    transform: scale(1.5); /* Permanent hovered state */
+    fill: #fff;
+}
+
+.nb__wordmark-wrapper {
+    position: relative;
 }
 
 .nb__wordmark {
     font-family: var(--font-display);
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.04em;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    background: linear-gradient(
+        -45deg, 
+        var(--text) 0%, 
+        var(--text) 30%, 
+        #8b5cf6 50%, 
+        #ec4899 70%, 
+        var(--text) 100%
+    );
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 2.5s linear infinite; /* Permanent shine animation */
+}
+
+@keyframes shine {
+    to {
+        background-position: 300% center;
+    }
 }
 
 .nb__dot { color: var(--accent); }
