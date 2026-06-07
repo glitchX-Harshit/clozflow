@@ -8,9 +8,9 @@
 
 :root {
   /* ... (keeping other variables same) */
-  --bg:           #ffffff;
-  --surface:      #f9f9f9;
-  --surface-2:    #f3f2f0;
+  --bg:           #f4f6f8;   /* Soft, cool off-white to reduce eye strain */
+  --surface:      #ffffff;   /* Pure white for cards so they pop cleanly */
+  --surface-2:    #eaf0f6;   /* Slightly deeper off-white for secondary surfaces */
   --surface-inv:  #0a0a0a;   /* dark surface for inverted cards */
 
   /* ── Text ── */
