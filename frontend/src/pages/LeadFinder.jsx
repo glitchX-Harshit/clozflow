@@ -368,10 +368,15 @@ const FindingLeadsProgress = ({ query }) => {
                     Finding leads for: <span>"{displayName}"</span>
                 </h3>
                 
-                <div className="lf__loader-status-container">
-                    <div key={statusIndex} className="lf__loader-status">
-                        <span className="lf__loader-status-dot" />
-                        {STATUSES[statusIndex]}
+                <div className="lf__loader-status-wrapper">
+                    <div className="lf__loader-status-container">
+                        <div key={statusIndex} className="lf__loader-status">
+                            <span className="lf__loader-status-dot" />
+                            {STATUSES[statusIndex]}
+                        </div>
+                    </div>
+                    <div className="lf__loader-percent">
+                        {Math.round(progress)}%
                     </div>
                 </div>
 

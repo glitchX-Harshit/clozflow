@@ -23,18 +23,18 @@ class OutreachGenerateRequest(BaseModel):
 
 
 class OutreachGenerateResponse(BaseModel):
-    opportunity_angle: str
+    opportunity_angle: str = ""
     opening_strategy: str = ""
     generated_thought: str = ""
     attention_hook: str = ""
     observation: str
-    curiosity_angle: str
+    curiosity_angle: str = ""
     opening_message: str
     likely_reply: str
     reply_probability: str = ""
-    next_move: str
-    reasoning: str
-    personalization_points: List[str]
+    next_move: str = ""
+    reasoning: str = ""
+    personalization_points: List[str] = []
     likely_response_rate: str                 
     personalization_score: int                
     curiosity_score: int                      

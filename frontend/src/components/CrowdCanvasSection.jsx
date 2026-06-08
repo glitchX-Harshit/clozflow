@@ -1,282 +1,276 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useState, useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Target, Zap, ShieldAlert, CheckCircle2, TrendingUp } from 'lucide-react';
+import MagButton from './MagButton';
 import './CrowdCanvasSection.css';
 
-const CrowdCanvas = ({ src, rows = 15, cols = 7 }) => {
-  const canvasRef = useRef(null);
+gsap.registerPlugin(ScrollTrigger);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const config = {
-      src,
-      rows,
-      cols,
-    };
-
-    // UTILS
-    const randomRange = (min, max) => min + Math.random() * (max - min);
-    const randomIndex = (array) => randomRange(0, array.length) | 0;
-    const removeFromArray = (array, i) => array.splice(i, 1)[0];
-    const removeItemFromArray = (array, item) => removeFromArray(array, array.indexOf(item));
-    const removeRandomFromArray = (array) => removeFromArray(array, randomIndex(array));
-    const getRandomFromArray = (array) => array[randomIndex(array) | 0];
-
-    // TWEEN FACTORIES
-    const resetPeep = ({ stage, peep }) => {
-      const direction = Math.random() > 0.5 ? 1 : -1;
-      // Using power2.in from GSAP, but calling the parseEase string interpolation equivalent.
-      const parseEase = gsap.parseEase("power2.in");
-      const offsetY = 100 - 250 * parseEase(Math.random());
-      const startY = stage.height - peep.height + offsetY;
-      let startX;
-      let endX;
-
-      if (direction === 1) {
-        startX = -peep.width;
-        endX = stage.width;
-        peep.scaleX = 1;
-      } else {
-        startX = stage.width + peep.width;
-        endX = 0;
-        peep.scaleX = -1;
-      }
-
-      peep.x = startX;
-      peep.y = startY;
-      peep.anchorY = startY;
-
-      return {
-        startX,
-        startY,
-        endX,
-      };
-    };
-
-    const normalWalk = ({ peep, props }) => {
-      const { startX, startY, endX } = props;
-      const xDuration = 10;
-      const yDuration = 0.25;
-
-      const tl = gsap.timeline();
-      tl.timeScale(randomRange(0.5, 1.5));
-      tl.to(
-        peep,
-        {
-          duration: xDuration,
-          x: endX,
-          ease: "none",
-        },
-        0,
-      );
-      tl.to(
-        peep,
-        {
-          duration: yDuration,
-          repeat: xDuration / yDuration,
-          yoyo: true,
-          y: startY - 10,
-        },
-        0,
-      );
-
-      return tl;
-    };
-
-    const walks = [normalWalk];
-
-    // FACTORY FUNCTIONS
-    const createPeep = ({ image, rect }) => {
-      const peep = {
-        image,
-        rect: [],
-        width: 0,
-        height: 0,
-        drawArgs: [],
-        x: 0,
-        y: 0,
-        anchorY: 0,
-        scaleX: 1,
-        walk: null,
-        setRect: (rect) => {
-          peep.rect = rect;
-          peep.width = rect[2];
-          peep.height = rect[3];
-          peep.drawArgs = [peep.image, ...rect, 0, 0, peep.width, peep.height];
-        },
-        render: (ctx) => {
-          ctx.save();
-          ctx.translate(peep.x, peep.y);
-          ctx.scale(peep.scaleX, 1);
-          ctx.drawImage(
-            peep.image,
-            peep.rect[0],
-            peep.rect[1],
-            peep.rect[2],
-            peep.rect[3],
-            0,
-            0,
-            peep.width,
-            peep.height,
-          );
-          ctx.restore();
-        },
-      };
-
-      peep.setRect(rect);
-      return peep;
-    };
-
-    // MAIN
-    const img = document.createElement("img");
-    const stage = {
-      width: 0,
-      height: 0,
-    };
-
-    const allPeeps = [];
-    const availablePeeps = [];
-    const crowd = [];
-
-    const createPeeps = () => {
-      const { rows, cols } = config;
-      const { naturalWidth: width, naturalHeight: height } = img;
-      const total = rows * cols;
-      const rectWidth = width / rows;
-      const rectHeight = height / cols;
-
-      for (let i = 0; i < total; i++) {
-        allPeeps.push(
-          createPeep({
-            image: img,
-            rect: [
-              (i % rows) * rectWidth,
-              ((i / rows) | 0) * rectHeight,
-              rectWidth,
-              rectHeight,
-            ],
-          }),
-        );
-      }
-    };
-
-    const initCrowd = () => {
-      while (availablePeeps.length) {
-        addPeepToCrowd().walk.progress(Math.random());
-      }
-    };
-
-    const addPeepToCrowd = () => {
-      const peep = removeRandomFromArray(availablePeeps);
-      const walk = getRandomFromArray(walks)({
-        peep,
-        props: resetPeep({
-          peep,
-          stage,
-        }),
-      }).eventCallback("onComplete", () => {
-        removePeepFromCrowd(peep);
-        addPeepToCrowd();
-      });
-
-      peep.walk = walk;
-
-      crowd.push(peep);
-      crowd.sort((a, b) => a.anchorY - b.anchorY);
-
-      return peep;
-    };
-
-    const removePeepFromCrowd = (peep) => {
-      removeItemFromArray(crowd, peep);
-      availablePeeps.push(peep);
-    };
-
-    const render = () => {
-      if (!canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-
-      crowd.forEach((peep) => {
-        peep.render(ctx);
-      });
-
-      ctx.restore();
-    };
-
-    const resize = () => {
-      if (!canvas) return;
-      // Taking parent dimensions to make it responsive
-      const parent = canvas.parentElement;
-      stage.width = parent ? parent.clientWidth : window.innerWidth;
-      stage.height = parent ? parent.clientHeight : window.innerHeight;
-      
-      canvas.width = stage.width * (window.devicePixelRatio || 1);
-      canvas.height = stage.height * (window.devicePixelRatio || 1);
-      
-      canvas.style.width = `${stage.width}px`;
-      canvas.style.height = `${stage.height}px`;
-
-      crowd.forEach((peep) => {
-        if (peep.walk) peep.walk.kill();
-      });
-
-      crowd.length = 0;
-      availablePeeps.length = 0;
-      availablePeeps.push(...allPeeps);
-
-      initCrowd();
-    };
-
-    const init = () => {
-      createPeeps();
-      resize();
-      gsap.ticker.add(render);
-    };
-
-    img.onload = init;
-    img.src = config.src;
-
-    const handleResize = () => resize();
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      gsap.ticker.remove(render);
-      crowd.forEach((peep) => {
-        if (peep.walk) peep.walk.kill();
-      });
-    };
-  }, [src, rows, cols]);
-
-  return (
-    <canvas ref={canvasRef} className="cc__canvas" />
-  );
-};
+const INITIAL_DEALS = [
+    { id: 1, company: 'Stripe', value: '$150,000', playbook: 'Deferred Q3 Billing Plan', x: 10, y: 20, speed: 0.08, status: 'drifting', opacity: 1, progress: 0 },
+    { id: 2, company: 'Notion', value: '$85,000', playbook: 'Live SLA Advantage Plan', x: 25, y: 45, speed: 0.12, status: 'drifting', opacity: 1, progress: 0 },
+    { id: 3, company: 'Gong', value: '$220,000', playbook: 'Competitor Edge Pitch', x: 40, y: 70, speed: 0.07, status: 'drifting', opacity: 1, progress: 0 }
+];
 
 const CrowdCanvasSection = () => {
-  return (
-    <section className="cc__section">
-      <div className="container cc__content">
-        <h2 className="section-title cc__title">
-          Don't let deals <span className="italic-accent">walk away.</span>
-        </h2>
-        <p className="cc__subtitle">
-          Poor sales skills and hesitation cost you money every single day.
-          Equip yourself with Hexagon and turn objections into closed won.
-        </p>
-      </div>
-      
-      <div className="cc__canvas-wrapper">
-        <CrowdCanvas src="/images/peeps/all-peeps.png" rows={15} cols={7} />
-      </div>
-    </section>
-  );
+    const [deals, setDeals] = useState(INITIAL_DEALS);
+    const [savedCount, setSavedCount] = useState(0);
+    const [savedRevenue, setSavedRevenue] = useState(0);
+
+    const sectionRef = useRef(null);
+    const playgroundRef = useRef(null);
+
+    // Section entrance animations
+    useEffect(() => {
+        let ctx = gsap.context(() => {
+            gsap.fromTo('.cc__header-animate',
+                { y: 30, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '.cc__section',
+                        start: 'top 80%'
+                    }
+                }
+            );
+
+            gsap.fromTo('.cc__playground-wrapper',
+                { y: 40, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: '.cc__section',
+                        start: 'top 80%'
+                    }
+                }
+            );
+        }, sectionRef);
+        return () => ctx.revert();
+    }, []);
+
+    // Main conveyor update physics loop (60fps requestAnimationFrame)
+    useEffect(() => {
+        let animFrame;
+
+        const updatePhysics = () => {
+            setDeals(prevDeals => {
+                return prevDeals.map(d => {
+                    // Secured State: floats upwards and fades out
+                    if (d.status === 'secured') {
+                        return {
+                            ...d,
+                            y: Math.max(-20, d.y - 1.2),
+                            opacity: Math.max(0, d.opacity - 0.025)
+                        };
+                    }
+                    
+                    // Lost State: drifts quickly to the right edge and fades
+                    if (d.status === 'lost') {
+                        return {
+                            ...d,
+                            x: d.x + 1.2,
+                            opacity: Math.max(0, d.opacity - 0.03)
+                        };
+                    }
+
+                    // Intercepting State: stays stationary and fills progress
+                    if (d.status === 'intercepting') {
+                        const nextProgress = d.progress + 2; // Increments by 2% per frame (~1s total)
+                        if (nextProgress >= 100) {
+                            // Trigger counter increments when secured
+                            const valueNum = parseInt(d.value.replace(/[^0-9]/g, ''), 10);
+                            setSavedCount(c => c + 1);
+                            setSavedRevenue(r => r + valueNum);
+                            return { ...d, status: 'secured', progress: 100 };
+                        }
+                        return { ...d, progress: nextProgress };
+                    }
+
+                    // Drifting State: drifts horizontally
+                    const nextX = d.x + d.speed;
+                    // If deal passes the red warning threshold (88% width), it leaks out
+                    if (nextX >= 88) {
+                        return { ...d, x: nextX, status: 'lost' };
+                    }
+
+                    return { ...d, x: nextX };
+                }).filter(d => d.opacity > 0); // remove dead deals
+            });
+
+            animFrame = requestAnimationFrame(updatePhysics);
+        };
+
+        animFrame = requestAnimationFrame(updatePhysics);
+        return () => cancelAnimationFrame(animFrame);
+    }, []);
+
+    // Spawning interval loop to add new pipeline deals
+    useEffect(() => {
+        const companies = ['Stripe', 'Gong', 'Notion', 'Figma', 'Deel', 'Retool', 'Vanta', 'Linear', 'Segment', 'Attentive'];
+        const values = ['$120,000', '$85,000', '$240,000', '$480,000', '$50,000', '$95,000', '$110,000', '$320,000'];
+        const playbooks = ['Deferred Q3 Billing', 'Active SLA Playbook', 'SOC2 Compliance Sync', 'Competitive Play', 'Quick-start Roadmap', 'Contract Indemnity Option'];
+
+        let nextId = 10;
+        const spawnInterval = setInterval(() => {
+            setDeals(prev => {
+                // Limit concurrent deals on screen
+                if (prev.filter(d => d.status === 'drifting' || d.status === 'intercepting').length >= 4) return prev;
+
+                const randIdx = Math.floor(Math.random() * companies.length);
+                const randValIdx = Math.floor(Math.random() * values.length);
+                
+                const newDeal = {
+                    id: nextId++,
+                    company: companies[randIdx],
+                    value: values[randValIdx],
+                    playbook: playbooks[randIdx % playbooks.length],
+                    x: 0,
+                    y: 15 + Math.random() * 60, // random lane Y-coordinate
+                    speed: 0.08 + Math.random() * 0.08,
+                    status: 'drifting',
+                    opacity: 1,
+                    progress: 0
+                };
+                return [...prev, newDeal];
+            });
+        }, 2800);
+
+        return () => clearInterval(spawnInterval);
+    }, []);
+
+    // Intercept deal hover trigger
+    const handleMouseEnter = (id) => {
+        setDeals(prev => prev.map(d => {
+            if (d.id === id && d.status === 'drifting') {
+                return { ...d, status: 'intercepting' };
+            }
+            return d;
+        }));
+    };
+
+    // Exit hover, reset to drift
+    const handleMouseLeave = (id) => {
+        setDeals(prev => prev.map(d => {
+            if (d.id === id && d.status === 'intercepting') {
+                return { ...d, status: 'drifting', progress: 0 };
+            }
+            return d;
+        }));
+    };
+
+    return (
+        <section className="cc__section" ref={sectionRef} id="telemetry">
+            <div className="container">
+                <div className="crowd__header">
+                    <span className="crowd__eyebrow-text crowd__header-animate">// Interactive Interceptor Conveyor</span>
+                    <h2 className="section-title crowd__header-animate">
+                        Don't let deals <span className="italic-title">walk away.</span>
+                    </h2>
+                    <p className="crowd__subtitle crowd__header-animate">
+                        Objections drift deals to churn. Hover your cursor over the active cards below to deploy Hexagon suggestions and intercept the leak.
+                    </p>
+                </div>
+
+                {/* Gamified Conveyor Playground wrapper */}
+                <div className="cc__playground-wrapper">
+                    <div className="cc__playground" ref={playgroundRef}>
+                        
+                        {/* Inlet Zone */}
+                        <div className="cc__zone cc__zone--inlet">
+                            <span className="cc__zone-tag">Active Pipeline</span>
+                        </div>
+
+                        {/* Outlet Churn Zone (Red border threshold) */}
+                        <div className="cc__zone cc__zone--outlet">
+                            <span className="cc__zone-tag cc__zone-tag--warn">Revenue Churn Threshold</span>
+                        </div>
+
+                        {/* Deal Conveyor Lane Area */}
+                        <div className="cc__lanes-canvas">
+                            {deals.map((deal) => (
+                                <div
+                                    key={deal.id}
+                                    className={`cc__deal-node cc__deal-node--${deal.status}`}
+                                    style={{
+                                        left: `${deal.x}%`,
+                                        top: `${deal.y}%`,
+                                        opacity: deal.opacity
+                                    }}
+                                    onMouseEnter={() => handleMouseEnter(deal.id)}
+                                    onMouseLeave={() => handleMouseLeave(deal.id)}
+                                >
+                                    {/* Progress indicator border */}
+                                    {deal.status === 'intercepting' && (
+                                        <div 
+                                            className="cc__node-progress-bar"
+                                            style={{ width: `${deal.progress}%` }}
+                                        />
+                                    )}
+
+                                    <div className="cc__node-content">
+                                        <div className="cc__node-meta-row">
+                                            <span className="cc__node-company">{deal.company}</span>
+                                            <span className="cc__node-value">{deal.value}</span>
+                                        </div>
+
+                                        <div className="cc__node-status-row">
+                                            {deal.status === 'drifting' && (
+                                                <span className="cc__node-status-text drifting">
+                                                    [ Drifting to Churn ]
+                                                </span>
+                                            )}
+                                            {deal.status === 'intercepting' && (
+                                                <span className="cc__node-status-text intercepting">
+                                                    Deploying: {deal.playbook}
+                                                </span>
+                                            )}
+                                            {deal.status === 'secured' && (
+                                                <span className="cc__node-status-text secured">
+                                                    <CheckCircle2 size={10} className="cc__secured-icon-check" />
+                                                    Deal Salvaged
+                                                </span>
+                                            )}
+                                            {deal.status === 'lost' && (
+                                                <span className="cc__node-status-text lost">
+                                                    <ShieldAlert size={10} className="cc__lost-icon-alert" />
+                                                    Leaked Churn
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Counter Score HUD */}
+                    <div className="cc__hud-stats">
+                        <div className="cc__hud-metric">
+                            <Target size={16} className="cc__hud-icon" />
+                            <span className="cc__hud-label">Deals Intercepted:</span>
+                            <span className="cc__hud-num">{savedCount}</span>
+                        </div>
+
+                        <div className="cc__hud-metric">
+                            <TrendingUp size={16} className="cc__hud-icon" style={{ color: '#10b981' }} />
+                            <span className="cc__hud-label">Total Revenue Salvaged:</span>
+                            <span className="cc__hud-num" style={{ color: '#10b981' }}>
+                                ${savedRevenue.toLocaleString()}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
 };
 
 export default CrowdCanvasSection;

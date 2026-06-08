@@ -567,8 +567,11 @@ async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
         return _mock_enrich(lead, user_offer)
 
     try:
-        # Detect Groq key (starts with gsk_)
-        if api_key.startswith("gsk_"):
+        # Detect Gemini key (starts with AIza) or Groq key (starts with gsk_)
+        if api_key.startswith("AIza"):
+            base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+            model = "gemini-3.5-flash"
+        elif api_key.startswith("gsk_"):
             base_url = "https://api.groq.com/openai/v1"
             model = "llama-3.1-8b-instant"
         else:

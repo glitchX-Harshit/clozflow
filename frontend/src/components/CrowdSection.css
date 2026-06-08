@@ -1,156 +1,238 @@
-/* ══ CROWD SECTION — Testimonial Marquee ═════════════ */
+/* ══════════════════════════════════════════════════════
+   CROWD SECTION — Editorial Testimonial Carousel CSS
+   Minimalist Typography · Cinematic Eases · Clean HUD
+   ══════════════════════════════════════════════════════ */
+
 .crowd__section {
     background: transparent;
     padding: 8rem 0;
-    overflow: hidden;
-    border-top: 1px solid var(--border);
     position: relative;
+    border-top: 1px solid var(--border-strong);
     z-index: 1;
+    overflow: hidden;
 }
 
 .crowd__header {
-    margin-bottom: 4.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 720px;
+    margin: 0 auto 4.5rem;
 }
 
-/* Two rows */
-.crowd__rows {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-/* ── Marquee ── */
-.crowd__marquee-outer {
-    overflow: hidden;
-    position: relative;
-}
-
-/* Edge fades */
-.crowd__marquee-outer::before,
-.crowd__marquee-outer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 180px;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.crowd__marquee-outer::before {
-    left: 0;
-    background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
-}
-
-.crowd__marquee-outer::after {
-    right: 0;
-    background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
-}
-
-.crowd__marquee-track {
-    display: flex;
-    gap: 1rem;
-    padding: 0.5rem 0;
-    width: max-content;
-    animation: marquee-fwd 35s linear infinite;
-}
-
-.crowd__marquee-track--rev {
-    animation: marquee-rev 35s linear infinite;
-}
-
-@keyframes marquee-fwd {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-}
-
-@keyframes marquee-rev {
-    from { transform: translateX(-50%); }
-    to   { transform: translateX(0); }
-}
-
-/* Pause on hover */
-.crowd__marquee-outer:hover .crowd__marquee-track {
-    animation-play-state: paused;
-}
-
-/* ── Card ── */
-.crowd__card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-xl);
-    padding: 1.5rem;
-    width: 340px;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-xs);
-    transition: all 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
-}
-
-.crowd__card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-}
-
-/* Card header */
-.crowd__card-head {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.crowd__avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--surface-2);
-    font-size: 0.7rem;
-    font-weight: 800;
+.crowd__subtitle {
+    font-size: 1.1rem;
     color: var(--text-dim);
+    margin-top: 1.5rem;
+    line-height: 1.6;
+}
+
+/* ── PLAIN MONOSPACE EYEBROW (NO CYLINDER) ── */
+.crowd__eyebrow-text {
+    font-family: monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+/* ── CAROUSEL LAYOUT ── */
+.crowd__carousel-container {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Viewport panel */
+.cr__carousel-viewport {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    border: 1px solid var(--border);
-    letter-spacing: -0.02em;
 }
 
-.crowd__card-name {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.2;
+/* Floating quotation watermark background */
+.cr__watermark {
+    position: absolute;
+    top: -5rem;
+    left: 0;
+    right: 0;
+    font-size: 26rem;
+    font-family: Georgia, serif;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(30, 64, 175, 0.025);
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+    user-select: none;
 }
 
-.crowd__card-role {
-    font-size: 0.74rem;
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-.crowd__stars {
+/* Slide elements container */
+.cr__slide {
+    position: relative;
+    z-index: 2;
     display: flex;
-    gap: 2px;
-    margin-left: auto;
-    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
 }
 
-/* Quote */
-.crowd__card-quote {
-    font-size: 0.875rem;
-    line-height: 1.6;
+/* Categories Monospace Tag */
+.cr__tag-mono {
+    font-family: monospace;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: inline-block;
+}
+
+/* Large quote style */
+.cr__quote-large {
+    font-family: var(--font-body), sans-serif;
+    font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 2.5rem 0;
+    letter-spacing: -0.025em;
+    max-width: 860px;
+}
+
+/* Large Meta details */
+.cr__meta-large {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--text-dim);
+}
+
+.cr__meta-name {
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.cr__meta-divider {
+    color: var(--border-strong);
     font-weight: 400;
 }
 
+.cr__meta-role {
+    font-weight: 500;
+}
+
+.cr__meta-company {
+    color: var(--text);
+    font-weight: 700;
+}
+
+/* ── NAV BAR INDEX HUD ── */
+.cr__nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-strong);
+    padding-top: 2rem;
+    width: 100%;
+}
+
+.cr__nav-tracker {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.cr__tracker-active {
+    color: var(--accent);
+    font-size: 1.4rem;
+}
+
+.cr__tracker-divider {
+    color: var(--text-muted);
+}
+
+.cr__tracker-total {
+    color: var(--text-dim);
+}
+
+.cr__nav-arrows {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.cr__arrow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--r-full);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s ease;
+}
+
+.cr__arrow-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.cr__arrow-btn:active {
+    transform: translateY(0);
+}
+
+/* ── RESPONSIVE ADAPTATIONS ── */
 @media (max-width: 768px) {
-    .crowd__section { padding: 6rem 0; }
-    .crowd__card    { width: 290px; }
+    .crowd__section {
+        padding: 6rem 0;
+    }
+
+    .cr__carousel-viewport {
+        min-height: 250px;
+    }
+
+    .cr__quote-large {
+        font-size: 1.35rem;
+        line-height: 1.5;
+        margin-bottom: 2rem;
+    }
+
+    .cr__meta-large {
+        font-size: 0.72rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.35rem;
+    }
+
+    .cr__nav-bar {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+        padding-top: 1.5rem;
+    }
 }
