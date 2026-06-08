@@ -1,72 +1,291 @@
-/* ══ CROWD CANVAS SECTION ════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   CROWD CANVAS — Telemetry Interception Conveyor CSS
+   Interactive Lanes · Glassmorphic Cards · Live HUD Score
+   ══════════════════════════════════════════════════════ */
+
 .cc__section {
     position: relative;
     width: 100%;
-    min-height: 80vh;
     background: transparent;
     overflow: hidden;
-    padding-top: 6rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
+    padding: 8rem 0;
+    border-top: 1px solid var(--border-strong);
     z-index: 1;
 }
 
-.cc__content {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-    max-width: 600px;
-    max-width: 600px;
-    margin: 0 auto 3rem auto;
+/* ── INTERACTIVE PLAYGROUND HUD WRAPPER ── */
+.cc__playground-wrapper {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
+    gap: 2.5rem;
+    max-width: 1180px;
+    margin: 0 auto;
+    position: relative;
 }
 
-.cc__title {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 800;
-    line-height: 1.1;
-    color: var(--text);
-    letter-spacing: -0.04em;
-}
-
-.cc__subtitle {
-    font-size: 1.125rem;
-    color: var(--text-dim);
-    line-height: 1.6;
-    max-width: 42ch;
-}
-
-.cc__canvas-wrapper {
+.cc__playground {
     position: relative;
     width: 100%;
-    flex: 1;
-    min-height: 45vh;
-    pointer-events: none;
-    z-index: 5;
-    /* Edge fades to blend smoothly into bg */
-    mask-image: linear-gradient(to bottom, transparent, black 15%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%);
+    height: 440px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
 }
 
-.cc__canvas {
+/* Pipeline Lanes Canvas Layer */
+.cc__lanes-canvas {
+    position: relative;
     width: 100%;
     height: 100%;
-    display: block;
+    z-index: 5;
+}
+
+/* ── HUD PIPELINE ZONES ── */
+.cc__zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.cc__zone--inlet {
+    left: 0;
+    background: linear-gradient(to right, rgba(59, 130, 246, 0.04), transparent);
+    border-right: 1px dashed rgba(59, 130, 246, 0.15);
+}
+
+.cc__zone--outlet {
+    right: 0;
+    background: linear-gradient(to left, rgba(239, 68, 68, 0.04), transparent);
+    border-left: 1px dashed rgba(239, 68, 68, 0.2);
+}
+
+.cc__zone-tag {
+    font-family: monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    transform: rotate(-90deg);
+    white-space: nowrap;
+}
+
+.cc__zone-tag--warn {
+    color: #ef4444;
+}
+
+/* ── DYNAMIC DEAL NODES (CARDS) ── */
+.cc__deal-node {
+    position: absolute;
+    width: 230px;
+    height: 75px;
+    transform: translate(-50%, -50%); /* aligns perfectly relative to its X/Y coordinates */
+    
+    /* Frosted glass texture */
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    padding: 0.85rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    cursor: crosshair;
+    transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s;
+    z-index: 10;
+}
+
+.cc__node-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.cc__node-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.cc__node-company {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.cc__node-value {
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.cc__node-status-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+/* Intercept progress loading bar */
+.cc__node-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent-mid);
+    z-index: 12;
+}
+
+/* State Overrides */
+
+/* 1. Drifting */
+.cc__deal-node--drifting {
+    border-color: var(--border-strong);
+}
+.cc__node-status-text.drifting {
+    color: var(--text-dim);
+}
+
+/* 2. Intercepting (Hover) */
+.cc__deal-node--intercepting {
+    border-color: var(--accent-mid);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+}
+.cc__node-status-text.intercepting {
+    color: var(--accent-mid);
+    font-family: monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 190px;
+}
+
+/* 3. Secured (Success) */
+.cc__deal-node--secured {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: #10b981;
+}
+.cc__node-status-text.secured {
+    color: #10b981;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.cc__secured-icon-check {
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+/* 4. Lost (Failure) */
+.cc__deal-node--lost {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: #ef4444;
+}
+.cc__node-status-text.lost {
+    color: #ef4444;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.cc__lost-icon-alert {
+    color: #ef4444;
+    flex-shrink: 0;
+}
+
+/* ── HUD SCOREBOARD PANEL ── */
+.cc__hud-stats {
+    display: flex;
+    gap: 4rem;
+    justify-content: center;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border-strong);
+    width: 100%;
+}
+
+.cc__hud-metric {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.cc__hud-icon {
+    color: var(--accent);
+}
+
+.cc__hud-label {
+    color: var(--text-dim);
+    font-weight: 600;
+}
+
+.cc__hud-num {
+    font-family: monospace;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+/* ── RESPONSIVE ADAPTATIONS ── */
+@media (max-width: 960px) {
+    .cc__playground {
+        height: 380px;
+    }
 }
 
 @media (max-width: 768px) {
     .cc__section {
-        min-height: 60vh;
-        padding-top: 4rem;
+        padding: 6rem 0;
     }
-    .cc__canvas-wrapper {
-        position: relative;
-        height: 50vh;
-        margin-top: 2rem;
+
+    .cc__playground {
+        height: 340px;
+        border-radius: 12px;
+    }
+
+    .cc__deal-node {
+        width: 180px;
+        height: 65px;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .cc__node-company {
+        font-size: 0.8rem;
+    }
+
+    .cc__node-value {
+        font-size: 0.75rem;
+    }
+
+    .cc__node-status-text.intercepting {
+        max-width: 140px;
+    }
+
+    .cc__hud-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding-top: 1.5rem;
     }
 }

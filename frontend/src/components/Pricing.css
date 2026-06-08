@@ -1,8 +1,13 @@
-/* ══ PRICING ═════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   PRICING — Premium Horizontal Banner Row System
+   Stacked Panels · Sapphire Pro Banner · Spec grid
+   ══════════════════════════════════════════════════════ */
+
 .pr__section {
     background: transparent;
-    padding: 10rem 0;
+    padding: 8rem 0;
     position: relative;
+    overflow: hidden;
 }
 
 .pr__header {
@@ -10,205 +15,482 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 680px;
-    margin: 0 auto 6rem;
+    max-width: 720px;
+    margin: 0 auto 5rem;
+}
+
+.pr__eyebrow {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.pr__title {
+    font-family: var(--font-body), sans-serif;
+    font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    text-transform: none;
+    color: var(--text);
+    margin: 0;
 }
 
 .pr__subtitle {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: var(--text-dim);
-    margin-top: 1.25rem;
-    line-height: 1.65;
-    font-weight: 400;
+    margin-top: 1.5rem;
+    line-height: 1.6;
 }
 
-/* Cards row */
-.pr__cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-    align-items: stretch;
-}
-
-/* Base card */
-.pr__card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--r-2xl);
-    padding: 2.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-xs);
+/* ── BILLING TOGGLE ── */
+.pr__toggle-container {
+    display: inline-flex;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    padding: 0.25rem;
+    border-radius: var(--r-full);
+    margin-top: 2rem;
     position: relative;
 }
 
-.pr__card:hover {
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
-}
-
-/* PRO — inverted luxury */
-.pr__card--pro {
-    background: var(--surface-inv);
-    border-color: transparent;
-    box-shadow: var(--shadow-xl);
-    color: var(--text-inv);
-}
-
-.pr__card--pro:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 32px 80px rgba(0,0,0,0.25);
-    border-color: transparent;
-}
-
-.pr__badge {
-    position: absolute;
-    top: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.375rem 1rem;
+.pr__toggle-btn {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-dim);
     border-radius: var(--r-full);
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    box-shadow: var(--shadow-accent);
-}
-
-.pr__tag {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
 }
 
-.pr__card--pro .pr__tag { color: rgba(255,255,255,0.5); }
+.pr__toggle-btn.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+}
 
-/* Price */
+.pr__toggle-discount {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+/* ── STACKED ROW CONTAINERS ── */
+.pr__rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+/* Base Horizontal Row Panel */
+.pr__row {
+    display: grid;
+    grid-template-columns: 1.25fr 2fr 1fr;
+    align-items: center;
+    gap: 3.5rem;
+    padding: 2.75rem 3.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    /* Smooth transition for mouse leave return */
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.3s ease, 
+                background-color 0.3s ease;
+}
+
+/* Bypass transitions on active hover tracking for real-time 60fps responsiveness */
+.pr__row:hover {
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    border-color: var(--border-hover);
+    z-index: 5;
+}
+
+/* Spotlight tracker overlay inside cells */
+.pr__cell-spotlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(400px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(30, 64, 175, 0.07), transparent 80%);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.pr__row:hover .pr__cell-spotlight {
+    opacity: 1;
+}
+
+/* ── LEFT PANE: META & PRICE ── */
+.pr__row-meta {
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+.pr__row-tag {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+}
+
 .pr__price-row {
     display: flex;
     align-items: baseline;
     gap: 0.25rem;
+    margin-bottom: 0.75rem;
 }
 
 .pr__curr {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: var(--text);
 }
 
-.pr__card--pro .pr__curr { color: var(--text-inv); }
-
 .pr__num {
-    font-family: var(--font-display);
-    font-size: 4rem;
+    font-family: var(--font-body), sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: 3.25rem;
     font-weight: 800;
-    letter-spacing: -0.06em;
+    letter-spacing: -0.04em;
     color: var(--text);
     line-height: 1;
 }
 
-.pr__card--pro .pr__num { color: var(--text-inv); }
-
 .pr__per {
-    font-size: 0.875rem;
+    font-size: 0.82rem;
     color: var(--text-dim);
-    font-weight: 500;
+    font-weight: 600;
 }
 
-.pr__card--pro .pr__per { color: rgba(255,255,255,0.5); }
-
-.pr__tagline {
-    font-size: 0.9375rem;
+.pr__row-tagline {
+    font-size: 0.88rem;
     color: var(--text-dim);
-    line-height: 1.55;
-    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
 }
 
-.pr__card--pro .pr__tagline { color: rgba(255,255,255,0.6); }
+/* ── MIDDLE PANE: 2-COLUMN FEATURES GRID ── */
+.pr__row-features {
+    z-index: 2;
+}
 
-/* Features list */
-.pr__feats {
+.pr__row-feats-grid {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
-    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 2.25rem;
+    padding: 0;
+    margin: 0;
 }
 
-.pr__feats li {
+.pr__row-feats-grid li {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.75rem;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--text-dim);
     font-weight: 500;
     line-height: 1.4;
 }
 
-.pr__card--pro .pr__feats li { color: rgba(255,255,255,0.7); }
-
-.pr__feats li svg {
-    color: var(--accent);
+.pr__check-icon {
+    color: var(--text-dim);
     flex-shrink: 0;
-    margin-top: 0.1em;
 }
 
-.pr__card--pro .pr__feats li svg { color: rgba(255,255,255,0.6); }
-
-/* CTA */
-.pr__cta {
+/* ── RIGHT PANE: CTA BUTTON ── */
+.pr__row-cta {
+    display: flex;
     width: 100%;
-    padding: 0.9rem;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    border-radius: var(--r-lg);
-    justify-content: center;
+    z-index: 2;
 }
 
-.pr__cta--primary {
-    background: var(--bg);
-    color: var(--text);
-    border: none;
-    box-shadow: var(--shadow-md);
+/* ── MATTE CARBON Highlight Banner (PRO ROW) ── */
+.pr__row--pro {
+    background: #121316;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    box-shadow: 0 8px 30px rgba(18, 19, 22, 0.25);
 }
 
-.pr__cta--primary:hover {
-    background: #f0f0f0;
-    box-shadow: var(--shadow-lg);
+.pr__row--pro:hover {
+    border-color: rgba(59, 130, 246, 0.35);
 }
 
+.pr__row--pro .pr__cell-spotlight {
+    background: radial-gradient(400px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.05), transparent 80%);
+}
+
+.pr__row--pro .pr__row-tag {
+    color: #a1a1aa;
+}
+
+.pr__row--pro .pr__num {
+    color: #ffffff;
+}
+
+.pr__row--pro .pr__curr {
+    color: #ffffff;
+}
+
+.pr__row--pro .pr__per {
+    color: #a1a1aa;
+}
+
+.pr__row--pro .pr__row-tagline {
+    color: #d4d4d8;
+}
+
+.pr__row--pro .pr__row-feats-grid li {
+    color: #e4e4e7;
+}
+
+.pr__row--pro .pr__check-icon {
+    color: #60a5fa;
+}
+
+/* Pro Accent Ribbon Badge */
+.pr__row--pro .pr__pro-badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 3.5rem;
+    background: rgba(96, 165, 250, 0.1);
+    color: #60a5fa;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    z-index: 10;
+}
+
+/* Offset padding for Pro Row to prevent badge overlap */
+.pr__row--pro {
+    padding-top: 3.75rem;
+    padding-bottom: 2.75rem;
+}
+
+/* Pro Row Button override (Striking white button) */
+.pr__row--pro .mag-btn--dark {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+.pr__row--pro .mag-btn--dark .mag-label {
+    color: #121316 !important;
+}
+
+.pr__row--pro .mag-btn--dark:hover {
+    background: var(--accent-mid) !important;
+    border-color: var(--accent-mid) !important;
+}
+
+.pr__row--pro .mag-btn--dark:hover .mag-label {
+    color: #ffffff !important;
+}
+
+.pr__row--pro .mag-btn--dark .mag-fill {
+    background: var(--accent-mid) !important;
+}
+
+/* ── ENTERPRISE ROW BLUEPRINT TEXTURE ── */
+.pr__row--enterprise {
+    background-color: var(--surface);
+    background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+    background-size: 16px 16px;
+    background-position: 0 0;
+}
+
+/* ── FOOTNOTE ── */
 .pr__footnote {
     text-align: center;
-    margin-top: 4rem;
-    font-size: 0.875rem;
-    color: var(--text-muted);
+    margin-top: 3.5rem;
+    font-size: 0.88rem;
+    color: var(--text-dim);
     font-weight: 500;
 }
 
-.pr__footnote strong { color: var(--text-dim); }
-
-@media (max-width: 1024px) {
-    .pr__cards { grid-template-columns: 1fr; max-width: 440px; }
-    .pr__card  { padding: 2.25rem 2rem; }
+.pr__footnote strong {
+    color: var(--text);
 }
 
-@media (max-width: 768px) {
-    .pr__section { padding: 6rem 0; }
-    .pr__num     { font-size: 3rem; }
+/* ── DETAILED COMPARISON TABLE ── */
+.pr__compare-trigger-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+}
+
+.pr__compare-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 0.8rem 1.6rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: var(--r-full);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pr__compare-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.pr__comparison-matrix {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.pr__comparison-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.pr__comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.88rem;
+}
+
+.pr__comparison-table th, 
+.pr__comparison-table td {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.pr__comparison-table th {
+    background: var(--surface-2);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+}
+
+.pr__comparison-table th:first-child {
+    width: 32%;
+}
+
+.pr__comparison-table th:not(:first-child) {
+    width: 22.6%;
+    text-align: center;
+}
+
+.pr__comparison-table td:not(:first-child) {
+    text-align: center;
+    font-weight: 600;
+}
+
+.pr__comparison-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.pr__comparison-table tbody tr:hover {
+    background-color: rgba(30, 64, 175, 0.02);
+}
+
+.pr__comparison-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Category header rows */
+.pr__row-header-cat td {
+    background: var(--surface-2);
+    font-weight: 800;
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-strong);
+    border-top: 1px solid var(--border-strong);
+    padding: 0.8rem 1.5rem;
+}
+
+/* ── RESPONSIVE STYLING ── */
+@media (max-width: 960px) {
+    .pr__row {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2.5rem 2rem;
+    }
+
+    .pr__row--pro {
+        padding-top: 3.5rem;
+    }
+
+    .pr__row--pro .pr__pro-badge {
+        left: 2rem;
+    }
+
+    .pr__row-feats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .pr__section {
+        padding: 6rem 0;
+    }
+
+    .pr__num {
+        font-size: 2.75rem;
+    }
+
+    .pr__comparison-table th, 
+    .pr__comparison-table td {
+        padding: 1rem 0.8rem;
+        font-size: 0.8rem;
+    }
 }

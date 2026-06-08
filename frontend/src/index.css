@@ -100,6 +100,12 @@ p { color: var(--text-dim); line-height: 1.7; }
   padding: 0 2rem;
 }
 
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
 section {
   position: relative;
   padding: 9rem 0;
@@ -210,6 +216,13 @@ section {
 .italic-accent {
   font-style: italic;
   color: var(--accent);
+}
+
+.italic-title {
+  font-style: italic;
+  font-family: inherit;
+  color: inherit;
+  text-transform: none;
 }
 
 /* ══ EYEBROW LABEL ══════════════════════════════════ */

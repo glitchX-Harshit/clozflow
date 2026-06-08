@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Target, Users, TrendingUp, Handshake } from 'lucide-react';
+import { Target, Users, TrendingUp, Handshake, ChevronRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MagButton from './MagButton';
@@ -15,8 +15,8 @@ const PERSONAS = [
         stat: '22%',
         statLabel: 'Higher Close Rate',
         heading: 'Win more deals, faster.',
-        desc: 'Stay fully present during discovery calls. hexagon.ai handles objection tracking and script navigation so you can focus on building trust.',
-        preview: '"Your pricing is high compared to XYZ." → hexagon.ai: "We offer 24/7 priority support and custom integrations which XYZ lacks. Want to see the ROI dashboard?"'
+        desc: 'Stay fully present during discovery calls. Hexagon handles objection tracking and script navigation so you can focus on building trust.',
+        preview: '"Your pricing is high compared to XYZ." → Hexagon: "We offer 24/7 priority support and custom integrations which XYZ lacks. Want to see the ROI dashboard?"'
     },
     {
         id: 'sdr',
@@ -26,7 +26,7 @@ const PERSONAS = [
         statLabel: 'More Meetings Set',
         heading: 'Convert cold calls to meetings.',
         desc: 'Never get flustered by a brush-off. Instant rebuttals for "send me an email" or "not interested right now" while you\'re still on the phone.',
-        preview: '"Just send me an email." → hexagon.ai: "Usually people say that when they\'re busy or it\'s bad timing — which is it for you right now?"'
+        preview: '"Just send me an email." → Hexagon: "Usually people say that when they\'re busy or it\'s bad timing — which is it for you right now?"'
     },
     {
         id: 'managers',
@@ -35,7 +35,7 @@ const PERSONAS = [
         stat: '100%',
         statLabel: 'Playbook Compliance',
         heading: 'Coach your team at scale.',
-        desc: 'Ensure every rep follows the approved playbook. hexagon.ai automatically surfaces the right script at the right time during live calls.',
+        desc: 'Ensure every rep follows the approved playbook. Hexagon automatically surfaces the right script at the right time during live calls.',
         preview: '"Manager Hint: Rep hasn\'t yet mentioned the Q3 enterprise discount. Nudge now."'
     },
     {
@@ -59,11 +59,15 @@ const UseCases = () => {
     // Animate section in
     useEffect(() => {
         let ctx = gsap.context(() => {
-            gsap.fromTo('.uc__header',
+            gsap.fromTo('.uc__header-animate',
                 { y: 30, opacity: 0 },
                 {
-                    y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-                    scrollTrigger: { trigger: '.uc__header', start: 'top 80%' }
+                    y: 0, 
+                    opacity: 1, 
+                    duration: 1, 
+                    stagger: 0.1, 
+                    ease: 'power2.out',
+                    scrollTrigger: { trigger: '.uc__header', start: 'top 85%' }
                 }
             );
         }, sectionRef);
@@ -73,9 +77,9 @@ const UseCases = () => {
     // Animate panel on tab switch
     useEffect(() => {
         if (panelRef.current) {
-            gsap.fromTo(panelRef.current,
-                { opacity: 0, y: 12 },
-                { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }
+            gsap.fromTo(panelRef.current.children,
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.35, stagger: 0.05, ease: 'power2.out' }
             );
         }
     }, [active]);
@@ -84,49 +88,115 @@ const UseCases = () => {
         <section className="uc__section" id="use-cases" ref={sectionRef}>
             <div className="container">
                 <div className="uc__header">
-                    <span className="eyebrow eyebrow-accent">Personas</span>
-                    <h2 className="section-title uc__title">
-                        Built for the<br />
-                        <span className="italic-accent">entire org.</span>
+                    <span className="uc__eyebrow uc__header-animate">Personas</span>
+                    <h2 className="uc__title uc__header-animate">
+                        Empowering every sales role
                     </h2>
-                    <p className="uc__subtitle">
+                    <p className="uc__subtitle uc__header-animate">
                         Whether you're on the front lines or leading the team,
-                        hexagon.ai gives everyone an edge.
+                        Hexagon gives everyone an edge.
                     </p>
                 </div>
 
-                <div className="uc__layout">
-                    {/* Selector */}
-                    <div className="uc__selector">
-                        <div className="uc__persona-list">
-                            {PERSONAS.map(p => (
-                                <button
-                                    key={p.id}
-                                    className={`uc__persona-btn ${active === p.id ? 'active' : ''}`}
-                                    onClick={() => setActive(p.id)}
-                                >
-                                    <span style={{ color: active === p.id ? 'var(--accent)' : 'var(--text-muted)' }}>
-                                        {p.icon}
-                                    </span>
-                                    {p.label}
-                                </button>
-                            ))}
+                {/* Desktop View Layout */}
+                <div className="uc__desktop-layout">
+                    <div className="uc__grid-layout">
+                        {/* Left: Role Navigation Sidebar */}
+                        <div className="uc__selector">
+                            <div className="uc__persona-list">
+                                {PERSONAS.map(p => {
+                                    const isActive = active === p.id;
+                                    return (
+                                        <button
+                                            key={p.id}
+                                            className={`uc__persona-btn ${isActive ? 'active' : ''}`}
+                                            onClick={() => setActive(p.id)}
+                                        >
+                                            <div className="uc__btn-icon-label">
+                                                <span className="uc__btn-icon" style={{ color: isActive ? 'var(--accent)' : 'var(--text-muted)' }}>
+                                                    {p.icon}
+                                                </span>
+                                                <span className="uc__btn-label">{p.label}</span>
+                                            </div>
+                                            <ChevronRight size={14} className="uc__btn-arrow" />
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Right: Role Details Panel */}
+                        <div className="uc__panel" ref={panelRef}>
+                            <div className="uc__panel-meta">
+                                <div className="uc__panel-stat-pill">
+                                    <span className="stat-n">{persona.stat}</span>
+                                    <span className="stat-l">{persona.statLabel}</span>
+                                </div>
+                            </div>
+                            <h3 className="uc__panel-heading">{persona.heading}</h3>
+                            <p className="uc__panel-desc">{persona.desc}</p>
+                            
+                            <div className="uc__preview">
+                                <span className="uc__preview-label">Live Example Interaction</span>
+                                <p className="uc__preview-text">{persona.preview}</p>
+                            </div>
+                            
+                            <div className="uc__cta-wrap">
+                                <MagButton label="Learn more" variant="dark" magnetStrength={0.35} />
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Panel */}
-                    <div className="uc__panel" ref={panelRef}>
-                        <div className="uc__panel-stat-pill">
-                            <span className="stat-n">{persona.stat}</span>
-                            <span className="stat-l">{persona.statLabel}</span>
-                        </div>
-                        <h3 className="uc__panel-heading">{persona.heading}</h3>
-                        <p className="uc__panel-desc">{persona.desc}</p>
-                        <div className="uc__preview">
-                            <span className="uc__preview-label">Live Example</span>
-                            <p className="uc__preview-text">{persona.preview}</p>
-                        </div>
-                        <MagButton label="Learn more" variant="dark" magnetStrength={0.35} className="uc__cta" />
+                {/* Mobile Accordion Layout */}
+                <div className="uc__mobile-layout">
+                    <div className="uc__accordion-list">
+                        {PERSONAS.map(p => {
+                            const isActive = active === p.id;
+                            return (
+                                <div 
+                                    key={p.id} 
+                                    className={`uc__accordion-item ${isActive ? 'active' : ''}`}
+                                >
+                                    <button 
+                                        className="uc__accordion-header"
+                                        onClick={() => setActive(p.id)}
+                                    >
+                                        <div className="uc__accordion-header-left">
+                                            <span className="uc__accordion-icon" style={{ color: isActive ? 'var(--accent)' : 'var(--text-muted)' }}>
+                                                {p.icon}
+                                            </span>
+                                            <span className="uc__accordion-label">{p.label}</span>
+                                        </div>
+                                        <ChevronRight size={16} className="uc__accordion-arrow" />
+                                    </button>
+                                    
+                                    <div className="uc__accordion-body-wrapper">
+                                        <div className="uc__accordion-body">
+                                            <div className="uc__accordion-content">
+                                                <div className="uc__panel-meta">
+                                                    <div className="uc__panel-stat-pill">
+                                                        <span className="stat-n">{p.stat}</span>
+                                                        <span className="stat-l">{p.statLabel}</span>
+                                                    </div>
+                                                </div>
+                                                <h3 className="uc__panel-heading">{p.heading}</h3>
+                                                <p className="uc__panel-desc">{p.desc}</p>
+                                                
+                                                <div className="uc__preview">
+                                                    <span className="uc__preview-label">Live Example Interaction</span>
+                                                    <p className="uc__preview-text">{p.preview}</p>
+                                                </div>
+                                                
+                                                <div className="uc__cta-wrap">
+                                                    <MagButton label="Learn more" variant="dark" magnetStrength={0.35} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

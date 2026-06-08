@@ -1,29 +1,47 @@
 /* ══════════════════════════════════════════════════════
-   HOW IT WORKS — Industrial Grid Redesign
-   Bold · Sequential · High-Status
+   HOW IT WORKS — Corporate Timeline CSS
+   Open Grid Columns · Thin Grid Lines · Minimal HUD Details
    ══════════════════════════════════════════════════════ */
 
 .hiw__section {
-  padding: 12rem 0;
+  padding: 8rem 0;
   background: transparent;
   position: relative;
   z-index: 5;
 }
 
 .hiw__header {
-  margin-bottom: 8rem;
-  text-align: left; /* Editorial alignment */
+  margin-bottom: 5rem;
+  text-align: left;
 }
 
-.hiw__eyebrow-box {
-  margin-bottom: 1.5rem;
+.hiw__eyebrow {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.hiw__title {
+  font-family: var(--font-body), sans-serif;
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  text-transform: none; /* Corporate look - mixed case */
+  color: var(--text);
+  margin: 0;
 }
 
 .hiw__subtitle {
   font-size: 1.1rem;
   color: var(--text-dim);
-  max-width: 540px;
-  margin-top: 2rem;
+  max-width: 600px;
+  margin-top: 1.5rem;
   line-height: 1.6;
 }
 
@@ -32,7 +50,7 @@
   width: 100%;
   height: 2px;
   background: var(--border-strong);
-  margin-bottom: 4rem;
+  margin-bottom: 3.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -46,118 +64,132 @@
   width: 0%;
 }
 
-/* ── BOLD GRID ── */
+/* ── TIMELINE COLUMNS GRID ── */
 .hiw__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 0;
 }
 
-.hiw__card {
+.hiw__column {
   position: relative;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 24px;
-  padding: 3rem;
+  padding: 0 3rem;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
-  box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.03);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+  gap: 2.25rem;
+  border-right: 1px solid var(--border-strong);
 }
 
-.hiw__card:hover {
-  border-color: rgba(0, 0, 0, 0.12);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+.hiw__column:first-child {
+  padding-left: 0;
 }
 
-.hiw__card-top {
+.hiw__column:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+/* Column Header */
+.hiw__col-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
-.hiw__card-num {
-  font-family: var(--font-display);
-  font-size: 2rem;
+.hiw__col-num-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.hiw__col-num {
+  font-family: var(--font-body), monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.hiw__col-tag {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.hiw__card-icon {
-  width: 48px;
-  height: 48px;
+.hiw__col-icon {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.03);
-  color: var(--text);
-  transition: background 0.3s ease;
+  border-radius: 8px;
+  background: var(--surface-2);
+  transition: all 0.3s ease;
 }
 
-.hiw__card:hover .hiw__card-icon {
-  background: var(--text);
-  color: #ffffff;
+.hiw__column:hover .hiw__col-icon {
+  background: var(--accent);
+  color: #ffffff !important;
 }
 
-.hiw__card-tag {
-  display: inline-block;
-  font-size: 0.7rem;
+/* Column Body */
+.hiw__col-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.hiw__col-title {
+  font-family: var(--font-body), sans-serif;
+  font-size: 1.25rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
-}
-
-.hiw__card-title {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--text);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.875rem;
 }
 
-.hiw__card-sub {
-  font-size: 1rem;
+.hiw__col-desc {
+  font-size: 0.95rem;
   color: var(--text-dim);
   line-height: 1.6;
+  margin-bottom: 2rem;
+  flex-grow: 1;
 }
+
+/* Monospace Technical Metric Badge */
+.hiw__col-metric {
+  font-family: var(--font-body), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
   .hiw__grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 3.5rem;
   }
 
-  .hiw__header {
-    text-align: center;
+  .hiw__column {
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 3.5rem;
   }
-
-  .hiw__subtitle {
-    margin: 2rem auto 0;
-  }
-
-  .hiw__card {
-    padding: 2.5rem;
+  
+  .hiw__column:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 }
 
 @media (max-width: 640px) {
   .hiw__section {
-    padding: 8rem 0;
-  }
-
-  .hiw__card-num {
-    font-size: 3.5rem;
-  }
-
-  .hiw__card-title {
-    font-size: 1.5rem;
+    padding: 6rem 0;
   }
 }

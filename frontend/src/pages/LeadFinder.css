@@ -868,27 +868,37 @@
     font-family: var(--font-body);
     cursor: pointer;
     transition: all 0.2s;
-    background: transparent;
+    background-color: transparent;
     color: var(--text-dim);
 }
 
 .lf__action-btn:hover {
     border-color: var(--border-hover);
     color: var(--text);
-    background: var(--surface);
+    background-color: var(--surface);
 }
 
 .lf__action-btn--primary {
-    background: var(--text);
+    background-color: var(--text);
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    background-position: right center;
     color: var(--bg);
     border-color: var(--text);
+    transition: background-size 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                border-color 0.4s ease,
+                transform 0.4s ease,
+                box-shadow 0.4s ease;
 }
 
 .lf__action-btn--primary:hover {
-    background: var(--accent);
+    background-size: 100% 100%;
+    background-position: left center;
     border-color: var(--accent);
-    box-shadow: 0 4px 16px rgba(30, 64, 175, 0.25);
-    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(30, 64, 175, 0.25);
+    transform: translateY(-2px);
+    color: #fff;
 }
 
 .lf__action-btn--copied {
@@ -914,16 +924,33 @@
 }
 
 .lf__action-btn--outreach {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    background-image: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%), linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    background-size: 0% 100%, 100% 100%;
+    background-repeat: no-repeat, no-repeat;
+    background-position: right center, center;
     color: #ffffff;
     border-color: #1e40af;
+    transition: background-size 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                transform 0.4s ease,
+                box-shadow 0.4s ease,
+                border-color 0.4s ease;
 }
 
 .lf__action-btn--outreach:hover {
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
-    transform: translateY(-1px);
+    background-size: 100% 100%, 100% 100%;
+    background-position: left center, center;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+    transform: translateY(-2px);
+    border-color: #4f46e5;
     color: #ffffff;
+}
+
+.lf__action-btn svg {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lf__action-btn:hover svg {
+    transform: scale(1.15) rotate(-5deg);
 }
 
 /* ── Finding Leads Loader ───────────────────────────────────────── */
@@ -1026,11 +1053,18 @@
     color: var(--accent);
 }
 
+.lf__loader-status-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0.875rem;
+}
+
 .lf__loader-status-container {
     height: 20px;
-    margin-bottom: 0.875rem;
     overflow: hidden;
     position: relative;
+    flex: 1;
 }
 
 .lf__loader-status {
@@ -1048,9 +1082,18 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--text-dim);
     display: inline-block;
     opacity: 0.8;
+}
+
+.lf__loader-percent {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    margin-left: 1rem;
+    line-height: 1;
 }
 
 @keyframes lf-status-slide {
@@ -1063,13 +1106,13 @@
     background: var(--surface-2);
     border-radius: 999px;
     width: 100%;
-    overflow: hidden;
     position: relative;
+    overflow: hidden;
 }
 
 .lf__loader-bar-fill {
     height: 100%;
-    background: var(--accent);
+    background: var(--text);
     width: 0%;
     border-radius: 999px;
     transition: width 0.3s ease-out;
