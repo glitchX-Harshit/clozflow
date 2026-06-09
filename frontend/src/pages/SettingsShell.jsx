@@ -266,11 +266,11 @@ const SettingsShell = () => {
     return (
         <div className="animate-fade-in">
             {/* Header */}
-            <div style={{ marginBottom: '2rem' }}>
-                <div style={{ fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '0.5rem' }}>Account</div>
+            <div style={{ marginBottom: '2.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem' }}>
+                <div style={{ fontSize: '0.64rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Account</div>
                 <h1 style={{ fontSize: 'clamp(1.75rem,4vw,2.5rem)', fontWeight: 900, letterSpacing: '-0.05em', margin: 0 }}>Settings</h1>
             </div>
-
+ 
             <div className="settings-layout">
                 {/* Sidebar */}
                 <nav className="settings-sidebar">
@@ -281,16 +281,7 @@ const SettingsShell = () => {
                             <button
                                 key={id}
                                 onClick={() => setActive(id)}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: '0.75rem',
-                                    padding: '0.75rem 0.875rem', borderRadius: 10,
-                                    border: 'none', background: isActive ? (isDanger ? 'rgba(239,68,68,0.06)' : 'rgba(99,102,241,0.07)') : 'transparent',
-                                    color: isActive ? (isDanger ? '#ef4444' : 'var(--accent)') : isDanger ? '#ef4444' : 'var(--text-dim)',
-                                    fontWeight: isActive ? 700 : 500, fontSize: '0.875rem',
-                                    cursor: 'pointer', width: '100%', textAlign: 'left',
-                                    transition: 'all 0.2s', marginBottom: 2,
-                                    ...(id === 'danger' ? { borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '0.5rem' } : {}),
-                                }}
+                                className={`settings-sidebar-btn ${isActive ? 'active' : ''} ${isDanger ? 'danger' : ''}`}
                             >
                                 <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
                                 <span className="settings-nav-label">{label}</span>
@@ -299,55 +290,137 @@ const SettingsShell = () => {
                         );
                     })}
                 </nav>
-
+ 
                 {/* Content */}
                 <div className="settings-content">
                     {PANELS[active]}
                 </div>
             </div>
-
+ 
             <style>{`
                 .settings-layout {
                     display: grid;
-                    grid-template-columns: 200px 1fr;
-                    gap: 2rem;
+                    grid-template-columns: 240px 1fr;
+                    gap: 4rem;
                     align-items: start;
                 }
                 .settings-sidebar {
-                    background: var(--bg);
-                    border: 1px solid var(--border);
-                    border-radius: 20px;
-                    padding: 1rem;
+                    background: transparent;
+                    border: none;
+                    padding: 0;
                     position: sticky;
-                    top: 1rem;
+                    top: 2rem;
                     display: flex;
                     flex-direction: column;
+                    gap: 0.25rem;
+                }
+                .settings-sidebar-btn {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    padding: 0.75rem 1rem;
+                    border: none;
+                    background: transparent;
+                    color: var(--text-dim);
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    width: 100%;
+                    text-align: left;
+                    transition: all 0.2s;
+                    border-left: 2px solid transparent;
+                }
+                .settings-sidebar-btn:hover {
+                    color: var(--text);
+                }
+                .settings-sidebar-btn.active {
+                    color: var(--text);
+                    font-weight: 800;
+                    border-left-color: var(--text);
+                }
+                .settings-sidebar-btn.danger {
+                    color: #ef4444;
+                }
+                .settings-sidebar-btn.danger.active {
+                    border-left-color: #ef4444;
+                    font-weight: 800;
                 }
                 .settings-content {
                     min-width: 0;
                 }
-                @media (max-width: 860px) {
+ 
+                /* ── Settings Sections (Flat Grid) ── */
+                .settings-section {
+                    display: grid;
+                    grid-template-columns: 240px 1fr;
+                    gap: 3rem;
+                    border-top: 1px solid var(--border);
+                    padding: 3rem 0;
+                }
+                .settings-section:first-of-type {
+                    border-top: none;
+                    padding-top: 0;
+                }
+                .settings-section-meta {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+                .settings-section-title {
+                    font-size: 1.1rem;
+                    font-weight: 800;
+                    letter-spacing: -0.02em;
+                    color: var(--text);
+                    margin: 0;
+                }
+                .settings-section-sub {
+                    font-size: 0.8125rem;
+                    color: var(--text-muted);
+                    line-height: 1.5;
+                    margin: 0;
+                }
+                .settings-section-fields {
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                }
+ 
+                @media (max-width: 960px) {
                     .settings-layout {
                         grid-template-columns: 1fr;
+                        gap: 2rem;
                     }
                     .settings-sidebar {
                         position: static;
                         flex-direction: row;
                         flex-wrap: wrap;
                         gap: 0.25rem;
-                        padding: 0.625rem;
+                        border-bottom: 1px solid var(--border);
+                        padding-bottom: 1rem;
                     }
-                    .settings-sidebar button {
+                    .settings-sidebar-btn {
                         width: auto !important;
                         padding: 0.5rem 0.75rem !important;
+                        border-left: none;
+                        border-bottom: 2px solid transparent;
                     }
-                    .settings-nav-label {
-                        font-size: 0.78rem !important;
+                    .settings-sidebar-btn.active {
+                        border-left-color: transparent;
+                        border-bottom-color: var(--text);
+                    }
+                    .settings-sidebar-btn.danger.active {
+                        border-left-color: transparent;
+                        border-bottom-color: #ef4444;
+                    }
+                    .settings-section {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                        padding: 2rem 0;
                     }
                 }
                 @media (max-width: 480px) {
                     .settings-nav-label { display: none; }
-                    .settings-sidebar button { padding: 0.625rem !important; }
+                    .settings-sidebar-btn { padding: 0.625rem !important; }
                 }
             `}</style>
         </div>
