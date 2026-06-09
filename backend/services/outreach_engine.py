@@ -334,7 +334,7 @@ async def generate_outreach_message(
 
     if api_key and HAS_OPENAI:
         try:
-            if api_key.startswith("AIza"):
+            if api_key.startswith("AIza") or api_key.startswith("AQ"):
                 base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
                 model = "gemini-3.5-flash"
             elif api_key.startswith("gsk_"):

@@ -55,15 +55,16 @@ const scoreLevel = (score) => {
     return 'low';
 };
 
-const OutreachStudioPage = () => {
+const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: propOnBack }) => {
     const navigate = useNavigate();
     const location = useLocation();
     
     // Support either being navigated to with state, or fallback if accessed directly
-    const lead = location.state?.lead;
-    const userOffer = location.state?.userOffer || '';
+    const lead = propLead || location.state?.lead;
+    const userOffer = propUserOffer || location.state?.userOffer || '';
+    const onBackClick = propOnBack || (() => navigate(-1));
 
-    // If no lead in state, redirect back to dashboard
+    // If no lead, redirect back to dashboard
     useEffect(() => {
         if (!lead) {
             navigate('/dashboard');
@@ -200,9 +201,9 @@ const OutreachStudioPage = () => {
     const messageText = isEditing ? editedMessage : (generatedMessage?.opening_message || '');
 
     return (
-        <div className="os-page__wrapper">
+        <div className={`os-page__wrapper ${propLead ? 'os-page__wrapper--nested' : ''}`}>
             {/* Back button */}
-            <button className="os-page__back interactive" onClick={() => navigate(-1)}>
+            <button className="os-page__back interactive" onClick={onBackClick}>
                 <ArrowLeft size={16} strokeWidth={2.5} />
                 <span>Back to Leads</span>
             </button>

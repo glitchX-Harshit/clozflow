@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Search,
@@ -26,8 +26,12 @@ import {
     Bot,
     Megaphone,
     Send,
+    ChevronDown,
+    ChevronUp,
 } from 'lucide-react';
 import { useLeadFinderStore } from '../store/useLeadFinderStore';
+import MagButton from '../components/MagButton';
+import { gsap } from 'gsap';
 import './LeadFinder.css';
 
 const API_BASE = 'http://localhost:8000';
@@ -83,11 +87,6 @@ const FILTER_OPTIONS = [
 /* ══════════════════════════════════════════════════════════════════
    HELPERS
    ══════════════════════════════════════════════════════════════════ */
-const scoreColor = (score) => {
-    if (score >= 75) return '#22c55e';
-    if (score >= 50) return '#f59e0b';
-    return '#ef4444';
-};
 const scoreTier = (score) => {
     if (score >= 75) return 'high';
     if (score >= 50) return 'mid';
@@ -107,7 +106,7 @@ const renderStars = (rating) => {
         stars.push(
             <Star
                 key={i}
-                size={11}
+                size={10}
                 fill={i < full ? '#f59e0b' : 'none'}
                 className={i < full ? 'lf__star' : 'lf__star lf__star--empty'}
             />
@@ -121,14 +120,23 @@ const renderStars = (rating) => {
    ══════════════════════════════════════════════════════════════════ */
 const SkeletonCard = () => (
     <div className="lf__skeleton-card">
-        <div className="lf__skeleton-line lf__skeleton-line--title" />
+        <div className="lf__skeleton-header">
+            <div className="lf__skeleton-line lf__skeleton-line--title" />
+            <div className="lf__skeleton-circle" />
+        </div>
         <div className="lf__skeleton-line lf__skeleton-line--badge" />
+        <div style={{ height: 16 }} />
         <div className="lf__skeleton-line lf__skeleton-line--meta" />
         <div className="lf__skeleton-line lf__skeleton-line--meta" style={{ width: '45%' }} />
         <div style={{ height: 16 }} />
-        <div className="lf__skeleton-line lf__skeleton-line--text" />
-        <div className="lf__skeleton-line lf__skeleton-line--text2" />
-        <div className="lf__skeleton-line lf__skeleton-line--btn" />
+        <div className="lf__skeleton-panel">
+            <div className="lf__skeleton-line lf__skeleton-line--text" />
+            <div className="lf__skeleton-line lf__skeleton-line--text2" />
+        </div>
+        <div className="lf__skeleton-actions">
+            <div className="lf__skeleton-line lf__skeleton-line--btn" />
+            <div className="lf__skeleton-line lf__skeleton-line--btn" />
+        </div>
     </div>
 );
 
@@ -137,12 +145,15 @@ const SkeletonCard = () => (
    ══════════════════════════════════════════════════════════════════ */
 const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) => {
     const [copied, setCopied] = useState(false);
+    const [showInsights, setShowInsights] = useState(false);
 
     /* Use opportunity_score when available, fall back to lead_score */
     const score = lead.opportunity_score ?? lead.lead_score ?? 0;
     const tier = scoreTier(score);
     const signals = lead.opportunity_signals || [];
     const visibleSignals = signals.slice(0, 4);
+
+    const hasAiInsights = !!(lead.ai_summary || lead.opportunity_summary || lead.service_fit_reason || lead.likely_pain_point);
 
     const handleCopyClick = () => {
         onCopy(lead);
@@ -151,76 +162,99 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) =>
     };
 
     return (
-        <div className="lf__card" id={`lead-card-${lead.business_name?.replace(/\s+/g, '-').toLowerCase()}`}>
+        <div className={`lf__card lf__card--${tier}`} id={`lead-card-${lead.business_name?.replace(/\s+/g, '-').toLowerCase()}`}>
+            {/* Glow accent */}
+            <div className="lf__card-glow" />
+
             {/* Header — Name + Score */}
             <div className="lf__card-header">
-                <div>
-                    <div className="lf__card-name">{lead.business_name}</div>
-                    {lead.category && (
-                        <span className="lf__card-category">
-                            {lead.category}
-                        </span>
-                    )}
-                </div>
-                <div className="lf__score-group">
-                    <div className={`lf__score lf__score--${tier}`}>
-                        <span className="lf__score-value">{score}</span>
-                        <span className="lf__score-label">Opportunity</span>
+                <div className="lf__card-brand-block">
+                    <div className="lf__card-name" title={lead.business_name}>{lead.business_name}</div>
+                    <div className="lf__card-category-row">
+                        {lead.category && (
+                            <span className="lf__card-category">
+                                {lead.category}
+                            </span>
+                        )}
+                        {lead.buying_probability && (
+                            <span className={`lf__buying-badge lf__buying-badge--${buyingColor(lead.buying_probability)}`}>
+                                <Zap size={8} /> {lead.buying_probability} Fit
+                            </span>
+                        )}
                     </div>
-                    {lead.buying_probability && (
-                        <span className={`lf__buying-badge lf__buying-badge--${buyingColor(lead.buying_probability)}`}>
-                            {lead.buying_probability}
-                        </span>
-                    )}
+                </div>
+
+                {/* Circular Gauge Opportunity Score */}
+                <div className="lf__card-gauge-wrapper">
+                    <div className={`lf__score-gauge lf__score-gauge--${tier}`}>
+                        <svg className="lf__gauge-svg" viewBox="0 0 36 36">
+                            <path
+                                className="lf__gauge-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path
+                                className="lf__gauge-fill"
+                                strokeDasharray={`${score}, 100`}
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                        </svg>
+                        <div className="lf__gauge-text">
+                            <span className="lf__gauge-value">{score}</span>
+                            <span className="lf__gauge-label">FIT</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Opportunity Reason Banner */}
-            {lead.opportunity_reason && (
-                <div className={`lf__opportunity-reason lf__opportunity-reason--${tier}`}>
-                    <Crosshair size={13} className="lf__opportunity-reason-icon" />
-                    <span>{lead.opportunity_reason}</span>
-                </div>
-            )}
+            {/* Body Section */}
+            <div className="lf__card-body">
+                {/* Opportunity Reason Banner */}
+                {lead.opportunity_reason && (
+                    <div className={`lf__opportunity-reason lf__opportunity-reason--${tier}`}>
+                        <Crosshair size={12} className="lf__opportunity-reason-icon" />
+                        <span>{lead.opportunity_reason}</span>
+                    </div>
+                )}
 
-            {/* Opportunity Signals Pills */}
-            {visibleSignals.length > 0 && (
-                <div className="lf__signals">
-                    {visibleSignals.map((signal, idx) => (
-                        <span key={idx} className="lf__signal-pill">
-                            <span className="lf__signal-dot" />
-                            {signal}
+                {/* Opportunity Signals Pills */}
+                {visibleSignals.length > 0 && (
+                    <div className="lf__signals">
+                        {visibleSignals.map((signal, idx) => (
+                            <span key={idx} className="lf__signal-pill">
+                                <span className="lf__signal-dot" />
+                                {signal}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {/* Meta — Location + Rating */}
+                <div className="lf__card-meta">
+                    {lead.city && (
+                        <span className="lf__meta-item">
+                            <MapPin size={11} className="lf__meta-icon" />
+                            {lead.city}
                         </span>
-                    ))}
+                    )}
+                    {lead.google_rating > 0 && (
+                        <span className="lf__meta-item">
+                            <span className="lf__rating-stars">{renderStars(lead.google_rating)}</span>
+                            <span style={{ fontWeight: 700, color: 'var(--text)' }}>{lead.google_rating}</span>
+                        </span>
+                    )}
                 </div>
-            )}
-
-            {/* Meta — Location + Rating */}
-            <div className="lf__card-meta">
-                {lead.city && (
-                    <span className="lf__meta-item">
-                        <MapPin size={12} className="lf__meta-icon" />
-                        {lead.city}
-                    </span>
-                )}
-                {lead.google_rating > 0 && (
-                    <span className="lf__meta-item">
-                        <span className="lf__rating-stars">{renderStars(lead.google_rating)}</span>
-                        <span style={{ fontWeight: 700, color: 'var(--text)' }}>{lead.google_rating}</span>
-                    </span>
-                )}
             </div>
 
             {/* Contact Links */}
             <div className="lf__card-contacts">
                 {lead.phone_number && (
                     <a href={`tel:${lead.phone_number}`} className="lf__contact-link" title="Call">
-                        <Phone size={11} /> {lead.phone_number}
+                        <Phone size={10} /> {lead.phone_number}
                     </a>
                 )}
                 {lead.website && (
                     <a href={lead.website} target="_blank" rel="noopener noreferrer" className="lf__contact-link" title="Website">
-                        <Globe size={11} /> Website
+                        <Globe size={10} /> Website
                     </a>
                 )}
                 {lead.instagram && (
@@ -231,57 +265,91 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) =>
                         className="lf__contact-link"
                         title="Instagram"
                     >
-                        <Instagram size={11} /> {lead.instagram}
+                        <Instagram size={10} /> {lead.instagram}
                     </a>
                 )}
             </div>
 
-            {/* AI Analysis Section */}
-            <div className="lf__ai-section">
-                <div className="lf__ai-label">
-                    <Sparkles size={10} className="lf__ai-sparkle" />
-                    AI Intelligence
-                </div>
-                {lead.ai_summary && (
-                    <p className="lf__ai-summary">{lead.ai_summary}</p>
-                )}
-                {lead.opportunity_summary && (
-                    <div className="lf__ai-opportunity">
-                        <Target size={12} className="lf__ai-opportunity-icon" />
-                        <span>{lead.opportunity_summary}</span>
+            {/* Collapsible Dropdown (Only if insights exist) */}
+            {hasAiInsights && (
+                <>
+                    {/* Collapsible Dropdown Toggle Button */}
+                    <button 
+                        className={`lf__insights-toggle ${showInsights ? 'active' : ''}`}
+                        onClick={() => setShowInsights(!showInsights)}
+                    >
+                        <div className="lf__insights-toggle-left">
+                            <Sparkles size={11} />
+                            <span>AI Opportunity Insights</span>
+                        </div>
+                        {showInsights ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+                    </button>
+
+                    {/* Collapsible AI Analysis Section */}
+                    <div className={`lf__ai-section ${showInsights ? 'expanded' : 'collapsed'}`}>
+                        <div style={{ minHeight: 0 }} className="lf__ai-section-inner">
+                            <div className="lf__ai-panel-header">
+                                <div className="lf__ai-label">
+                                    <Sparkles size={10} className="lf__ai-sparkle" />
+                                    <span>Executive Analysis & Insights</span>
+                                </div>
+                            </div>
+                            <div className="lf__ai-panel-body">
+                                {lead.ai_summary && (
+                                    <p className="lf__ai-summary">{lead.ai_summary}</p>
+                                )}
+                                <div className="lf__ai-telemetry">
+                                    {lead.opportunity_summary && (
+                                        <div className="lf__ai-opportunity">
+                                            <Target size={11} className="lf__ai-opportunity-icon" />
+                                            <div className="lf__ai-detail-block">
+                                                <span className="lf__ai-detail-label">Key Opportunity</span>
+                                                <span>{lead.opportunity_summary}</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {lead.service_fit_reason && (
+                                        <div className="lf__ai-fit">
+                                            <Link2 size={11} className="lf__ai-fit-icon" />
+                                            <div className="lf__ai-detail-block">
+                                                <span className="lf__ai-detail-label">Value Proposition</span>
+                                                <span>{lead.service_fit_reason}</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {lead.likely_pain_point && (
+                                        <div className="lf__ai-pain">
+                                            <AlertTriangle size={11} className="lf__ai-pain-icon" />
+                                            <div className="lf__ai-detail-block">
+                                                <span className="lf__ai-detail-label">Key Pain Point</span>
+                                                <span>{lead.likely_pain_point}</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                )}
-                {lead.service_fit_reason && (
-                    <div className="lf__ai-fit">
-                        <Link2 size={12} className="lf__ai-fit-icon" />
-                        <span>{lead.service_fit_reason}</span>
-                    </div>
-                )}
-                {lead.likely_pain_point && (
-                    <div className="lf__ai-pain">
-                        <AlertTriangle size={12} className="lf__ai-pain-icon" />
-                        <span>{lead.likely_pain_point}</span>
-                    </div>
-                )}
-            </div>
+                </>
+            )}
 
             {/* Action Buttons */}
             <div className="lf__card-actions">
                 <button className="lf__action-btn lf__action-btn--primary" onClick={() => onStartCall(lead)}>
-                    <Zap size={13} /> Live Copilot
+                    <Zap size={12} /> Live Copilot
                 </button>
                 <button className="lf__action-btn lf__action-btn--outreach" onClick={() => onOutreach(lead)}>
-                    <Send size={13} /> Outreach
+                    <Send size={12} /> Outreach
                 </button>
                 <button 
-                    className={`lf__action-btn ${copied ? 'lf__action-btn--copied' : ''}`} 
+                    className={`lf__action-btn lf__action-btn--square ${copied ? 'lf__action-btn--copied' : ''}`} 
                     onClick={handleCopyClick} 
                     title="Copy contact info"
                 >
                     {copied ? <CheckCircle2 size={13} /> : <Copy size={13} />}
                 </button>
                 <button 
-                    className={`lf__action-btn ${isSaved ? 'lf__action-btn--saved' : ''}`} 
+                    className={`lf__action-btn lf__action-btn--square ${isSaved ? 'lf__action-btn--saved' : ''}`} 
                     onClick={() => onSave(lead)} 
                     title={isSaved ? "Saved" : "Save lead"}
                 >
@@ -299,13 +367,13 @@ const LeadCard = ({ lead, onStartCall, onCopy, onSave, isSaved, onOutreach }) =>
 const FindingLeadsProgress = ({ query }) => {
     const STATUSES = [
         "Connecting to search endpoints...",
-        "Scanning database registries for businesses...",
-        "Crawling digital footprint (websites, social platforms)...",
-        "Analyzing SEO health, site speed, and technology stack...",
-        "Detecting opportunity signals and market gaps...",
-        "Calculating AI opportunity scores & buying probability...",
-        "Drafting customized outreach strategies & pain points...",
-        "Structuring enriched lead cards..."
+        "Scanning database registries...",
+        "Crawling digital footprint...",
+        "Analyzing SEO health & speed...",
+        "Detecting opportunity signals...",
+        "Calculating AI scores...",
+        "Drafting outreach angles...",
+        "Structuring enriched profiles..."
     ];
 
     const [statusIndex, setStatusIndex] = useState(0);
@@ -339,71 +407,50 @@ const FindingLeadsProgress = ({ query }) => {
         };
     }, [statusIndex]);
 
-    const getStepState = (stepIndex) => {
-        const currentStep = Math.floor(statusIndex / 2);
-        if (currentStep > stepIndex) return 'completed';
-        if (currentStep === stepIndex) return 'active';
-        return 'pending';
-    };
-
     const displayName = query ? query.trim() : "target businesses";
 
     return (
-        <div className="lf__loader-container">
-            {/* Left Column: Minimal AI Orbital Loader */}
-            <div className="lf__orbital">
-                <div className="lf__orbital-ring" />
-                <div className="lf__orbital-dot" />
-                <div className="lf__orbital-core">
-                    <Sparkles size={18} />
-                </div>
-            </div>
-
-            {/* Right Column: Status info & Progress Bar */}
-            <div className="lf__loader-info">
-                <div className="lf__loader-tag">
-                    <Bot size={11} /> AI Engine Active
-                </div>
-                <h3 className="lf__loader-title">
-                    Finding leads for: <span>"{displayName}"</span>
-                </h3>
-                
-                <div className="lf__loader-status-wrapper">
-                    <div className="lf__loader-status-container">
-                        <div key={statusIndex} className="lf__loader-status">
-                            <span className="lf__loader-status-dot" />
-                            {STATUSES[statusIndex]}
+        <div className="lf__loader-card">
+            <div className="lf__loader-glow" />
+            
+            <div className="lf__loader-content">
+                <div className="lf__loader-header-row">
+                    <div className="lf__loader-left">
+                        <div className="lf__loader-tag">
+                            <span className="lf__loader-pulse" />
+                            <span>COGNITIVE HARVESTER ACTIVE</span>
                         </div>
+                        <h3 className="lf__loader-heading">
+                            Crawling <span>"{displayName}"</span>
+                        </h3>
                     </div>
-                    <div className="lf__loader-percent">
-                        {Math.round(progress)}%
+                    
+                    <div className="lf__loader-percentage">
+                        {Math.round(progress)}<span className="lf__loader-percentage-symbol">%</span>
                     </div>
                 </div>
 
-                {/* Progress bar */}
+                {/* Vertical ticker for current actions */}
+                <div className="lf__loader-ticker">
+                    <div className="lf__loader-ticker-track" style={{ transform: `translateY(-${statusIndex * 24}px)` }}>
+                        {STATUSES.map((status, idx) => (
+                            <div 
+                                key={idx} 
+                                className={`lf__loader-ticker-item ${idx === statusIndex ? 'active' : ''}`}
+                            >
+                                <span className="lf__loader-ticker-num">[{String(idx + 1).padStart(2, '0')}]</span>
+                                <span className="lf__loader-ticker-text">{status}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Ultra-minimalist progress bar */}
                 <div className="lf__loader-bar-bg">
                     <div 
                         className="lf__loader-bar-fill" 
                         style={{ width: `${progress}%` }} 
                     />
-                </div>
-
-                {/* Step indicators */}
-                <div className="lf__loader-steps">
-                    {[
-                        { label: 'Search', icon: Search },
-                        { label: 'Analyze', icon: Globe },
-                        { label: 'AI Score', icon: Target },
-                        { label: 'Enrich', icon: Sparkles }
-                    ].map((step, idx) => {
-                        const state = getStepState(idx);
-                        return (
-                            <div key={idx} className={`lf__loader-step ${state}`}>
-                                <div className="lf__loader-step-dot" />
-                                <span className="lf__loader-step-label">{step.label}</span>
-                            </div>
-                        );
-                    })}
                 </div>
             </div>
         </div>
@@ -413,7 +460,7 @@ const FindingLeadsProgress = ({ query }) => {
 /* ══════════════════════════════════════════════════════════════════
    MAIN LEAD FINDER PAGE
    ══════════════════════════════════════════════════════════════════ */
-const LeadFinder = () => {
+const LeadFinder = ({ onOutreach }) => {
     const navigate = useNavigate();
     const {
         query, setQuery,
@@ -432,6 +479,13 @@ const LeadFinder = () => {
     const [toast, setToast] = useState(null);
     const [savedLeads, setSavedLeads] = useState([]);
 
+    // GSAP Refs
+    const gridRef = useRef(null);
+    const tabsRef = useRef(null);
+    const sliderRef = useRef(null);
+    const tabDiscoverRef = useRef(null);
+    const tabSavedRef = useRef(null);
+
     // Check cache expiration (30 mins)
     useEffect(() => {
         if (searched && lastUpdated) {
@@ -447,7 +501,6 @@ const LeadFinder = () => {
     // Restore scroll position
     useEffect(() => {
         if (searched && scrollPosition > 0) {
-            // Wait a tick for rendering, then scroll
             const timer = setTimeout(() => {
                 if (window.lenis) {
                     window.lenis.scrollTo(scrollPosition, { immediate: true });
@@ -458,6 +511,68 @@ const LeadFinder = () => {
             return () => clearTimeout(timer);
         }
     }, [searched, scrollPosition]);
+
+    // GSAP Tab Slider highlight reposition
+    useEffect(() => {
+        const activeTab = viewMode === 'discover' ? tabDiscoverRef.current : tabSavedRef.current;
+        if (activeTab && sliderRef.current && tabsRef.current) {
+            const containerRect = tabsRef.current.getBoundingClientRect();
+            const tabRect = activeTab.getBoundingClientRect();
+            const left = tabRect.left - containerRect.left;
+            const width = tabRect.width;
+            
+            gsap.to(sliderRef.current, {
+                left: left,
+                width: width,
+                duration: 0.38,
+                ease: 'power2.out',
+            });
+        }
+    }, [viewMode, savedLeads.length]);
+
+    // GSAP Card Grid Stagger
+    useEffect(() => {
+        if (!loading && gridRef.current) {
+            const cards = gridRef.current.querySelectorAll('.lf__card');
+            if (cards.length > 0) {
+                gsap.killTweensOf(cards);
+                gsap.fromTo(cards, 
+                    { opacity: 0, y: 35, scale: 0.98 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        scale: 1, 
+                        duration: 0.65, 
+                        stagger: 0.06, 
+                        ease: 'power3.out',
+                        clearProps: 'transform,opacity'
+                    }
+                );
+            }
+        }
+    }, [leads, loading, viewMode]);
+
+    // GSAP Skeleton Grid Stagger
+    useEffect(() => {
+        if (loading && gridRef.current) {
+            const skeletons = gridRef.current.querySelectorAll('.lf__skeleton-card');
+            if (skeletons.length > 0) {
+                gsap.killTweensOf(skeletons);
+                gsap.fromTo(skeletons, 
+                    { opacity: 0, y: 25, scale: 0.98 },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        scale: 1, 
+                        duration: 0.55, 
+                        stagger: 0.04, 
+                        ease: 'power2.out',
+                        clearProps: 'transform,opacity'
+                    }
+                );
+            }
+        }
+    }, [loading]);
 
     /* ── Toast helper ────────────────────────────────── */
     const showToast = useCallback((msg, icon) => {
@@ -505,7 +620,6 @@ const LeadFinder = () => {
     };
 
     const handleCustomOfferFocus = () => {
-        /* If a preset was selected, clear it so user can type freely */
         if (OFFER_PRESETS.some((p) => p.label === userOffer)) {
             setUserOffer(customOffer);
         }
@@ -589,8 +703,12 @@ const LeadFinder = () => {
     };
 
     const handleOutreach = (lead) => {
-        saveScrollState();
-        navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
+        if (onOutreach) {
+            onOutreach(lead, effectiveOffer);
+        } else {
+            saveScrollState();
+            navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
+        }
     };
 
     const fallbackCopyText = (text, callback) => {
@@ -683,49 +801,63 @@ const LeadFinder = () => {
 
     return (
         <div className="lf">
-            {/* ── Header ── */}
-            <div className="lf__header">
-                <div className="lf__eyebrow">AI-Powered Lead Discovery</div>
-                <h1 className="lf__title">Lead Finder</h1>
-                <p className="lf__subtitle">
-                    Discover high-potential business leads instantly. AI analyzes each prospect's digital presence, pain points, and the best angle to approach them.
-                </p>
+            {/* ── Editorial Header ── */}
+            <div className="lf__header-deck">
+                <div className="lf__header-left">
+                    <div className="lf__eyebrow">
+                        <span className="lf__eyebrow-dot" /> 
+                        <span>INTEL_SIGNAL // DISCOVERY ENGINE v2.5</span>
+                    </div>
+                    <h1 className="lf__title">Lead Finder</h1>
+                </div>
+                <div className="lf__header-right">
+                    <p className="lf__subtitle">
+                        Discover high-potential business leads instantly. Deployment of cognitive crawlers to analyze digital footprints, isolate performance gaps, and calculate service-fit conversions.
+                    </p>
+                </div>
             </div>
 
-            {/* ── Tabs Segmented Control ── */}
-            <div className="lf__tabs">
-                <button 
-                    className={`lf__tab ${viewMode === 'discover' ? 'active' : ''}`}
-                    onClick={() => setViewMode('discover')}
-                >
-                    <Search size={14} />
-                    <span>Discover Leads</span>
-                </button>
-                <button 
-                    className={`lf__tab ${viewMode === 'saved' ? 'active' : ''}`}
-                    onClick={() => setViewMode('saved')}
-                >
-                    <Bookmark size={14} />
-                    <span>Saved Leads</span>
-                    {savedLeads.length > 0 && (
-                        <span className="lf__tab-badge">{savedLeads.length}</span>
-                    )}
-                </button>
+            {/* ── Segmented Sliding Tabs ── */}
+            <div className="lf__tabs-container">
+                <div className="lf__tabs-wrapper" ref={tabsRef}>
+                    <div className="lf__tabs-slider" ref={sliderRef} />
+                    <button 
+                        ref={tabDiscoverRef}
+                        className={`lf__tab ${viewMode === 'discover' ? 'active' : ''}`}
+                        onClick={() => setViewMode('discover')}
+                    >
+                        <Search size={13} />
+                        <span>Discover Leads</span>
+                    </button>
+                    <button 
+                        ref={tabSavedRef}
+                        className={`lf__tab ${viewMode === 'saved' ? 'active' : ''}`}
+                        onClick={() => setViewMode('saved')}
+                    >
+                        <Bookmark size={13} />
+                        <span>Saved Leads</span>
+                        {savedLeads.length > 0 && (
+                            <span className="lf__tab-badge">{savedLeads.length}</span>
+                        )}
+                    </button>
+                </div>
             </div>
 
             {/* ── Discover View ── */}
             {viewMode === 'discover' && (
-                <div className="animate-fade-in" style={{ marginTop: '2rem' }}>
+                <div className="animate-fade-in" style={{ marginTop: '2.5rem' }}>
 
                     {/* ── Offer Configuration Section ── */}
                     <div className="lf__offer-section">
                         <div className="lf__offer-header">
-                            <ShoppingBag size={14} className="lf__offer-header-icon" />
-                            <span className="lf__offer-header-label">Your Offer</span>
+                            <div className="lf__offer-header-left">
+                                <ShoppingBag size={14} className="lf__offer-header-icon" />
+                                <span className="lf__offer-header-label">YOUR VALUE PROPOSITION</span>
+                            </div>
                             {effectiveOffer && (
                                 <span className="lf__offer-indicator">
                                     <Target size={10} />
-                                    Scoring leads for: <strong>{effectiveOffer}</strong>
+                                    Scoring for: <strong>{effectiveOffer}</strong>
                                 </span>
                             )}
                         </div>
@@ -749,7 +881,7 @@ const LeadFinder = () => {
                             <input
                                 className="lf__offer-custom"
                                 type="text"
-                                placeholder="Or type your custom offer…"
+                                placeholder="Or specify your custom value proposition..."
                                 value={OFFER_PRESETS.some((p) => p.label === userOffer) ? '' : customOffer}
                                 onChange={handleCustomOfferChange}
                                 onFocus={handleCustomOfferFocus}
@@ -757,7 +889,7 @@ const LeadFinder = () => {
                         </div>
                     </div>
 
-                    {/* Search Bar */}
+                    {/* Search Deck */}
                     <div className="lf__search-section">
                         <div className="lf__search-bar">
                             <Search size={18} className="lf__search-icon" />
@@ -765,77 +897,80 @@ const LeadFinder = () => {
                                 id="lead-search-input"
                                 className="lf__search-input"
                                 type="text"
-                                placeholder="Find bakery shops in Delhi..."
+                                placeholder="e.g. Find bakery shops in Delhi..."
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
-                            <button
-                                id="lead-search-btn"
-                                className="lf__search-btn"
-                                onClick={() => handleSearch()}
-                                disabled={loading || query.trim().length < 2}
-                            >
-                                {loading ? (
-                                    <>Searching...</>
-                                ) : (
-                                    <>Search Leads <ArrowRight size={14} /></>
-                                )}
-                            </button>
+                            <div className="lf__search-btn-wrapper">
+                                <MagButton
+                                    id="lead-search-btn"
+                                    className="lf__search-btn"
+                                    label={loading ? "Searching" : "Search"}
+                                    icon={!loading && <ArrowRight size={14} />}
+                                    onClick={() => handleSearch()}
+                                    disabled={loading || query.trim().length < 2}
+                                    variant="dark"
+                                    magnetStrength={0.25}
+                                />
+                            </div>
                         </div>
 
-                        {/* Filters */}
-                        <div className="lf__filters">
-                            <span className="lf__filter-chip" style={{ cursor: 'default', opacity: 0.6 }}>
-                                <Filter size={11} /> Filters{filterCount > 0 ? ` (${filterCount})` : ''}
-                            </span>
-                            {FILTER_OPTIONS.map((f) => {
-                                const Icon = f.icon;
-                                const isActive = !!activeFilters[f.key];
-                                return (
-                                    <button
-                                        key={f.key}
-                                        className={`lf__filter-chip ${isActive ? 'active' : ''}`}
-                                        onClick={() => toggleFilter(f.key, f.value)}
-                                    >
-                                        <Icon size={11} /> {f.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
+                        {/* Filters & Mode grid */}
+                        <div className="lf__filters-row">
+                            {/* Filter Chips */}
+                            <div className="lf__filters">
+                                <span className="lf__filter-header">
+                                    <Filter size={11} /> Filters{filterCount > 0 ? ` (${filterCount})` : ''}
+                                </span>
+                                {FILTER_OPTIONS.map((f) => {
+                                    const Icon = f.icon;
+                                    const isActive = !!activeFilters[f.key];
+                                    return (
+                                        <button
+                                            key={f.key}
+                                            className={`lf__filter-chip ${isActive ? 'active' : ''}`}
+                                            onClick={() => toggleFilter(f.key, f.value)}
+                                        >
+                                            <Icon size={11} /> {f.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
 
-                        {/* Search Mode Selector */}
-                        <div className="lf__mode-section">
-                            <span className="lf__mode-label">
-                                <BarChart3 size={11} /> Search Mode
-                            </span>
-                            <div className="lf__mode-chips">
-                                {SEARCH_MODES.map((mode) => (
-                                    <button
-                                        key={mode.value}
-                                        className={`lf__mode-chip ${searchMode === mode.value ? 'active' : ''}`}
-                                        onClick={() => setSearchMode(mode.value)}
-                                    >
-                                        {mode.label}
-                                    </button>
-                                ))}
+                            {/* Search Mode Selector */}
+                            <div className="lf__mode-section">
+                                <span className="lf__mode-label">
+                                    <BarChart3 size={11} /> Search Mode
+                                </span>
+                                <div className="lf__mode-chips">
+                                    {SEARCH_MODES.map((mode) => (
+                                        <button
+                                            key={mode.value}
+                                            className={`lf__mode-chip ${searchMode === mode.value ? 'active' : ''}`}
+                                            onClick={() => setSearchMode(mode.value)}
+                                        >
+                                            {mode.label}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Loading State */}
                     {loading && (
-                        <>
+                        <div className="lf__loading-wrapper animate-fade-in">
                             <FindingLeadsProgress query={query} />
-                            <div className="lf__skeleton-grid">
+                            <div className="lf__skeleton-grid" ref={gridRef}>
                                 {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
                             </div>
-                        </>
+                        </div>
                     )}
 
                     {/* Results */}
                     {!loading && searched && leads.length > 0 && (
-                        <>
+                        <div className="lf__results-wrapper animate-fade-in">
                             <div className="lf__results-meta">
                                 <span className="lf__results-count">
                                     Found <strong>{leads.length}</strong> opportunities
@@ -853,7 +988,7 @@ const LeadFinder = () => {
                                     </span>
                                 </div>
                             </div>
-                            <div className="lf__grid">
+                            <div className="lf__grid" ref={gridRef}>
                                 {leads.map((lead, idx) => {
                                     const isSaved = !!getSavedLead(lead);
                                     return (
@@ -869,16 +1004,17 @@ const LeadFinder = () => {
                                     );
                                 })}
                             </div>
-                        </>
+                        </div>
                     )}
 
                     {/* No Results */}
                     {!loading && searched && leads.length === 0 && (
                         <div className="lf__empty">
-                            <div className="lf__empty-icon"><Search size={56} /></div>
-                            <h3 className="lf__empty-title">No leads found</h3>
+                            <div className="lf__empty-glow" />
+                            <div className="lf__empty-icon"><Search size={40} /></div>
+                            <h3 className="lf__empty-title">No leads harvested</h3>
                             <p className="lf__empty-desc">
-                                Try adjusting your search query or removing filters to discover more businesses.
+                                Try widening your search queries or disabling active filters to scan broader datasets.
                             </p>
                         </div>
                     )}
@@ -886,11 +1022,13 @@ const LeadFinder = () => {
                     {/* Initial State */}
                     {!loading && !searched && (
                         <div className="lf__empty">
-                            <div className="lf__empty-icon"><Users size={56} /></div>
-                            <h3 className="lf__empty-title">Discover your next customer</h3>
+                            <div className="lf__empty-glow" />
+                            <div className="lf__empty-icon"><Users size={40} /></div>
+                            <h3 className="lf__empty-title">Deploy Discovery Crawler</h3>
                             <p className="lf__empty-desc">
-                                Search for any business type in any city. Our AI will analyze each lead and surface the best opportunities.
+                                Search for any niche, business, or category across local regions. Let our agent decode target digital presence, calculate fit, and structure briefings.
                             </p>
+                            <div className="lf__empty-examples-label">RECOMMENDED DISCOVERY SCRIPTS:</div>
                             <div className="lf__empty-examples">
                                 {EXAMPLES.map((ex) => (
                                     <button
@@ -901,7 +1039,8 @@ const LeadFinder = () => {
                                             handleSearch(ex);
                                         }}
                                     >
-                                        {ex}
+                                        <span>{ex}</span>
+                                        <ArrowRight size={10} className="lf__example-arrow" />
                                     </button>
                                 ))}
                             </div>
@@ -912,18 +1051,18 @@ const LeadFinder = () => {
 
             {/* ── Saved Leads View ── */}
             {viewMode === 'saved' && (
-                <div className="animate-fade-in" style={{ marginTop: '2rem' }}>
+                <div className="animate-fade-in" style={{ marginTop: '2.5rem' }}>
                     {savedLeads.length > 0 ? (
-                        <>
+                        <div className="lf__results-wrapper">
                             <div className="lf__results-meta">
                                 <span className="lf__results-count">
                                     You have <strong>{savedLeads.length}</strong> saved leads
                                 </span>
                                 <span className="lf__results-badge" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>
-                                    Target Pipeline
+                                    TARGET PIPELINE
                                 </span>
                             </div>
-                            <div className="lf__grid">
+                            <div className="lf__grid" ref={gridRef}>
                                 {savedLeads.map((lead, idx) => (
                                     <LeadCard
                                         key={`saved-${lead.business_name}-${idx}`}
@@ -936,19 +1075,19 @@ const LeadFinder = () => {
                                     />
                                 ))}
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <div className="lf__empty" style={{ padding: '6rem 2rem' }}>
-                            <div className="lf__empty-icon"><Bookmark size={56} style={{ color: 'var(--text-muted)', opacity: 0.2 }} /></div>
+                            <div className="lf__empty-glow" />
+                            <div className="lf__empty-icon"><Bookmark size={40} /></div>
                             <h3 className="lf__empty-title">Your saved pipeline is empty</h3>
                             <p className="lf__empty-desc">
-                                Search and bookmark high-potential leads in the Discover Leads tab to build your closing target pipeline.
+                                Bookmarked leads will be compiled here as your core outreach pipeline. Start exploring in the Discover tab.
                             </p>
                             <div style={{ marginTop: '2rem' }}>
                                 <button 
-                                    className="lf__action-btn lf__action-btn--primary" 
+                                    className="lf__action-btn lf__action-btn--primary lf__action-btn--centered" 
                                     onClick={() => setViewMode('discover')}
-                                    style={{ maxWidth: '220px', margin: '0 auto', padding: '0.6rem 1.2rem' }}
                                 >
                                     Start Discovering Leads
                                 </button>
@@ -961,8 +1100,8 @@ const LeadFinder = () => {
             {/* ── Toast ── */}
             {toast && (
                 <div className="lf__toast">
-                    {toast.icon === '✓' ? <CheckCircle2 size={15} color="#22c55e" /> : <span style={{fontSize: '0.85rem'}}>{toast.icon}</span>}
-                    {toast.msg}
+                    {toast.icon === '✓' ? <CheckCircle2 size={14} color="#22c55e" /> : <span style={{fontSize: '0.8rem'}}>{toast.icon}</span>}
+                    <span>{toast.msg}</span>
                 </div>
             )}
         </div>

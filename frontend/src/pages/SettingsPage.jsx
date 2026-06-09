@@ -30,13 +30,13 @@ const Input = ({ value, onChange, placeholder, type = 'text', disabled }) => (
         disabled={disabled}
         style={{
             width: '100%', boxSizing: 'border-box',
-            background: 'var(--bg)', border: '1px solid var(--border)',
-            borderRadius: 10, padding: '0.75rem 1rem',
+            background: 'var(--surface)', border: '1px solid var(--border)',
+            borderRadius: 12, padding: '0.75rem 1rem',
             fontSize: '0.9rem', color: 'var(--text)',
             outline: 'none', transition: 'border-color 0.2s',
             opacity: disabled ? 0.5 : 1,
         }}
-        onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+        onFocus={e => e.target.style.borderColor = 'var(--text)'}
         onBlur={e => e.target.style.borderColor = 'var(--border)'}
     />
 );
@@ -49,12 +49,12 @@ const TextArea = ({ value, onChange, placeholder, rows = 3 }) => (
         rows={rows}
         style={{
             width: '100%', boxSizing: 'border-box', resize: 'vertical',
-            background: 'var(--bg)', border: '1px solid var(--border)',
-            borderRadius: 10, padding: '0.75rem 1rem',
+            background: 'var(--surface)', border: '1px solid var(--border)',
+            borderRadius: 12, padding: '0.75rem 1rem',
             fontSize: '0.9rem', color: 'var(--text)',
-            outline: 'none', fontFamily: 'inherit',
+            outline: 'none', fontFamily: 'inherit', transition: 'border-color 0.2s',
         }}
-        onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+        onFocus={e => e.target.style.borderColor = 'var(--text)'}
         onBlur={e => e.target.style.borderColor = 'var(--border)'}
     />
 );
@@ -65,8 +65,8 @@ const Select = ({ value, onChange, options }) => (
         onChange={onChange}
         style={{
             width: '100%', boxSizing: 'border-box',
-            background: 'var(--bg)', border: '1px solid var(--border)',
-            borderRadius: 10, padding: '0.75rem 1rem',
+            background: 'var(--surface)', border: '1px solid var(--border)',
+            borderRadius: 12, padding: '0.75rem 1rem',
             fontSize: '0.9rem', color: 'var(--text)', outline: 'none',
         }}
     >
@@ -75,24 +75,23 @@ const Select = ({ value, onChange, options }) => (
 );
 
 const Toggle = ({ checked, onChange, label, sub }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', borderBottom: '1px solid var(--border)' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 0.5rem', borderBottom: '1px solid var(--border)' }}>
         <div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{label}</div>
-            {sub && <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>{sub}</div>}
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)' }}>{label}</div>
+            {sub && <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 4 }}>{sub}</div>}
         </div>
         <button
             onClick={() => onChange(!checked)}
             style={{
-                width: 44, height: 24, borderRadius: 99, border: 'none', cursor: 'pointer',
-                background: checked ? 'var(--accent)' : 'var(--surface)',
+                width: 42, height: 22, borderRadius: 99, border: 'none', cursor: 'pointer',
+                background: checked ? 'var(--text)' : 'var(--border)',
                 position: 'relative', transition: 'background 0.2s', flexShrink: 0,
             }}
         >
             <div style={{
-                width: 18, height: 18, borderRadius: '50%', background: 'white',
+                width: 16, height: 16, borderRadius: '50%', background: 'var(--bg)',
                 position: 'absolute', top: 3,
                 left: checked ? 23 : 3, transition: 'left 0.2s',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
             }} />
         </button>
     </div>
@@ -104,28 +103,31 @@ const SaveBtn = ({ saving, saved, onClick, disabled }) => (
         disabled={saving || disabled}
         style={{
             display: 'flex', alignItems: 'center', gap: '0.5rem',
-            background: saved ? '#22c55e' : 'var(--accent)',
-            color: 'white', border: 'none', borderRadius: 10,
-            padding: '0.75rem 1.75rem', fontSize: '0.875rem', fontWeight: 700,
-            cursor: saving ? 'wait' : 'pointer', transition: 'background 0.3s',
-            marginTop: '1.5rem',
+            background: 'var(--text)',
+            color: 'var(--bg)', border: 'none', borderRadius: 12,
+            padding: '0.75rem 1.75rem', fontSize: '0.875rem', fontWeight: 800,
+            cursor: saving ? 'wait' : 'pointer', transition: 'opacity 0.2s',
+            marginTop: '1.75rem',
+            opacity: disabled || saving ? 0.6 : 1,
         }}
+        onMouseEnter={e => { if (!saving && !disabled) e.target.style.opacity = 0.85; }}
+        onMouseLeave={e => { if (!saving && !disabled) e.target.style.opacity = 1; }}
     >
-        {saving ? <><Loader2 size={15} className="animate-spin" />Saving...</>
-            : saved ? <><Check size={15} />Saved!</>
+        {saving ? <><Loader2 size={15} className="animate-spin" /> Saving...</>
+            : saved ? <><Check size={15} /> Saved</>
                 : 'Save Changes'}
     </button>
 );
 
 const SectionCard = ({ title, sub, children }) => (
-    <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 20, padding: '2rem', marginBottom: '1.5rem' }}>
-        {title && (
-            <div style={{ marginBottom: '1.75rem', paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)' }}>
-                <div style={{ fontSize: '1rem', fontWeight: 800 }}>{title}</div>
-                {sub && <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 3 }}>{sub}</div>}
-            </div>
-        )}
-        {children}
+    <div className="settings-section">
+        <div className="settings-section-meta">
+            {title && <h2 className="settings-section-title">{title}</h2>}
+            {sub && <p className="settings-section-sub">{sub}</p>}
+        </div>
+        <div className="settings-section-fields">
+            {children}
+        </div>
     </div>
 );
 
@@ -288,10 +290,11 @@ const WorkspacePanel = () => {
                             key={s}
                             onClick={() => setForm(p => ({ ...p, sales_style: s }))}
                             style={{
-                                padding: '0.75rem', borderRadius: 12, border: `1px solid ${form.sales_style === s ? 'var(--accent)' : 'var(--border)'}`,
-                                background: form.sales_style === s ? 'rgba(99,102,241,0.07)' : 'var(--bg)',
-                                color: form.sales_style === s ? 'var(--accent)' : 'var(--text-dim)',
-                                fontSize: '0.8125rem', fontWeight: form.sales_style === s ? 700 : 500,
+                                padding: '0.75rem', borderRadius: 12,
+                                border: `1.5px solid ${form.sales_style === s ? 'var(--text)' : 'var(--border)'}`,
+                                background: form.sales_style === s ? 'var(--surface)' : 'var(--bg)',
+                                color: form.sales_style === s ? 'var(--text)' : 'var(--text-dim)',
+                                fontSize: '0.8125rem', fontWeight: form.sales_style === s ? 800 : 500,
                                 cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center',
                             }}
                         >{s}</button>
@@ -323,10 +326,10 @@ const AiPanel = () => {
                         onClick={() => setForm(p => ({ ...p, [field]: o.value }))}
                         style={{
                             padding: '0.5rem 1.125rem', borderRadius: 99,
-                            border: `1px solid ${form[field] === o.value ? 'var(--accent)' : 'var(--border)'}`,
-                            background: form[field] === o.value ? 'rgba(99,102,241,0.1)' : 'var(--bg)',
-                            color: form[field] === o.value ? 'var(--accent)' : 'var(--text-dim)',
-                            fontSize: '0.8125rem', fontWeight: form[field] === o.value ? 700 : 500,
+                            border: `1.5px solid ${form[field] === o.value ? 'var(--text)' : 'var(--border)'}`,
+                            background: form[field] === o.value ? 'var(--surface)' : 'var(--bg)',
+                            color: form[field] === o.value ? 'var(--text)' : 'var(--text-dim)',
+                            fontSize: '0.8125rem', fontWeight: form[field] === o.value ? 800 : 500,
                             cursor: 'pointer', transition: 'all 0.15s',
                         }}
                     >{o.label}</button>
