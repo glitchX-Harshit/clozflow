@@ -93,7 +93,7 @@ graph TD
 * **Strict Prompt Budgets:** Enforces a rigid `max_chunks: 2` retrieval limit to prevent prompt ballooning, ensuring context-rich yet highly compressed prompts of `700-1200` tokens.
 
 ### 3. Smart Fallback & SLA Guardrails
-* **8-Second Strict SLA:** Monitors LLM API response times in real-time. If latency exceeds the 8.0-second limit or network failures occur, Hexagon automatically halts the request.
+* **15-Second Strict SLA:** Monitors LLM API response times in real-time. If latency exceeds the 15.0-second limit or network failures occur, Hexagon automatically halts the request.
 * **Psychologically-Aware Fallbacks:** Instantly serves custom fallback responses mapped to the prospect's predicted objection category and emotional tone, ensuring zero conversation drop-offs.
 * **GPT Detox & Anti-Repetition:** Strips conversational filler, generic sales phrasing, and repetitive suggestions using strict validation filters and sequential difference matching.
 

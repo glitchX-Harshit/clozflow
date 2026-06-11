@@ -1,0 +1,441 @@
+project: HEXAGON_V4_PERFORMANCE_REFACTOR
+
+status:
+
+current_state:
+response_quality: acceptable
+outreach_quality: improving
+latency: unacceptable
+token_usage: excessive
+
+objective:
+
+reduce_latency
+
+reduce_input_tokens
+
+preserve_response_quality
+
+preserve_reasoning_quality
+
+improve_real_time_sales_assistance
+
+core_problem:
+
+current_architecture_duplicates_reasoning
+
+current_flow:
+
+prospect_message
+
+-> reasoning_router
+
+-> hidden_concern_detection
+
+-> conversation_goal_selection
+
+-> response_type_selection
+
+-> rag_retrieval
+
+-> giant_system_prompt
+
+-> giant_user_prompt
+
+-> llm
+
+issues:
+
+issue_1:
+
+```
+title: duplicated_reasoning
+
+description:
+
+  python_already_identifies:
+
+    - hidden_concern
+
+    - conversation_goal
+
+    - response_type
+
+  but_llm_is_asked_to_reason_about_same_things_again
+```
+
+issue_2:
+
+```
+title: oversized_system_prompt
+
+description:
+
+  system_prompt_contains:
+
+    - philosophy
+
+    - examples
+
+    - concern_mapping
+
+    - response_types
+
+    - quality_scoring
+
+    - language_rules
+
+    - output_schema
+
+  all_sent_every_request
+```
+
+issue_3:
+
+```
+title: unnecessary_context
+
+description:
+
+  entire_conversation_buffer_sent
+
+  even_when_last_few_turns_are_sufficient
+```
+
+issue_4:
+
+```
+title: rag_overinjection
+
+description:
+
+  retrieved_context_is_embedded_inside_large_prompt
+
+  increasing_token_count
+```
+
+target_architecture:
+
+speech
+
+-> voice_activity_detection
+
+-> transcript_finalization
+
+-> reasoning_router
+
+-> rag_retrieval
+
+-> response_generation
+
+voice_layer:
+
+add:
+
+```
+voice_activity_detection
+```
+
+goal:
+
+```
+prevent_llm_calls_for_partial_sentences
+```
+
+behavior:
+
+```
+user_speaking:
+  do_not_call_llm
+
+silence_detected:
+  duration_ms: 700_to_1000
+
+after_silence:
+  call_reasoning_engine
+```
+
+reasoning_layer:
+
+keep:
+
+```
+- hidden_concern_detection
+
+- conversation_goal_selection
+
+- response_type_selection
+```
+
+move_from_prompt_to_code:
+
+```
+- concern_mapping
+
+- goal_selection
+
+- response_strategy_selection
+```
+
+llm_should_receive:
+
+```
+- prospect_message
+
+- hidden_concern
+
+- conversation_goal
+
+- response_type
+```
+
+rag_layer:
+
+purpose:
+
+```
+retrieve_relevant_sales_knowledge
+```
+
+do_not_store:
+
+```
+- system_prompt
+
+- philosophy
+
+- response_rules
+```
+
+store_only:
+
+```
+- objection_playbooks
+
+- trust_examples
+
+- pricing_examples
+
+- switching_vendor_examples
+
+- discovery_examples
+```
+
+retrieval_limit:
+
+```
+maximum_chunks: 3
+
+maximum_context_tokens: 300
+```
+
+conversation_memory:
+
+replace:
+
+```
+full_buffer
+```
+
+with:
+
+```
+rolling_context
+```
+
+keep:
+
+```
+last_3_turns
+```
+
+remove:
+
+```
+historical_turns_not_relevant
+```
+
+new_system_prompt:
+
+target_size:
+
+```
+under_250_tokens
+```
+
+responsibilities:
+
+```
+identity
+
+output_format
+
+brevity_rules
+
+human_tone
+```
+
+remove:
+
+```
+hidden_concern_mapping
+
+conversation_goals
+
+response_types
+
+examples
+
+quality_scoring
+
+large_explanations
+```
+
+new_generation_input:
+
+structure:
+
+```
+prospect_message
+
+hidden_concern
+
+conversation_goal
+
+response_type
+
+rag_context
+```
+
+example_generation_payload:
+
+prospect_message:
+too_expensive
+
+hidden_concern:
+uncertain_roi
+
+conversation_goal:
+diagnose
+
+response_type:
+diagnostic_question
+
+rag_context:
+pricing_objection_examples
+
+output_requirements:
+
+response:
+
+```
+max_sentences: 2
+```
+
+next_question:
+
+```
+optional
+```
+
+coaching_tip:
+
+```
+optional
+```
+
+latency_targets:
+
+routing:
+
+```
+less_than: 100ms
+```
+
+rag:
+
+```
+less_than: 200ms
+```
+
+llm_generation:
+
+```
+less_than: 2500ms
+```
+
+total_response_time:
+
+```
+target: under_3_seconds
+
+hard_limit: under_5_seconds
+```
+
+token_targets:
+
+current_estimate:
+
+```
+1500_to_3000_tokens
+```
+
+target:
+
+```
+300_to_800_tokens
+```
+
+success_definition:
+
+preserve_current_response_quality
+
+reduce_token_usage_by_50_percent_or_more
+
+reduce_average_latency_below_3_seconds
+
+prevent_llm_calls_on_partial_speech
+
+maintain_real_time_sales_assistance
+
+implementation_priority:
+
+phase_1:
+
+```
+shrink_system_prompt
+```
+
+phase_2:
+
+```
+move_reasoning_from_prompt_to_code
+```
+
+phase_3:
+
+```
+implement_voice_activity_detection
+```
+
+phase_4:
+
+```
+reduce_conversation_context
+```
+
+phase_5:
+
+```
+optimize_rag_retrieval
+```
+
+important_rule:
+
+llm_generates_language
+
+python_performs_reasoning
+
+rag_provides_knowledge
+
+never_duplicate_responsibilities

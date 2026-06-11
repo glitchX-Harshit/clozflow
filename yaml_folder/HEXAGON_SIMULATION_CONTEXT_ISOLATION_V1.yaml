@@ -1,0 +1,147 @@
+project: HEXAGON_SIMULATION_CONTEXT_ISOLATION_V1
+
+objective:
+  - eliminate_product_context_leakage
+  - isolate_simulation_from_hexagon_default_context
+  - ensure_responses_match_simulated_product
+  - improve_realism_of_test_scenarios
+
+problem:
+  current_simulation:
+    prospect: cafe_owner
+    product: oat_milk
+  but_responses_reference:
+    - Hexagon_AI
+    - Acme_Corp
+    - machine_learning
+    - AI_solutions
+    - server_racks
+  root_cause:
+    - default_product_context_is_leaking_into_generation
+    - simulation_context_is_not_overriding_production_context
+
+required_fix:
+  simulation_mode_must_be_fully_isolated: true
+  simulation_context:
+    enabled: true
+    when_enabled:
+      override:
+        - company_name
+        - product_name
+        - product_description
+        - value_proposition
+        - customer_type
+        - industry
+        - examples
+        - case_studies
+        - sales_material
+
+  production_context:
+    enabled: false
+    when_simulation_mode_enabled:
+      block:
+        - Hexagon_AI
+        - Acme_Corp
+        - machine_learning
+        - AI_assistant
+        - sales_intelligence
+        - revenue_intelligence
+        - SaaS
+        - software_platform
+
+  simulation_profile:
+    prospect_type: cafe_owner
+    product: oat_milk
+    industry: cafe
+    customer: local_cafe_owner
+
+  response_validation:
+    before_returning_response:
+      reject_if_contains:
+        - Hexagon_AI
+        - Acme_Corp
+        - machine_learning
+        - AI_solution
+        - server_rack
+        - software_platform
+        - dashboard
+        - analytics
+        - revenue_growth
+        - customer_insights
+        - implementation
+        - operational_efficiency
+
+  context_guardrail:
+    if_product: oat_milk
+    allowed_topics:
+      - milk
+      - oat_milk
+      - supplier
+      - menu
+      - coffee
+      - latte
+      - customers
+      - cafe
+      - fridge
+      - storage
+      - cost
+      - margins
+      - demand
+      - inventory
+      - repeat_customers
+      - taste
+      - consistency
+      - quality
+    forbidden_topics:
+      - AI
+      - software
+      - SaaS
+      - server
+      - machine_learning
+      - dashboards
+      - analytics
+      - CRM
+      - Acme_Corp
+
+  simulation_examples:
+    good:
+      - prospect: where_would_i_even_keep_it
+        response: most_cafes_keep_it_with_other_milk_alternatives
+      - prospect: why_pay_extra
+        response: depends_whether_customers_notice_the_difference
+    bad:
+      - prospect: where_would_i_even_keep_it
+        response: it_can_fit_on_a_standard_server_rack
+
+  response_realism_filter:
+    enabled: true
+    verify:
+      - response_references_simulated_product
+      - response_references_simulated_industry
+      - response_matches_prospect_type
+      - response_does_not_reference_production_product
+
+  interview_mode_cleanup:
+    ban_phrases:
+      - whats_driving
+      - what_specific
+      - what_metrics
+      - what_priorities
+      - what_are_your
+      - can_you_elaborate
+      - help_me_understand
+    preferred_patterns:
+      - observation
+      - perspective_shift
+      - answer_first
+      - concise_reframe
+      - one_targeted_question
+
+  success_definition:
+    when_selling_oat_milk:
+      every_response_should_sound_like:
+        - cafe_salesperson
+      never_like:
+        - SaaS_demo
+        - AI_assistant
+        - software_sales_rep
