@@ -174,7 +174,7 @@ FALLBACK_SYSTEM:
 
 PERFORMANCE_RULES:
 
-  max_latency: 8 sec
+  max_latency: 15 sec
   max_calls_per_minute: 10
   batch_transcripts: true
 

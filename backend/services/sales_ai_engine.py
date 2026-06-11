@@ -1,5 +1,6 @@
 import os
 import json
+import yaml
 import time
 import random
 import asyncio
@@ -10,20 +11,31 @@ from rag.rag_engine import RAGEngine
 from ml.evaluation.learning_filter import filter_and_log_interaction
 from backend.services.reasoning_router import reasoning_router
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # ═══════════════════════════════════════════════════════════════════════════════
-# HEXAGON CONVERSATION ENGINE V3 — Reasoning-First Architecture
+# HEXAGON CONVERSATION ENGINE V4.2 — Psychological Sharpness + Compact Prompts
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# V3 Flow:
+# V4.2 Flow (reasoning in Python, generation in LLM):
 #   prospect_message
-#   → identify_hidden_concern
-#   → identify_missing_information
-#   → choose_conversation_goal
-#   → choose_response_type
-#   → generate_response
+#   → identify_hidden_concern  (reasoning_router)
+#   → choose_conversation_goal (Python)
+#   → choose_response_type     (Python)
+#   → select_response_energy   (intent-driven map)
+#   → generate_response        (LLM — compact prompt, generation-only)
 #
-# This replaces the V2 strategy-first flow (prospect → strategy → response)
-# which produced generic reframes, consultant language, and conversation stalls.
+# V4.2 upgrades over V3:
+#   - ~70% smaller system prompt (removed duplicated reasoning)
+#   - Intent-driven response energy (not random)
+#   - Psychologically sharper fallback responses
+#   - "Experienced operator" tone (not alpha/guru)
+#   - Compressed persuasion bias
+#   - All stability systems preserved
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -173,6 +185,33 @@ V3_SCORING_WEIGHTS = {
     "brevity":      0.10,
 }
 
+# ─── V4.2: Intent-Driven Response Energy Map ─────────────────────────────────
+ENERGY_MAP = {
+    "trust_issue":          "calm_authority",
+    "budget":               "perspective_shift",
+    "pricing":              "perspective_shift",
+    "need_to_think":        "controlled_challenge",
+    "delay":                "controlled_challenge",
+    "not_interested":       "sharp_minimal",
+    "rejection":            "sharp_minimal",
+    "already_have_vendor":  "perspective_shift",
+    "status_quo":           "perspective_shift",
+    "direct_question":      "calm_authority",
+    "curiosity":            "calm_authority",
+    "risk":                 "calm_authority",
+    "roi":                  "perspective_shift",
+    "authority":            "controlled_challenge",
+    "doing_fine":           "perspective_shift",
+    "unknown":              "sharp_minimal",
+}
+
+ENERGY_DEFINITIONS = {
+    "calm_authority": "grounded, experienced, confident without forcing",
+    "controlled_challenge": "gently challenge assumptions, expose weak logic calmly",
+    "perspective_shift": "reframe the situation, redirect thinking",
+    "sharp_minimal": "fewer words, high conviction, direct impact",
+}
+
 
 def _detect_hidden_concern(text: str) -> dict:
     """V3 Reasoning Step 1: Identify what the prospect is really protecting."""
@@ -200,8 +239,31 @@ def _select_response_type(conversation_goal: str, concern_type: str, hidden_conc
 
 class SalesAIEngine:
     def __init__(self, call_context: dict[str, Any] | None = None, mode: str = "live"):
-        self.call_context = call_context
+        self.call_context = call_context or {}
         self.mode = mode
+        self.sim_config = None
+        self.banned_sim_phrases = []
+        if self.mode == "simulation":
+            try:
+                sim_yaml_path = os.path.join(os.path.dirname(__file__), "..", "..", "yaml_folder", "HEXAGON_SIMULATION_CONTEXT_ISOLATION_V1.yaml")
+                with open(sim_yaml_path, "r", encoding="utf-8") as f:
+                    self.sim_config = yaml.safe_load(f)
+            except Exception as e:
+                print(f"[WARNING] Could not load simulation config: {e}")
+                
+            if self.sim_config:
+                sim_prof = self.sim_config.get("simulation_profile", {})
+                self.call_context["product_name"] = sim_prof.get("product", "oat_milk")
+                self.call_context["customer_type"] = sim_prof.get("customer", "local_cafe_owner")
+                self.call_context["industry"] = sim_prof.get("industry", "cafe")
+                self.call_context["prospect_type"] = sim_prof.get("prospect_type", "cafe_owner")
+                
+                interview_cleanup = self.sim_config.get("interview_mode_cleanup", {})
+                self.banned_sim_phrases = [p.replace("_", " ") for p in interview_cleanup.get("ban_phrases", [])]
+                
+                reject = self.sim_config.get("response_validation", {}).get("before_returning_response", {}).get("reject_if_contains", [])
+                self.banned_sim_phrases.extend([p.replace("_", " ").lower() for p in reject])
+
         self.message_buffer: list[dict[str, Any]] = []
         self.response_history: list[str] = []
         self.last_goals: list[str] = []
@@ -215,22 +277,24 @@ class SalesAIEngine:
         }
 
         self.max_messages = 8
-        self.max_latency = 8.0
+        self.max_latency = 15.0
         self._last_call_time: float = 0.0
         self._cooldown_secs: float = 2.0
 
-        # Initialize Gemini client
-        api_key = os.getenv("GEMINI_API_KEY")
+        # Initialize AI client (using Groq)
+        groq_key = os.getenv("GROQ_API_KEY")
 
-        if api_key:
+        if groq_key:
             self.client = AsyncOpenAI(
-                api_key=api_key,
-                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+                api_key=groq_key,
+                base_url="https://api.groq.com/openai/v1"
             )
-            print(f"[AI_CLIENT] Gemini client initialized for {self.mode} mode with key: {api_key[:8]}...")
+            self.model = "llama-3.3-70b-versatile"
+            print(f"[AI_CLIENT] Groq client initialized for {self.mode} mode using llama-3.3-70b-versatile.")
         else:
             self.client = None
-            print(f"[AI_CLIENT] WARNING: Gemini API key not found for {self.mode} mode — LLM calls will use fallback.")
+            self.model = None
+            print(f"[AI_CLIENT] WARNING: No Groq API key found for {self.mode} mode — LLM calls will use fallback.")
 
         self.rag = RAGEngine()
         self.rag.load_index()
@@ -280,39 +344,80 @@ class SalesAIEngine:
         goal = _select_conversation_goal(hidden, self.deal_state["stage"])
         response_type = _select_response_type(goal, hidden["type"], hidden)
 
-        # V3 fallback responses — diagnostic, not persuasive
+        # V4.2 fallback responses — psychologically sharp, reasoning-aware
         fallback_responses = {
+            "pricing": [
+                "If the price feels high, the value usually isn't fully clear yet.",
+                "Most pricing hesitation comes from uncertainty around outcomes.",
+                "The bigger cost is usually staying with what isn't fully working.",
+            ],
             "budget": [
-                "If we could prove the ROI made sense, would budget still be the main hurdle?",
-                "Is the concern the actual cost, or just making sure it pays off?",
+                "If the price feels high, the value usually isn't fully clear yet.",
+                "Most pricing hesitation comes from uncertainty around outcomes.",
+                "The bigger cost is usually staying with what isn't fully working.",
             ],
-            "doing_fine": [
-                "Glad to hear things are stable. Is there any specific area you're still trying to optimize?",
-                "That's great. What's the main metric you're using to measure that success?",
+            "authority": [
+                "When decisions slow down, there's usually one unresolved concern underneath.",
+                "Sounds like alignment matters here more than timing.",
             ],
-            "not_interested": [
-                "No problem at all. Just curious, what would have to change for this to be relevant?",
-                "Got it. Is it just bad timing, or does this just not fit your current strategy?",
+            "delay": [
+                "Usually there's one real hesitation underneath everything else.",
+                "Being unsure is normal when the outcome still feels uncertain.",
+                "Sounds like something still isn't fully clicking yet.",
             ],
             "need_to_think": [
-                "Makes total sense. What's the main thing you want to mull over?",
-                "Absolutely. Is there a specific part of this that isn't sitting right yet?",
+                "Usually there's one real hesitation underneath everything else.",
+                "Being unsure is normal when the outcome still feels uncertain.",
+                "Sounds like something still isn't fully clicking yet.",
+            ],
+            "status_quo": [
+                "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
+                "Doing things internally works — until growth exposes the gaps.",
+            ],
+            "doing_fine": [
+                "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
+                "Doing things internally works — until growth exposes the gaps.",
             ],
             "already_have_vendor": [
-                "Makes sense to stick with who you know. Are they handling everything you need right now?",
-                "Understood. Is there anything you wish your current setup did slightly better?",
+                "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
+                "Doing things internally works — until growth exposes the gaps.",
+            ],
+            "not_interested": [
+                "Feels like there's one important thing not fully aligned yet.",
+                "Something underneath this still seems unresolved.",
+            ],
+            "rejection": [
+                "Feels like there's one important thing not fully aligned yet.",
+                "Something underneath this still seems unresolved.",
             ],
             "trust_issue": [
-                "I get the skepticism. What kind of proof would actually make you feel comfortable?",
-                "Totally fair. What's the biggest risk you see in moving forward with something like this?",
+                "Trust usually breaks down when previous experiences didn't deliver.",
+                "Skepticism makes sense — the real question is what proof would matter to you.",
+            ],
+            "trust": [
+                "Trust usually breaks down when previous experiences didn't deliver.",
+                "Skepticism makes sense — the real question is what proof would matter to you.",
+            ],
+            "risk": [
+                "Usually there's one real hesitation underneath everything else.",
+                "Sounds like something still isn't fully clicking yet.",
+            ],
+            "roi": [
+                "If the price feels high, the value usually isn't fully clear yet.",
+                "The bigger cost is usually staying with what isn't fully working.",
             ],
             "direct_question": [
-                "To give you the most accurate answer, could you share a bit more context on your current setup?",
-                "That depends on your specific use case. How are you currently handling this?",
+                "To give you an honest answer, I'd need a bit more context on your current setup.",
+                "That depends on where things stand right now. How are you currently handling this?",
+            ],
+            "curiosity": [
+                "Good question. Let me give you the short version.",
+                "That's worth unpacking — here's what actually matters.",
             ],
             "unknown": [
-                "Could you elaborate a bit more on that?",
-                "I want to make sure I fully understand. Can you walk me through what you mean?",
+                "Feels like there's one important thing not fully aligned yet.",
+                "Something underneath this still seems unresolved.",
+                "Usually hesitation points to one core concern.",
             ],
         }
 
@@ -423,6 +528,11 @@ class SalesAIEngine:
         # Step 5: Determine if we should ask a question
         should_include_question = goal in ["diagnose", "clarify", "uncover_priority", "understand_gap"] or hidden["type"] == "unknown"
 
+        # V4.2: Intent-driven response energy (not random)
+        response_energy = ENERGY_MAP.get(hidden["type"], "sharp_minimal")
+        energy_description = ENERGY_DEFINITIONS.get(response_energy, "")
+        print(f"[V4.2_ENERGY] {hidden['type']} -> {response_energy}")
+
         # ── Build RAG context ────────────────────────────────────────────────
         rag_results = self.rag.retrieve(text)
         rag_context = "\n".join([
@@ -432,153 +542,96 @@ class SalesAIEngine:
 
         context_str = ""
         if self.call_context:
-            context_str = "\nCALL CONTEXT:\n" + json.dumps(self.call_context)
+            context_str = "\\nCALL CONTEXT:\\n" + json.dumps(self.call_context)
+
+        sim_guardrails = ""
+        if self.mode == "simulation" and self.sim_config:
+            guard = self.sim_config.get("context_guardrail", {})
+            allowed = ", ".join(guard.get("allowed_topics", []))
+            forbidden = ", ".join(guard.get("forbidden_topics", []))
+            
+            sim_guardrails += f"\\nSIMULATION MODE ACTIVE (STRICT ISOLATION)\\n"
+            sim_guardrails += f"Product: {self.call_context.get('product_name')}\\n"
+            sim_guardrails += f"Industry: {self.call_context.get('industry')}\\n"
+            sim_guardrails += f"Prospect: {self.call_context.get('prospect_type')}\\n"
+            sim_guardrails += f"Allowed Topics: {allowed}\\n"
+            sim_guardrails += f"Forbidden Topics: {forbidden}\\n"
+            sim_guardrails += "NEVER mention Hexagon_AI, Acme_Corp, machine_learning, AI_assistant, SaaS, software_platform, dashboard, or analytics.\\n"
+            sim_guardrails += "Every response MUST sound like a cafe_salesperson, NEVER like a SaaS_demo or AI_assistant.\\n"
+            sim_guardrails += "Preferred patterns: observation, perspective_shift, answer_first, concise_reframe, one_targeted_question.\\n"
 
         avoid_goals = ", ".join(self.last_goals) if self.last_goals else "None"
 
         # ── Build conversation history ───────────────────────────────────────
         prev_context = list(self.message_buffer[:-1])
 
-        print("\n=== V3 DEBUG INFO ===")
+        print("\n=== V4.2 DEBUG INFO ===")
         print("Transcript       :", text)
         print("Hidden Concern   :", hidden)
         print("Conversation Goal:", goal)
         print("Response Type    :", response_type)
+        print("Response Energy  :", response_energy)
         print("Deal State       :", self.deal_state)
         print("Question Required:", should_include_question)
-        print("=====================\n")
+        print("========================\n")
 
-        # ── V3 System Prompt ─────────────────────────────────────────────────
-        system_content = f"""You are Hexagon — a reasoning-first conversational sales AI.
+        # ── V4.2 System Prompt — Compact, generation-focused ──────────────────
+        system_content = f"""You are "Hexagon CloserBrain" — a B2B sales intelligence engine.
 
-═══ CORE PHILOSOPHY ═══
-You do NOT pick a strategy and generate a response.
-You THINK first, then respond.
-Understand before persuading.
-Answer before diagnosing.
-Clarify only when needed.
-Questions are tools, not requirements.
+IDENTITY:
+You sound like an experienced operator — confident, direct, conversational.
+Not a consultant, therapist, or motivational speaker.
 
-Success is NOT: prospect objects → AI reframes.
-Success IS: prospect objects → AI understands → AI diagnoses → AI guides.
+TONE:
+- calm authority
+- conversational
+- slightly sharp
+- never needy or overly polite
 
-═══ YOUR IDENTITY ═══
-You sound like: a founder, an operator, an experienced closer.
-You do NOT sound like: a consultant, a therapist, a LinkedIn creator, a motivational speaker.
-Reading level: SIMPLE. Tone: CONVERSATIONAL. Sound HUMAN natively (no injected filler phrases).
+RESPONSE ENERGY: {response_energy}
+({energy_description})
 
-═══ REASONING ENGINE (you must do this before responding) ═══
-Before generating any response, answer these 4 questions internally:
+RESPONSE STRUCTURE:
+Start with an insight, observation, reframe, or challenge.
+Then optionally ask ONE focused question.
+Guide the conversation — do not react or interview.
 
-1. What is the prospect protecting?
-   → Answer: {hidden['hidden_concern']}
+RESPONSE RULES:
+- 1–2 sentences ideal. 3 max.
+- Compressed persuasion > long explanation.
+- Perspective shifts > feature explanations.
+- Strong responses use 8–20 impactful words.
+- Answer direct questions FIRST, then follow up.
+- {"A question is recommended here to gain clarity." if should_include_question else "Questions are optional — don't force one."}
 
-2. What are they worried about?
-   → Their surface objection maps to: {hidden['type']}
+AVOID:
+"What specific...", "I understand your concern", "Let's explore",
+"Our solution helps", "This can improve", "Fair question",
+"Help me understand", "Out of curiosity"
 
-3. What information am I missing?
-   → Think: what don't I know yet that would change my approach?
+{f'RAG HINTS: {rag_context}' if rag_context.strip() else ''}
+{sim_guardrails}
 
-4. Should I clarify or answer first?
-   → Default rule: IF they ask a direct question → ANSWER IT. IF information is missing → ask a diagnostic question.
-
-═══ RESPONSE PRIORITY ═══
-1. answer_direct_questions_first
-2. address_objections_second
-3. diagnose_third
-4. create_curiosity_fourth
-5. advance_conversation_fifth
-
-═══ CONVERSATION GOAL FOR THIS RESPONSE ═══
-Goal: {goal} — {CONVERSATION_GOALS.get(goal, '')}
-Response Type: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
-
-═══ AVAILABLE RESPONSE TYPES ═══
-- direct_answer: Answer a question directly without avoiding it
-- objection_response: Directly address a stated concern or objection
-- diagnostic_question: Ask a question that reveals the real issue
-- perspective_shift: Reframe how they see the situation
-- assumption_challenge: Challenge a belief without being confrontational
-- consequence_exploration: Help them see the cost of doing nothing
-- future_projection: Paint a picture of what changes if they act
-- risk_reversal: Remove the perceived risk of taking action
-
-═══ MANDATORY QUESTION ENGINE ═══
-{"A question is recommended here to gain clarity." if should_include_question else "Questions are OPTIONAL. Do not force a question if the natural conversation progresses without one."}
-
-═══ HIDDEN CONCERN MAPPING ═══
-- budget → hidden concern: uncertain ROI → goal: diagnose
-- doing_fine → hidden concern: status quo protection → goal: define success
-- not_interested → hidden concern: low priority → goal: uncover priority
-- need_to_think → hidden concern: unresolved risk → goal: isolate concern
-- already_have_vendor → hidden concern: switching risk → goal: understand gap
-- trust_issue → hidden concern: fear of bad decision → goal: identify trust gap
-- direct_question → hidden concern: missing information → goal: answer
-
-═══ LANGUAGE RULES ═══
-FORBIDDEN PHRASES (NEVER use):
-- operationally, implementation efficiency, optimize workflow
-- strategic alignment, value proposition, key metrics
-- business optimization, customer engagement
-- "usually when", "most teams", "most businesses"
-- "the reality is", "in practice,"
-- "I understand your concern", "I hear hesitation"
-- "It sounds like you're", "Feels like you're"
-- "Fair question", "Out of curiosity", "Help me understand", "Let me ask you something"
-
-═══ EXAMPLE TRANSFORMATIONS ═══
-BAD: "Budgets are usually tight when ROI is unclear."
-GOOD: "If this somehow paid for itself in three months, would budget still be the issue — or is the real concern whether it works?"
-
-BAD (Direct Question):
-prospect: "How many customers will I get?"
-ai: "If you could change one thing about your business..."
-GOOD (Direct Question):
-prospect: "How many customers will I get?"
-ai: "I can't honestly promise a specific number. What I can do is help estimate the opportunity based on your current customer flow. How many new customers do you typically get each month?"
-
-═══ RESPONSE RULES ═══
-- 1-2 sentences is ideal. 3 sentences max.
-- Compressed insight > long explanation.
-- Sound like a real person having a real conversation.
-- Never start with "I understand" or "It sounds like."
-- If answering a direct question, give the direct answer FIRST, then optionally ask a follow-up.
-
-═══ QUALITY SCORING (optimize for this) ═══
-- Diagnosis weight: 0.35 — Does the response actually understand the real issue?
-- Curiosity weight: 0.25 — Does the response create genuine curiosity?
-- Human sound weight: 0.20 — Does it sound like a real person?
-- Persuasion weight: 0.10 — Does it move the conversation forward?
-- Brevity weight: 0.10 — Is it compressed and punchy?
-
-RAG INSIGHTS (use as hints, never repeat verbatim):
-{rag_context}
-
-CURRENT DEAL STATE:
-- Stage: {self.deal_state["stage"]}
-- Pressure Level: {self.deal_state["pressure_level"]}
-- Hidden Concerns Found: {', '.join(self.deal_state['hidden_concerns_identified']) or 'None yet'}
-- Avoid recently used goals: [{avoid_goals}]
-
+DEAL STATE: {self.deal_state['stage']} | Pressure: {self.deal_state['pressure_level']} | Avoid goals: [{avoid_goals}]
 {context_str}
 
-OUTPUT JSON (strict format):
+OUTPUT JSON:
 {{
-  "intent": "the prospect's surface intent (e.g., pricing, trust, hesitation, interest, confusion, neutral)",
-  "stage": "current deal stage (discovery, objection, closing)",
-  "strategy": "response type used (e.g., DIAGNOSTIC_QUESTION, PERSPECTIVE_SHIFT, etc.)",
+  "intent": "surface intent",
+  "stage": "deal stage",
+  "strategy": "response type used",
   "confidence": 0.0,
-  "response": "your actual response text — 1-3 sentences max",
-  "next_question": "the diagnostic/reflection/clarification/consequence question (if applicable)",
-  "coaching_tip": "brief tactical advice for the sales rep",
-  "hidden_concern": "the real underlying concern you identified",
-  "conversation_goal": "the goal you pursued with this response",
-  "response_type": "which response type you used",
+  "response": "1-3 sentences max",
+  "next_question": "optional follow-up question",
+  "coaching_tip": "brief rep advice",
+  "hidden_concern": "underlying concern",
+  "conversation_goal": "goal pursued",
+  "response_type": "type used",
   "reasoning_chain": {{
     "what_are_they_protecting": "...",
     "what_are_they_worried_about": "...",
     "what_information_am_i_missing": "...",
-    "should_i_diagnose_first": true/false
+    "should_i_diagnose_first": true
   }},
   "quality_scores": {{
     "diagnosis": 0.0,
@@ -590,27 +643,25 @@ OUTPUT JSON (strict format):
 }}"""
 
         prompt = f"""
-Conversation Buffer:
-{json.dumps(prev_context)}
+Conversation: {json.dumps(prev_context)}
 
-LATEST PROSPECT MESSAGE:
-"{text}"
+PROSPECT: "{text}"
 
-IDENTIFIED HIDDEN CONCERN: {hidden['hidden_concern']}
-CONVERSATION GOAL: {goal}
-RESPONSE TYPE TO USE: {response_type}
+REASONING (pre-computed):
+- Hidden concern: {hidden['hidden_concern']}
+- Surface intent: {hidden['type']}
+- Goal: {goal} — {CONVERSATION_GOALS.get(goal, '')}
+- Response type: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
+- Energy: {response_energy}
 
-CRITICAL RULE: Think before you respond. Answer before you diagnose.
-If they asked a direct question, answer it directly. If information is missing, ask a diagnostic question.
-
-Output strictly conforming JSON.
+Generate response. Answer direct questions first. Output strict JSON.
 """
 
         for attempt in range(2):
             try:
                 llm_response = await asyncio.wait_for(
                     self.client.chat.completions.create(
-                        model="gemini-3.5-flash",
+                        model=self.model,
                         messages=[
                             {"role": "system", "content": system_content},
                             {"role": "user", "content": prompt},
@@ -642,7 +693,8 @@ Output strictly conforming JSON.
 
                 # V3 GPT Detox — ban consultant/therapist/corporate patterns
                 response_lower = suggested_resp.lower()
-                if any(p in response_lower for p in BANNED_PATTERNS):
+                banned_total = BANNED_PATTERNS + (self.banned_sim_phrases if self.mode == "simulation" else [])
+                if any(p in response_lower for p in banned_total):
                     print("[REWRITE_TRIGGER] V3 GPT-detox: banned pattern detected, using fallback")
                     return self.smart_fallback(text)
 
