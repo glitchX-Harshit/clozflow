@@ -11,65 +11,7 @@
     width: 100%;
 }
 
-/* ── Editorial Header Deck ──────────────────────────────────────── */
-.lf__header-deck {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 3rem;
-    align-items: end;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 2.5rem;
-}
 
-@media (max-width: 991px) {
-    .lf__header-deck {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding-bottom: 2rem;
-        margin-bottom: 2rem;
-    }
-}
-
-.lf__eyebrow {
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-display);
-}
-
-.lf__eyebrow-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-mid);
-    border-radius: 50%;
-    animation: lf-pulse 2s infinite ease-in-out;
-}
-
-.lf__title {
-    font-size: clamp(2.5rem, 5vw, 4.25rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-    margin: 0;
-    font-family: var(--font-display);
-    color: var(--text);
-}
-
-.lf__subtitle {
-    color: var(--text-dim);
-    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-    font-weight: 500;
-    line-height: 1.6;
-    margin: 0;
-    max-width: 600px;
-}
 
 /* ── Segmented Sliding Tabs ──────────────────────────────────────── */
 .lf__tabs-container {

@@ -296,12 +296,33 @@ const HistoryView = () => {
 
     return (
         <div className="animate-fade-in">
-            <div style={{ marginBottom:'3rem' }}>
-                <span style={{ fontSize:'0.64rem', fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--accent)', background:'var(--accent-dim)', padding:'0.3rem 0.875rem', borderRadius:99 }}>
-                    Session Intelligence
-                </span>
-                <h1 style={{ fontSize:'clamp(2rem,4vw,2.75rem)', fontWeight:900, letterSpacing:'-0.05em', margin:'1rem 0 0.5rem' }}>Call History</h1>
-                <p style={{ color:'var(--text-dim)', fontSize:'1rem' }}>Click any session for deep-session intelligence — transcript, strategy, momentum, and missed opportunities.</p>
+            {/* Awwwards-Grade Editorial Header */}
+            <div className="editorial-header">
+                <div className="editorial-title-area">
+                    <div className="editorial-meta-label">
+                        <span className="editorial-meta-dot" />
+                        <span>SESSION LOGS / 02</span>
+                    </div>
+                    <h1 className="editorial-heading-hero">
+                        History<span className="editorial-period">.</span>
+                    </h1>
+                </div>
+                <div className="editorial-desc-area">
+                    <p className="editorial-desc-text">
+                        Deep-session records of parsed calls, showcasing conversation transcripts, psychological strategies, buyer momentum trackers, and custom growth analytics.
+                    </p>
+                    <div className="editorial-system-status">
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">TOTAL SESSIONS</span>
+                            <span className="editorial-status-val">{calls.length}</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">INTELLIGENCE STATE</span>
+                            <span className="editorial-status-val">PERSISTED</span>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <div style={{ display:'flex', flexDirection:'column', gap:'0.875rem' }}>

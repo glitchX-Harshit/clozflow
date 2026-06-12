@@ -1,0 +1,214 @@
+project: CLOZFLOW_OUTREACH_V2
+
+objective:
+make_outreach_feel_like_a_sales_workflow_not_an_ai_generator
+
+remove:
+
+* opening_style_dropdown
+* tone_dropdown
+* outreach_type_selector
+* manual_style_selection
+
+reason:
+
+users_should_not_configure_the_ai
+
+users_should_click_once_and_start_conversations
+
+new_flow:
+
+lead
+->
+generate_outreach
+->
+open_whatsapp
+->
+message_pre_filled
+->
+user_sends
+
+ui_changes:
+
+current:
+
+```
+lead
+  ->
+outreach
+  ->
+select_style
+  ->
+generate
+  ->
+copy
+  ->
+whatsapp
+```
+
+new:
+
+```
+lead
+  ->
+start_conversation_button
+  ->
+ai_generates_message
+  ->
+whatsapp_opens
+  ->
+message_already_in_input_box
+```
+
+button_label:
+
+"Start Conversation"
+
+secondary_button:
+
+"Regenerate Opening"
+
+whatsapp_integration:
+
+enabled: true
+
+format:
+
+```
+https://wa.me/{phone_number}?text={encoded_message}
+```
+
+generation_rules:
+
+objective:
+
+```
+generate_messages_that_get_replies
+```
+
+never:
+
+```
+- sound_like_marketing
+- sound_like_ai
+- sound_like_linkedin_post
+- compliment_for_no_reason
+- use_generic_flattery
+- use_fake_personalization
+```
+
+avoid_phrases:
+
+```
+- hope_you_are_doing_well
+- i_came_across_your_business
+- just_checking_in
+- quick_question
+- i_wanted_to_reach_out
+- i_help_businesses_like_yours
+```
+
+preferred_traits:
+
+```
+- natural
+- conversational
+- short
+- specific
+- low_pressure
+- curiosity_driven
+```
+
+message_structure:
+
+step_1:
+observation
+
+step_2:
+relevance
+
+step_3:
+low_friction_question
+
+examples:
+
+bad:
+
+```
+"Hi Rahul. I help cafes increase revenue through AI powered solutions. Would you be interested in learning more?"
+```
+
+bad:
+
+```
+"Hope you're doing well. I came across your business and wanted to reach out."
+```
+
+good:
+
+```
+"Hey Rahul, noticed Brew House has built a strong local reputation. Curious, do most new customers find you through word of mouth or Google these days?"
+```
+
+good:
+
+```
+"Saw the reviews on Brew House. Looks like you've built a loyal customer base. What's been the biggest driver behind that?"
+```
+
+good:
+
+```
+"Quick observation. Most cafes spend a lot getting first time customers and very little increasing repeat visits. Which side gets more attention for you?"
+```
+
+reply_likelihood_bias:
+
+prioritize:
+
+```
+- questions_people_can_answer_in_5_seconds
+- curiosity
+- business_observations
+```
+
+avoid:
+
+```
+- long_messages
+- sales_pitching
+- feature_talking
+- company_introductions
+```
+
+success_metric:
+
+not_meeting_booked
+
+first_goal:
+
+```
+get_reply
+```
+
+second_goal:
+
+```
+continue_conversation
+```
+
+third_goal:
+
+```
+discover_pain
+```
+
+future:
+
+after_reply:
+
+```
+clozflow_takes_over_with_sales_brain
+
+outreach_message_only_needs_to_earn_the_first_reply
+```

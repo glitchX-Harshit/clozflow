@@ -707,7 +707,7 @@ const LeadFinder = ({ onOutreach }) => {
             onOutreach(lead, effectiveOffer);
         } else {
             saveScrollState();
-            navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
+            navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer, query } });
         }
     };
 
@@ -801,19 +801,37 @@ const LeadFinder = ({ onOutreach }) => {
 
     return (
         <div className="lf">
-            {/* ── Editorial Header ── */}
-            <div className="lf__header-deck">
-                <div className="lf__header-left">
-                    <div className="lf__eyebrow">
-                        <span className="lf__eyebrow-dot" /> 
-                        <span>INTEL_SIGNAL // DISCOVERY ENGINE v2.5</span>
+            {/* ── Awwwards-Grade Minimal Header ── */}
+            <div className="editorial-header">
+                <div className="editorial-title-area">
+                    <div className="editorial-meta-label">
+                        <span className="editorial-meta-dot" />
+                        <span>DISCOVERY MODULE / 01</span>
                     </div>
-                    <h1 className="lf__title">Lead Finder</h1>
+                    <h1 className="editorial-heading-hero">
+                        Lead Finder<span className="editorial-period">.</span>
+                    </h1>
                 </div>
-                <div className="lf__header-right">
-                    <p className="lf__subtitle">
-                        Discover high-potential business leads instantly. Deployment of cognitive crawlers to analyze digital footprints, isolate performance gaps, and calculate service-fit conversions.
+                <div className="editorial-desc-area">
+                    <p className="editorial-desc-text">
+                        An autonomous intelligence layer designed to map local business footprints, quantify conversion deficiencies, and pre-structure outreach arguments.
                     </p>
+                    <div className="editorial-system-status">
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">STATUS</span>
+                            <span className="editorial-status-val">READY</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">ENGINE</span>
+                            <span className="editorial-status-val">HEX_V4</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">SPEED</span>
+                            <span className="editorial-status-val">124MS</span>
+                        </span>
+                    </div>
                 </div>
             </div>
 

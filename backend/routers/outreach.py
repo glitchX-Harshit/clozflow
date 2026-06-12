@@ -16,10 +16,8 @@ router = APIRouter(prefix="/outreach", tags=["outreach"])
 
 class OutreachGenerateRequest(BaseModel):
     lead_data: dict
-    channel: str                              
-    outreach_goal: str                        
-    outreach_strategy: str                    
-    user_offer: str = ""                      
+    channel: str = "whatsapp"
+    user_offer: str = ""
 
 
 class OutreachGenerateResponse(BaseModel):
@@ -72,28 +70,12 @@ async def generate_outreach_endpoint(request: OutreachGenerateRequest):
             detail=f"Invalid channel '{request.channel}'. Must be one of: {', '.join(valid_channels)}"
         )
 
-    valid_goals = ["start_conversation", "book_call", "follow_up", "re_engage"]
-    if request.outreach_goal.lower() not in valid_goals:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid outreach_goal '{request.outreach_goal}'. Must be one of: {', '.join(valid_goals)}"
-        )
-
-    valid_strategies = ["direct_observation", "curiosity_hook", "pattern_interrupt", "contrarian_observation", "founder_to_founder", "local_market_insight"]
-    if request.outreach_strategy.lower() not in valid_strategies:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid outreach_strategy '{request.outreach_strategy}'. Must be one of: {', '.join(valid_strategies)}"
-        )
-
     if not request.lead_data:
         raise HTTPException(status_code=400, detail="lead_data is required")
 
     result = await generate_outreach_message(
         lead_data=request.lead_data,
         channel=request.channel,
-        outreach_goal=request.outreach_goal,
-        outreach_strategy=request.outreach_strategy,
         user_offer=request.user_offer,
     )
     return result

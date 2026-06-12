@@ -97,17 +97,33 @@ const AnalyticsPage = () => {
     return (
         <>
         <div ref={pageRef} className="animate-fade-in">
-            {/* Header */}
-            <div style={{ marginBottom: '3.5rem' }}>
-                <span style={{ fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)', background: 'var(--accent-dim)', padding: '0.3rem 0.875rem', borderRadius: 99 }}>
-                    Intelligence Command Center
-                </span>
-                <h1 style={{ fontSize: 'clamp(2rem,4vw,2.875rem)', fontWeight: 900, letterSpacing: '-0.05em', margin: '1rem 0 0.625rem', lineHeight: 1.05 }}>
-                    Global Behavioral Intelligence
-                </h1>
-                <p style={{ color: 'var(--text-dim)', fontSize: '1rem', maxWidth: 580 }}>
-                    Psychologically aware analytics across all conversations — platform‑wide, not per‑call.
-                </p>
+            {/* Awwwards-Grade Editorial Header */}
+            <div className="editorial-header">
+                <div className="editorial-title-area">
+                    <div className="editorial-meta-label">
+                        <span className="editorial-meta-dot" />
+                        <span>ANALYTICS COMMAND / 03</span>
+                    </div>
+                    <h1 className="editorial-heading-hero">
+                        Intelligence<span className="editorial-period">.</span>
+                    </h1>
+                </div>
+                <div className="editorial-desc-area">
+                    <p className="editorial-desc-text">
+                        Platform-wide behavioral metrics, mapping emotional trends, decoding active buying cues, and coaching agents on psychological leverage.
+                    </p>
+                    <div className="editorial-system-status">
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">ACCURACY</span>
+                            <span className="editorial-status-val">99.8%</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">TRACKERS</span>
+                            <span className="editorial-status-val">ACTIVE</span>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             {/* 1 — CLOSE RATE */}

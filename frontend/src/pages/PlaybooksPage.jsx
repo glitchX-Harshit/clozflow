@@ -170,17 +170,33 @@ const PlaybooksPage = () => {
 
     return (
         <div className="animate-fade-in">
-            {/* Header */}
-            <div style={{ marginBottom:'2.5rem' }}>
-                <span style={{ fontSize:'0.64rem', fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--accent)', background:'var(--accent-dim)', padding:'0.3rem 0.875rem', borderRadius:99 }}>
-                    Persuasion Intelligence Vault
-                </span>
-                <h1 style={{ fontSize:'clamp(2rem,4vw,2.875rem)', fontWeight:900, letterSpacing:'-0.05em', margin:'1rem 0 0.625rem', lineHeight:1.05 }}>
-                    Tactical Playbooks
-                </h1>
-                <p style={{ color:'var(--text-dim)', fontSize:'1rem', maxWidth:560, margin:0 }}>
-                    Tactical frameworks decoded from elite sessions. The psychological response protocols for every difficult moment.
-                </p>
+            {/* Awwwards-Grade Editorial Header */}
+            <div className="editorial-header">
+                <div className="editorial-title-area">
+                    <div className="editorial-meta-label">
+                        <span className="editorial-meta-dot" />
+                        <span>PERSUASION VAULT / 04</span>
+                    </div>
+                    <h1 className="editorial-heading-hero">
+                        Playbooks<span className="editorial-period">.</span>
+                    </h1>
+                </div>
+                <div className="editorial-desc-area">
+                    <p className="editorial-desc-text">
+                        Tactical frameworks decoded from high-performing sales conversations, providing precise psychological response protocols for every critical deal pivot.
+                    </p>
+                    <div className="editorial-system-status">
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">PLAYBOOKS</span>
+                            <span className="editorial-status-val">5 ACTIVE</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">MODE</span>
+                            <span className="editorial-status-val">TACTICAL</span>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <div className="pb-layout">

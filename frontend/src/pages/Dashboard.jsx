@@ -77,19 +77,17 @@ const STATS_DATA = [
 
 const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) => (
     <div className="animate-fade-in">
-        {/* Header Grid Section */}
-        <div className="db-header-grid">
-            <div className="db-header-left">
-                <div className="db-header-eyebrow">
-                    Behavioral Deal Intelligence
+        {/* Awwwards-Grade Editorial Header */}
+        <div className="editorial-header">
+            <div className="editorial-title-area">
+                <div className="editorial-meta-label">
+                    <span className="editorial-meta-dot" />
+                    <span>INTELLIGENCE COCKPIT / 00</span>
                 </div>
-                <h1 className="db-header-title">
-                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}.
+                <h1 className="editorial-heading-hero">
+                    Overview<span className="editorial-period">.</span>
                 </h1>
-                <p className="db-header-subtitle">
-                    The intelligence layer is active. Decoding hesitation, mapping momentum, and identifying the psychological path to the close.
-                </p>
-                <div className="db-header-actions">
+                <div className="db-header-actions" style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
                     <MagButton
                         label="Start Strategic Mode"
                         variant="dark"
@@ -105,33 +103,25 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) =
                     />
                 </div>
             </div>
-
-            {/* Telemetry Card */}
-            <div className="db-telemetry-card">
-                <div className="db-telemetry-header">
-                    <span className="db-telemetry-title">System Status HUD</span>
-                    <div className="db-status-badge">
-                        <span className="db-status-dot animated-pulse"></span>
-                        <span>ONLINE</span>
-                    </div>
-                </div>
-                <div className="db-telemetry-body">
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Cognitive Engine</span>
-                        <span className="val success">ACTIVE</span>
-                    </div>
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Live Decoders</span>
-                        <span className="val">Objection, Pace, Cue</span>
-                    </div>
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Analysis Queue</span>
-                        <span className="val code">0 Pending</span>
-                    </div>
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Sync Latency</span>
-                        <span className="val code">28ms</span>
-                    </div>
+            <div className="editorial-desc-area">
+                <p className="editorial-desc-text">
+                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. The Deal Intelligence layer is currently active, scanning live conversations, decoding conversational friction, and mapping close velocities.
+                </p>
+                <div className="editorial-system-status">
+                    <span className="editorial-status-item">
+                        <span className="editorial-status-lbl">SYSTEM</span>
+                        <span className="editorial-status-val">ONLINE</span>
+                    </span>
+                    <span className="editorial-status-divider">/</span>
+                    <span className="editorial-status-item">
+                        <span className="editorial-status-lbl">DECODERS</span>
+                        <span className="editorial-status-val">ACTIVE</span>
+                    </span>
+                    <span className="editorial-status-divider">/</span>
+                    <span className="editorial-status-item">
+                        <span className="editorial-status-lbl">LATENCY</span>
+                        <span className="editorial-status-val">28MS</span>
+                    </span>
                 </div>
             </div>
         </div>
