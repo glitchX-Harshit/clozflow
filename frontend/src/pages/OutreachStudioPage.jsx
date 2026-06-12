@@ -127,6 +127,13 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
         }
     }, [lead, userOffer, targetPhone]);
 
+    // Automatically trigger generation on mount if not already done
+    useEffect(() => {
+        if (lead && !generatedMessage && !generating && !error) {
+            handleGenerate(false);
+        }
+    }, [lead, generatedMessage, generating, error, handleGenerate]);
+
     const handleCopy = useCallback((text) => {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
@@ -155,134 +162,75 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
         <div className={`os-v3-wrapper ${propLead ? 'os-v3-wrapper--nested' : ''}`}>
             <div className="os-v3-ambient-glow" />
             
-            <button className="os-v3-back" onClick={onBackClick}>
-                <ArrowLeft size={16} strokeWidth={2.5} />
-                <span>Back</span>
-            </button>
+            <div className="os-v3-workspace-header">
+                <button className="os-v3-back" onClick={onBackClick}>
+                    <ArrowLeft size={16} strokeWidth={2.5} />
+                    <span>Back to Discovery</span>
+                </button>
+            </div>
 
-            <div className="os-v3-container animate-fade-in-up">
+            <div className="os-v3-workspace animate-fade-in-up">
                 
-                {/* Header */}
-                <div className="os-v3-header">
-                    <div className="os-v3-logo-box">
-                        <MessageCircle size={28} className="os-v3-logo-icon" />
-                    </div>
-                    <div className="os-v3-header-text">
-                        <h2 className="os-v3-title">{lead.business_name}</h2>
-                        <p className="os-v3-subtitle">
-                            AI-powered sales conversion engine
-                        </p>
-                    </div>
-                </div>
-
-                {error && (
-                    <div className="os-v3-error">
-                        <AlertTriangle size={18} />
-                        {error}
-                    </div>
-                )}
-
-                {/* Initial State / Generate Action */}
-                {!generatedMessage ? (
-                    <div className="os-v3-action-panel">
-                        <div className="os-v3-action-illustration">
-                            <div className="os-v3-pulse-ring" />
-                            <Sparkles size={48} className="os-v3-action-icon" />
+                {/* Left Side: Message Composer & Recipient Input */}
+                <div className="os-v3-main-pane">
+                    
+                    {error && (
+                        <div className="os-v3-error">
+                            <AlertTriangle size={18} />
+                            <span>{error}</span>
                         </div>
-                        <h3 className="os-v3-action-title">Ready to engage</h3>
-                        <p className="os-v3-action-desc">
-                            We will analyze {lead.business_name}'s digital footprint, spot a revenue gap, and craft a message designed to earn a reply in seconds.
-                        </p>
-                        
-                        <div style={{ width: '100%', maxWidth: '320px', marginBottom: '1.5rem', textAlign: 'left' }}>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-                                <Phone size={14} /> WhatsApp Number
-                            </label>
-                            <input 
-                                type="text"
-                                value={targetPhone}
-                                onChange={(e) => setTargetPhone(e.target.value)}
-                                placeholder="Include country code (e.g., 919876543210)"
-                                className="os-v3-message-input"
-                                style={{ minHeight: 'auto', padding: '0.85rem', fontSize: '1rem' }}
-                            />
-                        </div>
-                        
-                        <button 
-                            className={`os-v3-primary-btn ${generating ? 'loading' : ''}`}
-                            onClick={() => handleGenerate(true)}
-                            disabled={generating || !targetPhone}
-                        >
-                            {generating ? (
-                                <><Loader2 size={20} className="spin" /> Synthesizing Strategy...</>
-                            ) : (
-                                <><Send size={18} /> Start Conversation</>
-                            )}
-                        </button>
-                    </div>
-                ) : (
-                    /* Result State */
-                    <div className="os-v3-result-panel animate-fade-in-up">
-                        
-                        {/* The Message Box */}
-                        <div className="os-v3-message-box">
-                            <div className="os-v3-message-header">
-                                <span className="os-v3-badge"><Sparkles size={12}/> AI Crafted</span>
-                                <div className="os-v3-message-actions">
-                                    <button className="os-v3-icon-btn" onClick={() => handleCopy(messageText)} title="Copy">
-                                        {copied ? <CheckCircle2 size={16} color="#10b981"/> : <Copy size={16} />}
-                                    </button>
-                                    <button className="os-v3-icon-btn" onClick={() => setIsEditing(!isEditing)} title="Edit">
-                                        <Edit3 size={16} />
-                                    </button>
-                                </div>
+                    )}
+
+                    <div className="os-v3-section-card">
+                        <div className="os-v3-section-header">
+                            <span className="os-v3-badge"><Sparkles size={12}/> AI Outreach Editor</span>
+                            <div className="os-v3-message-actions">
+                                <button className="os-v3-icon-btn" onClick={() => handleCopy(messageText)} title="Copy message">
+                                    {copied ? <CheckCircle2 size={16} color="#10b981"/> : <Copy size={16} />}
+                                </button>
+                                <button className="os-v3-icon-btn" onClick={() => setIsEditing(!isEditing)} title={isEditing ? "Save & View" : "Edit message"}>
+                                    <Edit3 size={16} />
+                                </button>
                             </div>
-                            
-                            {isEditing ? (
-                                <textarea
-                                    className="os-v3-message-input"
-                                    value={editedMessage}
-                                    onChange={(e) => setEditedMessage(e.target.value)}
-                                    autoFocus
-                                />
-                            ) : (
-                                <p className="os-v3-message-content">{messageText}</p>
-                            )}
                         </div>
 
-                        {/* Intelligence Grid */}
-                        <div className="os-v3-intelligence">
-                            <div className="os-v3-intel-card">
-                                <h4>Observation Angle</h4>
-                                <p>{generatedMessage.observation}</p>
-                            </div>
-                            <div className="os-v3-intel-card">
-                                <h4>Predicted Reply</h4>
-                                <p>"{generatedMessage.likely_reply}"</p>
-                                {generatedMessage.likely_response_rate && (
-                                    <span className={`os-v3-rate-badge rate-${generatedMessage.likely_response_rate.toLowerCase()}`}>
-                                        <TrendingUp size={12} /> {generatedMessage.likely_response_rate} Probability
-                                    </span>
+                        {generating && !generatedMessage ? (
+                            <div className="os-v3-skeleton-message" />
+                        ) : (
+                            <div className="os-v3-editor-wrapper">
+                                {isEditing ? (
+                                    <textarea
+                                        className="os-v3-message-input"
+                                        value={editedMessage}
+                                        onChange={(e) => setEditedMessage(e.target.value)}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <p className="os-v3-message-content">
+                                        {messageText || "No message generated yet. Click Regenerate below to create one."}
+                                    </p>
                                 )}
                             </div>
-                        </div>
-                        
-                        {/* Target Phone Input before sending */}
-                        <div style={{ marginTop: '0.5rem' }}>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-dim)', marginBottom: '0.5rem' }}>
-                                <Phone size={14} /> Send to WhatsApp Number
+                        )}
+                    </div>
+
+                    {/* Recipient Details & WhatsApp Dispatch */}
+                    <div className="os-v3-section-card">
+                        <h3 className="os-v3-section-title">Outbound Channel Settings</h3>
+                        <div className="os-v3-form-group">
+                            <label className="os-v3-input-label">
+                                <Phone size={14} /> <span>WhatsApp Phone Number (with Country Code)</span>
                             </label>
                             <input 
                                 type="text"
                                 value={targetPhone}
                                 onChange={(e) => setTargetPhone(e.target.value)}
-                                placeholder="Include country code (e.g., 919876543210)"
-                                className="os-v3-message-input"
-                                style={{ minHeight: 'auto', padding: '0.85rem', fontSize: '1rem', width: '100%' }}
+                                placeholder="Include country code (e.g., +14155551234 or +919876543210)"
+                                className="os-v3-text-field"
                             />
                         </div>
 
-                        {/* Bottom Actions */}
+                        {/* Dispatch Button Grid */}
                         <div className="os-v3-bottom-actions">
                             <button 
                                 className="os-v3-secondary-btn" 
@@ -290,19 +238,101 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                                 disabled={generating}
                             >
                                 {generating ? <Loader2 size={18} className="spin"/> : <RefreshCw size={18} />}
-                                Regenerate Opening
+                                <span>Regenerate Hook</span>
                             </button>
                             <button 
                                 className="os-v3-primary-btn" 
                                 onClick={openWhatsApp}
-                                disabled={!targetPhone}
+                                disabled={!targetPhone || generating}
                             >
                                 <MessageCircle size={18} /> 
-                                Open in WhatsApp
+                                <span>Launch WhatsApp Chat</span>
                             </button>
                         </div>
                     </div>
-                )}
+
+                </div>
+
+                {/* Right Side: Lead Metadata & AI Strategy Cards */}
+                <div className="os-v3-side-pane">
+                    
+                    {/* Lead Metadata Card */}
+                    <div className="os-v3-sidebar-card">
+                        <div className="os-v3-lead-meta-header">
+                            <span className="os-v3-sidebar-tag">TARGET PROFILE</span>
+                        </div>
+                        <h2 className="os-v3-lead-title">{lead.business_name}</h2>
+                        
+                        <div className="os-v3-lead-details">
+                            {lead.category && (
+                                <div className="os-v3-detail-item">
+                                    <span className="lbl">Category</span>
+                                    <span className="val">{lead.category}</span>
+                                </div>
+                            )}
+                            {lead.city && (
+                                <div className="os-v3-detail-item">
+                                    <span className="lbl">Location</span>
+                                    <span className="val">{lead.city}</span>
+                                </div>
+                            )}
+                            {lead.address && (
+                                <div className="os-v3-detail-item">
+                                    <span className="lbl">Address</span>
+                                    <span className="val">{lead.address}</span>
+                                </div>
+                            )}
+                            {lead.phone_number && (
+                                <div className="os-v3-detail-item">
+                                    <span className="lbl">Listed Phone</span>
+                                    <span className="val">{lead.phone_number}</span>
+                                </div>
+                            )}
+                            {lead.website && (
+                                <div className="os-v3-detail-item">
+                                    <span className="lbl">Website</span>
+                                    <a href={lead.website} target="_blank" rel="noopener noreferrer" className="val link">
+                                        {lead.website}
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* AI Persuasion Blueprint */}
+                    <div className="os-v3-sidebar-card">
+                        <div className="os-v3-lead-meta-header">
+                            <span className="os-v3-sidebar-tag">PERSUASION BLUEPRINT</span>
+                        </div>
+
+                        {generating && !generatedMessage ? (
+                            <div className="os-v3-skeleton-sidebar" />
+                        ) : generatedMessage ? (
+                            <div className="os-v3-intel-block">
+                                <div className="os-v3-intel-section">
+                                    <span className="os-v3-intel-lbl">Psychological Hook Angle</span>
+                                    <p className="os-v3-intel-text">{generatedMessage.observation}</p>
+                                </div>
+                                
+                                <div className="os-v3-intel-section">
+                                    <span className="os-v3-intel-lbl">Predicted Prospect Reply</span>
+                                    <p className="os-v3-intel-text">"{generatedMessage.likely_reply}"</p>
+                                </div>
+
+                                {generatedMessage.likely_response_rate && (
+                                    <div className={`os-v3-rate-badge rate-${generatedMessage.likely_response_rate.toLowerCase()}`}>
+                                        <TrendingUp size={12} /> 
+                                        <span>{generatedMessage.likely_response_rate} Conversion Probability</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <p className="os-v3-sidebar-placeholder">AI strategy blueprint will appear here once synthesized.</p>
+                        )}
+                    </div>
+
+                </div>
+
             </div>
         </div>
     );

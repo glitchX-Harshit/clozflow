@@ -62,6 +62,16 @@
   padding: 0;
 }
 
+::selection {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+::-moz-selection {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
 html { 
   scroll-behavior: smooth;
   width: 100%;

@@ -387,19 +387,19 @@ const FindingLeadsProgress = ({ query }) => {
                 }
                 return prev;
             });
-        }, 1100);
+        }, 2800); // Slowed down from 1100ms to 2800ms to map accurately to actual backend time
 
         const progressInterval = setInterval(() => {
             setProgress((prev) => {
-                const target = Math.min(95, ((statusIndex + 1) / STATUSES.length) * 100);
+                const target = Math.min(99, ((statusIndex + 1) / STATUSES.length) * 100);
                 if (prev < target) {
-                    return Math.min(95, prev + Math.random() * 8 + 2);
-                } else if (prev < 95) {
-                    return Math.min(95, prev + Math.random() * 1);
+                    return Math.min(99, prev + Math.random() * 3 + 1);
+                } else if (prev < 99) {
+                    return Math.min(99, prev + Math.random() * 0.2);
                 }
                 return prev;
             });
-        }, 300);
+        }, 500);
 
         return () => {
             clearInterval(statusInterval);
@@ -410,8 +410,13 @@ const FindingLeadsProgress = ({ query }) => {
     const displayName = query ? query.trim() : "target businesses";
 
     return (
-        <div className="lf__loader-card">
+        <div className="lf__loader-card" style={{ position: 'relative', overflow: 'hidden' }}>
             <div className="lf__loader-glow" />
+            
+            {/* Giant Background Typographic Counter */}
+            <div className="lf__loader-bg-percentage">
+                {Math.round(progress)}
+            </div>
             
             <div className="lf__loader-content">
                 <div className="lf__loader-header-row">
@@ -445,12 +450,18 @@ const FindingLeadsProgress = ({ query }) => {
                     </div>
                 </div>
 
-                {/* Ultra-minimalist progress bar */}
-                <div className="lf__loader-bar-bg">
-                    <div 
-                        className="lf__loader-bar-fill" 
-                        style={{ width: `${progress}%` }} 
-                    />
+                {/* Segmented Awwwards-style progress indicator */}
+                <div className="lf__loader-segments">
+                    {Array.from({ length: 16 }).map((_, idx) => {
+                        const segmentThreshold = (idx / 16) * 100;
+                        const isActive = progress >= segmentThreshold;
+                        return (
+                            <div 
+                                key={idx} 
+                                className={`lf__loader-segment ${isActive ? 'active' : ''}`} 
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </div>

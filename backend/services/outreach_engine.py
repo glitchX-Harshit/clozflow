@@ -234,19 +234,19 @@ def _build_outreach_prompt(
     rewrites = random.sample([
         (
             "Your website looks great but lacks a booking system.",
-            "I was trying to study how top local spots handle bookings and ended up on your site. Couldn't figure out how your customers actually reserve a spot — am I missing a hidden link somewhere?"
+            "I was looking at how top local spots handle bookings and ended up on your site. I couldn't figure out how your customers actually reserve a spot — am I missing a hidden link somewhere?"
         ),
         (
             "I noticed you have no social media presence.",
-            "I was looking for examples of strong local branding and found you guys, but I couldn't find your Instagram anywhere. Are you running purely on direct referrals, or did I just miss the page entirely?"
+            "I was looking for local businesses doing a great job and found you guys, but I couldn't find your Instagram anywhere. Are you running purely on referrals from past customers, or did I just miss the page entirely?"
         ),
         (
             "You seem to prioritize in-store experience over digital.",
-            "I was comparing local traffic models and noticed you guys seem to pull a ton of walk-ins despite having almost zero digital footprint. How are you guys actually driving that initial awareness?"
+            "I was looking at how local shops get new customers and noticed you guys seem to get a ton of walk-ins despite barely being online. How are you guys actually getting people through the door?"
         ),
         (
             "Your reviews are strong but there's no way to pre-order.",
-            "I was looking at your menu to see how you structure upsells, but I literally couldn't find a way to place an order online. Are you guys just intentionally keeping everything in-house?"
+            "I was checking out your menu to see how you handle orders, but I literally couldn't find a way to place an order online. Are you guys just intentionally keeping everything in-house?"
         ),
     ], k=2)
 
@@ -255,9 +255,13 @@ def _build_outreach_prompt(
         for bad, good in rewrites
     )
 
+    user_offer_instruction = ""
+    if user_offer:
+        user_offer_instruction = f"\n═══ YOUR VALUE PROPOSITION: {user_offer.upper()} ═══\nYou are an expert providing '{user_offer}'. The observation, problem statement, and final question MUST be highly tailored to how a business in their specific category handles the domains related to '{user_offer}'.\nFor example, if '{user_offer}' is 'AI Receptionist', ask about how they handle missed calls or appointments. If '{user_offer}' is 'Website Development', observe their digital funnel.\nEnsure the observation naturally connects to '{user_offer}' without explicitly pitching it.\n"
+
     return f"""You are a sharp, observant peer/founder — not a marketer, not an agency, not a cold email writer.
 You've spent 10 minutes looking at {biz_name} ({category}, {city}) and you're sending one direct message to start a real conversation.
-
+{user_offer_instruction}
 ═══ WHAT YOU KNOW ABOUT THIS BUSINESS ═══
 {signals_block}
 
@@ -281,6 +285,7 @@ Use the signals above. Form a 2-3 sentence pattern interrupt. Create a tension w
 
 Rules:
 - Exactly 2 to 3 sentences. No more.
+- Use simple, everyday conversational English. Do not use advanced vocabulary, big words, or formal phrasing. Write exactly like a normal human texting a peer.
 - Absolutely NO greetings ("Hi", "Hey", "Hope you're well"). Start immediately mid-thought.
 - Absolutely NO introductions ("I am from", "We do").
 - Use a psychological pattern interrupt: state a surprising observation about their business or a mini-storyline.
@@ -297,10 +302,11 @@ Return ONLY valid JSON:
 
 
 def _generate_fallback_message(lead_data: dict, channel: str, user_offer: str) -> dict:
+    offer_context = f" related to your {user_offer.lower()} setup" if user_offer else ""
     return {
-        "observation": f"Looking at {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')}, your core offering is strong, but your digital footprint is creating friction for buyers.",
-        "message": f"Usually I'd just pitch you, but looking at your setup for {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')}, there's a specific bottleneck creating friction for your buyers. Open to a quick observation?",
-        "expected_reply": "Sure, what did you find?",
+        "observation": f"Noticed a friction point in how they handle their operations{offer_context}.",
+        "message": f"I was trying to study how top {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')} operate, but I couldn't figure out how you guys handle a specific bottleneck{offer_context}. Are you doing everything manually, or did I miss something?",
+        "expected_reply": "What bottleneck did you notice?",
         "confidence": "Medium"
     }
 

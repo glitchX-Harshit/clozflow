@@ -1223,20 +1223,44 @@
     color: var(--text);
 }
 
-/* Progress Bar */
-.lf__loader-bar-bg {
-    height: 2px;
-    background: var(--surface-2);
-    border-radius: 1px;
-    overflow: hidden;
+/* Awwwards-style Segmented Loader */
+.lf__loader-segments {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    margin-top: 1.75rem;
     position: relative;
-    margin-top: 0.25rem;
+    z-index: 10;
 }
 
-.lf__loader-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--text) 0%, var(--accent) 100%);
-    transition: width 0.35s cubic-bezier(0.1, 0.8, 0.2, 1);
+.lf__loader-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lf__loader-segment.active {
+    background: var(--accent-mid);
+    box-shadow: 0 0 6px var(--accent-glow);
+}
+
+.lf__loader-bg-percentage {
+    position: absolute;
+    bottom: -2.5rem;
+    right: 0.5rem;
+    font-size: 10rem;
+    font-weight: 900;
+    color: var(--text);
+    opacity: 0.1;
+    line-height: 1;
+    font-family: var(--font-display);
+    pointer-events: none;
+    letter-spacing: -0.05em;
+    user-select: none;
+    z-index: 1;
 }
 
 /* ── Skeleton Card Loader ────────────────────────────────────────── */
