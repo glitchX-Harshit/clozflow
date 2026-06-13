@@ -52,21 +52,15 @@ CHANNEL_CONFIG = {
 }
 
 STRATEGY_CONFIG = {
-    "direct_observation": "Point out a highly specific business or operational fact — their offer, positioning, or market gap. Not about reviews. Be the sharp founder who notices things others miss.",
-    "curiosity_hook": "Create an irresistible information gap about a revenue or operational inefficiency you spotted. Hint at a specific growth lever without revealing it.",
-    "pattern_interrupt": "Break their expectation of a cold message. Be direct about the fact it's outreach, then flip it: 'Usually I'd pitch you on X, but looking at your setup...' — confident, not apologetic.",
-    "contrarian_observation": "Challenge a core assumption in their industry. State something opposite to what everyone else tells them. Make them question their own model.",
-    "founder_to_founder": "Two operators talking. Skip pleasantries. Jump straight to a specific operational or scaling observation. Max 2 sentences, very direct.",
-    "local_market_insight": "Use hyper-local context — compare their operational setup to what's happening in their local market specifically. Not generic, not reviews.",
+    "default": "Execute a severe pattern interrupt. Tell a very brief, casual 1-2 sentence observation or mini-story about their business that creates an irresistible information gap. Do not sound like a sales pitch; sound like an observant peer who noticed a massive leaky bucket in their revenue."
 }
 
 ANGLE_VECTORS = [
-    "Focus on pricing, margins, or premium positioning.",
-    "Focus on friction in their customer onboarding or booking/ordering flow.",
-    "Focus on how they compare visually or operationally to their top local competitors.",
+    "Focus on an unseen friction point in their customer journey.",
+    "Focus on a massive contrast between the quality of their work and their invisible digital footprint.",
+    "Focus on how much money they are likely leaving on the table by missing a basic operational system.",
     "Focus on customer retention — what brings people back vs what doesn't.",
-    "Focus on untapped revenue potential or unmonetized traffic.",
-    "Focus on a mismatch between the quality of their work and their external perception.",
+    "Focus on a mismatch between their premium offering and the friction required to buy it.",
 ]
 
 SCORING_WEIGHTS = {
@@ -208,12 +202,10 @@ def detect_available_channels(lead_data: dict) -> dict:
 def _build_outreach_prompt(
     lead_data: dict,
     channel: str,
-    outreach_goal: str,
-    outreach_strategy: str,
     user_offer: str,
 ) -> str:
     channel_cfg = CHANNEL_CONFIG.get(channel, CHANNEL_CONFIG["whatsapp"])
-    strategy_instruction = STRATEGY_CONFIG.get(outreach_strategy, STRATEGY_CONFIG["curiosity_hook"])
+    strategy_instruction = STRATEGY_CONFIG["default"]
     angle_instruction = random.choice(ANGLE_VECTORS)
 
     # Pull the sharpest available signal from lead data to force specificity
@@ -241,24 +233,20 @@ def _build_outreach_prompt(
     # Bad→Good rewrites: teach tone by contrast, not by example to copy
     rewrites = random.sample([
         (
-            "No Instagram, strong website. How's in-store driving demand?",
-            f"Your website's doing real work — most {category} places this size are living on Instagram. What's actually pulling people in the door?"
+            "Your website looks great but lacks a booking system.",
+            "I was looking at how top local spots handle bookings and ended up on your site. I couldn't figure out how your customers actually reserve a spot — am I missing a hidden link somewhere?"
         ),
         (
-            "What drives repeat business at Iris Café?",
-            "Your menu changes weekly but there's no visible way to follow it online — are regulars just showing up on instinct or is there something I'm missing?"
+            "I noticed you have no social media presence.",
+            "I was looking for local businesses doing a great job and found you guys, but I couldn't find your Instagram anywhere. Are you running purely on referrals from past customers, or did I just miss the page entirely?"
         ),
         (
-            "You seem to prioritize in-store experience. Is that intentional?",
-            "Looks like you're running almost entirely on foot traffic and word of mouth — no ordering app, no loyalty program visible. Is that deliberate or just never been the priority?"
+            "You seem to prioritize in-store experience over digital.",
+            "I was looking at how local shops get new customers and noticed you guys seem to get a ton of walk-ins despite barely being online. How are you guys actually getting people through the door?"
         ),
         (
-            "Your reviews are strong. What's your retention strategy?",
-            "Strong walk-in volume but I couldn't find any way to book, pre-order, or follow you. Is repeat business just organic or is there a system behind it?"
-        ),
-        (
-            "How are you driving demand without social media?",
-            "You've built something people clearly talk about — but I couldn't find a single place online to follow along or pre-order. How much revenue do you think that's costing per month?"
+            "Your reviews are strong but there's no way to pre-order.",
+            "I was checking out your menu to see how you handle orders, but I literally couldn't find a way to place an order online. Are you guys just intentionally keeping everything in-house?"
         ),
     ], k=2)
 
@@ -267,9 +255,13 @@ def _build_outreach_prompt(
         for bad, good in rewrites
     )
 
-    return f"""You are a sharp, experienced founder — not a marketer, not an agency, not a cold email writer.
-You've spent 10 minutes looking at {biz_name} ({category}, {city}) and you're sending one direct message to start a real conversation.
+    user_offer_instruction = ""
+    if user_offer:
+        user_offer_instruction = f"\n═══ YOUR VALUE PROPOSITION: {user_offer.upper()} ═══\nYou are an expert providing '{user_offer}'. The observation, problem statement, and final question MUST be highly tailored to how a business in their specific category handles the domains related to '{user_offer}'.\nFor example, if '{user_offer}' is 'AI Receptionist', ask about how they handle missed calls or appointments. If '{user_offer}' is 'Website Development', observe their digital funnel.\nEnsure the observation naturally connects to '{user_offer}' without explicitly pitching it.\n"
 
+    return f"""You are a sharp, observant peer/founder — not a marketer, not an agency, not a cold email writer.
+You've spent 10 minutes looking at {biz_name} ({category}, {city}) and you're sending one direct message to start a real conversation.
+{user_offer_instruction}
 ═══ WHAT YOU KNOW ABOUT THIS BUSINESS ═══
 {signals_block}
 
@@ -277,30 +269,28 @@ You've spent 10 minutes looking at {biz_name} ({category}, {city}) and you're se
 Strategy: {strategy_instruction}
 Angle: {angle_instruction}
 
-═══ CHANNEL ═══
-Platform: {channel.upper()} | Tone: {channel_cfg['tone']} | Hard max: {channel_cfg['max_words']} words
-
 ═══ THE DIFFERENCE BETWEEN WEAK AND SHARP ═══
 Study these rewrites. The left is what a lazy AI writes. The right is what a real founder sends.
 
 {rewrite_block}
 
 Notice what changes:
-- Weak messages ask survey questions ("What drives X?", "How's Y going?")
-- Sharp messages name a specific tension, gap, or contradiction they actually spotted
-- Sharp messages make the person feel seen, not interviewed
-- Sharp messages end with ONE question that's hard to ignore
+- Weak messages ask survey questions
+- Sharp messages execute a pattern interrupt by naming a specific tension or using a very brief storyline (e.g. "I was trying to figure out how your customers book...").
+- Sharp messages make the person feel seen, not pitched to.
+- Sharp messages end with ONE question that acts like a "pro cold DM" — playing the student, acting slightly confused, or asking for their expert input, which lowers their guard.
 
 ═══ NOW WRITE THE MESSAGE FOR {biz_name.upper()} ═══
-Use the signals above. Name something specific. Create a tension worth responding to.
+Use the signals above. Form a 2-3 sentence pattern interrupt. Create a tension worth responding to.
 
 Rules:
-- Max 2–3 sentences. Under 40 words. One question.
-- Start mid-thought — no greeting, no "I noticed", no "just reaching out"
-- The question must be something only THEY can answer — not a generic "what's your strategy?"
-- If no Instagram exists, that IS the signal — use it (e.g. "you're running on word of mouth")
-- If website is strong, use that contrast
-- NEVER: "is that intentional", "was that intentional", reviews, stars, rating, online presence
+- Exactly 2 to 3 sentences. No more.
+- Use simple, everyday conversational English. Do not use advanced vocabulary, big words, or formal phrasing. Write exactly like a normal human texting a peer.
+- Absolutely NO greetings ("Hi", "Hey", "Hope you're well"). Start immediately mid-thought.
+- Absolutely NO introductions ("I am from", "We do").
+- Use a psychological pattern interrupt: state a surprising observation about their business or a mini-storyline.
+- The final sentence MUST be a highly specific "pro cold DM" question — frame it as if you are studying their space, genuinely confused, or asking for their expert input (e.g. "Am I missing something hidden?", "How are you guys actually handling X?").
+- NEVER use: "word of mouth", "is that intentional", "was that intentional", reviews, stars, rating, online presence, or marketing jargon.
 
 Return ONLY valid JSON:
 {{
@@ -311,11 +301,12 @@ Return ONLY valid JSON:
 }}"""
 
 
-def _generate_fallback_message(lead_data: dict, channel: str, outreach_strategy: str, user_offer: str) -> dict:
+def _generate_fallback_message(lead_data: dict, channel: str, user_offer: str) -> dict:
+    offer_context = f" related to your {user_offer.lower()} setup" if user_offer else ""
     return {
-        "observation": f"Looking at {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')}, your core offering is strong, but your digital footprint is creating friction for buyers.",
-        "message": f"Usually I'd just pitch you, but looking at your setup for {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')}, there's a specific bottleneck creating friction for your buyers. Open to a quick observation?",
-        "expected_reply": "Sure, what did you find?",
+        "observation": f"Noticed a friction point in how they handle their operations{offer_context}.",
+        "message": f"I was trying to study how top {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')} operate, but I couldn't figure out how you guys handle a specific bottleneck{offer_context}. Are you doing everything manually, or did I miss something?",
+        "expected_reply": "What bottleneck did you notice?",
         "confidence": "Medium"
     }
 
@@ -323,12 +314,9 @@ def _generate_fallback_message(lead_data: dict, channel: str, outreach_strategy:
 async def generate_outreach_message(
     lead_data: dict,
     channel: str,
-    outreach_goal: str,
-    outreach_strategy: str,
     user_offer: str = "",
 ) -> dict:
     channel = channel.lower() if channel else "whatsapp"
-    outreach_strategy = outreach_strategy.lower() if outreach_strategy else "curiosity_hook"
 
     api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
 
@@ -344,7 +332,7 @@ async def generate_outreach_message(
                 base_url = "https://api.openai.com/v1"
                 model = "gpt-4o-mini"
             client = AsyncOpenAI(api_key=api_key, base_url=base_url)
-            prompt = _build_outreach_prompt(lead_data, channel, outreach_goal, outreach_strategy, user_offer)
+            prompt = _build_outreach_prompt(lead_data, channel, user_offer)
 
             response = await client.chat.completions.create(
                 model=model,
@@ -359,9 +347,9 @@ async def generate_outreach_message(
             result = json.loads(content)
         except Exception as e:
             print(f"LLM error: {e}")
-            result = _generate_fallback_message(lead_data, channel, outreach_strategy, user_offer)
+            result = _generate_fallback_message(lead_data, channel, user_offer)
     else:
-        result = _generate_fallback_message(lead_data, channel, outreach_strategy, user_offer)
+        result = _generate_fallback_message(lead_data, channel, user_offer)
 
     # Map V4 schema to legacy schema for frontend compatibility
     mapped_result = {

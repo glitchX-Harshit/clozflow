@@ -11,65 +11,7 @@
     width: 100%;
 }
 
-/* ── Editorial Header Deck ──────────────────────────────────────── */
-.lf__header-deck {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 3rem;
-    align-items: end;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 2.5rem;
-}
 
-@media (max-width: 991px) {
-    .lf__header-deck {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding-bottom: 2rem;
-        margin-bottom: 2rem;
-    }
-}
-
-.lf__eyebrow {
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-display);
-}
-
-.lf__eyebrow-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-mid);
-    border-radius: 50%;
-    animation: lf-pulse 2s infinite ease-in-out;
-}
-
-.lf__title {
-    font-size: clamp(2.5rem, 5vw, 4.25rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-    margin: 0;
-    font-family: var(--font-display);
-    color: var(--text);
-}
-
-.lf__subtitle {
-    color: var(--text-dim);
-    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-    font-weight: 500;
-    line-height: 1.6;
-    margin: 0;
-    max-width: 600px;
-}
 
 /* ── Segmented Sliding Tabs ──────────────────────────────────────── */
 .lf__tabs-container {
@@ -1048,15 +990,71 @@
     font-weight: 700;
     font-family: var(--font-body);
     cursor: pointer;
-    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     background: transparent;
     color: var(--text-dim);
+    transition: 
+        color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Premium Organic Liquid Morphing Blob Reveal */
+.lf__action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 155%;
+    aspect-ratio: 1;
+    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+    z-index: -1;
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    transition: 
+        transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
+        border-radius 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.lf__action-btn:hover::before {
+    transform: translate(-50%, -50%) scale(1.3) rotate(180deg);
+    border-radius: 50%;
+}
+
+.lf__action-btn svg {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lf__action-btn:hover svg {
+    transform: translateX(2.5px) scale(1.08);
+}
+
+.lf__action-btn--square:hover svg {
+    transform: scale(1.15) rotate(8deg);
+}
+
+/* Prevent sweeps on active success/warning states */
+.lf__action-btn--copied::before,
+.lf__action-btn--saved::before {
+    display: none !important;
 }
 
 .lf__action-btn:hover {
     border-color: var(--border-hover);
     color: var(--text);
-    background: var(--surface-2);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 15px rgba(0, 0, 0, 0.04),
+        0 0 0 3px rgba(0, 0, 0, 0.02);
+    letter-spacing: 0.01em;
+}
+
+/* Colors for default action button blobs */
+.lf__action-btn::before {
+    background: var(--surface-2); /* Solid Light Grey Blob */
 }
 
 .lf__action-btn--primary {
@@ -1065,12 +1063,17 @@
     border-color: var(--text);
 }
 
+.lf__action-btn--primary::before {
+    background: var(--accent); /* Solid Navy Blue Blob */
+}
+
 .lf__action-btn--primary:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 4px 12px var(--accent-glow);
     color: #fff;
-    transform: translateY(-1px);
+    border-color: var(--accent);
+    box-shadow: 
+        0 8px 20px var(--accent-glow),
+        0 0 0 3px rgba(30, 64, 175, 0.12);
+    transform: translateY(-2px);
 }
 
 .lf__action-btn--outreach {
@@ -1079,12 +1082,17 @@
     border-color: rgba(30, 64, 175, 0.15);
 }
 
+.lf__action-btn--outreach::before {
+    background: var(--accent); /* Solid Navy Blue Blob */
+}
+
 .lf__action-btn--outreach:hover {
-    background: var(--accent);
     color: #ffffff;
     border-color: var(--accent);
-    box-shadow: 0 4px 12px var(--accent-glow);
-    transform: translateY(-1px);
+    box-shadow: 
+        0 8px 20px var(--accent-glow),
+        0 0 0 3px rgba(30, 64, 175, 0.12);
+    transform: translateY(-2px);
 }
 
 .lf__action-btn--square {
@@ -1281,20 +1289,44 @@
     color: var(--text);
 }
 
-/* Progress Bar */
-.lf__loader-bar-bg {
-    height: 2px;
-    background: var(--surface-2);
-    border-radius: 1px;
-    overflow: hidden;
+/* Awwwards-style Segmented Loader */
+.lf__loader-segments {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    margin-top: 1.75rem;
     position: relative;
-    margin-top: 0.25rem;
+    z-index: 10;
 }
 
-.lf__loader-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--text) 0%, var(--accent) 100%);
-    transition: width 0.35s cubic-bezier(0.1, 0.8, 0.2, 1);
+.lf__loader-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lf__loader-segment.active {
+    background: var(--accent-mid);
+    box-shadow: 0 0 6px var(--accent-glow);
+}
+
+.lf__loader-bg-percentage {
+    position: absolute;
+    bottom: -2.5rem;
+    right: 0.5rem;
+    font-size: 10rem;
+    font-weight: 900;
+    color: var(--text);
+    opacity: 0.1;
+    line-height: 1;
+    font-family: var(--font-display);
+    pointer-events: none;
+    letter-spacing: -0.05em;
+    user-select: none;
+    z-index: 1;
 }
 
 /* ── Skeleton Card Loader ────────────────────────────────────────── */

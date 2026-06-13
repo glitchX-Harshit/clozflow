@@ -77,19 +77,17 @@ const STATS_DATA = [
 
 const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) => (
     <div className="animate-fade-in">
-        {/* Header Grid Section */}
-        <div className="db-header-grid">
-            <div className="db-header-left">
-                <div className="db-header-eyebrow">
-                    Behavioral Deal Intelligence
+        {/* Awwwards-Grade Editorial Header */}
+        <div className="editorial-header">
+            <div className="editorial-title-area">
+                <div className="editorial-meta-label">
+                    <span className="editorial-meta-dot" />
+                    <span>INTELLIGENCE COCKPIT / 00</span>
                 </div>
-                <h1 className="db-header-title">
-                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}.
+                <h1 className="editorial-heading-hero">
+                    Overview<span className="editorial-period">.</span>
                 </h1>
-                <p className="db-header-subtitle">
-                    The intelligence layer is active. Decoding hesitation, mapping momentum, and identifying the psychological path to the close.
-                </p>
-                <div className="db-header-actions">
+                <div className="db-header-actions" style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
                     <MagButton
                         label="Start Strategic Mode"
                         variant="dark"
@@ -105,33 +103,25 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) =
                     />
                 </div>
             </div>
-
-            {/* Telemetry Card */}
-            <div className="db-telemetry-card">
-                <div className="db-telemetry-header">
-                    <span className="db-telemetry-title">System Status HUD</span>
-                    <div className="db-status-badge">
-                        <span className="db-status-dot animated-pulse"></span>
-                        <span>ONLINE</span>
-                    </div>
-                </div>
-                <div className="db-telemetry-body">
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Cognitive Engine</span>
-                        <span className="val success">ACTIVE</span>
-                    </div>
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Live Decoders</span>
-                        <span className="val">Objection, Pace, Cue</span>
-                    </div>
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Analysis Queue</span>
-                        <span className="val code">0 Pending</span>
-                    </div>
-                    <div className="db-telemetry-row">
-                        <span className="lbl">Sync Latency</span>
-                        <span className="val code">28ms</span>
-                    </div>
+            <div className="editorial-desc-area">
+                <p className="editorial-desc-text">
+                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. The Deal Intelligence layer is currently active, scanning live conversations, decoding conversational friction, and mapping close velocities.
+                </p>
+                <div className="editorial-system-status">
+                    <span className="editorial-status-item">
+                        <span className="editorial-status-lbl">SYSTEM</span>
+                        <span className="editorial-status-val">ONLINE</span>
+                    </span>
+                    <span className="editorial-status-divider">/</span>
+                    <span className="editorial-status-item">
+                        <span className="editorial-status-lbl">DECODERS</span>
+                        <span className="editorial-status-val">ACTIVE</span>
+                    </span>
+                    <span className="editorial-status-divider">/</span>
+                    <span className="editorial-status-item">
+                        <span className="editorial-status-lbl">LATENCY</span>
+                        <span className="editorial-status-val">28MS</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -667,14 +657,49 @@ const Dashboard = () => {
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                     cursor: pointer;
-                    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                    position: relative;
+                    overflow: hidden;
+                    isolation: isolate;
+                    transition: 
+                        color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                .db-logout-btn::before {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 155%;
+                    aspect-ratio: 1;
+                    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+                    z-index: -1;
+                    background: #dc2626; /* Crimson Red Blob */
+                    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                    transition: 
+                        transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
+                        border-radius 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+                }
+                .db-logout-btn:hover::before {
+                    transform: translate(-50%, -50%) scale(1.3) rotate(180deg);
+                    border-radius: 50%;
                 }
                 .db-logout-btn:hover {
-                    background: #ef4444;
                     color: #ffffff;
-                    border-color: #ef4444;
-                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
-                    transform: translateY(-1px);
+                    border-color: #dc2626;
+                    transform: translateY(-2px);
+                    box-shadow: 
+                        0 8px 20px rgba(220, 38, 38, 0.25),
+                        0 0 0 3px rgba(220, 38, 38, 0.15);
+                    letter-spacing: 0.07em;
+                }
+                .db-logout-btn svg {
+                    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                .db-logout-btn:hover svg {
+                    transform: translateX(-3px) scale(1.1);
                 }
 
                 /* ── Main content (transparent, cards pop) ── */

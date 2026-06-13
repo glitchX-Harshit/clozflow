@@ -265,10 +265,33 @@ const SettingsShell = () => {
 
     return (
         <div className="animate-fade-in">
-            {/* Header */}
-            <div style={{ marginBottom: '2.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem' }}>
-                <div style={{ fontSize: '0.64rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Account</div>
-                <h1 style={{ fontSize: 'clamp(1.75rem,4vw,2.5rem)', fontWeight: 900, letterSpacing: '-0.05em', margin: 0 }}>Settings</h1>
+            {/* Awwwards-Grade Editorial Header */}
+            <div className="editorial-header">
+                <div className="editorial-title-area">
+                    <div className="editorial-meta-label">
+                        <span className="editorial-meta-dot" />
+                        <span>PREFERENCES PANEL / 05</span>
+                    </div>
+                    <h1 className="editorial-heading-hero">
+                        Settings<span className="editorial-period">.</span>
+                    </h1>
+                </div>
+                <div className="editorial-desc-area">
+                    <p className="editorial-desc-text">
+                        Configure workspace credentials, tweak AI prompting thresholds, fine-tune outbound scraping preferences, and manage account parameters.
+                    </p>
+                    <div className="editorial-system-status">
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">CONFIG</span>
+                            <span className="editorial-status-val">PERSISTED</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">SECURITY</span>
+                            <span className="editorial-status-val">TLS_V1.3</span>
+                        </span>
+                    </div>
+                </div>
             </div>
  
             <div className="settings-layout">

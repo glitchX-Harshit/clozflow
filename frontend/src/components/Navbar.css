@@ -2,9 +2,9 @@
 .nb {
     position: fixed;
     inset: 0 0 auto;
-    z-index: 1000;
+    z-index: 10002;
     padding: 1.25rem 0;
-    transition: padding 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    transition: padding-top 0.35s ease, padding-bottom 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
 }
 
 .nb--scrolled {
@@ -161,72 +161,282 @@
     border-radius: var(--r-full) !important;
 }
 
-/* Hamburger */
+/* Redesigned Cinematic Hamburger Button (Borderless & Floating) */
 .nb__hamburger {
     display: none;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--r-md);
-    color: var(--text);
+    background: transparent;
+    border: none;
     cursor: pointer;
-    padding: 0.45rem;
-    line-height: 0;
-    transition: all 0.18s ease;
-    font-family: inherit;
+    width: 44px;
+    height: 44px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0;
+    z-index: 10003;
 }
 
 .nb__hamburger:hover {
-    background: var(--surface-2);
-    border-color: var(--border-hover);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.nb__hamburger-line {
+    display: block;
+    height: 1.5px;
+    background-color: var(--text);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s ease;
+    will-change: transform, width;
+}
+
+.nb__hamburger-line--1 {
+    width: 18px;
+    transform: rotate(-10deg) translateY(1px);
+    transform-origin: center;
+}
+
+.nb__hamburger-line--2 {
+    width: 18px;
+    transform: rotate(10deg) translateY(-1px);
+    transform-origin: center;
+}
+
+/* Staggered kinetic slide on hover */
+.nb__hamburger:not(.nb__hamburger--active):hover .nb__hamburger-line--1 {
+    transform: rotate(0deg) translateY(0px) translateX(2.5px);
+}
+
+.nb__hamburger:not(.nb__hamburger--active):hover .nb__hamburger-line--2 {
+    transform: rotate(0deg) translateY(0px) translateX(-2.5px);
+}
+
+/* Active Morphing State: container styles when mobile menu is open */
+.nb__hamburger--active {
+    background: transparent !important;
+    border: none !important;
+    transform: rotate(90deg); /* 90deg turn on activation */
+}
+
+.nb__hamburger--active:hover {
+    background: transparent !important;
+    border: none !important;
+    transform: rotate(180deg); /* Spin to 180deg on hover while open */
+}
+
+/* Active Morphing State into Symmetrical Close Cross */
+.nb__hamburger--active .nb__hamburger-line--1 {
+    transform: translateY(3.25px) rotate(45deg);
+    background-color: #ffffff !important;
+    width: 16px;
+}
+
+.nb__hamburger--active .nb__hamburger-line--2 {
+    transform: translateY(-3.25px) rotate(-45deg);
+    background-color: #ffffff !important;
+    width: 16px;
 }
 
 /* ── Mobile drawer ── */
 .nb__drawer {
     position: fixed;
     inset: 0;
-    background: var(--bg);
-    z-index: 998;
+    background: #060606; /* Velvet black */
+    z-index: 10001; /* Set high to display on top of all page sections */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    opacity: 0;
     pointer-events: none;
-    transform: translateY(-8px);
-    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate3d(100%, 0, 0);
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
 }
 
 .nb__drawer--open {
-    opacity: 1;
+    transform: translate3d(0, 0, 0);
     pointer-events: all;
-    transform: translateY(0);
+}
+
+/* Background Grid Lines */
+.nb__drawer-grid-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.nb__drawer-grid-line {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.nb__drawer-grid-line.vertical {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    height: 100%;
+}
+
+.nb__drawer-grid-line.vertical.dv1 {
+    left: 25%;
+}
+
+.nb__drawer-grid-line.vertical.dv2 {
+    left: 75%;
+}
+
+/* Drawer Content Layout */
+.nb__drawer-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8rem 2.5rem 3rem 2.5rem;
+    z-index: 10;
+    box-sizing: border-box;
 }
 
 .nb__drawer-links {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    gap: 1.25rem;
+    align-items: flex-start;
+}
+
+.nb__drawer-link-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+    will-change: transform, opacity;
+}
+
+.nb__drawer--open .nb__drawer-link-item {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.nb__drawer--open .nb__drawer-link-item:nth-child(1) { transition-delay: 0.15s; }
+.nb__drawer--open .nb__drawer-link-item:nth-child(2) { transition-delay: 0.20s; }
+.nb__drawer--open .nb__drawer-link-item:nth-child(3) { transition-delay: 0.25s; }
+.nb__drawer--open .nb__drawer-link-item:nth-child(4) { transition-delay: 0.30s; }
+
+.nb__drawer-link-num {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.25);
+    font-family: 'Inter', sans-serif;
 }
 
 .nb__drawer-link {
+    display: inline-block;
     font-family: var(--font-display);
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 8vw, 3rem);
     font-weight: 700;
-    color: var(--text-dim);
-    letter-spacing: -0.05em;
-    padding: 0.5rem 1rem;
-    transition: color 0.18s ease;
+    color: #ffffff;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-.nb__drawer-link:hover { color: var(--text); }
+.nb__drawer-link:hover {
+    color: var(--accent-mid);
+}
+
+.nb__drawer-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
 
 .nb__drawer-actions {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    width: 280px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.nb__drawer-btn {
+    width: 100% !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    font-size: 0.875rem !important;
+    padding: 0.75rem 0 !important;
+}
+
+.nb__drawer-btn.primary {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #060606 !important;
+}
+
+.nb__drawer-meta {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+}
+
+/* Common fade animations */
+.nb__drawer-animate-fade {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+    will-change: transform, opacity;
+}
+
+.nb__drawer--open .nb__drawer-animate-fade {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.nb__drawer--open .nb__drawer-actions.nb__drawer-animate-fade {
+    transition-delay: 0.35s;
+}
+
+.nb__drawer--open .nb__drawer-meta.nb__drawer-animate-fade {
+    transition-delay: 0.40s;
+}
+
+/* ── Inverted open-nav states ── */
+.nb--open {
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.nb--open .nb__wordmark {
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.nb--open .nb__hex-core {
+    fill: #ffffff !important;
+}
+
+.nb--open .nb__hamburger {
+    background: transparent !important;
+    border: none !important;
+}
+
+.nb--open .nb__hamburger-line {
+    background-color: #ffffff !important;
 }
 
 /* ── Responsive ── */
@@ -240,4 +450,13 @@
 
 @media (max-width: 560px) {
     .nb__inner { padding: 0 1.25rem; }
+    .nb__drawer-content {
+        padding: 7rem 1.5rem 2.5rem 1.5rem;
+    }
+    .nb__drawer-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        text-align: center;
+    }
 }

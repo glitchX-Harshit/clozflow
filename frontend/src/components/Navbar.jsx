@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, Hexagon } from 'lucide-react';
 import MagButton from './MagButton';
 import './Navbar.css';
 
@@ -61,15 +60,37 @@ const Navbar = ({ onSignup, onLogin }) => {
     }, []);
 
     useEffect(() => {
-        document.body.style.overflow = mobileOpen ? 'hidden' : '';
-        return () => { document.body.style.overflow = ''; };
+        if (mobileOpen) {
+            window.lenis?.stop();
+        } else {
+            window.lenis?.start();
+        }
+        return () => {
+            window.lenis?.start();
+        };
+    }, [mobileOpen]);
+
+    useEffect(() => {
+        const preventDefault = (e) => {
+            // Prevent background touch scrolling through the drawer
+            e.preventDefault();
+        };
+        const drawer = document.querySelector('.nb__drawer');
+        if (mobileOpen && drawer) {
+            drawer.addEventListener('touchmove', preventDefault, { passive: false });
+        }
+        return () => {
+            if (drawer) {
+                drawer.removeEventListener('touchmove', preventDefault);
+            }
+        };
     }, [mobileOpen]);
 
     const close = () => setMobileOpen(false);
 
     return (
         <>
-            <nav className={`nb ${scrolled ? 'nb--scrolled' : ''}`}>
+            <nav className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''}`}>
                 <div className="nb__inner">
                     {/* Logo */}
                     <a href="#" className="nb__logo">
@@ -105,11 +126,12 @@ const Navbar = ({ onSignup, onLogin }) => {
                             magnetStrength={0.35}
                         />
                         <button
-                            className="nb__hamburger"
+                            className={`nb__hamburger ${mobileOpen ? 'nb__hamburger--active' : ''}`}
                             onClick={() => setMobileOpen(o => !o)}
                             aria-label="Toggle menu"
                         >
-                            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+                            <span className="nb__hamburger-line nb__hamburger-line--1"></span>
+                            <span className="nb__hamburger-line nb__hamburger-line--2"></span>
                         </button>
                     </div>
                 </div>
@@ -117,28 +139,51 @@ const Navbar = ({ onSignup, onLogin }) => {
 
             {/* Mobile drawer */}
             <div className={`nb__drawer ${mobileOpen ? 'nb__drawer--open' : ''}`}>
-                <div className="nb__drawer-links">
-                    {LINKS.map(l => (
-                        <a key={l.href} href={l.href} className="nb__drawer-link" onClick={close}>
-                            {l.label}
-                        </a>
-                    ))}
+                {/* Background grid lines */}
+                <div className="nb__drawer-grid-lines">
+                    <div className="nb__drawer-grid-line vertical dv1"></div>
+                    <div className="nb__drawer-grid-line vertical dv2"></div>
                 </div>
-                <div className="nb__drawer-actions">
-                    <MagButton
-                        label="Log in"
-                        variant="outline"
-                        fullWidth
-                        magnetStrength={0.25}
-                        onClick={() => { onLogin(); close(); }}
-                    />
-                    <MagButton
-                        label="Enter Workspace"
-                        variant="dark"
-                        fullWidth
-                        magnetStrength={0.25}
-                        onClick={() => { onSignup(); close(); }}
-                    />
+
+                <div className="nb__drawer-content">
+                    {/* Links */}
+                    <div className="nb__drawer-links">
+                        {LINKS.map((l, idx) => (
+                            <div key={l.href} className="nb__drawer-link-item">
+                                <span className="nb__drawer-link-num">0{idx + 1}</span>
+                                <a href={l.href} className="nb__drawer-link" onClick={close}>
+                                    {l.label}
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Actions & Footer Metadata */}
+                    <div className="nb__drawer-footer">
+                        <div className="nb__drawer-actions nb__drawer-animate-fade">
+                            <MagButton
+                                label="Log in"
+                                variant="outline"
+                                fullWidth
+                                magnetStrength={0.2}
+                                onClick={() => { onLogin(); close(); }}
+                                className="nb__drawer-btn"
+                            />
+                            <MagButton
+                                label="Enter Workspace"
+                                variant="dark"
+                                fullWidth
+                                magnetStrength={0.2}
+                                onClick={() => { onSignup(); close(); }}
+                                className="nb__drawer-btn primary"
+                            />
+                        </div>
+
+                        <div className="nb__drawer-meta nb__drawer-animate-fade">
+                            <span>© 2026 HEXAGON. ALL RIGHTS RESERVED.</span>
+                            <span>DESIGNED FOR ENTERPRISE</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

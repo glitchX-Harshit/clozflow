@@ -387,19 +387,19 @@ const FindingLeadsProgress = ({ query }) => {
                 }
                 return prev;
             });
-        }, 1100);
+        }, 2800); // Slowed down from 1100ms to 2800ms to map accurately to actual backend time
 
         const progressInterval = setInterval(() => {
             setProgress((prev) => {
-                const target = Math.min(95, ((statusIndex + 1) / STATUSES.length) * 100);
+                const target = Math.min(99, ((statusIndex + 1) / STATUSES.length) * 100);
                 if (prev < target) {
-                    return Math.min(95, prev + Math.random() * 8 + 2);
-                } else if (prev < 95) {
-                    return Math.min(95, prev + Math.random() * 1);
+                    return Math.min(99, prev + Math.random() * 3 + 1);
+                } else if (prev < 99) {
+                    return Math.min(99, prev + Math.random() * 0.2);
                 }
                 return prev;
             });
-        }, 300);
+        }, 500);
 
         return () => {
             clearInterval(statusInterval);
@@ -410,8 +410,13 @@ const FindingLeadsProgress = ({ query }) => {
     const displayName = query ? query.trim() : "target businesses";
 
     return (
-        <div className="lf__loader-card">
+        <div className="lf__loader-card" style={{ position: 'relative', overflow: 'hidden' }}>
             <div className="lf__loader-glow" />
+            
+            {/* Giant Background Typographic Counter */}
+            <div className="lf__loader-bg-percentage">
+                {Math.round(progress)}
+            </div>
             
             <div className="lf__loader-content">
                 <div className="lf__loader-header-row">
@@ -445,12 +450,18 @@ const FindingLeadsProgress = ({ query }) => {
                     </div>
                 </div>
 
-                {/* Ultra-minimalist progress bar */}
-                <div className="lf__loader-bar-bg">
-                    <div 
-                        className="lf__loader-bar-fill" 
-                        style={{ width: `${progress}%` }} 
-                    />
+                {/* Segmented Awwwards-style progress indicator */}
+                <div className="lf__loader-segments">
+                    {Array.from({ length: 16 }).map((_, idx) => {
+                        const segmentThreshold = (idx / 16) * 100;
+                        const isActive = progress >= segmentThreshold;
+                        return (
+                            <div 
+                                key={idx} 
+                                className={`lf__loader-segment ${isActive ? 'active' : ''}`} 
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </div>
@@ -707,7 +718,7 @@ const LeadFinder = ({ onOutreach }) => {
             onOutreach(lead, effectiveOffer);
         } else {
             saveScrollState();
-            navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer } });
+            navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer, query } });
         }
     };
 
@@ -801,19 +812,37 @@ const LeadFinder = ({ onOutreach }) => {
 
     return (
         <div className="lf">
-            {/* ── Editorial Header ── */}
-            <div className="lf__header-deck">
-                <div className="lf__header-left">
-                    <div className="lf__eyebrow">
-                        <span className="lf__eyebrow-dot" /> 
-                        <span>INTEL_SIGNAL // DISCOVERY ENGINE v2.5</span>
+            {/* ── Awwwards-Grade Minimal Header ── */}
+            <div className="editorial-header">
+                <div className="editorial-title-area">
+                    <div className="editorial-meta-label">
+                        <span className="editorial-meta-dot" />
+                        <span>DISCOVERY MODULE / 01</span>
                     </div>
-                    <h1 className="lf__title">Lead Finder</h1>
+                    <h1 className="editorial-heading-hero">
+                        Lead Finder<span className="editorial-period">.</span>
+                    </h1>
                 </div>
-                <div className="lf__header-right">
-                    <p className="lf__subtitle">
-                        Discover high-potential business leads instantly. Deployment of cognitive crawlers to analyze digital footprints, isolate performance gaps, and calculate service-fit conversions.
+                <div className="editorial-desc-area">
+                    <p className="editorial-desc-text">
+                        An autonomous intelligence layer designed to map local business footprints, quantify conversion deficiencies, and pre-structure outreach arguments.
                     </p>
+                    <div className="editorial-system-status">
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">STATUS</span>
+                            <span className="editorial-status-val">READY</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">ENGINE</span>
+                            <span className="editorial-status-val">HEX_V4</span>
+                        </span>
+                        <span className="editorial-status-divider">/</span>
+                        <span className="editorial-status-item">
+                            <span className="editorial-status-lbl">SPEED</span>
+                            <span className="editorial-status-val">124MS</span>
+                        </span>
+                    </div>
                 </div>
             </div>
 
