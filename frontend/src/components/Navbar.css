@@ -161,30 +161,28 @@
     border-radius: var(--r-full) !important;
 }
 
-/* Bordered Cinematic Hamburger Button */
+/* Redesigned Cinematic Hamburger Button (Borderless & Floating) */
 .nb__hamburger {
     display: none;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--r-md);
+    background: transparent;
+    border: none;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     position: relative;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     padding: 0;
     z-index: 10003;
 }
 
 .nb__hamburger:hover {
-    background: var(--surface-2);
-    border-color: var(--border-hover);
-    box-shadow: var(--shadow-sm);
-    transform: translateY(-1px);
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .nb__hamburger-line {
@@ -199,29 +197,35 @@
 
 .nb__hamburger-line--1 {
     width: 18px;
+    transform: rotate(-10deg) translateY(1px);
     transform-origin: center;
 }
 
 .nb__hamburger-line--2 {
-    width: 10px;
+    width: 18px;
+    transform: rotate(10deg) translateY(-1px);
     transform-origin: center;
 }
 
 /* Staggered kinetic slide on hover */
+.nb__hamburger:not(.nb__hamburger--active):hover .nb__hamburger-line--1 {
+    transform: rotate(0deg) translateY(0px) translateX(2.5px);
+}
+
 .nb__hamburger:not(.nb__hamburger--active):hover .nb__hamburger-line--2 {
-    width: 18px;
+    transform: rotate(0deg) translateY(0px) translateX(-2.5px);
 }
 
 /* Active Morphing State: container styles when mobile menu is open */
 .nb__hamburger--active {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
+    background: transparent !important;
+    border: none !important;
     transform: rotate(90deg); /* 90deg turn on activation */
 }
 
 .nb__hamburger--active:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
+    background: transparent !important;
+    border: none !important;
     transform: rotate(180deg); /* Spin to 180deg on hover while open */
 }
 
