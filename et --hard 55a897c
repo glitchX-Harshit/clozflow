@@ -1,0 +1,99 @@
+[33m55a897c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mxam[m[33m, [m[1;31morigin/xam[m[33m)[m FRONTEND 02
+[33mfceacc7[m FRONTEND 01
+[33m19bd4af[m FRONTEND
+[33ma2288fd[m Desgin
+[33m60ee0e9[m OUTREACH: context based observation
+[33m9d37e5c[m OUTREACH & FRONTEND: dashboard design & outreach v3
+[33mb61ded7[m stability: Latency, Basic Response
+[33m1575d4e[m FRONTEND: REDESIGNED V4
+[33ma6f61ae[m FRONTEND: REDESIGNED
+[33m32971aa[m FRONTEND: model changed
+[33mb20fa84[m SALES ENIGNE: Brain and Routing improved
+[33m927ed7a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #38 from glitchX-Harshit/xam
+[33m870b172[m Merge pull request #37 from glitchX-Harshit/main
+[33m79e1900[m[33m ([m[1;32mmain[m[33m)[m Merge pull request #36 from glitchX-Harshit/ml_research_v1
+[33m1a42bd4[m[33m ([m[1;31morigin/ml_research_v1[m[33m, [m[1;32mml_research_v1[m[33m)[m FRONTEND - pop-up window mount level
+[33meabddb8[m[33m ([m[1;31morigin/ml_research[m[33m)[m Merge pull request #35 from glitchX-Harshit/xam
+[33m9862992[m[33m ([m[1;32mml_research[m[33m)[m sales engine improved then before
+[33mb2a4cd1[m Merge pull request #34 from glitchX-Harshit/xam
+[33m42450d6[m loader animation during lead find
+[33m54ef6f7[m ux of research page improved
+[33m2a44bc7[m outreach back button redirection bug fixed
+[33m63eda8e[m outreach_v3 wth human like response
+[33m0bc72a1[m Outreach v2
+[33mda1377c[m Merge pull request #33 from glitchX-Harshit/xam
+[33m066eb5d[m Lead Research and Enrichment
+[33m6dc483b[m readme updated
+[33m1ec234f[m  home page heading cahnged to psychofancy keywords
+[33mb787780[m Merge pull request #32 from glitchX-Harshit/xam
+[33mb396eff[m ML integrated & lead finder with ai enrichment
+[33mb0f6f62[m ui ux
+[33m6329230[m Merge pull request #31 from glitchX-Harshit/xam
+[33m965450d[m ux fixing
+[33m84a0471[m Merge pull request #30 from glitchX-Harshit/xam
+[33md526779[m n commit
+[33m66cdc06[m Merge pull request #29 from glitchX-Harshit/xam
+[33medfa39b[m bad commit
+[33m9e525df[m Merge pull request #28 from glitchX-Harshit/xam
+[33m2ba0752[m readme updated
+[33m171d1df[m Merge pull request #27 from glitchX-Harshit/xam
+[33m34da745[m font changed
+[33m9902691[m Merge pull request #26 from glitchX-Harshit/xam
+[33m630c45a[m OAuth Integration (Google, Github)
+[33mc0a91bc[m added psychofancy layer , removed gptish vibe
+[33ma625012[m Merge pull request #25 from glitchX-Harshit/xam
+[33m62b4378[m Loading Animation
+[33m1dff989[m Merge pull request #24 from glitchX-Harshit/xam
+[33m5d6a684[m docs: add MIT license
+[33md4df054[m Merge pull request #23 from glitchX-Harshit/xam
+[33mc92f4b9[m dependencies conflict during deployment fixed
+[33mf19d843[m Merge pull request #22 from glitchX-Harshit/xam
+[33m88a4908[m 3D UI and UX implememnted #2
+[33m0ed2408[m Merge pull request #21 from glitchX-Harshit/xam
+[33m85f4ec1[m 3D UI and UX implememnted - Final blow
+[33m2c7d7af[m setting and real user integration
+[33mb6e2274[m Merge pull request #20 from glitchX-Harshit/xam
+[33mdfd0de0[m analytics and playbook
+[33m1406979[m Merge pull request #19 from glitchX-Harshit/xam
+[33md3a68f8[m ui fixing and changes
+[33mc5f13bc[m pschological sharpness raptor
+[33mc6b5440[m Merge pull request #18 from glitchX-Harshit/xam
+[33m80f35c2[m test simulator & report function
+[33m97cc3a4[m Merge pull request #17 from glitchX-Harshit/xam
+[33mdc82477[m GenAI RAG control Upgraded to majority to before llm
+[33md2e242f[m rag_pipeline_v1
+[33m539538e[m Merge pull request #16 from glitchX-Harshit/xam
+[33mfeb8b22[m UI and renaming
+[33m6504303[m Merge pull request #15 from glitchX-Harshit/xam
+[33m3bf1868[m DB export added aftercall - history
+[33m60511f1[m Merge pull request #13 from glitchX-Harshit/xam
+[33m90a1d82[m updated UX with batching
+[33m8e75a94[m closer Brain_v2 refinment
+[33m0728e57[m Merge pull request #12 from glitchX-Harshit/xam
+[33m6da158a[m UX Funnel - Done
+[33ma718e48[m auth successfull
+[33med193c8[m UI simplified for devices
+[33m8d68034[m Merge pull request #11 from glitchX-Harshit/xam
+[33m3f31b92[m working tree
+[33mf41daf3[m intelligence refined
+[33ma47c513[m  SignUP Form wired correctly
+[33mc94700c[m UI polished
+[33mebceb3b[m Zoom/Meet Integration - Done Successfully
+[33m96b9700[m Persuassion added with rotation
+[33m09316ca[m Context Brefing - AI enhancment (Stage 1)
+[33m952a926[m Suggestion engine - Prompted / enhanced (Update 2.0)
+[33m9890fbe[m sales_ai_engine stable with real-time AI suggestions
+[33m929e271[m Phase 1 - successfull
+[33m01c8b55[m core operational pipeline - Successfull
+[33m52274e7[m Day 1: realtime audio pipeline working (mic → websocket → fastapi → deepgram)
+[33mc1c2b33[m Remove virtual environment from repository
+[33m54381f1[m Day 1: realtime audio pipeline working (mic → websocket → fastapi → deepgram)
+[33meb97fbe[m readme updated
+[33m4c4bb12[m frontend Layer-2 - Dashboard integration
+[33m76191e4[m frontend Layer-2 - pre end
+[33md8c1917[m frontend Layer-2 - navbar fixed
+[33m9a6f636[m frontend Layer-2 - loading animation
+[33mcbc8d50[m frontend Layer-2 - svg stroke
+[33mf2f30cd[m frontend Layer-2 - upgrade UI enhancement
+[33md3786fe[m frontend prototype - Layer 1
+[33m9b06106[m Initial commit

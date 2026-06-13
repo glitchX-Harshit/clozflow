@@ -72,35 +72,18 @@ const Shape = () => {
                             vec3 normal = normalize(vNormal);
                             vec3 viewDir = normalize(vViewPosition);
                             
-                            // Virtual light source for metallic highlights
-                            vec3 lightDir = normalize(vec3(5.0, 8.0, 10.0));
+                            float noise = sin(vUv.x * 15.0 + time * 1.2) * cos(vUv.y * 15.0 - time * 0.8);
                             
-                            // Fresnel reflection factor
                             float fresnel = dot(normal, viewDir);
                             fresnel = clamp(1.0 - fresnel, 0.0, 1.0);
                             
-                            // Iridescent thickness driven by fresnel + animated noise
-                            float noise = sin(vUv.x * 12.0 + time * 1.0) * cos(vUv.y * 12.0 - time * 0.7);
-                            float thickness = fresnel * 2.0 + noise * 0.55;
-                            vec3 oilColor = palette(thickness - time * 0.25);
+                            float thickness = fresnel * 1.8 + noise * 0.4;
+                            vec3 oilColor = palette(thickness - time * 0.3);
                             
-                            // Base metallic chrome color (replaces the matte rubbery white)
-                            float ndl = max(dot(normal, lightDir), 0.0);
-                            vec3 chromeBase = mix(vec3(0.75, 0.77, 0.82), vec3(0.98, 0.98, 1.0), pow(ndl, 2.0));
+                            vec3 baseColor = vec3(0.95, 0.96, 0.98);
+                            float mixFactor = smoothstep(0.0, 1.0, fresnel + noise * 0.5);
                             
-                            // Specular highlight (glossy hot-spot)
-                            vec3 reflectDir = reflect(-lightDir, normal);
-                            float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0); // High exponent for a sharp, glossy shine
-                            vec3 specularHighlight = vec3(1.0, 1.0, 1.0) * spec * 1.5; // Intense specular shine
-                            
-                            // Blend the chrome base and iridescent colors, then add the specular highlight
-                            float mixFactor = smoothstep(-0.2, 0.8, fresnel + noise * 0.3);
-                            vec3 finalColor = mix(chromeBase, oilColor, mixFactor * 0.9);
-                            
-                            // Add the glossy specular reflection
-                            finalColor += specularHighlight;
-                            
-                            gl_FragColor = vec4(finalColor, 1.0);
+                            gl_FragColor = vec4(mix(baseColor, oilColor, mixFactor * 0.85), 1.0);
                         }
                     `}
                 />
