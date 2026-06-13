@@ -1,51 +1,131 @@
 /* ================================================================
-   LOADER — Minimal Awwwards Counter (White Background)
-================================================================= */
+   LOADER — Minimal Cinematic Preloader & Parallax Slide
+ ================================================================= */
 .loader-overlay {
     position: fixed;
     inset: 0;
     z-index: 999999;
     display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: all;
+    background: #060606; /* Solid luxury black */
+    overflow: hidden;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+    will-change: transform;
 }
 
-.loader-pixels {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    width: 100%;
-    height: 100%;
-    z-index: 0;
+/* Center Content Group */
+.loader-center-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem; /* Tight spacing for a clean, understated label look */
 }
 
-.loader-pixel {
-    background: #ffffff;
-    width: 100%;
-    height: 100%;
-    /* Slight scale to prevent any grid seam lines */
-    transform: scale(1.05);
-    transform-origin: center;
+/* Logo Reveal Mask */
+.loader-logo-wrapper {
+    overflow: hidden;
+    height: clamp(1.2rem, 3.5vw, 2.2rem);
+    display: flex;
+    align-items: center;
 }
 
-.loader-counter {
-    position: absolute;
-    bottom: 2rem;
-    right: 5vw;
-    z-index: 1;
-    color: #111111;
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 10vw, 12rem); /* Scaled down slightly for mobile safety */
-    font-weight: 800;
+.loader-logo {
+    display: flex;
     line-height: 1;
-    letter-spacing: -0.04em;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 3.5vw, 2.2rem);
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.18em; /* Premium wide letter tracking */
+    text-indent: 0.18em; /* Shift to center alignment due to trailing letter spacing */
+}
+
+.loader-logo-char {
+    display: inline-block;
+    transform: translateY(100%);
+    will-change: transform;
+}
+
+/* Mechanical Counter */
+.loader-counter-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     will-change: transform, opacity;
 }
 
-@media (max-width: 768px) {
-    .loader-counter {
-        right: 2rem;
-        bottom: 1.5rem;
-    }
+.loader-odometer {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.4);
+    height: 1.2em;
+    overflow: hidden;
+    letter-spacing: 0.05em;
+}
+
+.loader-bracket {
+    color: rgba(255, 255, 255, 0.18);
+    font-weight: 300;
+    margin: 0 0.3rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.loader-digit-window {
+    height: 1.2em;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.loader-digit-strip {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+}
+
+.loader-digit-strip span {
+    display: block;
+    height: 1.2em;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.loader-percent {
+    font-size: 0.75em;
+    line-height: 1;
+    margin-left: 0.05em;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 400;
+}
+
+/* Tiny Centered Progress Bar */
+.loader-progress-track {
+    width: 60px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+    margin-top: 0.6rem;
+    will-change: transform;
+}
+
+.loader-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: rgba(255, 255, 255, 0.65);
 }

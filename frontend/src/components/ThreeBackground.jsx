@@ -13,7 +13,7 @@ const Shape = () => {
     const { viewport, mouse } = useThree();
 
     const isMobile = viewport.width < 5; 
-    const responsiveScale = isMobile ? 0.8 : 1.5;
+    const responsiveScale = isMobile ? 0.55 : 1.5;
 
     const uniforms = useMemo(() => ({
         time: { value: 0 }
