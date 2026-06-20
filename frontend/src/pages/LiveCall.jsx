@@ -235,7 +235,7 @@ const LiveCall = () => {
                     <div className="db-logo-icon" style={{ background: 'var(--accent)' }}>
                         <Zap size={18} color="white" strokeWidth={2.5} />
                     </div>
-                    <span className="db-logo-text">Hexagon</span>
+                    <span className="db-logo-text">ClozFlow</span>
                 </div>
 
                 <nav className="db-nav">

@@ -10,9 +10,9 @@ const SCENARIOS = [
         name: "Pricing Concern",
         objection: "We already have a solution in place for this. Switching costs and licensing fees are going to be a nightmare.",
         rebuttals: {
-            Professional: "We understand cost is a consideration. However, Hexagon usually pays for itself within 45 days by increasing sales-cycle speed by 22%. Let's look at our custom ROI modeling based on your current team size.",
+            Professional: "We understand cost is a consideration. However, ClozFlow usually pays for itself within 45 days by increasing sales-cycle speed by 22%. Let's look at our custom ROI modeling based on your current team size.",
             Empathetic: "I completely hear you — switching costs are a real concern. Many of our current clients had the exact same hesitation before seeing how our white-glove migration team handles 100% of data porting in under 48 hours.",
-            Direct: "Switching friction is a one-time issue, but running inefficient sales processes is a continuous cost. Hexagon reduces representative administrative tasks by 12 hours a week from day one."
+            Direct: "Switching friction is a one-time issue, but running inefficient sales processes is a continuous cost. ClozFlow reduces representative administrative tasks by 12 hours a week from day one."
         },
         confidence: 98,
         strategy: "ROI Re-anchoring & Risk Mitigation",
@@ -27,9 +27,9 @@ const SCENARIOS = [
         name: "Competitor Comparison",
         objection: "Your competitors offer similar email sequencing and transcript notes for about half the cost. Why should we pay premium?",
         rebuttals: {
-            Professional: "While standard platforms focus on passive logging and generic sequencing, Hexagon operates as an active, in-call behavioral guidance layer. We don't just record data — we prevent lost deals in real-time.",
-            Empathetic: "It's smart to compare options. What our clients appreciate most about Hexagon is that we don't just dump analytics post-call. We actively guide sales reps during live moments when it actually impacts the outcome.",
-            Direct: "Competitors analyze why you lost a deal after the call is over. Hexagon is the only engine that gives suggestions during the call so you can win it."
+            Professional: "While standard platforms focus on passive logging and generic sequencing, ClozFlow operates as an active, in-call behavioral guidance layer. We don't just record data — we prevent lost deals in real-time.",
+            Empathetic: "It's smart to compare options. What our clients appreciate most about ClozFlow is that we don't just dump analytics post-call. We actively guide sales reps during live moments when it actually impacts the outcome.",
+            Direct: "Competitors analyze why you lost a deal after the call is over. ClozFlow is the only engine that gives suggestions during the call so you can win it."
         },
         confidence: 95,
         strategy: "Value Differentiation & Real-Time Advantage",
@@ -44,7 +44,7 @@ const SCENARIOS = [
         name: "Implementation Timeline",
         objection: "Our sales team is completely slammed right now. Introducing another software tool will just distract them and hurt our numbers.",
         rebuttals: {
-            Professional: "Hexagon does not require workflow training. Our UI overlays seamlessly on your existing Zoom or dialer system, and our dedicated engineers handle integrations behind the scenes in under 5 business days.",
+            Professional: "ClozFlow does not require workflow training. Our UI overlays seamlessly on your existing Zoom or dialer system, and our dedicated engineers handle integrations behind the scenes in under 5 business days.",
             Empathetic: "I respect how busy your reps are. We designed onboarding to be completely passive for reps — they simply log in, open their dialer, and immediately receive real-time cues. Zero setup friction.",
             Direct: "The tool is designed to save time immediately, not add to it. Within 48 hours of launch, your reps will spend 30% less time writing CRM follow-ups, giving them more hours back to sell."
         },
@@ -112,7 +112,7 @@ const ResponseSuggestion = () => {
                             Strategic Response Guidance
                         </h2>
                         <p className="resp__desc">
-                            Sales conversations break when confidence disappears. Hexagon 
+                            Sales conversations break when confidence disappears. ClozFlow 
                             provides the psychological response frameworks needed to 
                             maintain momentum in high‑stakes moments.
                         </p>
@@ -174,7 +174,7 @@ const ResponseSuggestion = () => {
                                 <div className="resp__rebuttal-header">
                                     <div className="resp__ai-mark">
                                         <Zap size={11} className="resp__zap-glow" />
-                                        <span>HEXAGON REBUTTAL</span>
+                                        <span>CLOZFLOW REBUTTAL</span>
                                     </div>
                                     <button 
                                         className={`resp__copy-btn ${copied ? 'copied' : ''}`}

@@ -339,7 +339,7 @@ const AiPanel = () => {
     );
 
     return (
-        <SectionCard title="AI Preferences" sub="Controls how Hexagon AI responds in your sessions.">
+        <SectionCard title="AI Preferences" sub="Controls how ClozFlow AI responds in your sessions.">
             <Picker label="Response Length" field="ai_response_length" opts={[{ value: 'short', label: 'Short' }, { value: 'balanced', label: 'Balanced' }, { value: 'detailed', label: 'Detailed' }]} />
             <Picker label="Tone" field="ai_tone" opts={[{ value: 'calm', label: 'Calm' }, { value: 'strategic', label: 'Strategic' }, { value: 'tactical', label: 'Tactical' }]} />
             <Picker label="Objection Pressure" field="ai_objection_pressure" opts={[{ value: 'soft', label: 'Soft' }, { value: 'balanced', label: 'Balanced' }, { value: 'high_intensity', label: 'High Intensity' }]} />

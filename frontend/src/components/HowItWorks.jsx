@@ -12,7 +12,7 @@ const STEPS = [
         tag: 'Phase One',
         title: 'Conversation Activation',
         icon: <Eye size={18} />,
-        sub: 'The intelligence layer starts running as the vocal stream initializes. Hexagon maps out the psychological path to a close.',
+        sub: 'The intelligence layer starts running as the vocal stream initializes. ClozFlow maps out the psychological path to a close.',
         metric: 'Stream Initialized · WebRTC'
     },
     {
@@ -85,7 +85,7 @@ const HowItWorks = () => {
                         The Persuasion Lifecycle
                     </h2>
                     <p className="hiw__subtitle">
-                        From initial vocal stream mapping to final signature — Hexagon handles the live 
+                        From initial vocal stream mapping to final signature — ClozFlow handles the live 
                         negotiation analysis so your reps can focus on building authentic trust.
                     </p>
                 </div>

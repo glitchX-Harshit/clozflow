@@ -15,8 +15,8 @@ const PERSONAS = [
         stat: '22%',
         statLabel: 'Higher Close Rate',
         heading: 'Win more deals, faster.',
-        desc: 'Stay fully present during discovery calls. Hexagon handles objection tracking and script navigation so you can focus on building trust.',
-        preview: '"Your pricing is high compared to XYZ." → Hexagon: "We offer 24/7 priority support and custom integrations which XYZ lacks. Want to see the ROI dashboard?"'
+        desc: 'Stay fully present during discovery calls. ClozFlow handles objection tracking and script navigation so you can focus on building trust.',
+        preview: '"Your pricing is high compared to XYZ." → ClozFlow: "We offer 24/7 priority support and custom integrations which XYZ lacks. Want to see the ROI dashboard?"'
     },
     {
         id: 'sdr',
@@ -26,7 +26,7 @@ const PERSONAS = [
         statLabel: 'More Meetings Set',
         heading: 'Convert cold calls to meetings.',
         desc: 'Never get flustered by a brush-off. Instant rebuttals for "send me an email" or "not interested right now" while you\'re still on the phone.',
-        preview: '"Just send me an email." → Hexagon: "Usually people say that when they\'re busy or it\'s bad timing — which is it for you right now?"'
+        preview: '"Just send me an email." → ClozFlow: "Usually people say that when they\'re busy or it\'s bad timing — which is it for you right now?"'
     },
     {
         id: 'managers',
@@ -35,7 +35,7 @@ const PERSONAS = [
         stat: '100%',
         statLabel: 'Playbook Compliance',
         heading: 'Coach your team at scale.',
-        desc: 'Ensure every rep follows the approved playbook. Hexagon automatically surfaces the right script at the right time during live calls.',
+        desc: 'Ensure every rep follows the approved playbook. ClozFlow automatically surfaces the right script at the right time during live calls.',
         preview: '"Manager Hint: Rep hasn\'t yet mentioned the Q3 enterprise discount. Nudge now."'
     },
     {
@@ -94,7 +94,7 @@ const UseCases = () => {
                     </h2>
                     <p className="uc__subtitle uc__header-animate">
                         Whether you're on the front lines or leading the team,
-                        Hexagon gives everyone an edge.
+                        ClozFlow gives everyone an edge.
                     </p>
                 </div>
 

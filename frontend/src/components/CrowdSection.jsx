@@ -10,7 +10,7 @@ const TESTIMONIALS = [
     { tag: 'STRIPE // REACTION LOG', name: 'Alex N.', role: 'Senior AE', company: 'Stripe', quote: 'Closed a $240K deal I nearly lost. The rebuttal suggestions were on screen before I even processed the customer\'s objection.' },
     { tag: 'GONG // CONNECT LIFT', name: 'Maya K.', role: 'SDR', company: 'Gong', quote: 'My connect-to-meeting rate jumped 38% in month one. The objection handling playbook is extremely seamless and quiet in the background.' },
     { tag: 'NOTION // ONBOARDING SPEED', name: 'Tom R.', role: 'VP of Sales', company: 'Notion', quote: 'We rolled this out to 60 sales representatives. Average rep ramp time dropped from 90 days down to just 28 days.' },
-    { tag: 'FIGMA // ENTERPRISE WIN', name: 'Sarah C.', role: 'Enterprise AE', company: 'Figma', quote: 'We won a $480K ARR client last quarter. Hexagon provided the exact value-metric calculations the CFO needed to approve the contract.' },
+    { tag: 'FIGMA // ENTERPRISE WIN', name: 'Sarah C.', role: 'Enterprise AE', company: 'Figma', quote: 'We won a $480K ARR client last quarter. ClozFlow provided the exact value-metric calculations the CFO needed to approve the contract.' },
     { tag: 'DEEL // PIPELINE ROI', name: 'David L.', role: 'VP Global Revenue', company: 'Deel', quote: 'We saw direct ROI in week one. Two major enterprise pipeline deals were saved using active suggestions. The platform paid for itself.' },
     { tag: 'RETOOL // CLOSER ADOPTION', name: 'Olivia W.', role: 'Head of Growth', company: 'Retool', quote: 'This is the first sales tool designed specifically for closers rather than just managers. My team adopted it instantly.' }
 ];
@@ -115,7 +115,7 @@ const CrowdSection = () => {
                 <div className="crowd__header">
                     <span className="crowd__eyebrow-text crowd__header-animate">// Loved by closers</span>
                     <h2 className="section-title crowd__header-animate">
-                        Winning sales teams trust Hexagon
+                        Winning sales teams trust ClozFlow
                     </h2>
                     <p className="crowd__subtitle crowd__header-animate">
                         Hear from the Account Executives, Sales Managers, and Founders who use our behavioral intelligence layer daily.

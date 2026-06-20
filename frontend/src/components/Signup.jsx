@@ -190,7 +190,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                 </form>
 
                 <p className="su-login-prompt">
-                    Already using Hexagon?{' '}
+                    Already using ClozFlow?{' '}
                     <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>
                         Log in
                     </a>

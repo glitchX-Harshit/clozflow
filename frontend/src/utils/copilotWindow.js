@@ -23,7 +23,7 @@ export async function openCopilotWindow() {
             injectStyles(pipWin);
             const container = createRoot(pipWin);
 
-            pipWin.document.title = 'Hexagon Copilot';
+            pipWin.document.title = 'ClozFlow Copilot';
 
             return { win: pipWin, container };
         } catch (err) {
@@ -37,12 +37,12 @@ export async function openCopilotWindow() {
         const top = window.screenY + 60;
         const popup = window.open(
             '',
-            'HexagonCopilot',
+            'ClozFlowCopilot',
             `popup=yes,width=400,height=440,left=${left},top=${top},resizable=yes,scrollbars=no`
         );
 
         if (popup) {
-            popup.document.title = 'Hexagon Copilot';
+            popup.document.title = 'ClozFlow Copilot';
 
             injectStyles(popup);
             const container = createRoot(popup);

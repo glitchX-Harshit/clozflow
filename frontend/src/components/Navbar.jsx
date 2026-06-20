@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import MagButton from './MagButton';
+import ClozFlowLogo from './ClozFlowLogo';
 import './Navbar.css';
 
 const LINKS = [
@@ -9,49 +10,14 @@ const LINKS = [
     { label: 'Pricing', href: '#pricing' },
 ];
 
-const HexagonLogo = () => (
-    <svg
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="nb__custom-mark"
-    >
-        <defs>
-            <linearGradient id="hexGradOuter" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="50%" stopColor="#6366f1" />
-                <stop offset="100%" stopColor="#3b82f6" />
-            </linearGradient>
-            <linearGradient id="hexGradInner" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#ec4899" />
-                <stop offset="100%" stopColor="#8b5cf6" />
-            </linearGradient>
-            <filter id="hexGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="1.5" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-        </defs>
-        <path
-            d="M16 2L3 9.5V22.5L16 30L29 22.5V9.5L16 2Z"
-            stroke="url(#hexGradOuter)"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-            filter="url(#hexGlow)"
-            className="nb__hex-base"
-        />
-        <path
-            d="M16 7L9 11V19L16 23L23 19V11L16 7Z"
-            fill="url(#hexGradInner)"
-            className="nb__hex-inner"
-            opacity="0.85"
-        />
-        <circle cx="16" cy="15" r="2.5" fill="#ffffff" className="nb__hex-core" />
-    </svg>
-);
-
 const Navbar = ({ onSignup, onLogin }) => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState('');
+    const [hoveredRect, setHoveredRect] = useState(null);
+    const [navHovered, setNavHovered] = useState(false);
+
+    const containerRef = useRef(null);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 30);
@@ -72,7 +38,6 @@ const Navbar = ({ onSignup, onLogin }) => {
 
     useEffect(() => {
         const preventDefault = (e) => {
-            // Prevent background touch scrolling through the drawer
             e.preventDefault();
         };
         const drawer = document.querySelector('.nb__drawer');
@@ -86,6 +51,61 @@ const Navbar = ({ onSignup, onLogin }) => {
         };
     }, [mobileOpen]);
 
+    // Active Section Intersection Observer
+    useEffect(() => {
+        const sections = LINKS.map(link => document.querySelector(link.href)).filter(Boolean);
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActiveSection(entry.target.id);
+                }
+            });
+        }, {
+            rootMargin: '-30% 0px -60% 0px'
+        });
+
+        sections.forEach(sec => observer.observe(sec));
+        return () => {
+            sections.forEach(sec => observer.unobserve(sec));
+        };
+    }, []);
+
+    // Set sliding pill coordinates to active link or clear it
+    useEffect(() => {
+        if (!navHovered) {
+            const activeLinkEl = containerRef.current?.querySelector(`.nb__link[href="#${activeSection}"]`);
+            if (activeLinkEl) {
+                const rect = activeLinkEl.getBoundingClientRect();
+                const parentRect = containerRef.current.getBoundingClientRect();
+                setHoveredRect({
+                    left: rect.left - parentRect.left,
+                    width: rect.width,
+                    height: rect.height,
+                    top: rect.top - parentRect.top,
+                });
+            } else {
+                setHoveredRect(null);
+            }
+        }
+    }, [activeSection, navHovered]);
+
+    const handleMouseEnter = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const parentRect = containerRef.current.getBoundingClientRect();
+        setHoveredRect({
+            left: rect.left - parentRect.left,
+            width: rect.width,
+            height: rect.height,
+            top: rect.top - parentRect.top,
+        });
+        setNavHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setNavHovered(false);
+    };
+
     const close = () => setMobileOpen(false);
 
     return (
@@ -94,16 +114,30 @@ const Navbar = ({ onSignup, onLogin }) => {
                 <div className="nb__inner">
                     {/* Logo */}
                     <a href="#" className="nb__logo">
-                        <HexagonLogo />
+                        <ClozFlowLogo />
                         <div className="nb__wordmark-wrapper">
-                            <span className="nb__wordmark">Hexagon</span>
+                            <span className="nb__wordmark">ClozFlow</span>
                         </div>
                     </a>
 
                     {/* Center links */}
-                    <div className="nb__links">
+                    <div className="nb__links" ref={containerRef} onMouseLeave={handleMouseLeave}>
+                        <div
+                            className="nb__link-bg"
+                            style={{
+                                transform: hoveredRect ? `translate3d(${hoveredRect.left}px, ${hoveredRect.top}px, 0)` : 'none',
+                                width: hoveredRect ? `${hoveredRect.width}px` : 0,
+                                height: hoveredRect ? `${hoveredRect.height}px` : 0,
+                                opacity: hoveredRect ? 1 : 0,
+                            }}
+                        />
                         {LINKS.map(l => (
-                            <a key={l.href} href={l.href} className="nb__link">
+                            <a
+                                key={l.href}
+                                href={l.href}
+                                className={`nb__link ${activeSection === l.href.substring(1) ? 'nb__link--active' : ''}`}
+                                onMouseEnter={handleMouseEnter}
+                            >
                                 {l.label}
                             </a>
                         ))}
@@ -116,14 +150,14 @@ const Navbar = ({ onSignup, onLogin }) => {
                             variant="outline"
                             onClick={onLogin}
                             className="nb__login-mag"
-                            magnetStrength={0.35}
+                            disableMagnet
                         />
                         <MagButton
                             label="Enter Workspace"
                             variant="dark"
                             onClick={onSignup}
                             className="nb__cta-mag"
-                            magnetStrength={0.35}
+                            disableMagnet
                         />
                         <button
                             className={`nb__hamburger ${mobileOpen ? 'nb__hamburger--active' : ''}`}
@@ -139,6 +173,7 @@ const Navbar = ({ onSignup, onLogin }) => {
 
             {/* Mobile drawer */}
             <div className={`nb__drawer ${mobileOpen ? 'nb__drawer--open' : ''}`}>
+                <div className="nb__drawer-glow" />
                 {/* Background grid lines */}
                 <div className="nb__drawer-grid-lines">
                     <div className="nb__drawer-grid-line vertical dv1"></div>
@@ -151,7 +186,11 @@ const Navbar = ({ onSignup, onLogin }) => {
                         {LINKS.map((l, idx) => (
                             <div key={l.href} className="nb__drawer-link-item">
                                 <span className="nb__drawer-link-num">0{idx + 1}</span>
-                                <a href={l.href} className="nb__drawer-link" onClick={close}>
+                                <a 
+                                    href={l.href} 
+                                    className={`nb__drawer-link ${activeSection === l.href.substring(1) ? 'nb__drawer-link--active' : ''}`} 
+                                    onClick={close}
+                                >
                                     {l.label}
                                 </a>
                             </div>
@@ -165,7 +204,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                                 label="Log in"
                                 variant="outline"
                                 fullWidth
-                                magnetStrength={0.2}
+                                disableMagnet
                                 onClick={() => { onLogin(); close(); }}
                                 className="nb__drawer-btn"
                             />
@@ -173,14 +212,14 @@ const Navbar = ({ onSignup, onLogin }) => {
                                 label="Enter Workspace"
                                 variant="dark"
                                 fullWidth
-                                magnetStrength={0.2}
+                                disableMagnet
                                 onClick={() => { onSignup(); close(); }}
                                 className="nb__drawer-btn primary"
                             />
                         </div>
 
                         <div className="nb__drawer-meta nb__drawer-animate-fade">
-                            <span>© 2026 HEXAGON. ALL RIGHTS RESERVED.</span>
+                            <span>© 2026 CLOZFLOW. ALL RIGHTS RESERVED.</span>
                             <span>DESIGNED FOR ENTERPRISE</span>
                         </div>
                     </div>

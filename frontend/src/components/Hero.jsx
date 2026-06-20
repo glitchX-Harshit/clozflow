@@ -93,7 +93,7 @@ const Hero = ({ onGetStarted }) => {
                         variant="dark"
                         icon={<ArrowRight size={16} />}
                         onClick={onGetStarted}
-                        magnetStrength={0.4}
+                        disableMagnet
                     />
                     <div className="hero__cta-meta">
                         <ArrowDownRight size={14} className="hero__cta-arrow" />
@@ -115,7 +115,7 @@ const Hero = ({ onGetStarted }) => {
                     </div>
                 </div>
                 <div className="hero__strip-right">
-                    <span className="hero__strip-note">© 2025 HEXAGON INTEL</span>
+                    <span className="hero__strip-note">© 2025 CLOZFLOW INTEL</span>
                 </div>
             </div>
         </section>

@@ -235,7 +235,7 @@ const HistoryView = () => {
             const blob = await res.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = `hexagon_report_${callId}.pdf`;
+            a.href = url; a.download = `clozflow_report_${callId}.pdf`;
             document.body.appendChild(a); a.click();
             window.URL.revokeObjectURL(url); document.body.removeChild(a);
         } catch (err) {

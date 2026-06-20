@@ -1,66 +1,121 @@
-/* ══ NAVBAR ═════════════════════════════════════════ */
+/* ══ NAVBAR (LUXURY FLOATING GLASS DOCK) ════════════ */
 .nb {
     position: fixed;
-    inset: 0 0 auto;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    width: calc(100% - 3rem);
+    max-width: 1180px;
     z-index: 10002;
-    padding: 1.25rem 0;
-    transition: padding-top 0.35s ease, padding-bottom 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    padding: 0.5rem 0.5rem;
+    border-radius: 9999px;
+    
+    /* Double-background trick for gradient border glassmorphism */
+    background: 
+        linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72)) padding-box,
+        linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(100, 116, 139, 0.08) 50%, rgba(0, 0, 0, 0.05) 100%) border-box;
+    border: 1.5px solid transparent;
+    
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: 
+        0 4px 20px -6px rgba(0, 0, 0, 0.03),
+        0 12px 36px -15px rgba(30, 64, 175, 0.06),
+        inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    
+    transition: 
+        top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nb--scrolled {
-    padding: 0.75rem 0;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07);
+    top: 0.75rem;
+    width: calc(100% - 2rem);
+    max-width: 1120px;
+    background: 
+        linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)) padding-box,
+        linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0%, rgba(100, 116, 139, 0.12) 50%, rgba(0, 0, 0, 0.08) 100%) border-box;
+    box-shadow: 
+        0 2px 10px rgba(0, 0, 0, 0.01),
+        0 20px 48px -15px rgba(30, 64, 175, 0.12),
+        inset 0 1px 1px rgba(255, 255, 255, 0.7);
 }
 
 .nb__inner {
-    max-width: 1180px;
+    width: 100%;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1rem 0 0.75rem;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
+    height: 3rem;
 }
 
-/* ── Premium Logo ── */
+/* ── Premium Logo & Brand Anim ── */
 .nb__logo {
     display: flex;
     align-items: center;
     gap: 0.625rem;
     flex-shrink: 0;
-    margin-right: auto;
     text-decoration: none;
     position: relative;
-    padding: 0.25rem 0;
-    border-radius: 12px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    transition: background-color 0.3s ease;
 }
 
-.nb__custom-mark {
+.nb__logo:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.nb__logo-svg {
     width: 32px;
     height: 32px;
     transform-style: preserve-3d;
     overflow: visible;
-    transform: rotate(90deg) scale(1.05); /* Permanent hovered state */
+    transform: rotate(0deg);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nb__hex-base {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120; /* Permanent hovered state */
-    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.6));
+.nb__logo:hover .nb__logo-svg {
+    transform: rotate(180deg);
 }
 
-.nb__hex-inner {
-    transform-origin: center;
-    transform: scale(0.65) rotate(-90deg); /* Permanent hovered state */
-    opacity: 1;
+.nb__logo-ribbon-1 {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nb__hex-core {
-    transform-origin: center;
-    transform: scale(1.5); /* Permanent hovered state */
-    fill: #fff;
+.nb__logo-ribbon-2 {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nb__logo:hover .nb__logo-ribbon-1 {
+    stroke-dashoffset: -24;
+}
+
+.nb__logo:hover .nb__logo-ribbon-2 {
+    stroke-dashoffset: 24;
+}
+
+.nb__logo-core {
+    transform-origin: 16px 16px;
+    transform: scale(1);
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), fill 0.3s ease;
+}
+
+.nb__logo:hover .nb__logo-core {
+    transform: scale(1.4);
+    fill: #ffffff;
+    filter: drop-shadow(0 0 4px #8b5cf6);
 }
 
 .nb__wordmark-wrapper {
@@ -69,196 +124,281 @@
 
 .nb__wordmark {
     font-family: var(--font-display);
-    font-size: 1.35rem;
+    font-size: 1.3rem;
     font-weight: 800;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.04em;
     background: linear-gradient(
-        -45deg, 
-        var(--text) 0%, 
-        var(--text) 30%, 
-        #8b5cf6 50%, 
-        #ec4899 70%, 
+        90deg,
+        var(--text) 0%,
+        var(--text) 45%,
+        #8b5cf6 50%,
+        #ec4899 55%,
+        #3b82f6 60%,
+        var(--text) 65%,
         var(--text) 100%
     );
-    background-size: 300% auto;
+    background-size: 300% 100%;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shine 2.5s linear infinite; /* Permanent shine animation */
+    transition: 
+        letter-spacing 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.4s ease;
+    animation: wordmarkReveal 6s ease-in-out infinite;
 }
 
-@keyframes shine {
-    to {
-        background-position: 300% center;
+.nb__logo:hover .nb__wordmark {
+    letter-spacing: 0.05em;
+    filter: drop-shadow(0 2px 12px rgba(139, 92, 246, 0.22));
+    animation: wordmarkShimmer 1.2s linear infinite;
+}
+
+@keyframes wordmarkReveal {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
     }
 }
 
-.nb__dot { color: var(--accent); }
+@keyframes wordmarkShimmer {
+    0% {
+        background-position: 300% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
-/* ── Links ── */
+/* ── Interactive Sliding Pill Links ── */
 .nb__links {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    position: relative;
+    gap: 0.15rem;
+    background: rgba(0, 0, 0, 0.02);
+    padding: 0.2rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.nb__link-bg {
+    position: absolute;
+    border-radius: 9999px;
+    background: var(--surface);
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.04),
+        0 6px 16px -4px rgba(30, 64, 175, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.035);
+    z-index: 0;
+    pointer-events: none;
+    transition: 
+        transform 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+        width 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+        height 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+        opacity 0.25s ease;
 }
 
 .nb__link {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-dim);
-    padding: 0.45rem 0.875rem;
-    border-radius: var(--r-full);
-    transition: all 0.18s ease;
+    padding: 0.45rem 1.05rem;
+    border-radius: 9999px;
+    transition: color 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+    position: relative;
+    z-index: 1;
 }
 
-.nb__link:hover {
+.nb__link:hover,
+.nb__link--active {
     color: var(--text);
-    background: var(--surface);
 }
 
-/* ── Actions ── */
+/* Add a microscopic glow dot under active link when not hovered */
+.nb__link--active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.nb__links:hover .nb__link--active::after {
+    opacity: 0;
+}
+
+/* ── Actions & CTA ── */
 .nb__actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-shrink: 0;
 }
 
-.nb__login {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-dim);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.45rem 0.75rem;
-    border-radius: var(--r-full);
-    transition: all 0.18s ease;
-    font-family: inherit;
-}
-
-.nb__login:hover {
-    color: var(--text);
-    background: var(--surface);
-}
-
-.nb__cta {
-    font-size: 0.875rem;
-    padding: 0.5rem 1.2rem;
-}
-
-/* MagButton overrides for compact navbar sizing */
+/* MagButton overrides for floating navbar design */
 .nb__login-mag {
     min-width: 0 !important;
-    padding: 0.5rem 1rem !important;
-    font-size: 0.875rem !important;
-    border-radius: var(--r-full) !important;
+    padding: 0.45rem 1rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    border-radius: 9999px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 1px solid transparent !important;
+    transition: color 0.3s ease, border-color 0.3s ease !important;
+}
+
+.nb__login-mag:hover {
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    background: rgba(0, 0, 0, 0.02) !important;
 }
 
 .nb__cta-mag {
     min-width: 0 !important;
-    padding: 0.5rem 1.25rem !important;
-    font-size: 0.875rem !important;
-    border-radius: var(--r-full) !important;
+    padding: 0.45rem 1.15rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    border-radius: 9999px !important;
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.05),
+        0 4px 12px rgba(30, 64, 175, 0.08) !important;
 }
 
-/* Redesigned Cinematic Hamburger Button (Borderless & Floating) */
+/* Redesigned Glassmorphic Mobile Hamburger Button */
 .nb__hamburger {
     display: none;
-    background: transparent;
-    border: none;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
     cursor: pointer;
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
     position: relative;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     padding: 0;
     z-index: 10003;
 }
 
 .nb__hamburger:hover {
-    background: transparent;
-    border: none;
-    box-shadow: none;
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.1);
+    transform: scale(1.04);
 }
 
 .nb__hamburger-line {
     display: block;
     height: 1.5px;
     background-color: var(--text);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.4s ease;
+    transition: 
+        transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+        width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.3s ease;
     will-change: transform, width;
 }
 
 .nb__hamburger-line--1 {
-    width: 18px;
-    transform: rotate(-10deg) translateY(1px);
-    transform-origin: center;
+    width: 15px;
+    transform: translateY(0);
 }
 
 .nb__hamburger-line--2 {
-    width: 18px;
-    transform: rotate(10deg) translateY(-1px);
-    transform-origin: center;
+    width: 15px;
+    transform: translateY(0);
 }
 
-/* Staggered kinetic slide on hover */
 .nb__hamburger:not(.nb__hamburger--active):hover .nb__hamburger-line--1 {
-    transform: rotate(0deg) translateY(0px) translateX(2.5px);
+    transform: translateY(-1px) scaleX(1.1);
 }
 
 .nb__hamburger:not(.nb__hamburger--active):hover .nb__hamburger-line--2 {
-    transform: rotate(0deg) translateY(0px) translateX(-2.5px);
+    transform: translateY(1px) scaleX(0.85);
 }
 
-/* Active Morphing State: container styles when mobile menu is open */
+/* Active Morphing State into symmetrical close cross */
 .nb__hamburger--active {
-    background: transparent !important;
-    border: none !important;
-    transform: rotate(90deg); /* 90deg turn on activation */
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    transform: rotate(90deg);
 }
 
 .nb__hamburger--active:hover {
-    background: transparent !important;
-    border: none !important;
-    transform: rotate(180deg); /* Spin to 180deg on hover while open */
+    background: rgba(255, 255, 255, 0.25) !important;
+    transform: rotate(180deg);
 }
 
-/* Active Morphing State into Symmetrical Close Cross */
 .nb__hamburger--active .nb__hamburger-line--1 {
-    transform: translateY(3.25px) rotate(45deg);
+    transform: translateY(1px) rotate(45deg);
     background-color: #ffffff !important;
-    width: 16px;
+    width: 13px;
 }
 
 .nb__hamburger--active .nb__hamburger-line--2 {
-    transform: translateY(-3.25px) rotate(-45deg);
+    transform: translateY(-1px) rotate(-45deg);
     background-color: #ffffff !important;
-    width: 16px;
+    width: 13px;
 }
 
-/* ── Mobile drawer ── */
+/* ── Mobile Drawer (Luxury Dark Glassmorphism) ── */
 .nb__drawer {
     position: fixed;
     inset: 0;
-    background: #060606; /* Velvet black */
-    z-index: 10001; /* Set high to display on top of all page sections */
+    background: rgba(6, 6, 6, 0.85); /* Velvet dark tint */
+    z-index: 10001;
     display: flex;
     flex-direction: column;
     pointer-events: none;
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(0, -100%, 0); /* Slide from top instead of side for premium look */
     transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(36px);
+    -webkit-backdrop-filter: blur(36px);
     will-change: transform;
 }
 
 .nb__drawer--open {
     transform: translate3d(0, 0, 0);
     pointer-events: all;
+}
+
+/* Ambient Moving Mesh Glow Inside Drawer */
+.nb__drawer-glow {
+    position: absolute;
+    top: -20%;
+    right: -20%;
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(
+        circle, 
+        rgba(255, 255, 255, 0.03) 0%, 
+        rgba(148, 163, 184, 0.015) 50%, 
+        transparent 100%
+    );
+    filter: blur(140px);
+    z-index: 0;
+    pointer-events: none;
+    animation: pulseGlow 12s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    100% {
+        transform: translate3d(-15%, 15%, 0) scale(1.2);
+    }
 }
 
 /* Background Grid Lines */
@@ -271,7 +411,7 @@
 
 .nb__drawer-grid-line {
     position: absolute;
-    background: rgba(255, 255, 255, 0.025);
+    background: rgba(255, 255, 255, 0.018);
 }
 
 .nb__drawer-grid-line.vertical {
@@ -297,7 +437,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 8rem 2.5rem 3rem 2.5rem;
+    padding: 7.5rem 2.5rem 3.5rem 2.5rem;
     z-index: 10;
     box-sizing: border-box;
 }
@@ -305,7 +445,7 @@
 .nb__drawer-links {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
     align-items: flex-start;
 }
 
@@ -314,8 +454,8 @@
     align-items: baseline;
     gap: 0.75rem;
     opacity: 0;
-    transform: translate3d(0, 20px, 0);
-    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+    transform: translate3d(0, 25px, 0);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
     will-change: transform, opacity;
 }
 
@@ -331,24 +471,33 @@
 
 .nb__drawer-link-num {
     font-size: 0.8rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.25);
-    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.22);
+    font-family: var(--font-body);
 }
 
 .nb__drawer-link {
     display: inline-block;
     font-family: var(--font-display);
-    font-size: clamp(2rem, 8vw, 3rem);
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
     font-weight: 700;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.7);
     letter-spacing: -0.04em;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease;
+}
+
+.nb__drawer-link:hover,
+.nb__drawer-link--active {
+    color: #ffffff;
+}
+
+.nb__drawer-link--active {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
 .nb__drawer-link:hover {
-    color: var(--accent-mid);
+    transform: translateX(4px);
 }
 
 .nb__drawer-footer {
@@ -369,7 +518,7 @@
 .nb__drawer-btn {
     width: 100% !important;
     background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     color: #ffffff !important;
     font-size: 0.875rem !important;
     padding: 0.75rem 0 !important;
@@ -379,25 +528,26 @@
     background: #ffffff !important;
     border-color: #ffffff !important;
     color: #060606 !important;
+    font-weight: 700 !important;
 }
 
 .nb__drawer-meta {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 500;
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 600;
     letter-spacing: 0.15em;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.25);
     text-transform: uppercase;
 }
 
-/* Common fade animations */
+/* Fade animations for items */
 .nb__drawer-animate-fade {
     opacity: 0;
     transform: translate3d(0, 20px, 0);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
     will-change: transform, opacity;
 }
 
@@ -420,6 +570,7 @@
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    border-color: transparent !important;
 }
 
 .nb--open .nb__wordmark {
@@ -431,27 +582,34 @@
 }
 
 .nb--open .nb__hamburger {
-    background: transparent !important;
-    border: none !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .nb--open .nb__hamburger-line {
     background-color: #ffffff !important;
 }
 
-/* ── Responsive ── */
+/* ── Responsive breakpoints ── */
 @media (max-width: 900px) {
     .nb__links { display: none; }
     .nb__hamburger { display: flex; }
-    .nb__login { display: none; }
     .nb__login-mag { display: none; }
     .nb__cta-mag { display: none; }
 }
 
 @media (max-width: 560px) {
-    .nb__inner { padding: 0 1.25rem; }
+    .nb {
+        top: 1rem;
+        width: calc(100% - 1.5rem);
+    }
+    .nb--scrolled {
+        top: 0.5rem;
+        width: calc(100% - 1rem);
+    }
+    .nb__inner { padding: 0 0.75rem 0 0.5rem; }
     .nb__drawer-content {
-        padding: 7rem 1.5rem 2.5rem 1.5rem;
+        padding: 6.5rem 1.5rem 2.5rem 1.5rem;
     }
     .nb__drawer-meta {
         flex-direction: column;

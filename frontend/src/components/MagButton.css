@@ -82,18 +82,31 @@
     transform: scale(0);
     opacity: 0;
     transform-origin: var(--ox) var(--oy);
-
-    /* Radial burst from exact cursor position */
-    background: radial-gradient(
-        circle at var(--ox) var(--oy),
-        var(--accent) 0%,
-        var(--accent) 100%
-    );
+    /* Radial burst background is overridden by variants below */
+    background: transparent;
 
     /* Butter-smooth spring reveal */
     transition:
         transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
         opacity   0.08s ease;
+}
+
+/* Dark variant uses sleek slate-charcoal black on hover */
+.mag-btn--dark .mag-fill {
+    background: radial-gradient(
+        circle at var(--ox) var(--oy),
+        #1e293b 0%,
+        #0f172a 100%
+    );
+}
+
+/* Outline variant fills with solid text color (black) */
+.mag-btn--outline .mag-fill {
+    background: radial-gradient(
+        circle at var(--ox) var(--oy),
+        var(--text) 0%,
+        var(--text) 100%
+    );
 }
 
 /* Accent variant uses a deeper navy fill */
@@ -165,17 +178,30 @@
     color: #fff;
 }
 
-/* ══ NAVY GLOW lift — all variants ══════════════════ */
-.mag-btn--dark.is-hovered,
-.mag-btn--outline.is-hovered,
+/* ── Premium hover transforms & shadows ── */
+.mag-btn.is-hovered {
+    transform: translateY(-2px);
+}
+.mag-btn--dark.is-hovered {
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.15),
+        0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.mag-btn--outline.is-hovered {
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
 .mag-btn--accent.is-hovered {
     box-shadow:
-        0 24px 60px rgba(30, 64, 175, 0.30),
-        0  8px 20px rgba(30, 64, 175, 0.18);
+        0 12px 30px rgba(30, 64, 175, 0.25),
+        0 4px 10px rgba(30, 64, 175, 0.12);
 }
 
 /* ══ Active press ══════════════════════════════════ */
 .mag-btn:active:not(.mag-btn--disabled) {
-    transform: scale(0.97) !important;
+    transform: translateY(0px) scale(0.97) !important;
     transition: transform 0.1s ease !important;
 }

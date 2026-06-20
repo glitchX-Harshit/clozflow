@@ -36,7 +36,7 @@ const FRICTION_CLIPS = [
         category: "INTEGRATION GAP",
         title: "Workflow Integration Dependency",
         timestamp: "09:05",
-        transcript: "We use a heavily customized Salesforce setup. If Hexagon doesn't seamlessly sync contact activities without dev support, it's going to be a non-starter for our operations team.",
+        transcript: "We use a heavily customized Salesforce setup. If ClozFlow doesn't seamlessly sync contact activities without dev support, it's going to be a non-starter for our operations team.",
         highlightText: "seamlessly sync contact activities without dev support",
         severity: 72,
         emotion: "Assertive / Technical Rigid",
@@ -174,7 +174,7 @@ const ObjectionHandling = () => {
                         Real-time Friction Analysis
                     </h2>
                     <p className="obj__header-sub">
-                        Most objection handling is reactive. Hexagon helps sales teams stay ahead 
+                        Most objection handling is reactive. ClozFlow helps sales teams stay ahead 
                         of hesitation by decoding acoustic and semantic signals in real-time.
                     </p>
                 </div>
