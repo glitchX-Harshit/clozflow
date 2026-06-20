@@ -18,24 +18,26 @@ except ImportError:
     pass
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# HEXAGON CONVERSATION ENGINE V4.2 — Psychological Sharpness + Compact Prompts
+# HEXAGON CONVERSATION ENGINE V5.0 — Response Quality Refactor
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# V4.2 Flow (reasoning in Python, generation in LLM):
+# V5.0 Flow (reasoning in Python, generation-only LLM):
 #   prospect_message
-#   → identify_hidden_concern  (reasoning_router)
-#   → choose_conversation_goal (Python)
-#   → choose_response_type     (Python)
-#   → select_response_energy   (intent-driven map)
-#   → generate_response        (LLM — compact prompt, generation-only)
+#   → identify_hidden_concern  (reasoning_router — unchanged)
+#   → choose_conversation_goal (Python — unchanged)
+#   → choose_response_type     (Python — unchanged)
+#   → select_response_energy   (intent-driven map — unchanged)
+#   → inject_few_shot_examples (NEW — concern-specific BAD/GOOD pairs)
+#   → generate_response        (LLM — 3-field output only)
+#   → populate_metadata        (Python — fills intent/stage/strategy/etc.)
 #
-# V4.2 upgrades over V3:
-#   - ~70% smaller system prompt (removed duplicated reasoning)
-#   - Intent-driven response energy (not random)
-#   - Psychologically sharper fallback responses
-#   - "Experienced operator" tone (not alpha/guru)
-#   - Compressed persuasion bias
-#   - All stability systems preserved
+# V5.0 upgrades over V4.2:
+#   - LLM generates only {response, next_question, coaching_tip}
+#   - Python populates all metadata fields post-generation
+#   - Few-shot examples per concern type (BAD → GOOD)
+#   - Natural sales voice (not consultant/engine)
+#   - Clean transcript format (PROSPECT:/REP: not JSON)
+#   - Conversational fallback library
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -237,6 +239,103 @@ def _select_response_type(conversation_goal: str, concern_type: str, hidden_conc
     return "diagnostic_question"
 
 
+# ─── V5.0: Few-Shot Example Library (BAD → GOOD per concern) ─────────────────
+# These examples are injected into the user prompt to teach the LLM tone by
+# demonstration. Each concern type gets 1-2 example pairs.
+_FEW_SHOT_BY_CONCERN = {
+    "pricing": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "It's too expensive."
+BAD: "I understand your concern about pricing. Let me explain the value proposition and ROI you'll see."
+GOOD: {"response": "Price only stings when the payoff isn't clear yet. What outcome would make this a no-brainer?", "next_question": "", "coaching_tip": "Don't defend price — redirect to value gap."}
+""",
+    "budget": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "We don't have the budget for this right now."
+BAD: "I understand budget constraints can be challenging. Let's explore how we can work within your budget."
+GOOD: {"response": "Heard. What if we started smaller and let the results justify scaling up?", "next_question": "", "coaching_tip": "Offer a smaller entry point, don't argue the budget."}
+""",
+    "need_to_think": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "I need to think about it."
+BAD: "Of course, take your time. What specific aspects would you like to consider further?"
+GOOD: {"response": "For sure. What's the one thing that would tip it from 'maybe' to 'let's do it'?", "next_question": "", "coaching_tip": "Isolate the real blocker — 'think about it' is never the actual issue."}
+""",
+    "delay": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "Can we revisit this next quarter?"
+BAD: "Absolutely, I understand timing is important. When would be a good time to reconnect?"
+GOOD: {"response": "Sure. What changes between now and then?", "next_question": "", "coaching_tip": "Make them confront that nothing changes by waiting."}
+""",
+    "trust_issue": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "I've heard this kind of pitch before."
+BAD: "I completely understand your skepticism. Let me share some case studies that demonstrate our track record."
+GOOD: {"response": "Yeah, most of it's noise. What went wrong last time?", "next_question": "", "coaching_tip": "Validate the skepticism, then dig into their bad experience."}
+""",
+    "trust": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "How do I know this actually works?"
+BAD: "Great question! We have numerous success stories and testimonials from satisfied clients."
+GOOD: {"response": "Fair. What kind of proof would actually move the needle for you — numbers, a reference call, a pilot?", "next_question": "", "coaching_tip": "Let them define what 'proof' means to them."}
+""",
+    "status_quo": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "We're doing fine with our current process."
+BAD: "That's great to hear. However, there might be opportunities to optimize your workflow further."
+GOOD: {"response": "Solid. Where's it costing you the most time right now?", "next_question": "", "coaching_tip": "Don't argue 'fine' — probe for the hidden friction."}
+""",
+    "doing_fine": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "We're handling everything internally."
+BAD: "I understand you have internal resources. Let me show you how we can complement your existing efforts."
+GOOD: {"response": "Nice. What's the one thing your team wishes they didn't have to do?", "next_question": "", "coaching_tip": "Find the task they'd love to offload."}
+""",
+    "already_have_vendor": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "We already work with someone for this."
+BAD: "I understand you have an existing partner. What specific areas do you feel could be improved?"
+GOOD: {"response": "Got it. How's that going — anything you wish worked differently?", "next_question": "", "coaching_tip": "Open the door to dissatisfaction without attacking the vendor."}
+""",
+    "not_interested": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "Not interested."
+BAD: "I understand. Can I ask what specific aspects didn't resonate with you?"
+GOOD: {"response": "Respect that. Mind if I ask what's behind it?", "next_question": "", "coaching_tip": "Short and direct — don't chase, just get the real reason."}
+""",
+    "rejection": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "We're going to pass."
+BAD: "I'm sorry to hear that. Is there anything we could have done differently?"
+GOOD: {"response": "Fair enough. What didn't land?", "next_question": "", "coaching_tip": "Get intel for next time. Don't grovel."}
+""",
+    "direct_question": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "How much does this cost?"
+BAD: "That's a great question. The pricing depends on several factors and I'd love to walk you through our options."
+GOOD: {"response": "Depends on the setup, but most teams land between X and Y. Where are you at scale-wise?", "next_question": "", "coaching_tip": "Give a range immediately, then qualify."}
+""",
+    "curiosity": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "How does this actually work?"
+BAD: "Excellent question! Let me walk you through our comprehensive process and methodology."
+GOOD: {"response": "Short version — we plug in, handle X, and you see Y within Z weeks. Want the longer breakdown?", "next_question": "", "coaching_tip": "Give the elevator pitch, then offer depth."}
+""",
+    "risk": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "What if it doesn't work?"
+BAD: "I understand your concern about risk. We offer comprehensive support and a proven methodology."
+GOOD: {"response": "What's the worst case you're picturing? Usually it's smaller than people think.", "next_question": "", "coaching_tip": "Name the fear to shrink it."}
+""",
+    "roi": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "I'm not sure we'd see the return."
+BAD: "Let me share our ROI calculator and demonstrate the potential returns you could expect."
+GOOD: {"response": "What does a win look like in numbers for you? Let's work backward from that.", "next_question": "", "coaching_tip": "Make them define success — then show how you deliver it."}
+""",
+    "authority": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "I need to run this by my team."
+BAD: "Of course, team alignment is crucial. Would it be helpful if I prepared a presentation for your stakeholders?"
+GOOD: {"response": "Totally. Who else needs to weigh in, and what would they want to see?", "next_question": "", "coaching_tip": "Map the buying committee. Don't just wait."}
+""",
+    "unknown": """EXAMPLES (study the tone, don't copy):
+PROSPECT: "Hmm, interesting."
+BAD: "I'm glad you find it interesting. Would you like me to elaborate on any specific aspect?"
+GOOD: {"response": "What caught your attention?", "next_question": "", "coaching_tip": "Short prompt to get them talking. Don't fill silence with features."}
+""",
+}
+
+
+def _get_few_shot_examples(concern_type: str) -> str:
+    """V5.0: Return few-shot examples for the detected concern type."""
+    return _FEW_SHOT_BY_CONCERN.get(concern_type, _FEW_SHOT_BY_CONCERN["unknown"])
+
+
 class SalesAIEngine:
     def __init__(self, call_context: dict[str, Any] | None = None, mode: str = "live"):
         self.call_context = call_context or {}
@@ -344,80 +443,80 @@ class SalesAIEngine:
         goal = _select_conversation_goal(hidden, self.deal_state["stage"])
         response_type = _select_response_type(goal, hidden["type"], hidden)
 
-        # V4.2 fallback responses — psychologically sharp, reasoning-aware
+        # V5.0 fallback responses — conversational, short, real-rep language
         fallback_responses = {
             "pricing": [
-                "If the price feels high, the value usually isn't fully clear yet.",
-                "Most pricing hesitation comes from uncertainty around outcomes.",
-                "The bigger cost is usually staying with what isn't fully working.",
+                "Price only feels off when the upside isn't obvious yet.",
+                "What would it cost you to keep running things the way they are?",
+                "Totally get it. What's the number that would make this a no-brainer?",
             ],
             "budget": [
-                "If the price feels high, the value usually isn't fully clear yet.",
-                "Most pricing hesitation comes from uncertainty around outcomes.",
-                "The bigger cost is usually staying with what isn't fully working.",
+                "Heard. What if we started smaller and let the results justify the spend?",
+                "Makes sense — what's the gap between your budget and where you want to be?",
+                "Price only feels off when the upside isn't obvious yet.",
             ],
             "authority": [
-                "When decisions slow down, there's usually one unresolved concern underneath.",
-                "Sounds like alignment matters here more than timing.",
+                "Who else needs to be on board for this to move?",
+                "What would your team need to see to feel good about it?",
             ],
             "delay": [
-                "Usually there's one real hesitation underneath everything else.",
-                "Being unsure is normal when the outcome still feels uncertain.",
-                "Sounds like something still isn't fully clicking yet.",
+                "No rush — what's the one thing you'd want nailed down before moving forward?",
+                "Totally fair. What would change between now and then?",
+                "What's the cost of waiting another quarter on this?",
             ],
             "need_to_think": [
-                "Usually there's one real hesitation underneath everything else.",
-                "Being unsure is normal when the outcome still feels uncertain.",
-                "Sounds like something still isn't fully clicking yet.",
+                "For sure. What's the main thing you're weighing?",
+                "Take your time — is there one thing that would make the decision easier?",
+                "What would 'yes' need to look like for you?",
             ],
             "status_quo": [
-                "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
-                "Doing things internally works — until growth exposes the gaps.",
+                "Where's the current setup costing you the most time right now?",
+                "What would have to break before you'd switch?",
             ],
             "doing_fine": [
-                "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
-                "Doing things internally works — until growth exposes the gaps.",
+                "Glad to hear it. Where do you see the biggest gap in the next 6 months?",
+                "That's solid. What's the one thing you'd improve if you could?",
             ],
             "already_have_vendor": [
-                "If the current setup was fully solving the problem, this probably wouldn't be a conversation.",
-                "Doing things internally works — until growth exposes the gaps.",
+                "How's that going? Anything you wish worked differently?",
+                "Got it. What's the one thing they're not doing well?",
             ],
             "not_interested": [
-                "Feels like there's one important thing not fully aligned yet.",
-                "Something underneath this still seems unresolved.",
+                "Appreciate you being straight. Mind if I ask what's behind that?",
+                "Respect that. Out of curiosity, what would make it relevant?",
             ],
             "rejection": [
-                "Feels like there's one important thing not fully aligned yet.",
-                "Something underneath this still seems unresolved.",
+                "Fair enough. What didn't land for you?",
+                "Got it. Was there one thing that felt off?",
             ],
             "trust_issue": [
-                "Trust usually breaks down when previous experiences didn't deliver.",
-                "Skepticism makes sense — the real question is what proof would matter to you.",
+                "Makes sense to be skeptical. What would actually convince you?",
+                "I get it — what's happened before that makes you cautious?",
             ],
             "trust": [
-                "Trust usually breaks down when previous experiences didn't deliver.",
-                "Skepticism makes sense — the real question is what proof would matter to you.",
+                "That's fair. What kind of proof would move the needle for you?",
+                "Skepticism is smart. What went wrong last time?",
             ],
             "risk": [
-                "Usually there's one real hesitation underneath everything else.",
-                "Sounds like something still isn't fully clicking yet.",
+                "What's the worst case you're picturing?",
+                "What would make this feel like a safe bet?",
             ],
             "roi": [
-                "If the price feels high, the value usually isn't fully clear yet.",
-                "The bigger cost is usually staying with what isn't fully working.",
+                "What does a win look like in numbers for you?",
+                "Where are you bleeding the most money right now?",
             ],
             "direct_question": [
-                "To give you an honest answer, I'd need a bit more context on your current setup.",
-                "That depends on where things stand right now. How are you currently handling this?",
+                "Short answer — it depends on where you're at right now. How are you set up?",
+                "Let me give you a straight answer. What's your current situation?",
             ],
             "curiosity": [
-                "Good question. Let me give you the short version.",
-                "That's worth unpacking — here's what actually matters.",
+                "Good question. Here's the short version.",
+                "Yeah, let me break that down real quick.",
             ],
             "unknown": [
-                "Feels like there's one important thing not fully aligned yet.",
-                "Something underneath this still seems unresolved.",
-                "Usually hesitation points to one core concern.",
+                "Tell me more — what's top of mind for you right now?",
+                "Interesting. What made you bring that up?",
+                "Got it. What's the main thing you're trying to solve?",
             ],
         }
 
@@ -562,10 +661,15 @@ class SalesAIEngine:
 
         avoid_goals = ", ".join(self.last_goals) if self.last_goals else "None"
 
-        # ── Build conversation history ───────────────────────────────────────
+        # ── Build conversation history (V5.0: clean transcript format) ────────
         prev_context = list(self.message_buffer[:-1])
+        transcript_lines = []
+        for msg in prev_context:
+            label = "PROSPECT" if msg.get("speaker") == "prospect" else "REP"
+            transcript_lines.append(f"{label}: {msg.get('text', '')}")
+        formatted_history = "\n".join(transcript_lines) if transcript_lines else "(start of conversation)"
 
-        print("\n=== V4.2 DEBUG INFO ===")
+        print("\n=== V5.0 DEBUG INFO ===")
         print("Transcript       :", text)
         print("Hidden Concern   :", hidden)
         print("Conversation Goal:", goal)
@@ -575,86 +679,59 @@ class SalesAIEngine:
         print("Question Required:", should_include_question)
         print("========================\n")
 
-        # ── V4.2 System Prompt — Compact, generation-focused ──────────────────
-        system_content = f"""You are "Hexagon CloserBrain" — a B2B sales intelligence engine.
+        # ── V5.0: Few-shot example injection ──────────────────────────────────
+        few_shot_examples = _get_few_shot_examples(hidden["type"])
 
-IDENTITY:
-You sound like an experienced operator — confident, direct, conversational.
-Not a consultant, therapist, or motivational speaker.
+        # ── V5.0 System Prompt — Natural sales voice, generation-only ─────────
+        system_content = f"""You are an experienced sales rep on a live call. You've closed hundreds of deals. You're sharp, calm, and you talk like a real person — not a chatbot, not a consultant, not a LinkedIn post.
 
-TONE:
-- calm authority
-- conversational
-- slightly sharp
-- never needy or overly polite
+Your job: respond to the prospect naturally. Say what a top closer would actually say on the phone.
 
-RESPONSE ENERGY: {response_energy}
-({energy_description})
+ENERGY: {response_energy} — {energy_description}
 
-RESPONSE STRUCTURE:
-Start with an insight, observation, reframe, or challenge.
-Then optionally ask ONE focused question.
-Guide the conversation — do not react or interview.
-
-RESPONSE RULES:
-- 1–2 sentences ideal. 3 max.
-- Compressed persuasion > long explanation.
-- Perspective shifts > feature explanations.
-- Strong responses use 8–20 impactful words.
+RULES:
+- 1–2 sentences. 3 max. Shorter is almost always better.
+- Lead with an observation, insight, or reframe. Not a question.
 - Answer direct questions FIRST, then follow up.
-- {"A question is recommended here to gain clarity." if should_include_question else "Questions are optional — don't force one."}
+- {"Ask ONE focused question to gain clarity." if should_include_question else "Skip questions unless they genuinely move the deal."}
+- Sound like a person, not a prompt. Vary your rhythm.
+- Never start with "I understand" or "Great question" or "That's a fair point."
 
-AVOID:
+NEVER SAY:
 "What specific...", "I understand your concern", "Let's explore",
 "Our solution helps", "This can improve", "Fair question",
-"Help me understand", "Out of curiosity"
+"Help me understand", "Out of curiosity", "Most businesses",
+"The reality is", "In practice,", "Usually when"
 
-{f'RAG HINTS: {rag_context}' if rag_context.strip() else ''}
+{f'CONTEXT HINTS (use as inspiration, never quote): {rag_context}' if rag_context.strip() else ''}
 {sim_guardrails}
 
-DEAL STATE: {self.deal_state['stage']} | Pressure: {self.deal_state['pressure_level']} | Avoid goals: [{avoid_goals}]
+DEAL: {self.deal_state['stage']} stage | Pressure: {self.deal_state['pressure_level']} | Already tried: [{avoid_goals}]
 {context_str}
 
-OUTPUT JSON:
+OUTPUT (strict JSON, nothing else):
 {{
-  "intent": "surface intent",
-  "stage": "deal stage",
-  "strategy": "response type used",
-  "confidence": 0.0,
-  "response": "1-3 sentences max",
-  "next_question": "optional follow-up question",
-  "coaching_tip": "brief rep advice",
-  "hidden_concern": "underlying concern",
-  "conversation_goal": "goal pursued",
-  "response_type": "type used",
-  "reasoning_chain": {{
-    "what_are_they_protecting": "...",
-    "what_are_they_worried_about": "...",
-    "what_information_am_i_missing": "...",
-    "should_i_diagnose_first": true
-  }},
-  "quality_scores": {{
-    "diagnosis": 0.0,
-    "curiosity": 0.0,
-    "human_sound": 0.0,
-    "persuasion": 0.0,
-    "brevity": 0.0
-  }}
+  "response": "your reply to the prospect",
+  "next_question": "optional follow-up question or empty string",
+  "coaching_tip": "one-line advice for the rep"
 }}"""
 
         prompt = f"""
-Conversation: {json.dumps(prev_context)}
+{few_shot_examples}
+---
+Conversation so far:
+{formatted_history}
 
 PROSPECT: "{text}"
 
-REASONING (pre-computed):
-- Hidden concern: {hidden['hidden_concern']}
+Context (already analyzed — just generate the response):
+- They're concerned about: {hidden['hidden_concern']}
 - Surface intent: {hidden['type']}
-- Goal: {goal} — {CONVERSATION_GOALS.get(goal, '')}
-- Response type: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
+- Your goal: {goal} — {CONVERSATION_GOALS.get(goal, '')}
+- Approach: {response_type} — {RESPONSE_TYPES.get(response_type, '')}
 - Energy: {response_energy}
 
-Generate response. Answer direct questions first. Output strict JSON.
+Respond as the rep. Answer direct questions first. Output strict JSON only.
 """
 
         for attempt in range(2):
@@ -675,13 +752,8 @@ Generate response. Answer direct questions first. Output strict JSON.
                 content = llm_response.choices[0].message.content
                 data = json.loads(content)
 
-                intent = data.get("intent", "neutral")
-                self.deal_state["last_intent"] = intent
-                self.update_stage(intent)
-
-                if intent in ["pricing", "trust", "hesitation"]:
-                    self.deal_state["objections_handled"].append(intent)
-
+                # V5.0: LLM only returns {response, next_question, coaching_tip}
+                # Python populates all metadata fields
                 suggested_resp = data.get("response", "").strip()
                 if not suggested_resp:
                     return self.smart_fallback(text)
@@ -703,30 +775,36 @@ Generate response. Answer direct questions first. Output strict JSON.
                     print("[REWRITE_TRIGGER] V3 Forbidden language detected, using fallback")
                     return self.smart_fallback(text)
 
-                self.push_response_history(suggested_resp, data.get("conversation_goal", goal))
+                self.push_response_history(suggested_resp, goal)
 
-                # Ensure V3 reasoning fields are populated
-                if "hidden_concern" not in data:
-                    data["hidden_concern"] = hidden["hidden_concern"]
-                if "conversation_goal" not in data:
-                    data["conversation_goal"] = goal
-                if "response_type" not in data:
-                    data["response_type"] = response_type
-                if "reasoning_chain" not in data:
-                    data["reasoning_chain"] = {
-                        "what_are_they_protecting": hidden["hidden_concern"],
-                        "what_are_they_worried_about": hidden["type"],
-                        "what_information_am_i_missing": "Inferred from conversation",
-                        "should_i_diagnose_first": True,
-                    }
-                if "quality_scores" not in data:
-                    data["quality_scores"] = {
-                        "diagnosis": 0.8,
-                        "curiosity": 0.7,
-                        "human_sound": 0.8,
-                        "persuasion": 0.5,
-                        "brevity": 0.8,
-                    }
+                # V5.0: Populate all metadata from Python (not LLM)
+                intent = hidden["type"]
+                self.deal_state["last_intent"] = intent
+                self.update_stage(intent)
+
+                if intent in ["pricing", "trust", "hesitation"]:
+                    self.deal_state["objections_handled"].append(intent)
+
+                data["intent"] = intent
+                data["stage"] = self.deal_state["stage"]
+                data["strategy"] = response_type.upper()
+                data["confidence"] = hidden["confidence"]
+                data["hidden_concern"] = hidden["hidden_concern"]
+                data["conversation_goal"] = goal
+                data["response_type"] = response_type
+                data["reasoning_chain"] = {
+                    "what_are_they_protecting": hidden["hidden_concern"],
+                    "what_are_they_worried_about": hidden["type"],
+                    "what_information_am_i_missing": "Inferred from conversation",
+                    "should_i_diagnose_first": goal in ["diagnose", "clarify"],
+                }
+                data["quality_scores"] = {
+                    "diagnosis": 0.8,
+                    "curiosity": 0.7,
+                    "human_sound": 0.8,
+                    "persuasion": 0.5,
+                    "brevity": 0.8,
+                }
 
                 # Backward-compat output normalization
                 data["suggested_response"] = suggested_resp
@@ -735,7 +813,7 @@ Generate response. Answer direct questions first. Output strict JSON.
                 data["type"] = data.get("intent", "")
                 data["deal_stage"] = data.get("stage", "")
 
-                print(f"[AI_RESPONSE] V3 OK | Goal: {data.get('conversation_goal')} | Type: {data.get('response_type')} | {suggested_resp[:60]}...")
+                print(f"[AI_RESPONSE] V5 OK | Goal: {data.get('conversation_goal')} | Type: {data.get('response_type')} | {suggested_resp[:60]}...")
 
                 # ML Adaptive Learning Layer
                 filter_and_log_interaction(

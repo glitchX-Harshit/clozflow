@@ -95,7 +95,7 @@ const Integrations = () => {
                             Connected to your existing workflows
                         </h2>
                         <p className="int__desc">
-                            The intelligence layer is platform agnostic. Hexagon connects 
+                            The intelligence layer is platform agnostic. ClozFlow connects 
                             natively with the environments where your sales conversations happen.
                         </p>
                         <div className="int__cta">

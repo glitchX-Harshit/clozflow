@@ -25,6 +25,7 @@ const MagButton = ({
     fullWidth = false,
     icon,
     magnetStrength = 0.35,
+    disableMagnet = false,
     ...rest
 }) => {
     const btnRef  = useRef(null);
@@ -35,19 +36,22 @@ const MagButton = ({
     const handleMouseMove = useCallback((e) => {
         if (disabled) return;
         const rect   = btnRef.current.getBoundingClientRect();
-        const cx     = rect.left + rect.width  / 2;
-        const cy     = rect.top  + rect.height / 2;
-        const dx     = (e.clientX - cx) * magnetStrength;
-        const dy     = (e.clientY - cy) * magnetStrength;
+        
+        if (!disableMagnet) {
+            const cx     = rect.left + rect.width  / 2;
+            const cy     = rect.top  + rect.height / 2;
+            const dx     = (e.clientX - cx) * magnetStrength;
+            const dy     = (e.clientY - cy) * magnetStrength;
 
-        btnRef.current.style.transform =
-            `translate(${dx}px, ${dy}px)`;
+            btnRef.current.style.transform =
+                `translate(${dx}px, ${dy}px)`;
 
-        /* Parallax the inner text slightly less */
-        const inner = btnRef.current.querySelector('.mag-inner');
-        if (inner) {
-            inner.style.transform =
-                `translate(${dx * 0.4}px, ${dy * 0.4}px)`;
+            /* Parallax the inner text slightly less */
+            const inner = btnRef.current.querySelector('.mag-inner');
+            if (inner) {
+                inner.style.transform =
+                    `translate(${dx * 0.4}px, ${dy * 0.4}px)`;
+            }
         }
 
         /* Move liquid fill origin to cursor position */
@@ -57,7 +61,7 @@ const MagButton = ({
             fillRef.current.style.setProperty('--ox', `${x}%`);
             fillRef.current.style.setProperty('--oy', `${y}%`);
         }
-    }, [disabled, magnetStrength]);
+    }, [disabled, magnetStrength, disableMagnet]);
 
     const handleMouseEnter = useCallback((e) => {
         if (disabled) return;
@@ -68,9 +72,9 @@ const MagButton = ({
     const handleMouseLeave = useCallback(() => {
         setHovered(false);
         if (btnRef.current) {
-            btnRef.current.style.transform = 'translate(0px, 0px)';
+            btnRef.current.style.transform = '';
             const inner = btnRef.current.querySelector('.mag-inner');
-            if (inner) inner.style.transform = 'translate(0px, 0px)';
+            if (inner) inner.style.transform = '';
         }
     }, []);
 

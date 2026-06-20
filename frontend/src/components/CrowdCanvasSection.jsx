@@ -175,7 +175,7 @@ const CrowdCanvasSection = () => {
                         Don't let deals <span className="italic-title">walk away.</span>
                     </h2>
                     <p className="crowd__subtitle crowd__header-animate">
-                        Objections drift deals to churn. Hover your cursor over the active cards below to deploy Hexagon suggestions and intercept the leak.
+                        Objections drift deals to churn. Hover your cursor over the active cards below to deploy ClozFlow suggestions and intercept the leak.
                     </p>
                 </div>
 

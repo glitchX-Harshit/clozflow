@@ -129,7 +129,7 @@ const Features = () => {
     const activeData = ARCHITECTURE_LAYERS[activeLayer];
 
     return (
-        <section className="arch__section" id="architecture" ref={sectionRef}>
+        <section className="arch__section" id="features" ref={sectionRef}>
             <div className="container">
                 <div className="arch__header">
                     <span className="arch__eyebrow arch__header-animate">System Architecture</span>
@@ -137,7 +137,7 @@ const Features = () => {
                         The Three-Layer Intelligence Stack
                     </h2>
                     <p className="arch__subtitle arch__header-animate">
-                        Hexagon is built on a proprietary multi-layer neural architecture 
+                        ClozFlow is built on a proprietary multi-layer neural architecture 
                         designed to solve the most complex human persuasion problems.
                     </p>
                 </div>

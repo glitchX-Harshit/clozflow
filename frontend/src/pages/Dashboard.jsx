@@ -28,45 +28,7 @@ import MagButton from '../components/MagButton';
 import LeadFinder from './LeadFinder';
 import OutreachStudioPage from './OutreachStudioPage';
 import { gsap } from 'gsap';
-
-const HexagonLogo = () => (
-    <svg
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="nb__custom-mark"
-    >
-        <defs>
-            <linearGradient id="hexGradOuterDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="50%" stopColor="#6366f1" />
-                <stop offset="100%" stopColor="#3b82f6" />
-            </linearGradient>
-            <linearGradient id="hexGradInnerDashboard" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#ec4899" />
-                <stop offset="100%" stopColor="#8b5cf6" />
-            </linearGradient>
-            <filter id="hexGlowDashboard" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="1.5" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-        </defs>
-        <path
-            d="M16 2L3 9.5V22.5L16 30L29 22.5V9.5L16 2Z"
-            stroke="url(#hexGradOuterDashboard)"
-            strokeWidth="2.5"
-            strokeLinejoin="round"
-            filter="url(#hexGlowDashboard)"
-            className="nb__hex-base"
-        />
-        <path
-            d="M16 7L9 11V19L16 23L23 19V11L16 7Z"
-            fill="url(#hexGradInnerDashboard)"
-            className="nb__hex-inner"
-            opacity="0.85"
-        />
-        <circle cx="16" cy="15" r="2.5" fill="#ffffff" className="nb__hex-core" />
-    </svg>
-);
+import ClozFlowLogo from '../components/ClozFlowLogo';
 
 const STATS_DATA = [
     { label: 'Close Velocity', value: '37%', color: '#22c55e', trend: '+4.2%', desc: 'vs last week' },
@@ -396,8 +358,8 @@ const Dashboard = () => {
             {/* Sidebar — desktop only */}
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <HexagonLogo />
-                    <span className="nb__wordmark db-logo-text" style={{ fontSize: '1.25rem' }}>Hexagon</span>
+                    <ClozFlowLogo />
+                    <span className="nb__wordmark db-logo-text" style={{ fontSize: '1.25rem' }}>ClozFlow</span>
                 </div>
 
                 <nav className="db-nav" style={{ position: 'relative' }}>
@@ -492,48 +454,35 @@ const Dashboard = () => {
 
             <style>{`
                 /* ── Logo Styles ── */
-                .nb__custom-mark {
-                    width: 32px;
-                    height: 32px;
-                    transform-style: preserve-3d;
-                    overflow: visible;
-                    transform: rotate(90deg) scale(1.05);
-                    flex-shrink: 0;
+                .cf-logo-svg {
+                    color: var(--text);
+                    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
                 }
-                .nb__hex-base {
-                    stroke-dasharray: 120;
-                    stroke-dashoffset: 120;
-                    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.6));
+                .db-sidebar-logo:hover .cf-logo-svg {
+                    transform: scale(1.08) rotate(-8deg);
                 }
-                .nb__hex-inner {
-                    transform-origin: center;
-                    transform: scale(0.65) rotate(-90deg);
-                    opacity: 1;
+                .cf-logo-path-bar {
+                    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                    transform-origin: 16px 16px;
                 }
-                .nb__hex-core {
-                    transform-origin: center;
-                    transform: scale(1.5);
-                    fill: #fff;
+                .db-sidebar-logo:hover .cf-logo-path-bar {
+                    transform: scaleX(1.3) translateX(0.5px);
                 }
                 .nb__wordmark-wrapper {
                     position: relative;
                 }
                 .nb__wordmark {
                     font-family: var(--font-display);
-                    font-size: 1.35rem;
-                    font-weight: 800;
-                    letter-spacing: -0.05em;
-                    background: linear-gradient(
-                        -45deg, 
-                        var(--text) 0%, 
-                        var(--text) 30%, 
-                        #8b5cf6 50%, 
-                        #ec4899 70%, 
-                        var(--text) 100%
-                    );
-                    background-size: 300% auto;
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    color: var(--text);
+                    transition: letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+                }
+                .db-sidebar-logo:hover .nb__wordmark {
+                    letter-spacing: 0.22em;
+                    opacity: 0.85;
                 }
 
                 /* ── Layout ── */

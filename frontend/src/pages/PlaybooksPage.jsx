@@ -1,5 +1,20 @@
 import { useState } from 'react';
-import { DollarSign, Shield, Clock, Users, Heart, Zap, Swords, Brain } from 'lucide-react';
+import { 
+    DollarSign, 
+    Shield, 
+    Clock, 
+    Users, 
+    Heart, 
+    Zap, 
+    Swords, 
+    Brain,
+    HelpCircle,
+    XCircle,
+    CheckCircle,
+    AlertTriangle,
+    Terminal,
+    ArrowRight
+} from 'lucide-react';
 
 const CATEGORIES = [
     { id: 'pricing',    label: 'Pricing',           icon: DollarSign },
@@ -32,7 +47,7 @@ const PLAYBOOKS = {
         scenarios: ['"Sounds like hype"', '"Everyone says that"', '"We tried before and it didn\'t work"'],
         why: ['Past failures with similar tools', 'Overpromised, underdelivered expectations', 'Market saturation fatigue'],
         weak: '"Trust me, this is different."',
-        strong: '"If every solution delivered what it promised, skepticism wouldn\'t exist. Walk me through what actually disappointed you."',
+        strong: '"If every solution delivered what it promised, skepticism wouldn\'t exist. Walk me through what disappointed you."',
         whyItWorks: 'Validates the skepticism as rational. Pulls them into a specifics conversation. Repositions you as someone who isn\'t defensive — you\'re curious. That builds trust faster than any claim.',
         traps: ['Claiming differentiation without proof', 'Getting defensive', 'Listing features to overcome doubt'],
     },
@@ -98,67 +113,94 @@ const PLAYBOOKS = {
     },
 };
 
-const WeakStrong = ({ weak, strong }) => (
-    <div className="pb-compare-grid">
-        <div style={{ background:'rgba(239,68,68,0.04)', border:'1px solid rgba(239,68,68,0.15)', borderRadius:14, padding:'1.5rem' }}>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase', color:'#ef4444', marginBottom:'0.875rem' }}>✗ Weak Response</div>
-            <p style={{ fontSize:'0.9rem', fontStyle:'italic', color:'var(--text-dim)', lineHeight:1.6, margin:0 }}>{weak}</p>
-        </div>
-        <div style={{ background:'rgba(34,197,94,0.04)', border:'1px solid rgba(34,197,94,0.15)', borderRadius:14, padding:'1.5rem' }}>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase', color:'#22c55e', marginBottom:'0.875rem' }}>✓ Elite Response</div>
-            <p style={{ fontSize:'0.9rem', fontStyle:'italic', color:'var(--text)', lineHeight:1.6, margin:0, fontWeight:600 }}>{strong}</p>
-        </div>
-    </div>
-);
-
 const PlaybookDetail = ({ pb }) => (
-    <div style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
-        {/* Psychology */}
-        <div style={{ background:`${pb.color}08`, border:`1px solid ${pb.color}22`, borderRadius:16, padding:'1.75rem', borderLeft:`3px solid ${pb.color}` }}>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:pb.color, marginBottom:'0.875rem' }}>🧠 Psychology</div>
-            <p style={{ fontSize:'0.9rem', color:'var(--text)', lineHeight:1.7, margin:0, fontWeight:500 }}>{pb.psychology}</p>
+    <div className="pb-detail-grid">
+        {/* Psychology box */}
+        <div className="pb-psychology-box">
+            <div className="pb-section-lbl">
+                <Brain size={13} />
+                <span>Behavioral Psychology</span>
+            </div>
+            <p className="pb-psychology-text">{pb.psychology}</p>
         </div>
 
-        {/* Common Scenarios */}
-        <div>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'0.75rem' }}>Common Scenarios</div>
-            <div style={{ display:'flex', flexWrap:'wrap', gap:'0.5rem' }}>
-                {pb.scenarios.map((s,i) => (
-                    <span key={i} style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:99, padding:'0.35rem 1rem', fontSize:'0.8rem', fontWeight:600, color:'var(--text-dim)', fontStyle:'italic' }}>{s}</span>
+        {/* Scenarios & Root Causes Grid */}
+        <div className="pb-split-grid">
+            {/* Scenarios */}
+            <div className="pb-scenarios-container">
+                <div className="pb-section-lbl">
+                    <Zap size={13} />
+                    <span>Acoustic Triggers</span>
+                </div>
+                {pb.scenarios.map((s, i) => (
+                    <span key={i} className="pb-scenario-pill">
+                        <span className="pb-scenario-dot" />
+                        <span>{s}</span>
+                    </span>
                 ))}
             </div>
-        </div>
 
-        {/* Why It Happens */}
-        <div>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'0.75rem' }}>Root Cause</div>
-            <div style={{ display:'flex', flexDirection:'column', gap:'0.4rem' }}>
-                {pb.why.map((w,i) => (
-                    <div key={i} style={{ fontSize:'0.875rem', color:'var(--text-dim)', display:'flex', gap:'0.5rem' }}>
-                        <span style={{ color:pb.color, flexShrink:0 }}>▸</span>{w}
+            {/* Root Causes */}
+            <div className="pb-root-cause-list">
+                <div className="pb-section-lbl">
+                    <HelpCircle size={13} />
+                    <span>Underlying Vulnerability</span>
+                </div>
+                {pb.why.map((w, i) => (
+                    <div key={i} className="pb-root-cause-item">
+                        <ArrowRight size={13} className="pb-root-cause-icon" />
+                        <span>{w}</span>
                     </div>
                 ))}
             </div>
         </div>
 
-        {/* Weak vs Strong */}
-        <WeakStrong weak={pb.weak} strong={pb.strong} color={pb.color} />
+        {/* Weak vs Elite Compare Cards */}
+        <div className="pb-compare-area">
+            {/* Weak Response */}
+            <div className="pb-compare-card pb-compare-card--weak">
+                <div className="pb-compare-header pb-compare-header--weak">
+                    <XCircle size={15} />
+                    <span>Weak Response</span>
+                </div>
+                <p className="pb-compare-text pb-compare-text--weak">"{pb.weak}"</p>
+            </div>
 
-        {/* Why It Works */}
-        <div style={{ background:'rgba(99,102,241,0.05)', border:'1px solid rgba(99,102,241,0.15)', borderRadius:14, padding:'1.5rem' }}>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'#6366f1', marginBottom:'0.875rem' }}>⚡ Why It Works</div>
-            <p style={{ fontSize:'0.875rem', fontWeight:600, color:'var(--text)', lineHeight:1.65, margin:0 }}>{pb.whyItWorks}</p>
+            {/* Elite Response */}
+            <div className="pb-compare-card pb-compare-card--strong">
+                <div className="pb-compare-header pb-compare-header--strong">
+                    <CheckCircle size={15} />
+                    <span>Elite Response</span>
+                </div>
+                <p className="pb-compare-text pb-compare-text--strong">"{pb.strong}"</p>
+            </div>
         </div>
 
-        {/* Conversational Traps */}
-        <div>
-            <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'#ef4444', marginBottom:'0.75rem' }}>⚠ Traps to Avoid</div>
-            <div style={{ display:'flex', flexDirection:'column', gap:'0.4rem' }}>
-                {pb.traps.map((t,i) => (
-                    <div key={i} style={{ fontSize:'0.875rem', color:'var(--text-dim)', display:'flex', gap:'0.5rem', alignItems:'flex-start' }}>
-                        <span style={{ color:'#ef4444', flexShrink:0, marginTop:2 }}>✗</span>{t}
-                    </div>
-                ))}
+        {/* Why it works & Traps Grid */}
+        <div className="pb-footer-grid">
+            {/* Why it works - Carbon Terminal Box */}
+            <div className="pb-why-works-card">
+                <div className="pb-why-works-title">
+                    <Terminal size={13} />
+                    <span>Strategic Rationale</span>
+                </div>
+                <p className="pb-why-works-text">{pb.whyItWorks}</p>
+            </div>
+
+            {/* Conversational Traps */}
+            <div className="pb-traps-card">
+                <div className="pb-traps-title">
+                    <AlertTriangle size={13} />
+                    <span>Vulnerabilities / Traps</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {pb.traps.map((t, i) => (
+                        <div key={i} className="pb-trap-item">
+                            <span className="pb-trap-icon">•</span>
+                            <span>{t}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     </div>
@@ -168,8 +210,25 @@ const PlaybooksPage = () => {
     const [active, setActive] = useState('pricing');
     const pb = PLAYBOOKS[active];
 
+    // Helper function to extract RGB values from HEX for transparent gradients
+    const hexToRgb = (hex) => {
+        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        const fullHex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
+        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '99, 102, 241';
+    };
+
+    const activeColorRgb = hexToRgb(pb.color);
+
     return (
-        <div className="animate-fade-in">
+        <div 
+            className="animate-fade-in"
+            style={{
+                '--pb-accent': pb.color,
+                '--pb-accent-dim': pb.bg,
+                '--pb-accent-rgb': activeColorRgb
+            }}
+        >
             {/* Awwwards-Grade Editorial Header */}
             <div className="editorial-header">
                 <div className="editorial-title-area">
@@ -188,7 +247,7 @@ const PlaybooksPage = () => {
                     <div className="editorial-system-status">
                         <span className="editorial-status-item">
                             <span className="editorial-status-lbl">PLAYBOOKS</span>
-                            <span className="editorial-status-val">5 ACTIVE</span>
+                            <span className="editorial-status-val">7 ACTIVE</span>
                         </span>
                         <span className="editorial-status-divider">/</span>
                         <span className="editorial-status-item">
@@ -200,10 +259,10 @@ const PlaybooksPage = () => {
             </div>
 
             <div className="pb-layout">
-                {/* Left Sidebar — scrollable chips on mobile */}
+                {/* Left Sidebar Category Selection */}
                 <div className="pb-sidebar">
-                    <div style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-muted)', padding:'0.5rem 0.75rem', marginBottom:'0.5rem' }}>Categories</div>
-                    {CATEGORIES.map(cat => {
+                    <div className="pb-nav-title">Categories</div>
+                    {CATEGORIES.map((cat, idx) => {
                         const Icon = cat.icon;
                         const isA = active === cat.id;
                         const cpb = PLAYBOOKS[cat.id];
@@ -211,38 +270,36 @@ const PlaybooksPage = () => {
                             <button
                                 key={cat.id}
                                 onClick={() => setActive(cat.id)}
+                                className={`pb-nav-item ${isA ? 'pb-nav-item--active' : ''}`}
                                 style={{
-                                    width:'100%', display:'flex', alignItems:'center', gap:'0.625rem',
-                                    padding:'0.75rem', borderRadius:12, border:'none', cursor:'pointer',
-                                    background: isA ? `${cpb.color}12` : 'transparent',
-                                    color: isA ? cpb.color : 'var(--text-dim)',
-                                    fontWeight: isA ? 700 : 500,
-                                    fontSize:'0.875rem', textAlign:'left',
-                                    transition:'all 0.2s',
-                                    borderLeft: isA ? `2px solid ${cpb.color}` : '2px solid transparent',
-                                    marginBottom:'2px',
+                                    '--item-accent': cpb.color,
+                                    '--item-accent-dim': cpb.bg
                                 }}
                             >
-                                <Icon size={15} />
-                                {cat.label}
+                                <span className="pb-nav-item-left">
+                                    <span className="pb-nav-num">0{idx + 1}</span>
+                                    <Icon size={14} />
+                                    <span className="pb-nav-label">{cat.label}</span>
+                                </span>
                             </button>
                         );
                     })}
                 </div>
 
-                {/* Main Panel */}
-                <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:20, padding:'clamp(1.25rem,3vw,2.5rem)' }}>
-                    {/* Card header */}
-                    <div style={{ display:'flex', alignItems:'flex-start', gap:'1.25rem', marginBottom:'2.25rem', paddingBottom:'2rem', borderBottom:'1px solid var(--border)' }}>
-                        <div style={{ width:52, height:52, borderRadius:14, background:pb.bg, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                            <Brain size={22} color={pb.color} />
+                {/* Main Content Details Panel */}
+                <div className="pb-content-card">
+                    {/* Header Area */}
+                    <div className="pb-header-area">
+                        <div className="pb-icon-wrapper">
+                            <Brain size={22} color="var(--pb-accent)" style={{ zIndex: 2 }} />
+                            <div className="pb-icon-pulse" />
                         </div>
-                        <div style={{ flex:1 }}>
-                            <div style={{ display:'flex', alignItems:'center', gap:'0.75rem', marginBottom:'0.375rem' }}>
-                                <h2 style={{ fontSize:'1.375rem', fontWeight:900, letterSpacing:'-0.03em', margin:0 }}>{pb.title}</h2>
-                                <span style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase', color:pb.color, background:pb.bg, padding:'0.25rem 0.6rem', borderRadius:99 }}>{pb.tag}</span>
+                        <div className="pb-title-group">
+                            <div className="pb-tag-row">
+                                <h2 className="pb-card-title">{pb.title}</h2>
+                                <span className="pb-badge">{pb.tag}</span>
                             </div>
-                            <p style={{ fontSize:'0.9375rem', color:'var(--text-dim)', margin:0 }}>{pb.subtitle}</p>
+                            <p className="pb-subtitle">{pb.subtitle}</p>
                         </div>
                     </div>
 
@@ -251,43 +308,469 @@ const PlaybooksPage = () => {
             </div>
 
             <style>{`
+                /* Playbook Page Layout */
                 .pb-layout {
                     display: grid;
-                    grid-template-columns: 220px 1fr;
-                    gap: 1.5rem;
+                    grid-template-columns: 260px 1fr;
+                    gap: 2rem;
                     align-items: start;
+                    margin-top: 3rem;
                 }
+
+                /* Sidebar navigation */
                 .pb-sidebar {
-                    background: var(--bg);
-                    border: 1px solid var(--border);
-                    border-radius: 20px;
-                    padding: 1rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.35rem;
+                    background: var(--surface);
+                    border: 1px solid var(--border-strong);
+                    border-radius: 24px;
+                    padding: 1.25rem 1rem;
                     position: sticky;
-                    top: 2rem;
+                    top: 6rem;
+                    box-shadow: var(--shadow-sm);
                 }
-                .pb-compare-grid {
+
+                .pb-nav-title {
+                    font-family: var(--font-display);
+                    font-size: 0.65rem;
+                    font-weight: 800;
+                    letter-spacing: 0.15em;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                    padding: 0.5rem 0.75rem;
+                    margin-bottom: 0.75rem;
+                    border-bottom: 1px solid var(--border);
+                    padding-bottom: 0.75rem;
+                }
+
+                .pb-nav-item {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 0.85rem 1rem;
+                    border-radius: 14px;
+                    border: 1px solid transparent;
+                    cursor: pointer;
+                    background: transparent;
+                    color: var(--text-dim);
+                    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+                    text-align: left;
+                }
+
+                .pb-nav-item-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+
+                .pb-nav-num {
+                    font-family: monospace;
+                    font-size: 0.75rem;
+                    opacity: 0.35;
+                }
+
+                .pb-nav-label {
+                    font-family: var(--font-body);
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                }
+
+                .pb-nav-item:hover {
+                    color: var(--text);
+                    background: var(--surface-2);
+                    transform: translateX(4px);
+                }
+
+                .pb-nav-item--active {
+                    color: var(--item-accent) !important;
+                    background: var(--item-accent-dim) !important;
+                    border-color: rgba(var(--pb-accent-rgb), 0.12) !important;
+                    font-weight: 700;
+                }
+
+                .pb-nav-item--active .pb-nav-num {
+                    opacity: 0.75;
+                }
+
+                /* Content card detailing playbooks */
+                .pb-content-card {
+                    background: var(--surface);
+                    border: 1px solid var(--border-strong);
+                    border-radius: 28px;
+                    padding: 3rem;
+                    box-shadow: var(--shadow-md);
+                    position: relative;
+                }
+
+                .pb-header-area {
+                    display: flex;
+                    align-items: center;
+                    gap: 1.5rem;
+                    margin-bottom: 2.5rem;
+                    padding-bottom: 2rem;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .pb-icon-wrapper {
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 16px;
+                    background: var(--pb-accent-dim);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                }
+
+                .pb-icon-pulse {
+                    position: absolute;
+                    inset: -3px;
+                    border: 1.5px solid var(--pb-accent);
+                    border-radius: 18px;
+                    opacity: 0.25;
+                    animation: pb-pulse-glow 2.5s infinite;
+                }
+
+                @keyframes pb-pulse-glow {
+                    0% { transform: scale(1); opacity: 0.3; }
+                    50% { transform: scale(1.08); opacity: 0; }
+                    100% { transform: scale(1); opacity: 0.3; }
+                }
+
+                .pb-title-group {
+                    flex: 1;
+                }
+
+                .pb-tag-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    margin-bottom: 0.35rem;
+                }
+
+                .pb-card-title {
+                    font-family: var(--font-display);
+                    font-size: 1.5rem;
+                    font-weight: 800;
+                    letter-spacing: -0.02em;
+                    margin: 0;
+                    color: var(--text);
+                }
+
+                .pb-badge {
+                    font-family: var(--font-body);
+                    font-size: 0.58rem;
+                    font-weight: 800;
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: var(--pb-accent);
+                    background: var(--pb-accent-dim);
+                    padding: 0.25rem 0.65rem;
+                    border-radius: 99px;
+                    border: 1px solid rgba(var(--pb-accent-rgb), 0.1);
+                }
+
+                .pb-subtitle {
+                    font-size: 0.95rem;
+                    color: var(--text-dim);
+                    margin: 0;
+                }
+
+                /* PlaybookDetail Grid Structure */
+                .pb-detail-grid {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2.25rem;
+                }
+
+                .pb-section-lbl {
+                    font-family: var(--font-display);
+                    font-size: 0.65rem;
+                    font-weight: 900;
+                    letter-spacing: 0.15em;
+                    text-transform: uppercase;
+                    color: var(--pb-accent);
+                    margin-bottom: 0.85rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .pb-psychology-box {
+                    background: linear-gradient(135deg, var(--pb-accent-dim) 0%, rgba(255, 255, 255, 0) 100%);
+                    border: 1px solid rgba(var(--pb-accent-rgb), 0.08);
+                    border-left: 3px solid var(--pb-accent);
+                    border-radius: 20px;
+                    padding: 2rem;
+                    position: relative;
+                }
+
+                .pb-psychology-text {
+                    font-size: 0.95rem;
+                    color: var(--text);
+                    line-height: 1.75;
+                    margin: 0;
+                    font-weight: 500;
+                }
+
+                .pb-split-grid {
+                    display: grid;
+                    grid-template-columns: 1.2fr 1fr;
+                    gap: 2rem;
+                    border-bottom: 1px solid var(--border);
+                    padding-bottom: 2.25rem;
+                }
+
+                .pb-scenarios-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.75rem;
+                }
+
+                .pb-scenario-pill {
+                    background: var(--surface-2);
+                    border: 1px solid var(--border-strong);
+                    border-radius: 14px;
+                    padding: 0.7rem 1.15rem;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    color: var(--text);
+                    font-style: italic;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+
+                .pb-scenario-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: var(--pb-accent);
+                    opacity: 0.75;
+                }
+
+                .pb-root-cause-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.65rem;
+                }
+
+                .pb-root-cause-item {
+                    font-size: 0.9rem;
+                    color: var(--text-dim);
+                    line-height: 1.6;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.75rem;
+                }
+
+                .pb-root-cause-icon {
+                    color: var(--pb-accent);
+                    margin-top: 3px;
+                    flex-shrink: 0;
+                }
+
+                /* Compare cards styling */
+                .pb-compare-area {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 1rem;
+                    gap: 1.5rem;
                 }
-                @media (max-width: 860px) {
+
+                .pb-compare-card {
+                    border-radius: 20px;
+                    padding: 2rem;
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .pb-compare-card--weak {
+                    background: rgba(239, 68, 68, 0.02);
+                    border: 1px solid rgba(239, 68, 68, 0.1);
+                    opacity: 0.8;
+                }
+
+                .pb-compare-card--strong {
+                    background: rgba(34, 197, 94, 0.03);
+                    border: 1px solid rgba(34, 197, 94, 0.18);
+                    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.03);
+                }
+
+                .pb-compare-header {
+                    font-family: var(--font-display);
+                    font-size: 0.62rem;
+                    font-weight: 900;
+                    letter-spacing: 0.14em;
+                    text-transform: uppercase;
+                    margin-bottom: 1.25rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .pb-compare-header--weak { color: #ef4444; }
+                .pb-compare-header--strong { color: #22c55e; }
+
+                .pb-compare-text {
+                    font-family: var(--font-body);
+                    font-size: 0.9375rem;
+                    line-height: 1.7;
+                    margin: 0;
+                }
+
+                .pb-compare-text--weak {
+                    color: var(--text-dim);
+                    font-style: italic;
+                }
+
+                .pb-compare-text--strong {
+                    color: var(--text);
+                    font-weight: 600;
+                }
+
+                /* Footer grid components */
+                .pb-footer-grid {
+                    display: grid;
+                    grid-template-columns: 1.2fr 1fr;
+                    gap: 2rem;
+                }
+
+                .pb-why-works-card {
+                    background: #0a0a0a;
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border-radius: 20px;
+                    padding: 2rem;
+                    color: #ffffff;
+                    position: relative;
+                }
+
+                .pb-why-works-card::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 20px;
+                    padding: 1px;
+                    background: linear-gradient(135deg, rgba(var(--pb-accent-rgb), 0.3) 0%, rgba(255, 255, 255, 0.02) 100%);
+                    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+                    pointer-events: none;
+                }
+
+                .pb-why-works-title {
+                    font-family: var(--font-display);
+                    font-size: 0.65rem;
+                    font-weight: 900;
+                    letter-spacing: 0.15em;
+                    text-transform: uppercase;
+                    color: #818cf8;
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .pb-why-works-text {
+                    font-size: 0.9rem;
+                    line-height: 1.7;
+                    color: rgba(255, 255, 255, 0.8);
+                    margin: 0;
+                    font-weight: 500;
+                }
+
+                .pb-traps-card {
+                    background: rgba(239, 68, 68, 0.03);
+                    border: 1px solid rgba(239, 68, 68, 0.08);
+                    border-radius: 20px;
+                    padding: 2rem;
+                }
+
+                .pb-traps-title {
+                    font-family: var(--font-display);
+                    font-size: 0.65rem;
+                    font-weight: 900;
+                    letter-spacing: 0.15em;
+                    text-transform: uppercase;
+                    color: #ef4444;
+                    margin-bottom: 1.25rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .pb-trap-item {
+                    font-size: 0.875rem;
+                    color: var(--text-dim);
+                    line-height: 1.65;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.65rem;
+                    margin-bottom: 0.75rem;
+                }
+
+                .pb-trap-item:last-child {
+                    margin-bottom: 0;
+                }
+
+                .pb-trap-icon {
+                    color: #ef4444;
+                    margin-top: 3px;
+                    flex-shrink: 0;
+                }
+
+                /* Responsive snapping breakpoints */
+                @media (max-width: 960px) {
                     .pb-layout {
                         grid-template-columns: 1fr;
+                        gap: 1.5rem;
                     }
                     .pb-sidebar {
                         position: static;
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 0.375rem;
+                        flex-direction: row;
+                        overflow-x: auto;
                         padding: 0.75rem;
+                        gap: 0.5rem;
                     }
-                    .pb-sidebar > div:first-child {
+                    .pb-sidebar::-webkit-scrollbar {
                         display: none;
                     }
-                }
-                @media (max-width: 640px) {
-                    .pb-compare-grid {
+                    .pb-nav-title {
+                        display: none;
+                    }
+                    .pb-nav-item {
+                        width: auto;
+                        flex-shrink: 0;
+                        padding: 0.65rem 1rem;
+                    }
+                    .pb-nav-num {
+                        display: none;
+                    }
+                    .pb-split-grid {
                         grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
+                    .pb-compare-area {
+                        grid-template-columns: 1fr;
+                        gap: 1rem;
+                    }
+                    .pb-footer-grid {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
+                }
+
+                @media (max-width: 560px) {
+                    .pb-content-card {
+                        padding: 1.75rem;
+                        border-radius: 20px;
+                    }
+                    .pb-header-area {
+                        flex-direction: column;
+                        gap: 1rem;
+                        align-items: flex-start;
                     }
                 }
             `}</style>
@@ -296,4 +779,3 @@ const PlaybooksPage = () => {
 };
 
 export default PlaybooksPage;
-

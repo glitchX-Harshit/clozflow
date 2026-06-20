@@ -182,7 +182,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
                 </form>
 
                 <p className="su-login-prompt">
-                    New to Hexagon?{' '}
+                    New to ClozFlow?{' '}
                     <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}>
                         Create account
                     </a>
