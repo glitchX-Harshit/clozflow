@@ -1,9 +1,10 @@
 /* ══════════════════════════════════════════════════════
    MAG-BUTTON — Awwwards-grade hover animation
-   ─ Magnetic pull
-   ─ Liquid fill (radial reveal, brand NAVY accent)
-   ─ Split-text slide
-   ─ Ultra-smooth spring transitions
+   ─ Magnetic pull & micro squash-and-stretch spring
+   ─ Organic morphing liquid fill reveal
+   ─ Tumbling, staggered character-split roll
+   ─ Outer magnetic depth ring with breathing glow
+   ─ Ambient blur backdrop
    ══════════════════════════════════════════════════════ */
 
 .mag-btn {
@@ -30,17 +31,102 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 
-    /* Magnetic spring */
+    /* Base transitions */
     transition:
-        transform    0.62s cubic-bezier(0.23, 1, 0.32, 1),
-        box-shadow   0.38s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow   0.45s cubic-bezier(0.25, 1, 0.5, 1),
+        background   0.45s ease,
+        border-color 0.45s ease;
 
     isolation: isolate;
 }
 
 .mag-btn--full { width: 100%; }
 
-/* ── Variants ──────────────────────────────────────── */
+.mag-btn.is-hovered {
+    transform: translateY(-2px);
+}
+
+/* ── Outer Magnetic Ring (Parallax Depth & Breath Glow) ── */
+.mag-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transform: scale(0.95);
+    transition:
+        transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 0.4s ease;
+}
+
+@keyframes border-glow-breath {
+    0%, 100% { 
+        border-color: rgba(30, 64, 175, 0.18); 
+        box-shadow: 0 0 0 0px transparent;
+    }
+    50% { 
+        border-color: var(--btn-glow-color, rgba(30, 64, 175, 0.45)); 
+        box-shadow: 0 0 8px var(--btn-glow-color, rgba(30, 64, 175, 0.15));
+    }
+}
+
+.mag-btn.is-hovered .mag-ring {
+    opacity: 1;
+    transform: scale(1.015);
+    animation: border-glow-breath 2s infinite ease-in-out;
+}
+
+.mag-btn--dark.is-hovered .mag-ring {
+    animation: border-glow-breath-dark 2s infinite ease-in-out;
+}
+
+@keyframes border-glow-breath-dark {
+    0%, 100% { 
+        border-color: rgba(255, 255, 255, 0.12); 
+        box-shadow: 0 0 0 0px transparent;
+    }
+    50% { 
+        border-color: var(--btn-glow-color, rgba(255, 255, 255, 0.4)); 
+        box-shadow: 0 0 8px var(--btn-glow-color, rgba(255, 255, 255, 0.1));
+    }
+}
+
+/* ── Ambient Premium Glow ── */
+.mag-glow {
+    position: absolute;
+    inset: -15%;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -3;
+    filter: blur(25px);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: 
+        opacity 0.55s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.mag-btn.is-hovered .mag-glow {
+    opacity: 0.55;
+    transform: scale(1.05);
+}
+
+/* Accent/Glow coloring for different variants */
+.mag-btn--dark .mag-glow {
+    background: radial-gradient(circle, rgba(30, 64, 175, 0.35) 0%, transparent 75%);
+}
+
+.mag-btn--accent .mag-glow {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 75%);
+}
+
+.mag-btn--custom .mag-glow {
+    background: radial-gradient(circle, var(--btn-glow-color, rgba(30, 64, 175, 0.3)) 0%, transparent 75%);
+}
+
+/* ── Variants ── */
 .mag-btn--dark {
     background: var(--text);
     color: var(--bg);
@@ -58,17 +144,14 @@
     box-shadow: var(--shadow-accent);
 }
 
-/* ── Disabled ──────────────────────────────────────── */
+/* ── Disabled ── */
 .mag-btn--disabled {
     opacity: 0.42;
     cursor: not-allowed;
     pointer-events: none;
 }
 
-/* ══ LIQUID FILL BLOB ══════════════════════════════
-   ALL variants fill with brand navy (--accent)
-   for a unified, bold identity.
-   ══════════════════════════════════════════════════════ */
+/* ══ ORGANIC MORPHING LIQUID FILL BLOB ══════════════ */
 .mag-fill {
     --ox: 50%;
     --oy: 50%;
@@ -76,19 +159,20 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 0;
+    z-index: -2;
 
-    border-radius: inherit;
+    /* Morphing wobbly blob shape at start */
+    border-radius: 40% 60% 70% 30% / 40% 45% 55% 60%;
     transform: scale(0);
     opacity: 0;
     transform-origin: var(--ox) var(--oy);
-    /* Radial burst background is overridden by variants below */
     background: transparent;
 
-    /* Butter-smooth spring reveal */
+    /* Butter-smooth organic reveal */
     transition:
-        transform 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-        opacity   0.08s ease;
+        transform 0.82s cubic-bezier(0.16, 1, 0.3, 1),
+        border-radius 0.82s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity   0.12s ease;
 }
 
 /* Dark variant uses sleek slate-charcoal black on hover */
@@ -113,29 +197,40 @@
 .mag-btn--accent .mag-fill {
     background: radial-gradient(
         circle at var(--ox) var(--oy),
-        #172554 0%, /* midnight navy */
+        #172554 0%,
         #172554 100%
     );
 }
 
-/* ── Reveal on hover ── */
-.mag-btn.is-hovered .mag-fill {
-    transform: scale(3.2);
-    opacity: 1;
+/* Custom variant uses CSS variable for liquid fill background */
+.mag-btn--custom .mag-fill {
+    background: radial-gradient(
+        circle at var(--ox) var(--oy),
+        var(--btn-fill-color, var(--accent)) 0%,
+        var(--btn-fill-color-end, var(--accent)) 100%
+    );
 }
 
-/* ══ TEXT — flip to white when navy fills ═══════════ */
+/* Reveal on hover & morph into a solid container circle */
+.mag-btn.is-hovered .mag-fill {
+    transform: scale(3.8);
+    opacity: 1;
+    border-radius: 50%;
+}
+
+/* ══ TEXT — flip color when filled ════════════════ */
 .mag-inner {
     position: relative;
     z-index: 1;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
     overflow: hidden;
     height: 1.1em;
     color: inherit;
     transition:
-        transform 0.62s cubic-bezier(0.23, 1, 0.32, 1),
-        color     0.28s ease;
+        transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
+        color     0.3s ease;
 }
 
 .mag-btn--dark.is-hovered .mag-inner,
@@ -145,9 +240,10 @@
 
 /* ══ SPLIT TEXT (slide up on hover) ════════════════ */
 .mag-label {
+    grid-area: 1 / 1;
     display: block;
     line-height: 1.1;
-    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Default label slides OUT upward */
@@ -156,11 +252,38 @@
 
 /* Hover label slides IN from below */
 .mag-label--hover {
-    position: absolute;
-    top: 0; left: 0; right: 0;
     transform: translateY(110%);
 }
 .mag-btn.is-hovered .mag-label--hover { transform: translateY(0%); }
+
+/* ══ TUMBLING CHARACTER TRANSITION (Awwwards Style) ══ */
+.mag-char {
+    display: inline-block;
+    opacity: 1;
+    transition: 
+        transform 0.58s cubic-bezier(0.25, 1, 0.5, 1),
+        opacity 0.4s ease;
+    transition-delay: calc(var(--char-index) * 0.016s);
+}
+
+/* Default state chars slide out and tilt slightly */
+.mag-label--default.mag-label--split .mag-char {
+    transform: translateY(0) rotate(0deg) scale(1);
+}
+.mag-btn.is-hovered .mag-label--default.mag-label--split .mag-char {
+    transform: translateY(-110%) rotate(-8deg) scale(0.85);
+    opacity: 0;
+}
+
+/* Hover state chars tumble in from below with dynamic rotation */
+.mag-label--hover.mag-label--split .mag-char {
+    transform: translateY(115%) rotate(12deg) scale(0.8);
+    opacity: 0;
+}
+.mag-btn.is-hovered .mag-label--hover.mag-label--split .mag-char {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+}
 
 /* ══ ICON ══════════════════════════════════════════ */
 .mag-icon {
@@ -169,39 +292,35 @@
     display: flex;
     align-items: center;
     transition:
-        transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-        color     0.28s ease;
+        transform 0.55s cubic-bezier(0.25, 1, 0.5, 1),
+        color     0.3s ease;
 }
 
 .mag-btn.is-hovered .mag-icon {
-    transform: translateX(4px) rotate(5deg);
-    color: #fff;
+    transform: translateX(-4px) rotate(-5deg);
+    color: inherit;
 }
 
-/* ── Premium hover transforms & shadows ── */
-.mag-btn.is-hovered {
-    transform: translateY(-2px);
-}
-.mag-btn--dark.is-hovered {
-    box-shadow:
-        0 12px 30px rgba(15, 23, 42, 0.15),
-        0 4px 10px rgba(15, 23, 42, 0.08);
-}
-
-.mag-btn--outline.is-hovered {
-    box-shadow:
-        0 10px 24px rgba(0, 0, 0, 0.08),
-        0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-.mag-btn--accent.is-hovered {
-    box-shadow:
-        0 12px 30px rgba(30, 64, 175, 0.25),
-        0 4px 10px rgba(30, 64, 175, 0.12);
-}
-
-/* ══ Active press ══════════════════════════════════ */
+/* ── Active press ── */
 .mag-btn:active:not(.mag-btn--disabled) {
-    transform: translateY(0px) scale(0.97) !important;
+    transform: translateY(0px) scale(0.95) !important;
     transition: transform 0.1s ease !important;
+    animation: none !important;
+}
+
+/* ── Custom Variant ── */
+.mag-btn--custom {
+    background: transparent;
+    color: inherit;
+    border: none;
+    box-shadow: none;
+}
+
+/* ── LeadFinder action btn override compatibility ── */
+.mag-btn.lf__action-btn {
+    padding: 0 1.25rem;
+    border-radius: 10px;
+    min-width: 0;
+    height: 46px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }

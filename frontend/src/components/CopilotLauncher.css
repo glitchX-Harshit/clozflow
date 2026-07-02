@@ -1,0 +1,220 @@
+/* ══════════════════════════════════════════════════════
+   COPILOT LAUNCHER MODAL — Minimalist Luxury White Theme
+   ══════════════════════════════════════════════════════ */
+
+.cl-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.cl-modal-content {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 
+        0 24px 60px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    color: #09090b;
+    font-family: var(--font-body), 'Inter', sans-serif;
+}
+
+.cl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cl-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #09090b;
+    letter-spacing: -0.01em;
+}
+
+.cl-title-icon {
+    color: var(--accent);
+}
+
+.cl-close-btn {
+    background: transparent;
+    border: none;
+    color: #71717a;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cl-close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #09090b;
+}
+
+.cl-body {
+    padding: 24px;
+}
+
+.cl-subtitle {
+    color: rgba(9, 9, 11, 0.7);
+    font-size: 0.925rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.cl-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.cl-option-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: left;
+}
+
+.cl-option-card:hover:not(.disabled) {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.cl-option-card.active {
+    background: rgba(30, 64, 175, 0.04) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 1px var(--accent) !important;
+}
+
+.cl-option-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cl-option-icon {
+    color: #71717a;
+    transition: color 0.2s ease;
+}
+
+.cl-option-card.active .cl-option-icon {
+    color: var(--accent) !important;
+}
+
+.cl-option-title {
+    font-weight: 700;
+    color: #09090b;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cl-badge-soon {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.05);
+    color: #71717a;
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+}
+
+.cl-option-desc {
+    color: rgba(9, 9, 11, 0.6);
+    font-size: 0.825rem;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.cl-launch-btn {
+    width: 100% !important;
+    margin-top: 24px;
+}
+
+.cl-success-view {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.cl-success-icon-wrap {
+    width: 64px;
+    height: 64px;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+}
+
+.cl-success-icon {
+    color: #22c55e;
+}
+
+.cl-success-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #09090b;
+    margin-bottom: 10px;
+}
+
+.cl-success-desc {
+    color: rgba(9, 9, 11, 0.7);
+    font-size: 0.925rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.cl-success-note {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    color: rgba(9, 9, 11, 0.6);
+    margin-bottom: 24px;
+}
+
+.cl-close-action-btn {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    color: #09090b;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cl-close-action-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}

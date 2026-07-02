@@ -21,37 +21,46 @@
     align-items: center;
     gap: 0.625rem;
     margin-bottom: 1rem;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-.ft__logo-mark {
-    width: 28px;
-    height: 28px;
-    background: var(--text);
-    color: var(--bg);
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 0.8rem;
-    font-weight: 800;
-}
-
-.ft__logo-text {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 700;
+.ft__logo .cf-logo-svg {
     color: var(--text);
-    letter-spacing: -0.04em;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.ft__logo-dot {
-    color: var(--accent);
+.ft__logo:hover .cf-logo-svg {
+    transform: scale(1.08) rotate(-8deg);
+}
+
+.ft__logo .cf-logo-path-bar {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: 16px 16px;
+}
+
+.ft__logo:hover .cf-logo-path-bar {
+    transform: scaleX(1.3) translateX(0.5px);
+}
+
+.ft__logo .nb__wordmark {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text);
+    transition: letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.ft__logo:hover .nb__wordmark {
+    letter-spacing: 0.22em;
+    opacity: 0.85;
 }
 
 .ft__brand-desc {
     font-size: 0.875rem;
-    color: var(--text-muted);
+    color: var(--text-dim);
     line-height: 1.65;
     font-weight: 400;
 }

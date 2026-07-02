@@ -1,0 +1,361 @@
+.cs-container {
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.07));
+    border-radius: var(--r-lg, 16px);
+    margin-bottom: 2.5rem;
+    padding: 24px;
+    box-shadow: var(--shadow-sm, 0 1px 4px rgba(0,0,0,0.06));
+    font-family: var(--font-display, 'Outfit', sans-serif);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Subtle premium top bar glow */
+.cs-glow-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent, #1e40af) 0%, var(--accent-mid, #3b82f6) 100%);
+    opacity: 0.85;
+}
+
+/* Header style - editorial minimal layout */
+.cs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.07));
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.cs-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cs-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cs-pulse-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 8px;
+}
+
+.cs-pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #10b981; /* high-tech emerald green */
+    opacity: 0.6;
+    animation: cs-pulse-anim 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.cs-pulse-dot {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+}
+
+@keyframes cs-pulse-anim {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(2.8);
+        opacity: 0;
+    }
+}
+
+.cs-engine-tag {
+    font-family: monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text-dim, #6b7280);
+    text-transform: uppercase;
+}
+
+.cs-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text, #0a0a0a);
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.cs-header-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Beautiful counter panel */
+.cs-counter-panel {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    background: var(--surface-2, #eaf0f6);
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.07));
+    padding: 6px 14px;
+    border-radius: var(--r-full, 9999px);
+}
+
+.cs-count-num {
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent, #1e40af);
+}
+
+.cs-count-lbl {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim, #6b7280);
+}
+
+/* Session Grid - Responsive & Airy */
+.cs-grid-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
+}
+
+/* Session Card - Floating luxury card design */
+.cs-session-card {
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.07));
+    border-radius: var(--r-md, 12px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-xs, 0 1px 2px rgba(0,0,0,0.04));
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs-session-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(30, 64, 175, 0.25);
+    box-shadow: 0 12px 30px -10px rgba(30, 64, 175, 0.12), var(--shadow-sm);
+}
+
+.cs-card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(30, 64, 175, 0.02) 0%, transparent 60%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.cs-session-card:hover .cs-card-glow {
+    background: radial-gradient(circle at top right, rgba(30, 64, 175, 0.05) 0%, transparent 65%);
+}
+
+/* Card Header */
+.cs-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cs-session-idx {
+    font-family: monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted, #a8a8a8);
+}
+
+/* Platform Badges with bespoke brand styling */
+.cs-platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: var(--r-full, 9999px);
+}
+
+.cs-platform-badge.cs-whatsapp {
+    background: rgba(37, 211, 102, 0.08);
+    color: #128c7e;
+    border: 1px solid rgba(37, 211, 102, 0.15);
+}
+
+.cs-platform-badge.cs-linkedin {
+    background: rgba(10, 102, 194, 0.08);
+    color: #0a66c2;
+    border: 1px solid rgba(10, 102, 194, 0.15);
+}
+
+.cs-platform-badge.cs-instagram {
+    background: rgba(225, 48, 108, 0.08);
+    color: #e1306c;
+    border: 1px solid rgba(225, 48, 108, 0.15);
+}
+
+.cs-platform-badge.cs-general {
+    background: var(--accent-dim, rgba(30, 64, 175, 0.08));
+    color: var(--accent, #1e40af);
+    border: 1px solid var(--accent-glow, rgba(30, 64, 175, 0.15));
+}
+
+/* Card Body */
+.cs-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cs-lead-name {
+    font-family: var(--font-display, 'Outfit', sans-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text, #0a0a0a);
+    margin: 0;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.cs-lead-phone {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.cs-lead-phone-icon {
+    font-family: monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted, #a8a8a8);
+}
+
+.cs-lead-phone-val {
+    font-family: monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-dim, #6b7280);
+    letter-spacing: 0.02em;
+}
+
+/* Card Footer */
+.cs-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    padding-top: 14px;
+    margin-top: 4px;
+}
+
+.cs-stage-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.65rem;
+}
+
+.cs-activity-icon {
+    color: var(--accent-mid, #3b82f6);
+    animation: cs-spin-pulse 4s linear infinite;
+}
+
+@keyframes cs-spin-pulse {
+    0% {
+        transform: rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: rotate(360deg);
+        opacity: 0.8;
+    }
+}
+
+.cs-stage-lbl {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--text-muted, #a8a8a8);
+    letter-spacing: 0.05em;
+}
+
+.cs-stage-val {
+    font-weight: 700;
+    color: var(--text-dim, #6b7280);
+    text-transform: capitalize;
+    letter-spacing: -0.01em;
+}
+
+/* Premium Disconnect Button */
+.cs-disconnect-btn {
+    background: transparent;
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.07));
+    padding: 6px 12px;
+    border-radius: var(--r-sm, 6px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-dim, #6b7280);
+    font-family: var(--font-display, 'Outfit', sans-serif);
+    font-size: 0.725rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs-disconnect-btn:hover {
+    color: #ef4444; /* Premium crimson alert color */
+    border-color: rgba(239, 68, 68, 0.25);
+    background: rgba(239, 68, 68, 0.05);
+    letter-spacing: 0.08em;
+    transform: scale(1.02);
+}
+
+.cs-disconnect-btn:active {
+    transform: scale(0.97);
+}
+
+.cs-cross {
+    transition: transform 0.25s ease;
+}
+
+.cs-disconnect-btn:hover .cs-cross {
+    transform: rotate(90deg);
+}

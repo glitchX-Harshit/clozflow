@@ -31,25 +31,41 @@
     gap: 8px;
 }
 
-/* ── Status Dot ── */
-.copilot-popup__status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #34d399;
-    box-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
-    animation: cp-pulse 2s ease-in-out infinite;
+/* ── Waveform Telemetry Visualizer ── */
+.copilot-popup__wave {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 12px;
+    width: 14px;
+    position: relative;
+    margin-right: 4px;
 }
 
-@keyframes cp-pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 12px rgba(52, 211, 153, 0.7); }
-    50%      { opacity: 0.35; box-shadow: 0 0 4px rgba(52, 211, 153, 0.3); }
+.copilot-popup__wave-bar {
+    display: block;
+    width: 2.5px;
+    height: 100%;
+    background-color: #00f2fe; /* Premium electric cyan status */
+    border-radius: 99px;
+    transform-origin: bottom;
+    animation: cp-wave-anim 0.8s ease-in-out infinite alternate;
 }
 
-.copilot-popup__status-dot--idle {
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: none;
+.copilot-popup__wave-bar:nth-child(1) { animation-delay: 0.15s; }
+.copilot-popup__wave-bar:nth-child(2) { animation-delay: 0.4s; }
+.copilot-popup__wave-bar:nth-child(3) { animation-delay: 0.25s; }
+
+@keyframes cp-wave-anim {
+    0% { transform: scaleY(0.25); opacity: 0.5; }
+    100% { transform: scaleY(1); opacity: 1; box-shadow: 0 0 8px rgba(0, 242, 254, 0.4); }
+}
+
+.copilot-popup__wave--idle .copilot-popup__wave-bar {
+    background-color: rgba(255, 255, 255, 0.25);
     animation: none;
+    transform: scaleY(0.25);
+    opacity: 0.5;
 }
 
 .copilot-popup__title {

@@ -52,15 +52,15 @@ CHANNEL_CONFIG = {
 }
 
 STRATEGY_CONFIG = {
-    "default": "Execute a severe pattern interrupt. Tell a very brief, casual 1-2 sentence observation or mini-story about their business that creates an irresistible information gap. Do not sound like a sales pitch; sound like an observant peer who noticed a massive leaky bucket in their revenue."
+    "default": "Execute a psychological pattern interrupt. You are an elite, 11-year veteran sales strategist who knows every objection before it happens. Your goal is NEVER to sell a product in the chat. Your goal is to spark intense curiosity and trust through a brief, tactical observation or micro-story. You must prove you understand their business better than they do. The ultimate psychological goal is to effortlessly bridge the conversation toward a casual Zoom meeting (e.g., 'Would love to show you what I mean on a quick call') without ever sounding desperate, needy, or salesy."
 }
 
 ANGLE_VECTORS = [
-    "Focus on an unseen friction point in their customer journey.",
-    "Focus on a massive contrast between the quality of their work and their invisible digital footprint.",
-    "Focus on how much money they are likely leaving on the table by missing a basic operational system.",
-    "Focus on customer retention — what brings people back vs what doesn't.",
-    "Focus on a mismatch between their premium offering and the friction required to buy it.",
+    "Tell a very brief story about a similar business in their niche that was bleeding revenue from an identical invisible friction point, offering to show them the fix on a quick call.",
+    "Share a sharp psychological insight about their specific customer journey that they likely haven't considered, leading to a casual offer to unpack it on a 5-minute Zoom.",
+    "Highlight a massive contrast between their premium brand and a missed operational detail, positioning a quick screen-share as the easiest way to reveal the gap.",
+    "Ask a highly tactical, non-salesy question about their retention strategy that proves your 11-year expertise, hinting that a brief call could save them thousands.",
+    "Position yourself as an elite peer who noticed a small but expensive flaw in their current digital setup, offering to walk them through the exact solution on a quick, no-pressure call."
 ]
 
 SCORING_WEIGHTS = {
@@ -75,12 +75,12 @@ BANNED_HOOK_PHRASES = [
     "something stood out immediately",
     "one thing doesnt add up",
     "one thing doesn't add up",
-    "i noticed something interesting",
+    "i noticed",
+    "just landed on",
+    "just wanted to reach out",
     "random observation",
     "this caught my attention",
     "this might sound strange",
-    "this might sound like a strange question",
-    "i may be wrong but",
     "what's their secret",
     "what's the secret",
     "stars, no website",
@@ -233,20 +233,20 @@ def _build_outreach_prompt(
     # Bad→Good rewrites: teach tone by contrast, not by example to copy
     rewrites = random.sample([
         (
-            "Your website looks great but lacks a booking system.",
-            "I was looking at how top local spots handle bookings and ended up on your site. I couldn't figure out how your customers actually reserve a spot — am I missing a hidden link somewhere?"
+            "I noticed your website lacks a booking system. I can help with that.",
+            "Hey guys, love the aesthetic you've built. Quick question—how are you currently handling overflow when people try to book? Saw a tiny bit of friction there that usually leaks leads. Open to a quick 5-min Zoom? I'd love to show you a quick workaround."
         ),
         (
-            "I noticed you have no social media presence.",
-            "I was looking for local businesses doing a great job and found you guys, but I couldn't find your Instagram anywhere. Are you running purely on referrals from past customers, or did I just miss the page entirely?"
+            "You have no social media presence. We should get on a call.",
+            "Big fan of what you're doing. I work with a few similar brands and was looking for your Instagram to see your recent work, but couldn't find one. Are you running purely on referrals right now? Let's jump on a quick Zoom later this week—I can show you how much traffic you're accidentally leaving on the table."
         ),
         (
-            "You seem to prioritize in-store experience over digital.",
-            "I was looking at how local shops get new customers and noticed you guys seem to get a ton of walk-ins despite barely being online. How are you guys actually getting people through the door?"
+            "I was trying to place an order but there's no link.",
+            "Hey! The menu looks incredible. I was actually showing it to a buddy and we were wondering how you guys process digital orders without a direct link? Seems like you might be handling it all manually. If you're open to it, I'd love to hop on a 5-minute screen share to show you a system we built for this."
         ),
         (
-            "Your reviews are strong but there's no way to pre-order.",
-            "I was checking out your menu to see how you handle orders, but I literally couldn't find a way to place an order online. Are you guys just intentionally keeping everything in-house?"
+            "I noticed you don't use an AI receptionist.",
+            "Hey team, incredible reviews on Google. Quick thought—when things get insanely busy during peak hours, how are you capturing the missed calls? I saw a small gap in the current setup that might be costing a few bookings. Would love to show you a quick visual of what I mean on a short Zoom call."
         ),
     ], k=2)
 
@@ -259,8 +259,8 @@ def _build_outreach_prompt(
     if user_offer:
         user_offer_instruction = f"\n═══ YOUR VALUE PROPOSITION: {user_offer.upper()} ═══\nYou are an expert providing '{user_offer}'. The observation, problem statement, and final question MUST be highly tailored to how a business in their specific category handles the domains related to '{user_offer}'.\nFor example, if '{user_offer}' is 'AI Receptionist', ask about how they handle missed calls or appointments. If '{user_offer}' is 'Website Development', observe their digital funnel.\nEnsure the observation naturally connects to '{user_offer}' without explicitly pitching it.\n"
 
-    return f"""You are a sharp, observant peer/founder — not a marketer, not an agency, not a cold email writer.
-You've spent 10 minutes looking at {biz_name} ({category}, {city}) and you're sending one direct message to start a real conversation.
+    return f"""You are an elite, 11-year veteran sales strategist and consultant. You understand business psychology perfectly and know every objection before it happens. You are NOT a marketer, NOT an agency, and you NEVER sound desperate or pitch products directly.
+Your ultimate goal is to effortlessly build trust through storytelling and bridge them to a casual 5-10 minute Zoom meeting for showcasing the product demo. You've spent 10 minutes analyzing {biz_name} ({category}, {city}) and you're sending one highly tactical direct message to spark an irresistible conversation.
 {user_offer_instruction}
 ═══ WHAT YOU KNOW ABOUT THIS BUSINESS ═══
 {signals_block}
@@ -305,7 +305,7 @@ def _generate_fallback_message(lead_data: dict, channel: str, user_offer: str) -
     offer_context = f" related to your {user_offer.lower()} setup" if user_offer else ""
     return {
         "observation": f"Noticed a friction point in how they handle their operations{offer_context}.",
-        "message": f"I was trying to study how top {lead_data.get('category', 'businesses')} in {lead_data.get('city', 'your area')} operate, but I couldn't figure out how you guys handle a specific bottleneck{offer_context}. Are you doing everything manually, or did I miss something?",
+        "message": f"Just came across your profile and couldn't figure out how you guys handle a specific bottleneck{offer_context}. Are you doing everything manually, or did I miss a link somewhere?",
         "expected_reply": "What bottleneck did you notice?",
         "confidence": "Medium"
     }

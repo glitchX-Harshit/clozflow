@@ -16,8 +16,8 @@ const Pricing = () => {
     const isInitialRender = useRef(true);
 
     // Dynamic price calculation
-    const starterPrice = billingPeriod === 'monthly' ? 49 : 39;
-    const proPrice = billingPeriod === 'monthly' ? 129 : 99;
+    const starterPrice = billingPeriod === 'monthly' ? '3,999' : '3,299';
+    const proPrice = billingPeriod === 'monthly' ? '10,999' : '8,299';
 
     // Staggered slide-in entrance animations
     useEffect(() => {
@@ -181,7 +181,7 @@ const Pricing = () => {
                         <div className="pr__row-meta">
                             <span className="pr__row-tag">Starter Plan</span>
                             <div className="pr__price-row">
-                                <span className="pr__curr">$</span>
+                                <span className="pr__curr">₹</span>
                                 <span className="pr__num pr__animate-price">{starterPrice}</span>
                                 <span className="pr__per">/rep/mo</span>
                             </div>
@@ -234,7 +234,7 @@ const Pricing = () => {
                             </div>
                             <span className="pr__row-tag">Professional</span>
                             <div className="pr__price-row">
-                                <span className="pr__curr">$</span>
+                                <span className="pr__curr">₹</span>
                                 <span className="pr__num pr__animate-price">{proPrice}</span>
                                 <span className="pr__per">/rep/mo</span>
                             </div>

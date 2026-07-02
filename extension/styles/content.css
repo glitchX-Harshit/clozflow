@@ -1,0 +1,15 @@
+#clozflow-copilot-container {
+    z-index: 999999;
+    box-shadow: 0 8px 32px rgb(255, 255, 255);
+    border-radius: 12px;
+    overflow: hidden;
+    /* background-color: transparent; */
+}
+
+#clozflow-copilot-sidebar {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    position: static;
+}
