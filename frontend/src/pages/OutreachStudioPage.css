@@ -43,9 +43,9 @@
     z-index: 10;
 }
 
-.os-v3-back {
-    display: flex;
-    align-items: center;
+.mag-btn.os-v3-back {
+    display: inline-flex;
+    flex-direction: row-reverse;
     gap: 0.5rem;
     font-size: 0.8rem;
     font-weight: 700;
@@ -56,16 +56,24 @@
     border: 1px solid var(--border);
     border-radius: 99px;
     padding: 0.6rem 1.25rem;
+    min-width: 0;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: var(--shadow-xs);
 }
 
-.os-v3-back:hover {
+.mag-btn.os-v3-back.is-hovered {
     color: var(--text);
     border-color: var(--text-muted);
-    transform: translateX(-3px);
+    transform: translateX(-3px) translateY(0);
     box-shadow: var(--shadow-sm);
+}
+
+.mag-btn.os-v3-back .mag-icon {
+    order: -1;
+}
+
+.mag-btn.os-v3-back.is-hovered .mag-icon {
+    transform: translateX(-4px);
 }
 
 /* ── Main Workspace Grid ── */
@@ -246,140 +254,127 @@
     margin-top: 0.5rem;
 }
 
-.os-v3-primary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    flex: 1.3;
-    padding: 1rem 1.5rem;
-    background: var(--text);
-    color: var(--bg);
-    border: 1px solid var(--text);
-    border-radius: 14px;
-    font-size: 0.925rem;
-    font-weight: 800;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    transition: 
-        color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: var(--shadow-sm);
-}
-
-.os-v3-primary-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 155%;
-    aspect-ratio: 1;
-    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
-    z-index: -1;
-    background: var(--accent); /* Solid Navy Blue Blob */
-    transform: translate(-50%, -50%) scale(0) rotate(0deg);
-    transition: 
-        transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
-        border-radius 0.65s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.os-v3-primary-btn::after,
-.os-v3-secondary-btn::after {
-    display: none !important;
-}
-
-.os-v3-primary-btn:hover:not(:disabled)::before {
-    transform: translate(-50%, -50%) scale(1.3) rotate(180deg);
-    border-radius: 50%;
-}
-
-.os-v3-primary-btn:hover:not(:disabled) {
-    color: #fff;
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(30, 64, 175, 0.25);
-    letter-spacing: 0.02em;
-}
-
-.os-v3-primary-btn svg {
-    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.os-v3-primary-btn:hover:not(:disabled) svg {
-    transform: translateX(3px) scale(1.08);
-}
-
-.os-v3-primary-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-.os-v3-secondary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
+/* ── Action Buttons (MagButton Integration) ── */
+.mag-btn.os-v3-secondary-btn {
     flex: 0.8;
-    padding: 1rem 1.5rem;
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border-strong);
+    height: 48px;
+    padding: 0 1.5rem;
     border-radius: 14px;
+    min-width: 0;
     font-size: 0.925rem;
     font-weight: 800;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    transition: 
-        color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.os-v3-secondary-btn::before {
+.mag-btn.os-v3-primary-btn {
+    background: #ffffff !important;
+    color: var(--accent) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: var(--shadow-sm);
+    flex: 1.3;
+    height: 48px;
+    padding: 0 1.5rem;
+    border-radius: 14px;
+    min-width: 0;
+    font-size: 0.925rem;
+    font-weight: 800;
+    
+    /* Awwwards liquid fill config — deep navy fill */
+    --btn-fill-color: var(--accent);
+    --btn-fill-color-end: #1d4ed8;
+    --btn-glow-color: rgba(30, 64, 175, 0.12);
+}
+
+.mag-btn.os-v3-primary-btn.is-hovered {
+    color: #ffffff !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 10px 24px rgba(30, 64, 175, 0.18);
+    transform: translateY(-2px);
+}
+
+.mag-btn.os-v3-primary-btn.is-hovered .mag-inner,
+.mag-btn.os-v3-primary-btn.is-hovered .mag-icon {
+    color: #ffffff !important;
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotate-border {
+    to {
+        --border-angle: 360deg;
+    }
+}
+
+/* ── Live Copilot Obsidian theme in Outreach Studio ── */
+.mag-btn.os-v3-primary-btn--copilot {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    height: 48px;
+    border-radius: 14px;
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 0.925rem;
+    font-weight: 800;
+    position: relative;
+    
+    /* Awwwards liquid fill config — minimal luxury white */
+    --btn-fill-color: #ffffff;
+    --btn-fill-color-end: #ffffff;
+    --btn-glow-color: rgba(0, 242, 254, 0.35);
+}
+
+.mag-btn.os-v3-primary-btn--copilot::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 155%;
-    aspect-ratio: 1;
-    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
-    z-index: -1;
-    background: var(--surface-2); /* Solid Light Grey Blob */
-    transform: translate(-50%, -50%) scale(0) rotate(0deg);
-    transition: 
-        transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
-        border-radius 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+    inset: 2.5px;
+    border-radius: 11.5px;
+    background: linear-gradient(180deg, #18181b 0%, #09090b 100%);
+    z-index: -2;
+    transition: background 0.4s ease;
 }
 
-.os-v3-secondary-btn:hover:not(:disabled)::before {
-    transform: translate(-50%, -50%) scale(1.3) rotate(180deg);
-    border-radius: 50%;
+.mag-btn.os-v3-primary-btn--copilot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: conic-gradient(from var(--border-angle), #00f2fe, #ff7e40, #ef4444, #ff7e40, #00f2fe);
+    z-index: -3;
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+    animation: rotate-border 2.5s linear infinite;
 }
 
-.os-v3-secondary-btn:hover:not(:disabled) {
-    color: var(--text);
-    border-color: var(--text-muted);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
-    letter-spacing: 0.01em;
+.mag-btn.os-v3-primary-btn--copilot.is-hovered::after {
+    opacity: 1;
 }
 
-.os-v3-secondary-btn svg {
-    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+.mag-btn.os-v3-primary-btn--copilot.is-hovered {
+    color: #09090b !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-3px);
 }
 
-.os-v3-secondary-btn:hover:not(:disabled) svg {
-    transform: translateX(3px) scale(1.08);
+.mag-btn.os-v3-primary-btn--copilot.is-hovered .mag-inner,
+.mag-btn.os-v3-primary-btn--copilot.is-hovered .mag-icon {
+    color: #09090b !important;
+}
+
+.mag-btn.os-v3-primary-btn--copilot.is-hovered .mag-icon {
+    transform: translate(-3px, -2px) rotate(-8deg);
+}
+
+.mag-btn.os-v3-primary-btn--copilot .mag-fill {
+    inset: 0 !important;
+    clip-path: inset(3.5px round 10.5px);
 }
 
 /* ── Sidebar Cards ── */

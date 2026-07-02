@@ -1,0 +1,533 @@
+project:
+name: Clozflow Browser Copilot V1
+goal: >
+Add a Browser Copilot to the existing Clozflow application.
+The Browser Copilot is NOT a separate application.
+It is another client that communicates with the existing FastAPI backend.
+
+###############################################################
+
+# NON NEGOTIABLE ARCHITECTURE
+
+###############################################################
+
+rules:
+
+* DO NOT create another backend.
+
+* DO NOT create another database.
+
+* DO NOT create another authentication system.
+
+* DO NOT duplicate the sales engine.
+
+* DO NOT duplicate RAG.
+
+* DO NOT duplicate session logic.
+
+* Everything must reuse the existing FastAPI backend.
+
+###############################################################
+
+# PROJECT STRUCTURE
+
+###############################################################
+
+existing:
+
+frontend/
+backend/
+
+add_only:
+
+extension/
+
+extension_contains:
+
+manifest.json
+
+background.js
+
+content.js
+
+sidebar.html
+
+sidebar.js
+
+popup.html
+
+popup.js
+
+styles/
+
+assets/
+
+NO:
+
+extension/backend
+
+extension/server
+
+express
+
+fastapi
+
+###############################################################
+
+# CONNECTION MODEL
+
+###############################################################
+
+architecture:
+
+```
+                Existing FastAPI Backend
+
+                 ▲                 ▲
+
+                 │                 │
+
+      React Dashboard      Browser Extension
+```
+
+Both clients communicate ONLY with the existing backend.
+
+They never communicate directly with each other.
+
+###############################################################
+
+# UI
+
+###############################################################
+
+Lead Card
+
+↓
+
+Generate Opening
+
+↓
+
+Launch Copilot
+
+↓
+
+Choose Environment
+
+Browser
+
+Desktop (Coming Soon)
+
+↓
+
+Launch
+
+###############################################################
+
+# SESSION MODEL
+
+###############################################################
+
+Launch Copilot
+
+↓
+
+Dashboard calls
+
+POST /api/copilot/session/start
+
+Payload:
+
+lead_id
+
+platform
+
+platform_identifier
+
+Backend:
+
+Find existing active session
+
+If found
+
+Resume
+
+Else
+
+Create new session
+
+Return
+
+session_id
+
+status
+
+summary
+
+Extension receives
+
+session_id
+
+through websocket
+
+or polling fallback
+
+###############################################################
+
+# IMPORTANT
+
+###############################################################
+
+Sessions belong to the LEAD.
+
+NOT to WhatsApp.
+
+NOT to LinkedIn.
+
+NOT to Gmail.
+
+The communication platform is only a channel.
+
+The lead owns:
+
+conversation summary
+
+research
+
+buying intent
+
+trust score
+
+stage
+
+objections
+
+history
+
+###############################################################
+
+# AUTHENTICATION
+
+###############################################################
+
+Reuse existing JWT authentication.
+
+Extension MUST use the same login/session.
+
+Do NOT create another login page.
+
+Do NOT create another auth service.
+
+###############################################################
+
+# EXTENSION RESPONSIBILITIES
+
+###############################################################
+
+Extension ONLY:
+
+Connect to backend
+
+Receive active session
+
+Detect supported websites
+
+Observe active conversation
+
+Extract latest incoming message
+
+Send message to backend
+
+Display floating UI
+
+Extension NEVER:
+
+Generate AI
+
+Store business logic
+
+Run reasoning
+
+Run RAG
+
+Run prompt engineering
+
+###############################################################
+
+# MESSAGE DETECTION
+
+###############################################################
+
+Supported
+
+WhatsApp Web
+
+LinkedIn
+
+Gmail
+
+Outlook
+
+Observe ONLY:
+
+Active conversation container
+
+Ignore:
+
+Typing indicators
+
+Read receipts
+
+Timestamps
+
+Outgoing messages
+
+Status updates
+
+Trigger ONLY when:
+
+New incoming message appears.
+
+###############################################################
+
+# CHAT MATCHING
+
+###############################################################
+
+When user launches copilot
+
+Backend stores
+
+lead_id
+
+platform
+
+platform_identifier
+
+Extension compares
+
+Current open conversation
+
+vs
+
+Attached lead
+
+If mismatch
+
+Sleep
+
+If match
+
+Activate Copilot
+
+Never monitor every conversation.
+
+Never analyze unrelated chats.
+
+###############################################################
+
+# FLOATING SIDEBAR
+
+###############################################################
+
+Sections
+
+Lead
+
+Connection Status
+
+Conversation Stage
+
+Hidden Concern
+
+Buying Intent
+
+Trust
+
+Suggested Reply
+
+Why
+
+Buttons
+
+Copy
+
+Regenerate
+
+Alternative Reply
+
+Hide
+
+###############################################################
+
+# AI FLOW
+
+###############################################################
+
+Extension
+
+↓
+
+Latest Message
+
+↓
+
+Existing Backend
+
+↓
+
+Existing Sales Engine
+
+↓
+
+Existing RAG
+
+↓
+
+Existing Prompt
+
+↓
+
+AI Response
+
+↓
+
+Floating Sidebar
+
+###############################################################
+
+# MEMORY
+
+###############################################################
+
+Backend stores
+
+conversation summary
+
+last reply
+
+buying intent
+
+trust score
+
+stage
+
+objections
+
+commitments
+
+unanswered questions
+
+Extension stores only
+
+last detected message
+
+session id
+
+###############################################################
+
+# WEBSOCKET
+
+###############################################################
+
+Preferred
+
+WebSocket
+
+Fallback
+
+Polling every 10 seconds
+
+###############################################################
+
+# LIFECYCLE
+
+###############################################################
+
+Extension starts
+
+↓
+
+Waiting...
+
+↓
+
+Session received
+
+↓
+
+Waiting for attached conversation
+
+↓
+
+Correct chat opened
+
+↓
+
+Copilot Active
+
+↓
+
+Prospect replies
+
+↓
+
+Analyze
+
+↓
+
+Display suggestion
+
+↓
+
+Back to waiting
+
+###############################################################
+
+# SECURITY
+
+###############################################################
+
+Never
+
+Read every browser tab
+
+Read unsupported websites
+
+Read inactive chats
+
+Store customer conversations locally
+
+Only monitor
+
+The attached lead
+
+The active conversation
+
+###############################################################
+
+# SUCCESS METRIC
+
+###############################################################
+
+The salesperson never leaves:
+
+WhatsApp Web
+
+LinkedIn
+
+Gmail
+
+Outlook
+
+The Browser Copilot stays beside the salesperson during the entire conversation.
+
+The extension behaves only as a lightweight UI client.
+
+All intelligence remains inside the existing FastAPI backend.
+
+No duplicate backend.
+
+No duplicate AI.
+
+No duplicate business logic.

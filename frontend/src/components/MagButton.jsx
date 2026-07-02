@@ -17,6 +17,7 @@ import './MagButton.css';
  */
 const MagButton = ({
     label,
+    hoverLabel,
     onClick,
     type = 'button',
     disabled = false,
@@ -25,12 +26,29 @@ const MagButton = ({
     fullWidth = false,
     icon,
     magnetStrength = 0.35,
-    disableMagnet = false,
+    disableMagnet = true,
+    splitText = true,
     ...rest
 }) => {
     const btnRef  = useRef(null);
     const fillRef = useRef(null);
     const [hovered, setHovered] = useState(false);
+
+    /* Helper to split a string into staggered character spans */
+    const renderChars = (text) => {
+        if (typeof text !== 'string') return text;
+        return text.split('').map((char, index) => (
+            <span
+                key={index}
+                className="mag-char"
+                style={{
+                    '--char-index': index,
+                }}
+            >
+                {char === ' ' ? '\u00A0' : char}
+            </span>
+        ));
+    };
 
     /* ── Magnetic movement ──────────────────────────── */
     const handleMouseMove = useCallback((e) => {
@@ -50,7 +68,21 @@ const MagButton = ({
             const inner = btnRef.current.querySelector('.mag-inner');
             if (inner) {
                 inner.style.transform =
-                    `translate(${dx * 0.4}px, ${dy * 0.4}px)`;
+                    `translate(${dx * 0.35}px, ${dy * 0.35}px)`;
+            }
+
+            /* Parallax the icon */
+            const iconEl = btnRef.current.querySelector('.mag-icon');
+            if (iconEl) {
+                iconEl.style.transform =
+                    `translate(${dx * 0.45}px, ${dy * 0.45}px)`;
+            }
+
+            /* Parallax the outer magnetic ring slightly more for depth */
+            const ringEl = btnRef.current.querySelector('.mag-ring');
+            if (ringEl) {
+                ringEl.style.transform =
+                    `translate(${dx * 0.55}px, ${dy * 0.55}px)`;
             }
         }
 
@@ -75,6 +107,10 @@ const MagButton = ({
             btnRef.current.style.transform = '';
             const inner = btnRef.current.querySelector('.mag-inner');
             if (inner) inner.style.transform = '';
+            const iconEl = btnRef.current.querySelector('.mag-icon');
+            if (iconEl) iconEl.style.transform = '';
+            const ringEl = btnRef.current.querySelector('.mag-ring');
+            if (ringEl) ringEl.style.transform = '';
         }
     }, []);
 
@@ -97,17 +133,36 @@ const MagButton = ({
             ].filter(Boolean).join(' ')}
             {...rest}
         >
+            {/* Ambient premium glow */}
+            <span className="mag-glow" aria-hidden="true" />
+
             {/* Liquid fill blob */}
             <span className="mag-fill" ref={fillRef} aria-hidden="true" />
 
-            {/* Text layers — slide up on hover */}
-            <span className="mag-inner">
-                <span className="mag-label mag-label--default">{label}</span>
-                <span className="mag-label mag-label--hover">{label}</span>
-            </span>
+            {/* Outer magnetic outline ring */}
+            <span className="mag-ring" aria-hidden="true" />
 
             {/* Optional icon */}
             {icon && <span className="mag-icon" aria-hidden="true">{icon}</span>}
+
+            {/* Text layers — slide up on hover */}
+            <span className="mag-inner">
+                {splitText ? (
+                    <>
+                        <span className="mag-label mag-label--default mag-label--split">
+                            {renderChars(label)}
+                        </span>
+                        <span className="mag-label mag-label--hover mag-label--split">
+                            {renderChars(hoverLabel || label)}
+                        </span>
+                    </>
+                ) : (
+                    <>
+                        <span className="mag-label mag-label--default">{label}</span>
+                        <span className="mag-label mag-label--hover">{hoverLabel || label}</span>
+                    </>
+                )}
+            </span>
         </button>
     );
 };

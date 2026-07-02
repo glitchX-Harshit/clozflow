@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import useCopilotStore from '../store/copilotStore';
 import { openCopilotWindow } from '../utils/copilotWindow';
+import ClozFlowLogo from '../components/ClozFlowLogo';
 import './LiveCall.css';
 
 const LiveCall = () => {
@@ -232,9 +233,7 @@ const LiveCall = () => {
             {/* ── SIDEBAR */}
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <div className="db-logo-icon" style={{ background: 'var(--accent)' }}>
-                        <Zap size={18} color="white" strokeWidth={2.5} />
-                    </div>
+                    <ClozFlowLogo size={28} />
                     <span className="db-logo-text">ClozFlow</span>
                 </div>
 
@@ -260,7 +259,7 @@ const LiveCall = () => {
             </aside>
 
             {/* ── MAIN CONTENT */}
-            <main className="db-main">
+            <main className="db-main" data-lenis-prevent>
                 {/* Header Strip */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                     <div>
@@ -529,7 +528,7 @@ const LiveCall = () => {
                             <div className="db-panel-header" style={{ marginBottom: '1.5rem' }}>
                                 <span className="db-panel-title">Live Transcription</span>
                             </div>
-                            <div className="db-transcript-scroll" style={{ flex: 1, minHeight: 0 }}>
+                            <div className="db-transcript-scroll" style={{ flex: 1, minHeight: 0 }} data-lenis-prevent>
                                {!isListening ? (
                                    <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
                                        Waiting for stream...

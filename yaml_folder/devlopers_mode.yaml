@@ -1,0 +1,450 @@
+project:
+name: Clozflow Labs
+version: 1.0
+
+objective: >
+Create an internal testing environment inside the existing Clozflow
+application that allows developers to rapidly test the Browser Copilot,
+Sales Brain and Conversation Engine without using real customer leads.
+
+###############################################################
+
+# IMPORTANT
+
+###############################################################
+
+This is NOT a production feature.
+
+It must only be visible when:
+
+Settings
+
+↓
+
+Enable Clozflow Labs
+
+↓
+
+Labs becomes visible.
+
+Production users must NEVER see this page.
+
+###############################################################
+
+# NAVIGATION
+
+###############################################################
+
+Add new sidebar item:
+
+🧪 Clozflow Labs
+
+Only visible when Labs Mode is enabled.
+
+###############################################################
+
+# LABS DASHBOARD
+
+###############################################################
+
+Sections
+
+• Test Leads
+
+• Browser Copilot
+
+• Conversation Simulator
+
+• Active Sessions
+
+• Brain Playground
+
+• Performance
+
+###############################################################
+
+# TEST LEADS
+
+###############################################################
+
+Purpose
+
+Allow developers to manually create fake leads.
+
+Button
+
+* Create Test Lead
+
+Fields
+
+Lead Name
+
+Company
+
+Phone Number
+
+Email (optional)
+
+Industry
+
+Platform
+
+Notes
+
+Tags
+
+Save
+
+Cancel
+
+After saving
+
+Lead appears immediately inside
+
+Test Leads.
+
+###############################################################
+
+# TEST LEAD CARD
+
+###############################################################
+
+Display
+
+Lead Name
+
+Company
+
+Phone
+
+Platform
+
+Industry
+
+Status
+
+Buttons
+
+Launch Copilot
+
+Edit
+
+Delete
+
+Duplicate
+
+Simulate Conversation
+
+###############################################################
+
+# QUICK DEMO LEADS
+
+###############################################################
+
+Button
+
+Generate Demo Lead
+
+Randomly generate
+
+Cafe
+
+Salon
+
+Restaurant
+
+Gym
+
+Dental Clinic
+
+Agency
+
+Retail Store
+
+Fields
+
+Random Name
+
+Random Phone
+
+Random Company
+
+Industry
+
+Ready
+
+###############################################################
+
+# BROWSER COPILOT
+
+###############################################################
+
+Inside each Test Lead
+
+Button
+
+Launch Copilot
+
+Flow
+
+Launch
+
+↓
+
+Backend creates or resumes session
+
+↓
+
+Extension receives session
+
+↓
+
+User opens WhatsApp
+
+↓
+
+Copilot waits
+
+↓
+
+Prospect replies
+
+↓
+
+AI responds
+
+###############################################################
+
+# ACTIVE SESSIONS
+
+###############################################################
+
+Display
+
+Session ID
+
+Lead
+
+Platform
+
+Current Stage
+
+Status
+
+Started
+
+Last Activity
+
+Buttons
+
+Resume
+
+Stop
+
+Delete
+
+###############################################################
+
+# CONVERSATION SIMULATOR
+
+###############################################################
+
+Purpose
+
+Test the Sales Brain without contacting real people.
+
+Preset Categories
+
+Already Have Supplier
+
+Price
+
+Budget
+
+Timing
+
+Need Approval
+
+Trust
+
+Not Interested
+
+Status Quo
+
+Custom Message
+
+User enters
+
+Prospect message
+
+↓
+
+Generate AI Reply
+
+Display
+
+Detected Intent
+
+Hidden Concern
+
+Buying Intent
+
+Trust
+
+Suggested Reply
+
+Alternative Reply
+
+Reasoning
+
+###############################################################
+
+# BRAIN PLAYGROUND
+
+###############################################################
+
+Purpose
+
+Rapidly iterate prompts and datasets.
+
+Input
+
+Prospect Message
+
+Industry
+
+Stage
+
+Lead Context
+
+Summary
+
+Generate
+
+Output
+
+Suggested Reply
+
+Reasoning
+
+Response Strategy
+
+Latency
+
+Prompt Tokens
+
+Completion Tokens
+
+Retrieved Dataset Items
+
+###############################################################
+
+# PERFORMANCE PANEL
+
+###############################################################
+
+Display
+
+Average Latency
+
+Current Response Time
+
+Prompt Tokens
+
+Completion Tokens
+
+RAG Retrieval Time
+
+Dataset Retrieval Time
+
+Total API Cost
+
+###############################################################
+
+# DATABASE
+
+###############################################################
+
+Create
+
+test_leads
+
+Fields
+
+id
+
+lead_name
+
+company
+
+phone
+
+email
+
+industry
+
+platform
+
+notes
+
+tags
+
+created_at
+
+updated_at
+
+Reuse existing
+
+sessions
+
+conversation_summary
+
+sales_engine
+
+authentication
+
+Do NOT duplicate existing tables.
+
+###############################################################
+
+# SAFETY
+
+###############################################################
+
+Never
+
+Mix Test Leads with Production Leads
+
+Never
+
+Send Test Leads into Production CRM
+
+Never
+
+Show Labs to Production Users
+
+###############################################################
+
+# GOAL
+
+###############################################################
+
+Developers should be able to
+
+Create fake leads
+
+Launch Browser Copilot
+
+Test WhatsApp conversations
+
+Simulate objections
+
+Measure latency
+
+Debug Sales Brain
+
+Iterate prompts
+
+Without needing real customers.
+
+This should become the primary internal environment for developing and improving Clozflow's Sales Brain.

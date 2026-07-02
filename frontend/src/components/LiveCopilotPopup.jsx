@@ -53,7 +53,11 @@ const LiveCopilotPopup = () => {
             {/* ── Header ── */}
             <div className="copilot-popup__header">
                 <div className="copilot-popup__header-left">
-                    <div className={`copilot-popup__status-dot ${!isListening ? 'copilot-popup__status-dot--idle' : ''}`} />
+                    <div className={`copilot-popup__wave ${!isListening ? 'copilot-popup__wave--idle' : ''}`}>
+                        <span className="copilot-popup__wave-bar" />
+                        <span className="copilot-popup__wave-bar" />
+                        <span className="copilot-popup__wave-bar" />
+                    </div>
                     <span className="copilot-popup__title">ClozFlow Copilot</span>
                     {isListening && (
                         <span className="copilot-popup__live-badge">LIVE</span>

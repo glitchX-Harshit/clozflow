@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/sidebar.css">
+</head>
+<body>
+    <div class="sidebar-container">
+        <!-- Dropdown & Session Selector -->
+        <div class="session-wrapper">
+            <div class="status-indicator">
+                <div class="status-dot green"></div>
+            </div>
+            <div class="select-container">
+                <select id="session-selector" class="session-selector">
+                    <option value="">Waiting for active session...</option>
+                </select>
+            </div>
+            <div id="platform-badge" class="badge"></div>
+        </div>
+        
+        <!-- Strategic Stage Badge -->
+        <div class="stage-section">
+            <div class="section-label">CURRENT STRATEGY STAGE</div>
+            <div class="stage-indicator">
+                <span id="stage-text">DISCOVERY</span>
+            </div>
+        </div>
+        
+        <!-- AI Intelligence Metrics -->
+        <div class="intelligence-panel">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span>DETECTED OBJECTION / CONCERN</span>
+                </div>
+                <div id="hidden-concern" class="metric-value">-</div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">BUYING INTENT</div>
+                    <div class="progress-bar">
+                        <div id="buying-intent" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">TRUST SCORE</div>
+                    <div class="progress-bar">
+                        <div id="trust-score" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Suggested Reply Panel -->
+        <div class="reply-card">
+            <div class="card-header">
+                <span class="card-title">RECOMMENDED STRATEGIC MOVE</span>
+            </div>
+            
+            <div class="reply-content">
+                <div id="suggested-reply" class="reply-text">Waiting for prospect message...</div>
+            </div>
+            
+            <div class="why-works-panel">
+                <div class="why-header">
+                    <span class="why-glow"></span>
+                    <span class="why-title">TACTICAL RATIONALE</span>
+                </div>
+                <div id="why-text" class="why-text">-</div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="action-buttons">
+                <button id="copy-btn" class="primary-btn">Copy Reply</button>
+                <button id="regenerate-btn" class="secondary-btn">Regenerate</button>
+            </div>
+        </div>
+    </div>
+    <script src="sidebar.js"></script>
+</body>
+</html>

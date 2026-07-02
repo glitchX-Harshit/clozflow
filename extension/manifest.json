@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "ClozFlow Browser Copilot",
+  "version": "1.0",
+  "description": "Real-time AI sales coaching for WhatsApp Web, LinkedIn, Gmail, and Outlook.",
+  "permissions": ["activeTab", "storage", "tabs", "clipboardWrite", "scripting"],
+  "host_permissions": [
+    "*://web.whatsapp.com/*",
+    "*://*.linkedin.com/*",
+    "*://mail.google.com/*",
+    "*://outlook.live.com/*",
+    "*://outlook.office.com/*",
+    "http://localhost:8000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://web.whatsapp.com/*",
+        "*://*.linkedin.com/*",
+        "*://mail.google.com/*",
+        "*://outlook.live.com/*",
+        "*://outlook.office.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["sidebar.html", "sidebar.js", "styles/sidebar.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

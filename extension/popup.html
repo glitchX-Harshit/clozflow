@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <div class="header">
+            <div class="logo-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00f2fe" />
+                            <stop offset="100%" stop-color="#4facfe" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            ClozFlow Copilot
+        </div>
+        
+        <div class="status-panel">
+            <div id="connection-status" class="status-row">
+                <div class="status-dot red" id="status-dot"></div>
+                <span id="status-text">Disconnected</span>
+            </div>
+            
+            <div id="session-info" class="session-info hidden">
+                <div class="session-label">Active Session</div>
+                <div id="session-details" class="details"></div>
+            </div>
+        </div>
+        
+        <div class="auth-section">
+            <label class="input-label">Authentication</label>
+            <input type="password" id="token-input" placeholder="Enter API Token..." />
+            <button id="save-token-btn" class="primary-btn">Sync Extension</button>
+        </div>
+        
+        <div class="dev-mode-section">
+            <div class="dev-mode-header">
+                <label class="input-label">Developer Test Mode</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dev-mode-toggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+            <div id="dev-mode-panel" class="dev-mode-panel hidden">
+                <input type="text" id="test-contact-name" class="dev-input" placeholder="Friend's Name (e.g. John Doe)" />
+                <input type="text" id="test-contact-phone" class="dev-input" placeholder="Phone (e.g. +1234567890)" />
+                <select id="test-contact-platform" class="dev-input">
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="gmail">Gmail</option>
+                    <option value="outlook">Outlook</option>
+                </select>
+                <button id="start-test-session-btn" class="secondary-btn dev-btn">Force Start Test Session</button>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="dashboard-btn" class="secondary-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Launch Dashboard
+            </button>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

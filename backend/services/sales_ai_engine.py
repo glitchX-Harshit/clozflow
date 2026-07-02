@@ -443,80 +443,75 @@ class SalesAIEngine:
         goal = _select_conversation_goal(hidden, self.deal_state["stage"])
         response_type = _select_response_type(goal, hidden["type"], hidden)
 
-        # V5.0 fallback responses — conversational, short, real-rep language
+        # V5.0 fallback responses — highly tactical closer language
         fallback_responses = {
             "pricing": [
-                "Price only feels off when the upside isn't obvious yet.",
-                "What would it cost you to keep running things the way they are?",
-                "Totally get it. What's the number that would make this a no-brainer?",
+                "Price is only an issue in the absence of value. What outcome makes this a no-brainer for you?",
+                "Totally get it. What's the actual cost of keeping your current broken setup running for another year?",
+                "Fair point. Let's flip it—what number makes sense for the ROI you're expecting?",
             ],
             "budget": [
-                "Heard. What if we started smaller and let the results justify the spend?",
-                "Makes sense — what's the gap between your budget and where you want to be?",
-                "Price only feels off when the upside isn't obvious yet.",
+                "Understood. What if we scaled it back initially and let the immediate ROI fund the rest?",
+                "Makes sense. Usually when budget is tight, there's a massive leak somewhere else. Open to finding it?",
             ],
             "authority": [
-                "Who else needs to be on board for this to move?",
-                "What would your team need to see to feel good about it?",
+                "Got it. Whose desk does this ultimately need to cross for a green light?",
+                "Who else on your team feels the pain of this bottleneck every day?",
             ],
             "delay": [
-                "No rush — what's the one thing you'd want nailed down before moving forward?",
-                "Totally fair. What would change between now and then?",
-                "What's the cost of waiting another quarter on this?",
+                "No rush. But what exactly changes between now and next quarter?",
+                "Fair enough. Usually delaying just compounds the friction. What's the biggest risk if you wait?",
             ],
             "need_to_think": [
-                "For sure. What's the main thing you're weighing?",
-                "Take your time — is there one thing that would make the decision easier?",
-                "What would 'yes' need to look like for you?",
+                "Take all the time you need. But just to cut to the chase—what's the main hesitation you're weighing?",
+                "For sure. Just so I have context, what would a 'yes' actually need to look like for your team?",
             ],
             "status_quo": [
-                "Where's the current setup costing you the most time right now?",
-                "What would have to break before you'd switch?",
+                "If it's not broke, don't fix it. But where is the current setup secretly bottlenecking your team?",
+                "Glad to hear it. Out of curiosity, what would literally have to break before you'd consider an upgrade?",
             ],
             "doing_fine": [
-                "Glad to hear it. Where do you see the biggest gap in the next 6 months?",
-                "That's solid. What's the one thing you'd improve if you could?",
+                "Love to hear that. Just curious, where do you see the biggest operational ceiling right now?",
+                "That's solid. If you had a magic wand, what's the one piece of friction you'd delete today?",
             ],
             "already_have_vendor": [
-                "How's that going? Anything you wish worked differently?",
-                "Got it. What's the one thing they're not doing well?",
+                "How's that going? What's the one thing you wish they did better?",
+                "Makes sense. Usually when teams have someone, there's still a 10% gap. Where's theirs?",
             ],
             "not_interested": [
-                "Appreciate you being straight. Mind if I ask what's behind that?",
-                "Respect that. Out of curiosity, what would make it relevant?",
+                "Appreciate the transparency. Just so I know for my own data, what missed the mark?",
+                "Respect that. Usually that means the timing is off or the pain isn't sharp enough. Which one is it?",
             ],
             "rejection": [
-                "Fair enough. What didn't land for you?",
-                "Got it. Was there one thing that felt off?",
+                "Fair enough. What exactly didn't land for you?",
             ],
             "trust_issue": [
-                "Makes sense to be skeptical. What would actually convince you?",
-                "I get it — what's happened before that makes you cautious?",
+                "Skepticism is completely warranted. What specific proof would actually move the needle for you?",
+                "I get it—you've likely been burned before. What went wrong last time?",
             ],
             "trust": [
-                "That's fair. What kind of proof would move the needle for you?",
-                "Skepticism is smart. What went wrong last time?",
+                "That's fair. What exactly would you need to see on a quick screen-share to believe it?",
             ],
             "risk": [
-                "What's the worst case you're picturing?",
-                "What would make this feel like a safe bet?",
+                "What's the absolute worst-case scenario you're picturing in your head right now?",
+                "What exact metric would you need to see to feel like this is a completely safe bet?",
             ],
             "roi": [
-                "What does a win look like in numbers for you?",
-                "Where are you bleeding the most money right now?",
+                "What does a home run look like in pure revenue for you?",
+                "Let's talk numbers. Where are you bleeding the most margin right now?",
             ],
             "direct_question": [
-                "Short answer — it depends on where you're at right now. How are you set up?",
-                "Let me give you a straight answer. What's your current situation?",
+                "Direct answer: it completely depends on your current infrastructure. How are you guys set up right now?",
+                "Let me give you a straight answer. But first, what exactly is breaking in your current process?",
             ],
             "curiosity": [
-                "Good question. Here's the short version.",
-                "Yeah, let me break that down real quick.",
+                "I can definitely walk you through that. What specific part of your workflow are you trying to patch?",
+                "Yeah, I can break that down. But just to tailor it—what's the main bottleneck you're facing?",
             ],
             "unknown": [
-                "Tell me more — what's top of mind for you right now?",
-                "Interesting. What made you bring that up?",
-                "Got it. What's the main thing you're trying to solve?",
+                "Interesting pivot. Just to make sure we're aligned, what's the absolute biggest bottleneck in your operations today?",
+                "Got it. Let me ask you this directly—what specific friction point are you actively trying to eliminate?",
+                "Understood. Before we go deeper, how are you currently handling overflow and lost leads?",
             ],
         }
 
@@ -683,25 +678,27 @@ class SalesAIEngine:
         few_shot_examples = _get_few_shot_examples(hidden["type"])
 
         # ── V5.0 System Prompt — Natural sales voice, generation-only ─────────
-        system_content = f"""You are an experienced sales rep on a live call. You've closed hundreds of deals. You're sharp, calm, and you talk like a real person — not a chatbot, not a consultant, not a LinkedIn post.
+        system_content = f"""You are an elite, 11-year veteran sales strategist on a live chat. You've closed hundreds of deals. You're sharp, highly tactical, and you talk like a real human — not a chatbot, not a generic marketer.
 
-Your job: respond to the prospect naturally. Say what a top closer would actually say on the phone.
+Your ultimate goal is NEVER to just answer questions aimlessly. Every single response you generate MUST extract intelligence and strategically move the conversation forward toward QUALIFICATION and booking a Zoom meeting.
+
+CRITICAL IDENTITY RULE: You are representing {self.call_context.get('your_company', 'a B2B software firm')} as a {self.call_context.get('your_role', 'strategist')}. NEVER pretend to be a customer, patient, or someone trying to buy their services. You are here to sell to them.
 
 ENERGY: {response_energy} — {energy_description}
 
 RULES:
 - 1–2 sentences. 3 max. Shorter is almost always better.
-- Lead with an observation, insight, or reframe. Not a question.
-- Answer direct questions FIRST, then follow up.
-- {"Ask ONE focused question to gain clarity." if should_include_question else "Skip questions unless they genuinely move the deal."}
-- Sound like a person, not a prompt. Vary your rhythm.
-- Never start with "I understand" or "Great question" or "That's a fair point."
+- Acknowledge what they said organically, then immediately use a psychological PATTERN INTERRUPT to reframe the conversation.
+- You do NOT always need to ask a question. Sometimes, the most powerful move is to just provide a sharp, insightful reply that organically moves the conversation forward.
+- If they ask a direct question, give them a straight, conversational answer. You can occasionally append a soft qualification question, but DO NOT interrogate them on every single message.
+- Sound like a highly experienced, friendly peer having a casual chat, NOT a desperate seller pitching a product.
+- Never start with "I understand," "Great question," or "That's a fair point."
 
 NEVER SAY:
 "What specific...", "I understand your concern", "Let's explore",
 "Our solution helps", "This can improve", "Fair question",
 "Help me understand", "Out of curiosity", "Most businesses",
-"The reality is", "In practice,", "Usually when"
+"The reality is", "In practice,", "Usually when", "I was trying to", "I noticed"
 
 {f'CONTEXT HINTS (use as inspiration, never quote): {rag_context}' if rag_context.strip() else ''}
 {sim_guardrails}
@@ -711,9 +708,9 @@ DEAL: {self.deal_state['stage']} stage | Pressure: {self.deal_state['pressure_le
 
 OUTPUT (strict JSON, nothing else):
 {{
-  "response": "your reply to the prospect",
-  "next_question": "optional follow-up question or empty string",
-  "coaching_tip": "one-line advice for the rep"
+  "response": "your tactical reply to the prospect",
+  "next_question": "the tactical qualification question you appended to move the deal forward (or empty if included in response)",
+  "coaching_tip": "one-line strategic advice for why you chose this angle"
 }}"""
 
         prompt = f"""

@@ -12,9 +12,12 @@ import {
     AlertTriangle,
     Loader2,
     TrendingUp,
-    Phone
+    Phone,
+    Rocket
 } from 'lucide-react';
 import './OutreachStudioPage.css';
+import CopilotLauncher from '../components/CopilotLauncher';
+import MagButton from '../components/MagButton';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -37,6 +40,7 @@ const guessCountryCode = (text) => {
     if (/\b(germany|berlin|munich|hamburg|frankfurt)\b/.test(t)) return '+49';
     if (/\b(france|paris|marseille|lyon|toulouse)\b/.test(t)) return '+33';
     if (/\b(india|delhi|mumbai|pune|hyderabad|jaipur|bangalore|chennai|lucknow|kolkata|ahmedabad|surat|noida|gurgaon|kochi|indore|chandigarh)\b/.test(t)) return '+91';
+    if (/\b(nepal|kathmandu|pokhara|lalitpur|bhaktapur)\b/.test(t)) return '+977';
     
     return null;
 };
@@ -62,6 +66,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
     const [editedMessage, setEditedMessage] = useState('');
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState(null);
+    const [isCopilotLauncherOpen, setIsCopilotLauncherOpen] = useState(false);
     
     // Manage target phone number explicitly so country code can be added/edited
     const [targetPhone, setTargetPhone] = useState('');
@@ -163,10 +168,15 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
             <div className="os-v3-ambient-glow" />
             
             <div className="os-v3-workspace-header">
-                <button className="os-v3-back" onClick={onBackClick}>
-                    <ArrowLeft size={16} strokeWidth={2.5} />
-                    <span>Back to Discovery</span>
-                </button>
+                <MagButton 
+                    className="os-v3-back" 
+                    onClick={onBackClick}
+                    label="Back to Discovery"
+                    icon={<ArrowLeft size={16} strokeWidth={2.5} />}
+                    variant="outline"
+                    magnetStrength={0.2}
+                    splitText={false}
+                />
             </div>
 
             <div className="os-v3-workspace animate-fade-in-up">
@@ -232,22 +242,37 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
 
                         {/* Dispatch Button Grid */}
                         <div className="os-v3-bottom-actions">
-                            <button 
+                            <MagButton 
                                 className="os-v3-secondary-btn" 
                                 onClick={() => handleGenerate(false)}
                                 disabled={generating}
-                            >
-                                {generating ? <Loader2 size={18} className="spin"/> : <RefreshCw size={18} />}
-                                <span>Regenerate Hook</span>
-                            </button>
-                            <button 
+                                label={generating ? "Generating..." : "Regenerate Hook"}
+                                hoverLabel="Synthesize Hook"
+                                icon={generating ? <Loader2 size={18} className="spin"/> : <RefreshCw size={18} />}
+                                variant="outline"
+                                magnetStrength={0.25}
+                            />
+                            <MagButton 
                                 className="os-v3-primary-btn" 
                                 onClick={openWhatsApp}
                                 disabled={!targetPhone || generating}
-                            >
-                                <MessageCircle size={18} /> 
-                                <span>Launch WhatsApp Chat</span>
-                            </button>
+                                label="Launch WhatsApp Chat"
+                                hoverLabel="Open In WhatsApp"
+                                icon={<MessageCircle size={18} />}
+                                variant="custom"
+                                magnetStrength={0.25}
+                            />
+                            <MagButton 
+                                className="os-v3-primary-btn os-v3-primary-btn--copilot" 
+                                onClick={() => setIsCopilotLauncherOpen(true)}
+                                disabled={generating || !generatedMessage}
+                                label="Launch Browser Copilot"
+                                hoverLabel="Start AI Companion"
+                                icon={<Rocket size={18} />}
+                                variant="custom"
+                                magnetStrength={0.25}
+                                style={{gridColumn: '1 / -1', width: '100%'}}
+                            />
                         </div>
                     </div>
 
@@ -334,6 +359,13 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                 </div>
 
             </div>
+            
+            <CopilotLauncher 
+                isOpen={isCopilotLauncherOpen} 
+                onClose={() => setIsCopilotLauncherOpen(false)} 
+                lead={lead} 
+                platform="WhatsApp" 
+            />
         </div>
     );
 };

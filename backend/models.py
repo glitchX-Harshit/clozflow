@@ -66,3 +66,26 @@ class Lead(Base):
     outreach_angle    = Column(Text, nullable=True)
     lead_score        = Column(Integer, default=0)
     created_at        = Column(DateTime, default=datetime.utcnow)
+
+class CopilotSession(Base):
+    __tablename__ = "copilot_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    lead_id = Column(Integer, ForeignKey("leads.id"))
+    platform = Column(String) # whatsapp, linkedin, gmail, outlook
+    platform_identifier = Column(String)
+    status = Column(String, default="active")
+    conversation_summary = Column(Text, nullable=True)
+    last_reply = Column(Text, nullable=True)
+    buying_intent = Column(Integer, default=0)
+    trust_score = Column(Integer, default=0)
+    stage = Column(String, default="initial_contact")
+    objections = Column(Text, nullable=True) # JSON string
+    commitments = Column(Text, nullable=True) # JSON string
+    unanswered_questions = Column(Text, nullable=True) # JSON string
+    hidden_concern = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User")
+    lead = relationship("Lead")
