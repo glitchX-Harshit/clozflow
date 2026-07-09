@@ -24,6 +24,9 @@ const useCopilotStore = create((set, get) => ({
     suggestionCount: 0,
     reasoningData: null,
 
+    // ── Active Sessions ──
+    activeSessions: [],
+
     // ── Actions ──
 
     /** Store the external window references after opening */
@@ -55,6 +58,31 @@ const useCopilotStore = create((set, get) => ({
         })),
 
     setReasoningData: (data) => set({ reasoningData: data }),
+
+    fetchActiveSessions: async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            
+            const API_BASE = 'http://localhost:8000';
+            const res = await fetch(`${API_BASE}/api/copilot/sessions/active`, { headers });
+            if (res.ok) {
+                const data = await res.json();
+                set({ activeSessions: data || [] });
+            } else {
+                set({ activeSessions: [] });
+            }
+        } catch (error) {
+            console.error('Failed to fetch copilot status:', error);
+            set({ activeSessions: [] });
+        }
+    },
+
+    removeActiveSession: (sessionId) => 
+        set((state) => ({
+            activeSessions: state.activeSessions.filter(s => s.session_id !== sessionId)
+        })),
 
     /** Reset everything when the session ends */
     resetCopilot: () => {

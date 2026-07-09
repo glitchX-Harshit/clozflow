@@ -83,7 +83,7 @@ class UnifiedConversationBrain:
             return {"error": "LLM client not configured"}
             
         system_prompt = f"""You are an elite, 11-year veteran sales strategist representing {memory['business_context']['your_company']} as a {memory['business_context']['your_role']}.
-Your ultimate goal is to effortlessly bridge the prospect to a casual Zoom meeting without ever sounding desperate or salesy.
+Your ultimate goal is to start an organic conversation by highlighting an unseen bottleneck, without ever sounding like you're selling something.
 
 You are crafting the very first OUTREACH message to a new lead.
 LEAD PROFILE:
@@ -96,9 +96,9 @@ LEAD PROFILE:
 RULES:
 1. Execute a psychological pattern interrupt.
 2. Find a massive contrast or unseen friction point in their setup.
-3. NEVER pitch a product and NEVER ask for a Zoom meeting in the first message. Spark intense curiosity and trust.
+3. NEVER pitch a product and NEVER ask for a call, meeting, or Zoom. Spark intense curiosity and trust.
 4. Keep it to 1-2 short sentences.
-5. End with a soft, low-pressure question that forces them to reply and builds conversation, NOT a request for a meeting.
+5. End with a soft, low-pressure question that forces them to reply and builds conversation, NOT a request for a meeting or call.
 
 OUTPUT (Strict JSON):
 {{
@@ -173,10 +173,10 @@ Current Goal: {memory['planning_state']['current_goal']}
 --- REPLY RULES ---
 - 1-3 sentences max. Shorter is almost always better.
 - ALWAYS answer their question first naturally.
+- PROSPECT PERSPECTIVE FILTER: Before answering, ask yourself: 'If I were the prospect, would I reply to this?' If no, discard it and generate a sharper, value-driven reframe.
+- FOCUS ON THE CLOSE: Don't ask fluffy or repetitive questions. Address objections by reframing them and pushing the deal forward. The ultimate goal is to close the deal.
 - DO NOT restart discovery. Build on what they just said.
 - Continue the original strategy. Do not forget the previous context.
-- NEVER ask for a Zoom meeting until you have fully built trust and clearly identified a massive pain point. Prioritize trust over the close.
-- Move the conversation ONE step forward toward qualification organically.
 - NEVER become generic or ask random "What's your biggest bottleneck" questions if you already know their bottleneck.
 - Sound human, confident, and peer-to-peer. NEVER sound desperate or like a chatbot.
 

@@ -12,3 +12,6 @@ passlib[bcrypt]
 PyJWT
 reportlab==4.1.0
 httpx
+silero-vad>=5.1
+onnxruntime>=1.17.0
+numpy>=1.24.0

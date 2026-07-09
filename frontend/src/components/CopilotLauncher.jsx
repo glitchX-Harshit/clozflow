@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Rocket, Monitor, Chrome, X, CheckCircle2 } from 'lucide-react';
 import MagButton from './MagButton';
+import useCopilotStore from '../store/copilotStore';
 import './CopilotLauncher.css';
 
 const API_BASE = 'http://localhost:8000';
@@ -10,6 +11,8 @@ const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
     const [step, setStep] = useState(1);
     const [selectedEnv, setSelectedEnv] = useState('browser');
     const [loading, setLoading] = useState(false);
+    const [activeSessionId, setActiveSessionId] = useState(null);
+    const { fetchActiveSessions } = useCopilotStore();
     
     if (!isOpen) return null;
     
@@ -48,8 +51,17 @@ const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
                 })
             });
             
+            
             if (!res.ok) throw new Error('Failed to start session');
             
+            const data = await res.json();
+            if (data.session_id) {
+                setActiveSessionId(data.session_id);
+            }
+            
+            // Sync with global store so status widget appears instantly without polling
+            await fetchActiveSessions();
+
             setStep(3); // Success step
         } catch (error) {
             console.error('Failed to launch copilot:', error);
@@ -57,6 +69,29 @@ const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
             setStep(3); // Mock success for now if backend is not ready
         }
         setLoading(false);
+    };
+
+    const handleClose = async () => {
+        if (activeSessionId) {
+            try {
+                const token = localStorage.getItem('token');
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+                
+                await fetch(`${API_BASE}/api/copilot/session/${activeSessionId}/end`, {
+                    method: 'PUT',
+                    headers
+                });
+                
+                // Sync with global store so status widget disappears instantly without polling
+                await fetchActiveSessions();
+            } catch (err) {
+                console.error('Failed to end session on close:', err);
+            }
+            setActiveSessionId(null);
+            setStep(1);
+        }
+        onClose();
     };
 
     return (
@@ -72,7 +107,7 @@ const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
                         <Rocket className="cl-title-icon" size={20} />
                         Launch Copilot
                     </h3>
-                    <button onClick={onClose} className="cl-close-btn">
+                    <button onClick={handleClose} className="cl-close-btn" title="Close">
                         <X size={20} />
                     </button>
                 </div>
@@ -144,10 +179,10 @@ const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
                                     The ClozFlow Copilot extension will appear automatically when it detects the chat.
                                 </div>
                                 <button 
-                                    onClick={onClose}
+                                    onClick={handleClose}
                                     className="cl-close-action-btn"
                                 >
-                                    Close
+                                    Close & Deactivate
                                 </button>
                             </motion.div>
                         )}

@@ -1,36 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, X, Phone, MessageSquare, Linkedin, Instagram, Activity } from 'lucide-react';
+import useCopilotStore from '../store/copilotStore';
 import './CopilotStatus.css';
 
 const API_BASE = 'http://localhost:8000';
 
 const CopilotStatus = () => {
-    const [sessions, setSessions] = useState([]);
-
-    const checkStatus = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-
-            const res = await fetch(`${API_BASE}/api/copilot/sessions/active`, { headers });
-            if (res.ok) {
-                const data = await res.json();
-                setSessions(data || []);
-            } else {
-                setSessions([]);
-            }
-        } catch (error) {
-            console.error('Failed to fetch copilot status:', error);
-        }
-    };
+    const { activeSessions, fetchActiveSessions, removeActiveSession } = useCopilotStore();
 
     useEffect(() => {
-        checkStatus();
-        const interval = setInterval(checkStatus, 5000);
-        return () => clearInterval(interval);
-    }, []);
+        fetchActiveSessions();
+    }, [fetchActiveSessions]);
 
     const handleEndSession = async (sessionId) => {
         try {
@@ -38,21 +19,19 @@ const CopilotStatus = () => {
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
-            // Optimistic update
-            setSessions(prev => prev.filter(s => s.session_id !== sessionId));
+            // Optimistic update + prevent reappearance
+            removeActiveSession(sessionId);
 
             await fetch(`${API_BASE}/api/copilot/session/${sessionId}/end`, {
                 method: 'PUT',
                 headers
             });
-            // Re-fetch to sync state
-            checkStatus();
         } catch (error) {
             console.error('Failed to end session:', error);
         }
     };
 
-    if (sessions.length === 0) return null;
+    if (!activeSessions || activeSessions.length === 0) return null;
 
     const getPlatformIcon = (platform) => {
         const p = platform?.toLowerCase();
@@ -78,7 +57,7 @@ const CopilotStatus = () => {
                 </div>
                 <div className="cs-header-right">
                     <div className="cs-counter-panel">
-                        <span className="cs-count-num">{String(sessions.length).padStart(2, '0')}</span>
+                        <span className="cs-count-num">{String(activeSessions.length).padStart(2, '0')}</span>
                         <span className="cs-count-lbl">Live Channels</span>
                     </div>
                 </div>
@@ -86,7 +65,7 @@ const CopilotStatus = () => {
             
             <div className="cs-grid-wrapper">
                 <AnimatePresence mode="popLayout">
-                    {sessions.map((session, idx) => (
+                    {activeSessions.map((session, idx) => (
                         <motion.div 
                             key={session.session_id}
                             layout

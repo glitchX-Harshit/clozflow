@@ -1,5 +1,6 @@
 import os
 import sys
+from contextlib import asynccontextmanager
 
 # Add parent directory to sys.path to allow importing sibling modules like 'rag'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -28,7 +29,16 @@ load_dotenv()
 # [DEBUG LOG] Check if deepgram key was found in .env
 print("Deepgram key loaded:", bool(os.getenv("DEEPGRAM_API_KEY")))
 
-app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API")
+# ── Lifespan: runs once on startup / shutdown ──
+@asynccontextmanager
+async def lifespan(app):
+    # Startup: pre-load Silero VAD model
+    from services.vad_engine import SileroVADEngine
+    await SileroVADEngine.warmup()
+    yield
+    # Shutdown: nothing to clean up
+
+app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
 
 # Configure CORS for frontend access
 app.add_middleware(
@@ -49,6 +59,8 @@ app.include_router(copilot_router.router, prefix="/api/copilot", tags=["copilot"
 # Serve uploaded avatars
 os.makedirs("static/avatars", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
 
 import json
 from pydantic import BaseModel

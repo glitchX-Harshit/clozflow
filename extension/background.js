@@ -171,8 +171,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         } else {
             logger.error("No valid tab to inject copy script");
             sendResponse({ success: false });
-            return false;
         }
+    }
+    
+    if (request.action === 'stopPolling') {
+        stopSessionPolling();
+        sendResponse({ success: true });
+        return false;
+    }
+
+    if (request.action === 'startPolling') {
+        startSessionPolling();
+        sendResponse({ success: true });
+        return false;
     }
 });
 
@@ -219,4 +230,23 @@ function startSessionPolling() {
     pollActiveSessions(); // Initial poll
     pollingInterval = setInterval(pollActiveSessions, 5000);
     logger.info("Session Polling Started");
+}
+
+function stopSessionPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+    logger.info("Session Polling Stopped");
+    // Also notify tabs to hide copilot since polling stopped
+    chrome.tabs.query({}, (tabs) => {
+        for (let tab of tabs) {
+            try {
+                chrome.tabs.sendMessage(tab.id, { 
+                    action: 'sessionsUpdated', 
+                    sessions: [] 
+                }).catch(() => {});
+            } catch(e) {}
+        }
+    });
 }

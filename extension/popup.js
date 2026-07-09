@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Start polling immediately when the extension icon is clicked
+    chrome.runtime.sendMessage({ action: 'startPolling' });
+
     chrome.runtime.sendMessage({ action: 'getToken' }, (response) => {
         if (response && response.token) {
             document.getElementById('token-input').value = response.token;

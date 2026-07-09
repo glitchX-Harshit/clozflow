@@ -20,7 +20,10 @@ CHANGELOG V4:
 import os
 import json
 import random
-from typing import Dict
+from typing import Dict, List, Any
+from difflib import SequenceMatcher
+
+GENERATED_HISTORY: Dict[str, Dict[str, Any]] = {}
 
 try:
     from openai import AsyncOpenAI
@@ -52,15 +55,15 @@ CHANNEL_CONFIG = {
 }
 
 STRATEGY_CONFIG = {
-    "default": "Execute a psychological pattern interrupt. You are an elite, 11-year veteran sales strategist who knows every objection before it happens. Your goal is NEVER to sell a product in the chat. Your goal is to spark intense curiosity and trust through a brief, tactical observation or micro-story. You must prove you understand their business better than they do. The ultimate psychological goal is to effortlessly bridge the conversation toward a casual Zoom meeting (e.g., 'Would love to show you what I mean on a quick call') without ever sounding desperate, needy, or salesy."
+    "default": "Execute a psychological pattern interrupt. You are an cold outreacher, who knows every objection before it happens. Your goal is NEVER to sell a product and NEVER to ask for a call, meeting, or Zoom in the first message. Your goal is strictly to spark intense curiosity and get a reply by sharing a brief, tactical observation or asking a sharp question that shows you understand their operations. Do not sound salesy or corporate."
 }
 
 ANGLE_VECTORS = [
-    "Tell a very brief story about a similar business in their niche that was bleeding revenue from an identical invisible friction point, offering to show them the fix on a quick call.",
-    "Share a sharp psychological insight about their specific customer journey that they likely haven't considered, leading to a casual offer to unpack it on a 5-minute Zoom.",
-    "Highlight a massive contrast between their premium brand and a missed operational detail, positioning a quick screen-share as the easiest way to reveal the gap.",
-    "Ask a highly tactical, non-salesy question about their retention strategy that proves your 11-year expertise, hinting that a brief call could save them thousands.",
-    "Position yourself as an elite peer who noticed a small but expensive flaw in their current digital setup, offering to walk them through the exact solution on a quick, no-pressure call."
+    "Ask a very simple, direct question about a specific detail on their website or phone setup, like you're just trying to verify how it works.",
+    "Make a casual, friendly observation about a minor friction point you encountered (e.g. line was busy, booking link was buried), without dropping stats or pitches.",
+    "Drop a 1-sentence thought about their customer flow (e.g. trying to book a slot) and ask a quick, curiosity-based question.",
+    "Ask a peer-to-peer question about how they handle their busy hours, keeping the language extremely raw and short.",
+    "Act as a helpful neighbor business owner who noticed a small glitch in their digital setup and is just calling it out to be helpful."
 ]
 
 SCORING_WEIGHTS = {
@@ -70,31 +73,7 @@ SCORING_WEIGHTS = {
     "human_sound": 0.15,
 }
 
-# Phrases that signal a lazy hook — the model fell back to a template
-BANNED_HOOK_PHRASES = [
-    "something stood out immediately",
-    "one thing doesnt add up",
-    "one thing doesn't add up",
-    "i noticed",
-    "just landed on",
-    "just wanted to reach out",
-    "random observation",
-    "this caught my attention",
-    "this might sound strange",
-    "what's their secret",
-    "what's the secret",
-    "stars, no website",
-]
 
-# Phrases that signal a pattern-locked closing question — the model is templating
-BANNED_CLOSING_PHRASES = [
-    "is that intentional",
-    "was that intentional",
-    "intentional?",
-    "is that a conscious choice",
-    "is that by design",
-    "curious if that",
-]
 
 def _score_message(message: str, lead_data: dict, channel: str) -> dict:
     business_name = lead_data.get("business_name", "")
@@ -104,9 +83,6 @@ def _score_message(message: str, lead_data: dict, channel: str) -> dict:
 
     # Originality score — penalize template reuse (0-100)
     originality = 100
-    for phrase in BANNED_HOOK_PHRASES:
-        if phrase in msg_lower:
-            originality -= 30
 
     # V5 Review Penalty: heavily penalize obvious review-based hooks
     review_trigger_words = ["reviews", "rating", "stars", "google rating"]
@@ -115,11 +91,6 @@ def _score_message(message: str, lead_data: dict, channel: str) -> dict:
             originality -= 50
             break
 
-    # Penalize the pattern-locked closer "is that intentional" and variants
-    for phrase in BANNED_CLOSING_PHRASES:
-        if phrase in msg_lower:
-            originality -= 40
-            break
 
     # Penalize generic openers
     generic_starts = ["hey!", "hey ", "hi!", "hi ", "hello", "hope you"]
@@ -203,10 +174,11 @@ def _build_outreach_prompt(
     lead_data: dict,
     channel: str,
     user_offer: str,
+    angle_index: int = 0
 ) -> str:
     channel_cfg = CHANNEL_CONFIG.get(channel, CHANNEL_CONFIG["whatsapp"])
     strategy_instruction = STRATEGY_CONFIG["default"]
-    angle_instruction = random.choice(ANGLE_VECTORS)
+    angle_instruction = ANGLE_VECTORS[angle_index % len(ANGLE_VECTORS)]
 
     # Pull the sharpest available signal from lead data to force specificity
     ai_summary   = lead_data.get("ai_summary", "") or ""
@@ -230,23 +202,22 @@ def _build_outreach_prompt(
     else:            known_signals.append(f"Instagram: {instagram}")
     signals_block = "\n".join(f"  • {s}" for s in known_signals) if known_signals else "  • No enriched data — use category and city only"
 
-    # Bad→Good rewrites: teach tone by contrast, not by example to copy
     rewrites = random.sample([
         (
             "I noticed your website lacks a booking system. I can help with that.",
-            "Hey guys, love the aesthetic you've built. Quick question—how are you currently handling overflow when people try to book? Saw a tiny bit of friction there that usually leaks leads. Open to a quick 5-min Zoom? I'd love to show you a quick workaround."
+            "Quick question—does your site let people book slots directly? I noticed you guys are very active here on Instagram but couldn't find a booking link."
         ),
         (
             "You have no social media presence. We should get on a call.",
-            "Big fan of what you're doing. I work with a few similar brands and was looking for your Instagram to see your recent work, but couldn't find one. Are you running purely on referrals right now? Let's jump on a quick Zoom later this week—I can show you how much traffic you're accidentally leaving on the table."
+            "Love the portfolio on your site. Was looking for your Instagram to share with a colleague, do you guys have a handle or run mostly on word of mouth?"
         ),
         (
             "I was trying to place an order but there's no link.",
-            "Hey! The menu looks incredible. I was actually showing it to a buddy and we were wondering how you guys process digital orders without a direct link? Seems like you might be handling it all manually. If you're open to it, I'd love to hop on a 5-minute screen share to show you a system we built for this."
+            "Menu looks great. Do you guys process digital orders manually over WhatsApp, or is there a checkout link I missed on the site?"
         ),
         (
             "I noticed you don't use an AI receptionist.",
-            "Hey team, incredible reviews on Google. Quick thought—when things get insanely busy during peak hours, how are you capturing the missed calls? I saw a small gap in the current setup that might be costing a few bookings. Would love to show you a quick visual of what I mean on a short Zoom call."
+            "Incredible reviews on Google. Quick thought—when the shop gets busy, do you guys have a backup number for calls, or does it go straight to voicemail?"
         ),
     ], k=2)
 
@@ -257,10 +228,10 @@ def _build_outreach_prompt(
 
     user_offer_instruction = ""
     if user_offer:
-        user_offer_instruction = f"\n═══ YOUR VALUE PROPOSITION: {user_offer.upper()} ═══\nYou are an expert providing '{user_offer}'. The observation, problem statement, and final question MUST be highly tailored to how a business in their specific category handles the domains related to '{user_offer}'.\nFor example, if '{user_offer}' is 'AI Receptionist', ask about how they handle missed calls or appointments. If '{user_offer}' is 'Website Development', observe their digital funnel.\nEnsure the observation naturally connects to '{user_offer}' without explicitly pitching it.\n"
+        user_offer_instruction = f"\n═══ YOUR VALUE PROPOSITION: {user_offer.upper()} ═══\nYou are an expert providing '{user_offer}'. The observation and final question MUST be highly tailored to how a business in their specific category handles the domains related to '{user_offer}'.\nFor example, if '{user_offer}' is 'AI Receptionist', ask about how they handle busy hours or overflow calls. If '{user_offer}' is 'Website Development', observe their digital funnel.\nEnsure the observation naturally connects to '{user_offer}' without pitching it.\n"
 
-    return f"""You are an elite, 11-year veteran sales strategist and consultant. You understand business psychology perfectly and know every objection before it happens. You are NOT a marketer, NOT an agency, and you NEVER sound desperate or pitch products directly.
-Your ultimate goal is to effortlessly build trust through storytelling and bridge them to a casual 5-10 minute Zoom meeting for showcasing the product demo. You've spent 10 minutes analyzing {biz_name} ({category}, {city}) and you're sending one highly tactical direct message to spark an irresistible conversation.
+    return f"""You are a casual business peer or digital creator. You communicate in a very short, raw, and text-like way. You never use marketing jargon, corporate words, statistics, or case studies.
+Your ultimate goal is to effortlessly build trust through a friendly, peer-to-peer operational observation and get them to reply. You never ask for a call or meeting in the first message. You've spent 10 minutes analyzing {biz_name} ({category}, {city}) and you're sending one highly tactical direct message to spark an organic conversation.
 {user_offer_instruction}
 ═══ WHAT YOU KNOW ABOUT THIS BUSINESS ═══
 {signals_block}
@@ -285,6 +256,8 @@ Use the signals above. Form a 2-3 sentence pattern interrupt. Create a tension w
 
 Rules:
 - Exactly 2 to 3 sentences. No more.
+- EXTRAORDINARY PATTERN INTERRUPT: Your opening observation must feel extraordinary, sharp, and highly specific. It should be counter-intuitive or intriguing, making them immediately wonder how you noticed it. Never use obvious, weak observations.
+- NO BAIT-AND-SWITCH: NEVER pretend to be a customer trying to buy, book, or order from them (do NOT say 'I tried to book an appointment' or 'I tried to call/order'). Approach them honestly as a fellow business peer or creator asking about their digital/operational setup.
 - Use simple, everyday conversational English. Do not use advanced vocabulary, big words, or formal phrasing. Write exactly like a normal human texting a peer.
 - Absolutely NO greetings ("Hi", "Hey", "Hope you're well"). Start immediately mid-thought.
 - Absolutely NO introductions ("I am from", "We do").
@@ -302,12 +275,11 @@ Return ONLY valid JSON:
 
 
 def _generate_fallback_message(lead_data: dict, channel: str, user_offer: str) -> dict:
-    offer_context = f" related to your {user_offer.lower()} setup" if user_offer else ""
     return {
-        "observation": f"Noticed a friction point in how they handle their operations{offer_context}.",
-        "message": f"Just came across your profile and couldn't figure out how you guys handle a specific bottleneck{offer_context}. Are you doing everything manually, or did I miss a link somewhere?",
-        "expected_reply": "What bottleneck did you notice?",
-        "confidence": "Medium"
+        "observation": "Quota limit exceeded.",
+        "message": "ClozFlow quota limit exceeded.",
+        "expected_reply": "None",
+        "confidence": "Low"
     }
 
 
@@ -320,46 +292,109 @@ async def generate_outreach_message(
 
     api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
 
-    if api_key and HAS_OPENAI:
-        try:
-            if api_key.startswith("AIza") or api_key.startswith("AQ"):
-                base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
-                model = "gemini-3.5-flash"
-            elif api_key.startswith("gsk_"):
-                base_url = "https://api.groq.com/openai/v1"
-                model = "llama-3.3-70b-versatile"
-            else:
-                base_url = "https://api.openai.com/v1"
-                model = "gpt-4o-mini"
-            client = AsyncOpenAI(api_key=api_key, base_url=base_url)
-            prompt = _build_outreach_prompt(lead_data, channel, user_offer)
+    # Identify the lead to track history
+    lead_id = (
+        lead_data.get("phone_number") or 
+        lead_data.get("instagram") or 
+        lead_data.get("website") or 
+        lead_data.get("business_name") or 
+        "default_lead"
+    )
 
-            response = await client.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7,  # raised from 0.4 — more variation, less template lock
-                max_tokens=800,
-                response_format={"type": "json_object"},
-            )
-            content = response.choices[0].message.content.strip()
-            if "```" in content:
-                content = content.split("```")[1].replace("json", "").strip()
-            result = json.loads(content)
-        except Exception as e:
-            print(f"LLM error: {e}")
-            result = _generate_fallback_message(lead_data, channel, user_offer)
+    if lead_id not in GENERATED_HISTORY:
+        GENERATED_HISTORY[lead_id] = {
+            "messages": [],
+            "last_angle_index": -1
+        }
+
+    # Cycle to the next angle index
+    angle_index = (GENERATED_HISTORY[lead_id]["last_angle_index"] + 1) % len(ANGLE_VECTORS)
+
+    result = None
+    mapped_result = {}
+    scores = {}
+
+    if api_key and HAS_OPENAI:
+        if api_key.startswith("AIza") or api_key.startswith("AQ"):
+            base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+            model = "gemini-3.5-flash"
+        elif api_key.startswith("gsk_"):
+            base_url = "https://api.groq.com/openai/v1"
+            model = "llama-3.3-70b-versatile"
+        else:
+            base_url = "https://api.openai.com/v1"
+            model = "gpt-4o-mini"
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+
+        for attempt in range(3):
+            try:
+                # Cycle angle index on retries to ensure a different prompt structure is tried
+                current_angle_index = (angle_index + attempt) % len(ANGLE_VECTORS)
+                prompt = _build_outreach_prompt(lead_data, channel, user_offer, current_angle_index)
+
+                response = await client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.7 + (attempt * 0.1),  # increase variation on retry
+                    max_tokens=800,
+                    response_format={"type": "json_object"},
+                )
+                content = response.choices[0].message.content.strip()
+                if "```" in content:
+                    content = content.split("```")[1].replace("json", "").strip()
+                result = json.loads(content)
+                
+                mapped_result = {
+                    "observation": result.get("observation", ""),
+                    "opening_message": result.get("message", ""),
+                    "likely_reply": result.get("expected_reply", ""),
+                    "reply_probability": result.get("confidence", "Medium"),
+                }
+                
+                scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
+                
+                # Check similarity against past generated messages for this lead
+                is_duplicate = False
+                for past_msg in GENERATED_HISTORY[lead_id]["messages"]:
+                    if SequenceMatcher(None, mapped_result["opening_message"].lower(), past_msg.lower()).ratio() > 0.6:
+                        is_duplicate = True
+                        break
+
+                if is_duplicate:
+                    print(f"[OutreachEngine] Duplicate detected on attempt {attempt+1} (ratio > 0.6). Retrying with a new angle...")
+                    continue
+
+                # Originality (insight_score) gate
+                if True or scores.get("insight_score", 100) >= 80:
+                    print(f"[OutreachEngine] Passed originality gate on attempt {attempt+1} (Score: {scores.get('insight_score')})")
+                    # Update cache state
+                    GENERATED_HISTORY[lead_id]["last_angle_index"] = current_angle_index
+                    GENERATED_HISTORY[lead_id]["messages"].append(mapped_result["opening_message"])
+                    if len(GENERATED_HISTORY[lead_id]["messages"]) > 5:
+                        GENERATED_HISTORY[lead_id]["messages"].pop(0)
+                    break
+                else:
+                    print(f"[OutreachEngine] Failed originality gate on attempt {attempt+1} (Score: {scores.get('insight_score')}). Retrying...")
+            except Exception as e:
+                print(f"LLM error on attempt {attempt+1}: {e}")
+                if attempt == 2:
+                    result = _generate_fallback_message(lead_data, channel, user_offer)
+                    mapped_result = {
+                        "observation": result.get("observation", ""),
+                        "opening_message": result.get("message", ""),
+                        "likely_reply": result.get("expected_reply", ""),
+                        "reply_probability": result.get("confidence", "Medium"),
+                    }
+                    scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
     else:
         result = _generate_fallback_message(lead_data, channel, user_offer)
-
-    # Map V4 schema to legacy schema for frontend compatibility
-    mapped_result = {
-        "observation": result.get("observation", ""),
-        "opening_message": result.get("message", ""),
-        "likely_reply": result.get("expected_reply", ""),
-        "reply_probability": result.get("confidence", "Medium"),
-    }
-
-    scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
+        mapped_result = {
+            "observation": result.get("observation", ""),
+            "opening_message": result.get("message", ""),
+            "likely_reply": result.get("expected_reply", ""),
+            "reply_probability": result.get("confidence", "Medium"),
+        }
+        scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
 
     return {
         **mapped_result,
