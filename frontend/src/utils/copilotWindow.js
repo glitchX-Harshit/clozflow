@@ -13,6 +13,7 @@
  */
 export async function openCopilotWindow() {
     // ─── 1. Try Document Picture-in-Picture API ───
+    // Try Document Picture-in-Picture API for a native desktop window feel
     if ('documentPictureInPicture' in window) {
         try {
             const pipWin = await window.documentPictureInPicture.requestWindow({
@@ -36,18 +37,35 @@ export async function openCopilotWindow() {
         const left = window.screenX + window.innerWidth - 440;
         const top = window.screenY + 60;
         const popup = window.open(
-            '',
+            '/copilot.html',
             'ClozFlowCopilot',
             `popup=yes,width=400,height=440,left=${left},top=${top},resizable=yes,scrollbars=no`
         );
 
         if (popup) {
-            popup.document.title = 'ClozFlow Copilot';
-
-            injectStyles(popup);
-            const container = createRoot(popup);
-
-            return { win: popup, container };
+            return new Promise((resolve) => {
+                // Wait for the new document to load before injecting
+                popup.onload = () => {
+                    popup.document.title = 'ClozFlow Copilot';
+                    injectStyles(popup);
+                    // copilot-root is already in copilot.html, but if not we can use it
+                    let container = popup.document.getElementById('copilot-root');
+                    if (!container) {
+                        container = createRoot(popup);
+                    }
+                    resolve({ win: popup, container });
+                };
+                
+                // Fallback in case onload already fired or fails
+                setTimeout(() => {
+                    if (popup.document.readyState === 'complete') {
+                        popup.document.title = 'ClozFlow Copilot';
+                        injectStyles(popup);
+                        let container = popup.document.getElementById('copilot-root') || createRoot(popup);
+                        resolve({ win: popup, container });
+                    }
+                }, 1000);
+            });
         }
     } catch (err) {
         console.warn('[Copilot] window.open failed:', err.message);

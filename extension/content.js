@@ -243,6 +243,13 @@ function removeSidebar() {
         sidebarContainer = null;
         sidebarIframe = null;
         logger.info("Sidebar Removed");
+        
+        // Tell background script to stop polling
+        try {
+            chrome.runtime.sendMessage({ action: 'stopPolling' });
+        } catch (e) {
+            // Ignore if extension context is invalidated
+        }
     }
 }
 

@@ -13,11 +13,13 @@ import {
     Loader2,
     TrendingUp,
     Phone,
-    Rocket
+    Rocket,
+    Puzzle
 } from 'lucide-react';
 import './OutreachStudioPage.css';
 import CopilotLauncher from '../components/CopilotLauncher';
 import MagButton from '../components/MagButton';
+import useCopilotStore from '../store/copilotStore';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -148,7 +150,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
         }
     }, []);
 
-    const openWhatsApp = () => {
+    const openWhatsApp = async () => {
         if (!targetPhone) {
             setError("Please provide a valid WhatsApp number with country code.");
             return;
@@ -157,6 +159,44 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
         const encodedMessage = encodeURIComponent(text || '');
         const waUrl = `https://api.whatsapp.com/send?phone=${targetPhone.replace(/\D/g, '')}&text=${encodedMessage}`;
         window.open(waUrl, '_blank');
+
+        // Automatically launch copilot session
+        try {
+            const token = localStorage.getItem('token');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            let currentLeadId = lead.id;
+            
+            // Save lead if new
+            if (!currentLeadId) {
+                const saveRes = await fetch(`${API_BASE}/leads/save`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(lead)
+                });
+                if (saveRes.ok) {
+                    const savedData = await saveRes.json();
+                    currentLeadId = savedData.id;
+                }
+            }
+
+            const res = await fetch(`${API_BASE}/api/copilot/session/start`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    lead_id: currentLeadId,
+                    platform: 'whatsapp',
+                    platform_identifier: targetPhone
+                })
+            });
+            
+            if (res.ok) {
+                await useCopilotStore.getState().fetchActiveSessions();
+            }
+        } catch (err) {
+            console.error('Failed to auto-launch copilot for WhatsApp:', err);
+        }
     };
 
     if (!lead) return null;
@@ -165,6 +205,47 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
 
     return (
         <div className={`os-v3-wrapper ${propLead ? 'os-v3-wrapper--nested' : ''}`}>
+            
+            {/* Simulated Chrome Extension Icon */}
+            {!isCopilotLauncherOpen && (
+                <div 
+                    onClick={() => setIsCopilotLauncherOpen(true)}
+                    className="animate-fade-in-up"
+                    style={{
+                        position: 'fixed',
+                        top: '1.5rem',
+                        right: '1.5rem',
+                        width: '42px',
+                        height: '42px',
+                        background: 'var(--surface)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        zIndex: 99999,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.background = 'var(--bg)';
+                        e.currentTarget.style.borderColor = 'var(--text-muted)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.background = 'var(--surface)';
+                        e.currentTarget.style.borderColor = 'var(--border)';
+                    }}
+                    title="ClozFlow Copilot Extension (Simulated)"
+                >
+                    <Puzzle size={20} color="var(--text)" />
+                    {/* Tiny notification dot */}
+                    <div style={{ position: 'absolute', top: '8px', right: '8px', width: '6px', height: '6px', background: 'var(--text)', borderRadius: '50%' }} />
+                </div>
+            )}
+
             <div className="os-v3-ambient-glow" />
             
             <div className="os-v3-workspace-header">

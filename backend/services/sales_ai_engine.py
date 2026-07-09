@@ -46,7 +46,7 @@ except ImportError:
 HIDDEN_CONCERN_MAP = {
     "budget": {
         "hidden_concern": "uncertain_roi",
-        "default_goal": "diagnose",
+        "default_goal": "quantify_problem",
         "keywords": ["price", "expensive", "budget", "cost", "afford", "money", "investment"],
     },
     "doing_fine": {
@@ -116,67 +116,7 @@ QUESTION_TYPES = [
     "consequence_question",
 ]
 
-# ─── V3: Forbidden Language (from YAML) ──────────────────────────────────────
-FORBIDDEN_LANGUAGE = [
-    "operationally",
-    "implementation efficiency",
-    "optimize workflow",
-    "strategic alignment",
-    "value proposition",
-    "key metrics",
-    "business optimization",
-    "customer engagement",
-    "online presence",
-    "digital transformation",
-    "maximize growth",
-    "strategic opportunity",
-    "unlock growth",
-    "enhance visibility",
-    "significant potential",
-    "comprehensive information",
-    "tailored solution",
-    "drive more sales",
-    "growth opportunity",
-    "maximize conversions",
-    "enhance brand presence",
-    "improve customer acquisition",
-    "strategic transformation",
-]
 
-# ─── V3: Banned Patterns (GPT Detox + consultant/therapist patterns) ─────────
-BANNED_PATTERNS = [
-    "what specific",
-    "what are your",
-    "can you elaborate",
-    "key performance indicators",
-    "implementation efficiency",
-    "optimize your workflow",
-    "our solution helps",
-    "value proposition",
-    "what metrics",
-    "what pain points",
-    "i understand your concern",
-    "you seem to feel",
-    "i hear hesitation",
-    "it sounds like you're",
-    "feels like you're",
-    "there's a gap",
-    "what are your top priorities",
-    "what outcomes would",
-    "what's holding you back",
-    "what would convince you",
-    "what's your current",
-    # V3 additions — consultant/therapist patterns
-    "usually when",
-    "most teams",
-    "most businesses",
-    "the reality is",
-    "in practice,",
-    "fair question",
-    "out of curiosity",
-    "help me understand",
-    "let me ask you something",
-]
 
 # ─── V3: Quality Scoring Weights (from YAML) ─────────────────────────────────
 V3_SCORING_WEIGHTS = {
@@ -230,13 +170,34 @@ def _select_conversation_goal(hidden_concern: dict, deal_stage: str) -> str:
     """V3 Reasoning Step 3: Choose what we're trying to achieve with this response."""
     if deal_stage == "closing":
         return "future_pace"
-    return hidden_concern.get("default_goal", "diagnose")
+        
+    # Only diagnose if explicitly routed to do so
+    goal = hidden_concern.get("default_goal")
+    if goal and goal not in ["unknown", "", None]:
+        return goal
+        
+    # Smart situational fallbacks instead of blind diagnosis
+    intent = hidden_concern.get("type", "unknown")
+    if intent in ["budget", "pricing", "roi"]:
+        return "quantify_problem"
+    elif intent in ["trust_issue", "risk"]:
+        return "identify_trust_gap"
+    elif intent in ["doing_fine", "status_quo"]:
+        return "challenge_assumption"
+        
+    return "isolate_concern"
 
 def _select_response_type(conversation_goal: str, concern_type: str, hidden_concern: dict = None) -> str:
     """V3 Reasoning Step 4: Choose the right response type for the goal."""
-    if hidden_concern and "strategy" in hidden_concern:
+    if hidden_concern and hidden_concern.get("strategy") and hidden_concern.get("strategy") not in ["unknown", "", None]:
         return hidden_concern["strategy"]
-    return "diagnostic_question"
+        
+    if conversation_goal == "diagnose":
+        return "diagnostic_question"
+    elif conversation_goal == "answer":
+        return "direct_answer"
+        
+    return "perspective_shift"
 
 
 # ─── V5.0: Few-Shot Example Library (BAD → GOOD per concern) ─────────────────
@@ -438,129 +399,37 @@ class SalesAIEngine:
     # ──────────────────────────────────────────────────────────────────────────
 
     def smart_fallback(self, text: str = "") -> dict:
-        text_lower = text.lower()
-        hidden = _detect_hidden_concern(text)
-        goal = _select_conversation_goal(hidden, self.deal_state["stage"])
-        response_type = _select_response_type(goal, hidden["type"], hidden)
-
-        # V5.0 fallback responses — highly tactical closer language
-        fallback_responses = {
-            "pricing": [
-                "Price is only an issue in the absence of value. What outcome makes this a no-brainer for you?",
-                "Totally get it. What's the actual cost of keeping your current broken setup running for another year?",
-                "Fair point. Let's flip it—what number makes sense for the ROI you're expecting?",
-            ],
-            "budget": [
-                "Understood. What if we scaled it back initially and let the immediate ROI fund the rest?",
-                "Makes sense. Usually when budget is tight, there's a massive leak somewhere else. Open to finding it?",
-            ],
-            "authority": [
-                "Got it. Whose desk does this ultimately need to cross for a green light?",
-                "Who else on your team feels the pain of this bottleneck every day?",
-            ],
-            "delay": [
-                "No rush. But what exactly changes between now and next quarter?",
-                "Fair enough. Usually delaying just compounds the friction. What's the biggest risk if you wait?",
-            ],
-            "need_to_think": [
-                "Take all the time you need. But just to cut to the chase—what's the main hesitation you're weighing?",
-                "For sure. Just so I have context, what would a 'yes' actually need to look like for your team?",
-            ],
-            "status_quo": [
-                "If it's not broke, don't fix it. But where is the current setup secretly bottlenecking your team?",
-                "Glad to hear it. Out of curiosity, what would literally have to break before you'd consider an upgrade?",
-            ],
-            "doing_fine": [
-                "Love to hear that. Just curious, where do you see the biggest operational ceiling right now?",
-                "That's solid. If you had a magic wand, what's the one piece of friction you'd delete today?",
-            ],
-            "already_have_vendor": [
-                "How's that going? What's the one thing you wish they did better?",
-                "Makes sense. Usually when teams have someone, there's still a 10% gap. Where's theirs?",
-            ],
-            "not_interested": [
-                "Appreciate the transparency. Just so I know for my own data, what missed the mark?",
-                "Respect that. Usually that means the timing is off or the pain isn't sharp enough. Which one is it?",
-            ],
-            "rejection": [
-                "Fair enough. What exactly didn't land for you?",
-            ],
-            "trust_issue": [
-                "Skepticism is completely warranted. What specific proof would actually move the needle for you?",
-                "I get it—you've likely been burned before. What went wrong last time?",
-            ],
-            "trust": [
-                "That's fair. What exactly would you need to see on a quick screen-share to believe it?",
-            ],
-            "risk": [
-                "What's the absolute worst-case scenario you're picturing in your head right now?",
-                "What exact metric would you need to see to feel like this is a completely safe bet?",
-            ],
-            "roi": [
-                "What does a home run look like in pure revenue for you?",
-                "Let's talk numbers. Where are you bleeding the most margin right now?",
-            ],
-            "direct_question": [
-                "Direct answer: it completely depends on your current infrastructure. How are you guys set up right now?",
-                "Let me give you a straight answer. But first, what exactly is breaking in your current process?",
-            ],
-            "curiosity": [
-                "I can definitely walk you through that. What specific part of your workflow are you trying to patch?",
-                "Yeah, I can break that down. But just to tailor it—what's the main bottleneck you're facing?",
-            ],
-            "unknown": [
-                "Interesting pivot. Just to make sure we're aligned, what's the absolute biggest bottleneck in your operations today?",
-                "Got it. Let me ask you this directly—what specific friction point are you actively trying to eliminate?",
-                "Understood. Before we go deeper, how are you currently handling overflow and lost leads?",
-            ],
-        }
-
-        concern_type = hidden["type"]
-        responses = fallback_responses.get(concern_type, fallback_responses["unknown"])
-        msg = random.choice(responses)
-
-        # ML Adaptive Learning Layer
-        filter_and_log_interaction(
-            message=text,
-            response=msg,
-            strategy=response_type.upper(),
-            confidence=0.7,
-            emotional_state="neutral",
-            is_fallback=True,
-            api_error=False,
-            is_repetitive=False,
-        )
-
+        msg = "ClozFlow daily API limit exceeded. Please review your usage quota to restore real-time AI capabilities."
         return {
-            "intent": concern_type,
+            "intent": "unknown",
             "stage": self.deal_state["stage"],
-            "strategy": response_type.upper(),
-            "confidence": 0.7,
+            "strategy": "UNKNOWN",
+            "confidence": 0.0,
             "response": msg,
             "next_question": "",
-            "coaching_tip": f"Diagnosed hidden concern: {hidden['hidden_concern']}. Goal: {goal}.",
+            "coaching_tip": "Quota limit exceeded.",
             # V3 reasoning fields
-            "hidden_concern": hidden["hidden_concern"],
-            "conversation_goal": goal,
-            "response_type": response_type,
+            "hidden_concern": "unknown",
+            "conversation_goal": "unknown",
+            "response_type": "unknown",
             "reasoning_chain": {
-                "what_are_they_protecting": hidden["hidden_concern"],
-                "what_are_they_worried_about": hidden["type"],
-                "what_information_am_i_missing": "Insufficient data — used fallback reasoning",
-                "should_i_diagnose_first": True,
+                "what_are_they_protecting": "unknown",
+                "what_are_they_worried_about": "unknown",
+                "what_information_am_i_missing": "Quota exceeded",
+                "should_i_diagnose_first": False,
             },
             "quality_scores": {
-                "diagnosis": 0.6,
-                "curiosity": 0.7,
-                "human_sound": 0.8,
-                "persuasion": 0.3,
-                "brevity": 0.8,
+                "diagnosis": 0.0,
+                "curiosity": 0.0,
+                "human_sound": 0.0,
+                "persuasion": 0.0,
+                "brevity": 0.0,
             },
             # Backward-compat fields
             "suggested_response": msg,
             "next_best_question": "",
-            "persuasion_pattern": response_type.upper(),
-            "type": concern_type,
+            "persuasion_pattern": "UNKNOWN",
+            "type": "unknown",
             "deal_stage": self.deal_state["stage"],
         }
 
@@ -578,14 +447,20 @@ class SalesAIEngine:
             self.deal_state["pressure_level"] = min(self.deal_state["pressure_level"] + 1, 3)
 
         if len(text.strip().split()) < 3 and len(text.strip()) < 15:
-            print("[AI_SKIPPED] Transcript too short.")
+            print("[AI_HELPER] Transcript too short, returning helper response.")
             self.add_message(speaker, text)
-            return None
+            return {
+                "intent": "unknown",
+                "stage": self.deal_state["stage"],
+                "strategy": "CLARIFY",
+                "confidence": 0.5,
+                "response": "Interesting... usually when people give a short answer there, it's because there's a bigger bottleneck they aren't mentioning yet. What's the real driver here?",
+                "next_question": "",
+                "coaching_tip": "Micro-response detected. Hold the silence for leverage, or drop a sharp pattern-interrupt to break their defensive shell.",
+                "quality_scores": {"diagnosis": 0.5, "curiosity": 0.8, "human_sound": 1.0, "persuasion": 0.5, "brevity": 1.0}
+            }
 
         now = time.time()
-        if now - self._last_call_time < self._cooldown_secs:
-            print("[AI_SKIPPED] Cooldown active.")
-            return None
 
         self._last_call_time = now
         self.add_message(speaker, text)
@@ -678,9 +553,7 @@ class SalesAIEngine:
         few_shot_examples = _get_few_shot_examples(hidden["type"])
 
         # ── V5.0 System Prompt — Natural sales voice, generation-only ─────────
-        system_content = f"""You are an elite, 11-year veteran sales strategist on a live chat. You've closed hundreds of deals. You're sharp, highly tactical, and you talk like a real human — not a chatbot, not a generic marketer.
-
-Your ultimate goal is NEVER to just answer questions aimlessly. Every single response you generate MUST extract intelligence and strategically move the conversation forward toward QUALIFICATION and booking a Zoom meeting.
+        system_content = f""" you are a sales representative your task to handle objection without being geneirc and handle the conversation to move ti further by using some psychological tactics and cognitive intelligence somethnig that drive the conversation ahead in strategically,  sometime flip the situation or reframe it tactically like how an cold callers do. Every single response you generate MUST extract intelligence and strategically move the conversation forward toward QUALIFICATION and booking a Zoom meeting.
 
 CRITICAL IDENTITY RULE: You are representing {self.call_context.get('your_company', 'a B2B software firm')} as a {self.call_context.get('your_role', 'strategist')}. NEVER pretend to be a customer, patient, or someone trying to buy their services. You are here to sell to them.
 
@@ -688,17 +561,11 @@ ENERGY: {response_energy} — {energy_description}
 
 RULES:
 - 1–2 sentences. 3 max. Shorter is almost always better.
+- PROSPECT PERSPECTIVE FILTER: Before answering, ask yourself: 'If I were the prospect, would I reply to this?' If the answer is no (e.g. because it's too generic, fluffy, or an annoying interrogation), discard it. Give a compelling, direct, and tactical response that forces engagement.
+- FOCUS ON CLOSING: Do NOT default to asking diagnostic questions. Your goal is to move the deal forward and close. Reframe objections tactically and push toward a close instead of constantly questioning the prospect.
 - Acknowledge what they said organically, then immediately use a psychological PATTERN INTERRUPT to reframe the conversation.
-- You do NOT always need to ask a question. Sometimes, the most powerful move is to just provide a sharp, insightful reply that organically moves the conversation forward.
-- If they ask a direct question, give them a straight, conversational answer. You can occasionally append a soft qualification question, but DO NOT interrogate them on every single message.
 - Sound like a highly experienced, friendly peer having a casual chat, NOT a desperate seller pitching a product.
-- Never start with "I understand," "Great question," or "That's a fair point."
-
-NEVER SAY:
-"What specific...", "I understand your concern", "Let's explore",
-"Our solution helps", "This can improve", "Fair question",
-"Help me understand", "Out of curiosity", "Most businesses",
-"The reality is", "In practice,", "Usually when", "I was trying to", "I noticed"
+- BAD AUDIO/TRANSCRIPT: If the prospect's text is gibberish, broken, or clearly a bad transcription, do not try to hallucinate meaning. Provide a natural response to ask for clarification, and in `coaching_tip` tell the rep: 'Audio broke up, ask them to repeat.'
 
 {f'CONTEXT HINTS (use as inspiration, never quote): {rag_context}' if rag_context.strip() else ''}
 {sim_guardrails}
@@ -753,23 +620,6 @@ Respond as the rep. Answer direct questions first. Output strict JSON only.
                 # Python populates all metadata fields
                 suggested_resp = data.get("response", "").strip()
                 if not suggested_resp:
-                    return self.smart_fallback(text)
-
-                # Anti-Repetition
-                if self.is_duplicate(suggested_resp):
-                    print("[BLOCKED] Duplicate response prevented")
-                    return self.smart_fallback(text)
-
-                # V3 GPT Detox — ban consultant/therapist/corporate patterns
-                response_lower = suggested_resp.lower()
-                banned_total = BANNED_PATTERNS + (self.banned_sim_phrases if self.mode == "simulation" else [])
-                if any(p in response_lower for p in banned_total):
-                    print("[REWRITE_TRIGGER] V3 GPT-detox: banned pattern detected, using fallback")
-                    return self.smart_fallback(text)
-
-                # V3 Forbidden language check
-                if any(phrase in response_lower for phrase in FORBIDDEN_LANGUAGE):
-                    print("[REWRITE_TRIGGER] V3 Forbidden language detected, using fallback")
                     return self.smart_fallback(text)
 
                 self.push_response_history(suggested_resp, goal)

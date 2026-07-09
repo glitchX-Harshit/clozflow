@@ -22,7 +22,11 @@ class DeepgramStream:
                 sample_rate=16000,
                 channels=1,
                 interim_results=True,
-                punctuate=True
+                punctuate=True,
+                # Enable Deepgram's endpoint detection (speech_final signal).
+                # 200ms = fire speech_final after 200ms of silence detected by Deepgram.
+                # This acts as a redundant signal alongside Silero VAD.
+                endpointing=200,
                 # diarize intentionally omitted — prospect-only mode
             )
 
@@ -42,23 +46,28 @@ class DeepgramStream:
             return False
 
     async def _on_transcript(self, *args, **kwargs):
-        """All audio is treated as prospect — no diarization or speaker detection."""
+        """Process all transcript events and forward with signal metadata.
+        All audio is treated as prospect — no diarization or speaker detection."""
         result = kwargs.get("result") or (args[0] if args else None)
         try:
             if not result or not result.channel or not result.channel.alternatives:
                 return
 
-            # ❌ IGNORE partial speech
-            if not result.is_final:
-                return
-
             alt = result.channel.alternatives[0]
-            transcript = alt.transcript
+            transcript = alt.transcript or ""
+            is_final = result.is_final
+            speech_final = getattr(result, 'speech_final', False)
 
-            if transcript and transcript.strip():
-                print("[PROSPECT] TRANSCRIPT:", transcript)
-                # Always route as prospect — this is tab/call audio only
-                await self.transcript_callback("prospect", transcript)
+            # Forward final transcripts with non-empty text
+            # Also forward speech_final events (even with empty text) as a signal
+            if (is_final and transcript.strip()) or speech_final:
+                print(f"[PROSPECT] TRANSCRIPT (is_final={is_final}, speech_final={speech_final}): {transcript}")
+                await self.transcript_callback(
+                    "prospect",
+                    transcript.strip() if transcript else "",
+                    is_final=is_final,
+                    speech_final=speech_final,
+                )
 
         except Exception as e:
             print("Transcript processing error:", e)

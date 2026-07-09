@@ -1,47 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Download, Clock, MessageCircle, Zap, FileText, ChevronRight, Loader2, ArrowLeft, Target, Activity, Lightbulb, Gavel, AlertTriangle, Trash2 } from 'lucide-react';
 
-// ── Mock session data for demo ────────────────────────────────────────────────
-const MOCK_SESSION_DETAIL = {
-    id: null,
-    verdict: {
-        probability: 'Moderate', pct: 62, color: '#f59e0b',
-        blocker: 'Trust uncertainty',
-        nextMove: 'Reduce pressure and rebuild certainty through a mirrored case study.',
-    },
-    objectionScore: 74,
-    momentumBreaks: [
-        { turn: 'T3', event: 'Skepticism ↑', type: 'danger', note: 'Prospect challenged credibility — no anchor deployed.' },
-        { turn: 'T5', event: 'Hesitation ↑', type: 'warn',   note: 'Pricing mention triggered visible resistance.' },
-        { turn: 'T7', event: 'Urgency ↓',   type: 'danger', note: 'Failed to rebuild urgency after pricing objection.' },
-        { turn: 'T9', event: 'Curiosity ↑', type: 'good',   note: 'Social proof example shifted engagement.' },
-    ],
-    missedOpportunities: [
-        {
-            phrase: '"I do see value here"',
-            insight: 'Prospect showed partial buying intent — uncertainty still active.',
-            betterResponse: 'Usually when someone sees value but hesitates, the real concern is unresolved risk. What still feels uncertain?',
-        },
-        {
-            phrase: '"That sounds interesting"',
-            insight: 'Curiosity peak detected — no pressure applied to convert it.',
-            betterResponse: 'Curiosity without tension fades. Challenge it: "What would it mean for your numbers if this actually worked?"',
-        },
-        {
-            phrase: '"Maybe we could..."',
-            insight: 'Conditional language signals openness — window was not leveraged.',
-            betterResponse: '"Maybe" is an open door. Step through it: "What would need to be true for maybe to become yes?"',
-        },
-    ],
-    strategyTimeline: [
-        { turn: 'T1',  strategy: 'Opening Frame',     result: 'neutral', note: 'Standard intro — no differentiation anchor.' },
-        { turn: 'T3',  strategy: 'Social Proof',       result: 'good',   note: 'Case study landed — created brief curiosity.' },
-        { turn: 'T5',  strategy: 'ROI Reframe',        result: 'warn',   note: 'Partial success — pricing still felt large.' },
-        { turn: 'T8',  strategy: 'Risk Reversal',      result: 'good',   note: 'Effectively reduced commitment threshold.' },
-        { turn: 'T11', strategy: 'Urgency Creation',   result: 'danger', note: 'Weak — no timeline pressure established.' },
-    ],
-};
-
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
 const MiniBar = ({ pct, color }) => (
@@ -51,13 +10,19 @@ const MiniBar = ({ pct, color }) => (
 );
 
 const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
-    const d = { ...MOCK_SESSION_DETAIL, id: call.id };
-    const typeColors = {
-        good:   { bg: 'rgba(34,197,94,0.07)',  border: 'rgba(34,197,94,0.2)',  text: '#22c55e' },
-        warn:   { bg: 'rgba(245,158,11,0.07)', border: 'rgba(245,158,11,0.2)', text: '#f59e0b' },
-        danger: { bg: 'rgba(239,68,68,0.07)',  border: 'rgba(239,68,68,0.2)',  text: '#ef4444' },
+    const d = call.details || {
+        verdict: { probability: 'Unknown', pct: 0, color: '#f59e0b', blocker: 'None', nextMove: 'Keep going.' },
+        objectionScore: 0,
+        momentumBreaks: [],
+        opportunityBranches: [],
+        strategyTimeline: []
     };
-    const resColors = { good: '#22c55e', warn: '#f59e0b', danger: '#ef4444', neutral: 'var(--text-muted)' };
+    const typeColors = {
+        good:   { bg: 'var(--surface)', border: 'var(--border)', text: 'var(--text)' },
+        warn:   { bg: 'var(--surface)', border: 'var(--border)', text: 'var(--text)' },
+        danger: { bg: 'var(--surface)', border: 'var(--border)', text: 'var(--text)' },
+    };
+    const resColors = { good: 'var(--text)', warn: 'var(--text-muted)', danger: 'var(--text-dim)', neutral: 'var(--text-muted)' };
 
     return (
         <div className="animate-fade-in">
@@ -72,7 +37,7 @@ const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
             {/* Session header */}
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'2rem', gap:'1rem', flexWrap:'wrap' }}>
                 <div>
-                    <div style={{ fontSize:'0.64rem', fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--accent)', marginBottom:'0.75rem' }}>Session Analysis</div>
+                    <div style={{ fontSize:'0.64rem', fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'0.75rem' }}>Session Analysis</div>
                     <h2 style={{ fontSize:'clamp(1.75rem,3vw,2.25rem)', fontWeight:900, letterSpacing:'-0.04em', marginBottom:'0.5rem' }}>Session #{call.id}</h2>
                     <div style={{ display:'flex', gap:'1rem', color:'var(--text-dim)', fontSize:'0.8125rem', flexWrap:'wrap' }}>
                         <span style={{ display:'flex', alignItems:'center', gap:'0.4rem' }}><Clock size={13} />{new Date(call.timestamp).toLocaleDateString()} at {new Date(call.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
@@ -83,117 +48,277 @@ const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
                 <button
                     onClick={() => onDownload(call.id)}
                     disabled={downloading === call.id}
-                    style={{ display:'flex', alignItems:'center', gap:'0.5rem', background:'var(--accent)', color:'white', border:'none', borderRadius:12, padding:'0.875rem 1.5rem', fontSize:'0.875rem', fontWeight:700, cursor:'pointer', flexShrink:0 }}
+                    className="hv-export-btn"
+                    style={{ display:'flex', alignItems:'center', gap:'0.5rem', borderRadius:12, padding:'0.875rem 1.5rem', fontSize:'0.875rem', fontWeight:700, cursor:'pointer', flexShrink:0 }}
                 >
                     {downloading === call.id ? <><Loader2 size={15} className="animate-spin" /> Generating...</> : <><Download size={15} /> Export Report</>}
                 </button>
             </div>
 
-            {/* Top stat row */}
-            <div className="hv-stat-grid">
-                {/* Deal Verdict */}
-                <div style={{ background:'var(--bg)', border:`1px solid ${d.verdict.color}30`, borderRadius:18, padding:'1.75rem', textAlign:'center', borderTop:`3px solid ${d.verdict.color}` }}>
-                    <Gavel size={18} color={d.verdict.color} style={{ marginBottom:'0.75rem' }} />
-                    <div style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:d.verdict.color, marginBottom:'0.5rem' }}>AI Verdict</div>
-                    <div style={{ fontSize:'2rem', fontWeight:900, color:d.verdict.color, lineHeight:1 }}>{d.verdict.pct}%</div>
-                    <div style={{ fontSize:'0.8125rem', fontWeight:700, marginTop:'0.25rem' }}>{d.verdict.probability}</div>
-                    <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'0.625rem' }}>Blocker: <span style={{ fontWeight:700, color:'var(--text)' }}>{d.verdict.blocker}</span></div>
+            {/* Header + Stats Split Container */}
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '1.5rem', marginBottom: '2rem' }} className="hv-header-split">
+                
+                {/* Left Panel: High Level Summary */}
+                <div className="hv-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1.5rem' }}>
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <div style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Session Analysis</div>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 600 }}>Session #{call.id}</span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.04em', margin: 0, lineHeight: 1 }}>{d.verdict.pct}%</h2>
+                            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)' }}>Closing Probability</span>
+                        </div>
+                        
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text)', fontWeight: 500, display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                            <span>Verdict: <strong>{d.verdict.probability}</strong></span>
+                            <span style={{ color: 'var(--border)' }}>|</span>
+                            <span>Blocker: <strong>{d.verdict.blocker}</strong></span>
+                        </div>
+                    </div>
+                    
+                    {/* Recommended Next Step inline */}
+                    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '1rem 1.25rem' }}>
+                        <div style={{ fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--text-dim)', marginBottom: '0.25rem' }}>🎯 Next Action</div>
+                        <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', margin: 0, lineHeight: 1.4 }}>{d.verdict.nextMove}</p>
+                    </div>
                 </div>
 
-                {/* Objection Score */}
-                <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:18, padding:'1.75rem', textAlign:'center' }}>
-                    <Target size={18} color="#6366f1" style={{ marginBottom:'0.75rem' }} />
-                    <div style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'#6366f1', marginBottom:'0.5rem' }}>Objection Score</div>
-                    <div style={{ fontSize:'2rem', fontWeight:900, color: d.objectionScore >= 75 ? '#22c55e' : '#f59e0b', lineHeight:1 }}>{d.objectionScore}</div>
-                    <div style={{ fontSize:'0.8125rem', fontWeight:700, marginTop:'0.25rem' }}>{d.objectionScore >= 75 ? 'Strong' : 'Moderate'}</div>
-                    <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'0.625rem' }}>Out of 100</div>
-                </div>
+                {/* Right Panel: KPI Overview */}
+                <div className="hv-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1.25rem' }}>
+                    <div style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Quick Metrics</div>
+                    
+                    {/* KPI 1: Objection Score */}
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', marginBottom: '0.375rem' }}>
+                            <span style={{ color: 'var(--text-dim)', fontWeight: 500 }}>Objection Resistance</span>
+                            <span style={{ fontWeight: 700 }}>{d.objectionScore} / 100</span>
+                        </div>
+                        <div style={{ height: 6, background: 'var(--surface)', borderRadius: 3, overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${d.objectionScore}%`, background: 'var(--text)', borderRadius: 3 }} />
+                        </div>
+                    </div>
 
-                {/* Momentum */}
-                <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:18, padding:'1.75rem', textAlign:'center' }}>
-                    <Activity size={18} color="#a855f7" style={{ marginBottom:'0.75rem' }} />
-                    <div style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'#a855f7', marginBottom:'0.5rem' }}>Momentum Breaks</div>
-                    <div style={{ fontSize:'2rem', fontWeight:900, color:'#ef4444', lineHeight:1 }}>{d.momentumBreaks.filter(m=>m.type==='danger').length}</div>
-                    <div style={{ fontSize:'0.8125rem', fontWeight:700, marginTop:'0.25rem' }}>Critical drops</div>
-                    <div style={{ fontSize:'0.72rem', color:'var(--text-muted)', marginTop:'0.625rem' }}>{d.momentumBreaks.length} total events</div>
-                </div>
-            </div>
+                    {/* KPI 2: Momentum Events */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', borderTop: '1px solid var(--border)' }}>
+                        <span style={{ fontSize: '0.8125rem', color: 'var(--text-dim)', fontWeight: 500 }}>Momentum Breaks</span>
+                        <span style={{ fontSize: '0.875rem', fontWeight: 700 }}>{d.momentumBreaks.length}</span>
+                    </div>
 
-            {/* Next Move */}
-            <div style={{ background:'rgba(99,102,241,0.05)', border:'1px solid rgba(99,102,241,0.2)', borderRadius:16, padding:'1.5rem 1.75rem', marginBottom:'2rem', display:'flex', gap:'1rem', alignItems:'flex-start' }}>
-                <div style={{ fontSize:'1.25rem', flexShrink:0 }}>🎯</div>
-                <div>
-                    <div style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'#6366f1', marginBottom:'0.5rem' }}>Recommended Next Move</div>
-                    <p style={{ fontSize:'0.9375rem', fontWeight:600, color:'var(--text)', lineHeight:1.6, margin:0 }}>{d.verdict.nextMove}</p>
+                    {/* KPI 3: Messages & Insights */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.8125rem', color: 'var(--text-dim)', fontWeight: 500 }}>Conversation Flow</span>
+                        <span style={{ fontSize: '0.875rem', fontWeight: 700 }}>{call.message_count} messages</span>
+                    </div>
                 </div>
             </div>
 
             {/* Strategy Timeline */}
-            <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:20, padding:'2rem', marginBottom:'1.5rem' }}>
-                <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'1.5rem' }}>Strategy Timeline</div>
-                <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
-                    {d.strategyTimeline.map((s,i) => (
-                        <div key={i} style={{ display:'grid', gridTemplateColumns:'40px 160px 1fr', alignItems:'center', gap:'1rem' }}>
-                            <div style={{ fontSize:'0.65rem', fontWeight:700, color:'var(--text-muted)', textAlign:'center' }}>{s.turn}</div>
-                            <div style={{ fontSize:'0.875rem', fontWeight:700, color: resColors[s.result] }}>{s.strategy}</div>
-                            <div style={{ fontSize:'0.8125rem', color:'var(--text-dim)' }}>{s.note}</div>
-                        </div>
-                    ))}
+            {d.strategyTimeline.length > 0 && (
+            <div className="hv-card" style={{ padding:'2.5rem', marginBottom:'2rem' }}>
+                <div style={{ fontSize:'0.65rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'2rem', display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                    <Clock size={14} /> Strategy Timeline
                 </div>
-            </div>
-
-            {/* Momentum Breaks */}
-            <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:20, padding:'2rem', marginBottom:'1.5rem' }}>
-                <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'1.5rem' }}>Momentum Events</div>
-                <div style={{ display:'flex', gap:'0.875rem', overflowX:'auto', paddingBottom:'0.5rem' }}>
-                    {d.momentumBreaks.map((m,i) => {
-                        const mc = typeColors[m.type];
+                
+                <div style={{ display:'flex', flexDirection:'column', gap:'1.75rem', position:'relative', paddingLeft:'1.75rem' }}>
+                    {/* Vertical track line */}
+                    <div style={{ position:'absolute', left:'7px', top:'10px', bottom:'10px', width:'1px', background:'var(--border)' }} />
+                    
+                    {d.strategyTimeline.map((s, i) => {
+                        const hasBreak = d.momentumBreaks.some(m => m.turn === s.turn);
+                        const breakEvent = d.momentumBreaks.find(m => m.turn === s.turn);
+                        
                         return (
-                            <div key={i} style={{ minWidth:200, background:mc.bg, border:`1px solid ${mc.border}`, borderRadius:14, padding:'1.25rem', flexShrink:0 }}>
-                                <div style={{ fontSize:'0.65rem', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:mc.text, marginBottom:'0.375rem' }}>Turn {m.turn.slice(1)}</div>
-                                <div style={{ fontSize:'0.9375rem', fontWeight:800, color:mc.text, marginBottom:'0.5rem' }}>{m.event}</div>
-                                <div style={{ fontSize:'0.75rem', color:'var(--text-dim)', lineHeight:1.5 }}>{m.note}</div>
+                            <div key={i} style={{ position:'relative', display:'flex', flexDirection:'column', gap:'0.25rem' }}>
+                                {/* Timeline Dot */}
+                                <div style={{
+                                    position:'absolute',
+                                    left: hasBreak ? '-1.925rem' : '-1.875rem',
+                                    top: hasBreak ? '2px' : '5px',
+                                    width: hasBreak ? '10px' : '6px',
+                                    height: hasBreak ? '10px' : '6px',
+                                    borderRadius:'50%',
+                                    background: hasBreak ? 'var(--text)' : 'var(--bg)',
+                                    border: hasBreak ? '2px solid var(--text)' : '2px solid var(--border)',
+                                    zIndex: 2
+                                }} />
+                                
+                                <div style={{ display:'flex', alignItems:'center', gap:'0.75rem' }}>
+                                    <span style={{ fontSize:'0.75rem', fontWeight:800, color:'var(--text-dim)' }}>{s.turn}</span>
+                                    <span style={{ fontSize:'0.875rem', fontWeight:700, color: 'var(--text)' }}>{s.strategy}</span>
+                                    {hasBreak && (
+                                        <span style={{ fontSize:'0.65rem', background:'var(--surface)', border:'1px solid var(--border)', padding:'0.125rem 0.375rem', borderRadius:4, color:'var(--text-dim)', fontWeight:600 }}>
+                                            ⚠️ Momentum Drop
+                                        </span>
+                                    )}
+                                </div>
+                                <div style={{ fontSize:'0.8125rem', color:'var(--text-dim)', lineHeight:1.5 }}>
+                                    {s.note}
+                                    {hasBreak && breakEvent && (
+                                        <div style={{ marginTop:'0.25rem', fontSize:'0.75rem', color:'var(--text-muted)', fontStyle:'italic' }}>
+                                            Reason: {breakEvent.note}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         );
                     })}
                 </div>
             </div>
+            )}
 
-            {/* Missed Opportunities */}
-            <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:20, padding:'2rem' }}>
-                <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'#a855f7', marginBottom:'1.5rem' }}>
-                    <Lightbulb size={14} style={{ display:'inline', marginRight:'0.4rem', verticalAlign:'middle' }} />
-                    Missed Opportunities
+            {/* Opportunity Branching (Deep Research Graph) */}
+            {d.opportunityBranches && d.opportunityBranches.length > 0 && (
+            <div className="hv-card" style={{ padding:'2.5rem' }}>
+                <div style={{ fontSize:'0.65rem', fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'2.5rem', display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                    <Activity size={14} /> Conversation Impact Graph
                 </div>
-                <div style={{ display:'flex', flexDirection:'column', gap:'1.25rem' }}>
-                    {d.missedOpportunities.map((mo,i) => (
-                        <div key={i} style={{ background:'var(--surface)', border:'1px solid var(--border)', borderRadius:14, padding:'1.5rem', borderLeft:'3px solid #a855f7' }}>
-                            <div style={{ fontSize:'0.9375rem', fontWeight:800, fontStyle:'italic', marginBottom:'0.5rem' }}>{mo.phrase}</div>
-                            <div style={{ fontSize:'0.8125rem', color:'var(--text-dim)', marginBottom:'1rem' }}>{mo.insight}</div>
-                            <div style={{ background:'rgba(168,85,247,0.06)', border:'1px solid rgba(168,85,247,0.15)', borderRadius:10, padding:'0.875rem 1.125rem', fontSize:'0.8375rem', fontWeight:600, color:'#a855f7', display:'flex', gap:'0.5rem' }}>
-                                <span style={{ flexShrink:0 }}>→</span>{mo.betterResponse}
+                
+                <div style={{ display:'flex', flexDirection:'column', gap:'4rem' }}>
+                    {d.opportunityBranches.map((branch, i) => (
+                        <div key={i} style={{ display:'flex', flexDirection:'column', gap:'1.5rem' }}>
+                            <div className="hv-branch-node" style={{ fontSize:'0.95rem', fontWeight:600, color:'var(--text)', background:'var(--surface)', padding:'1.25rem 1.5rem', borderRadius:14, border:'1px solid var(--border)', display:'inline-block', alignSelf:'center', textAlign:'center', maxWidth:'80%', boxShadow:'0 4px 20px rgba(0,0,0,0.03)' }}>
+                                <div style={{ fontSize:'0.6rem', color:'var(--text-dim)', fontWeight:800, textTransform:'uppercase', marginBottom:'0.4rem', letterSpacing:'0.05em' }}>{branch.turn} PROSPECT</div>
+                                {branch.trigger_phrase}
+                            </div>
+                            
+                            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'2rem', position:'relative', paddingTop:'1rem' }}>
+                                {/* Branching SVG lines */}
+                                <svg style={{ position:'absolute', top:0, left:0, width:'100%', height:'2rem', zIndex:0 }} preserveAspectRatio="none" viewBox="0 0 100 10">
+                                    <path d="M 50 0 Q 50 5, 25 5 T 25 10" stroke="var(--border)" strokeWidth="1" fill="none" />
+                                    <path d="M 50 0 Q 50 5, 75 5 T 75 10" stroke="var(--border)" strokeWidth="1" fill="none" />
+                                </svg>
+
+                                {/* Path Taken */}
+                                <div className="hv-branch-path" style={{ zIndex:1, background:'var(--bg)', border:'1px dashed var(--border)', borderRadius:16, padding:'1.75rem', display:'flex', flexDirection:'column', gap:'1rem', opacity:0.8 }}>
+                                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                                        <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-dim)' }}>Path Taken</div>
+                                        <div style={{ fontSize:'0.6rem', fontWeight:800, color:'var(--text-dim)', border:'1px solid var(--border)', padding:'0.25rem 0.5rem', borderRadius:6 }}>{branch.current_path.opportunity_status}</div>
+                                    </div>
+                                    <div style={{ fontSize:'0.9rem', color:'var(--text)', fontWeight:600, lineHeight:1.5 }}>{branch.current_path.action}</div>
+                                    <div style={{ fontSize:'0.8rem', color:'var(--text-muted)' }}>Outcome: {branch.current_path.result}</div>
+                                    
+                                    {branch.current_path.trajectory && (
+                                        <div style={{ marginTop:'0.75rem', padding:'1rem', background:'var(--surface)', borderRadius:12, border:'1px solid var(--border)', display:'flex', flexDirection:'column', gap:'0.5rem' }}>
+                                            <div style={{ fontSize:'0.55rem', fontWeight:800, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-dim)', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                                                <AlertTriangle size={10} /> Conversation Trajectory
+                                            </div>
+                                            <div style={{ fontSize:'0.8rem', color:'var(--text)', lineHeight:1.4 }}>{branch.current_path.trajectory}</div>
+                                        </div>
+                                    )}
+                                    {branch.current_path.lost_ground && (
+                                        <div style={{ marginTop:'0.5rem', padding:'0.75rem 1rem', borderRadius:10, border:'1px dashed var(--border)', display:'flex', gap:'0.6rem', alignItems:'flex-start' }}>
+                                            <Trash2 size={12} style={{ color:'var(--text-dim)', marginTop:'3px', flexShrink:0 }} />
+                                            <div style={{ fontSize:'0.75rem', color:'var(--text-muted)', lineHeight:1.4 }}>
+                                                <strong style={{ color:'var(--text-dim)', fontWeight:700, display:'block', marginBottom:'0.2rem' }}>Lost Ground</strong>
+                                                {branch.current_path.lost_ground}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Alternative Path (AI Suggested) */}
+                                <div className="hv-branch-path" style={{ zIndex:1, background:'var(--surface)', border:'1px solid var(--text)', borderRadius:16, padding:'1.75rem', display:'flex', flexDirection:'column', gap:'1rem', boxShadow:'0 8px 30px rgba(0,0,0,0.06)' }}>
+                                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                                        <div style={{ fontSize:'0.6rem', fontWeight:800, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text)' }}>AI Recommended Path</div>
+                                        <div style={{ fontSize:'0.6rem', fontWeight:800, color:'var(--text)', border:'1px solid var(--text)', padding:'0.25rem 0.5rem', borderRadius:6 }}>{branch.alternative_path.opportunity_status}</div>
+                                    </div>
+                                    <div style={{ fontSize:'0.9rem', color:'var(--text)', fontWeight:600, lineHeight:1.5 }}>{branch.alternative_path.action}</div>
+                                    <div style={{ fontSize:'0.8rem', color:'var(--text-muted)' }}>Potential: {branch.alternative_path.result}</div>
+                                    
+                                    {branch.alternative_path.trajectory && (
+                                        <div style={{ marginTop:'0.5rem', padding:'1rem', background:'var(--bg)', borderRadius:12, borderLeft:'3px solid var(--text)', display:'flex', flexDirection:'column', gap:'0.5rem', boxShadow:'inset 0 2px 10px rgba(0,0,0,0.02)' }}>
+                                            <div style={{ fontSize:'0.55rem', fontWeight:800, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-dim)', display:'flex', alignItems:'center', gap:'0.4rem' }}>
+                                                <Lightbulb size={10} /> Turnaround Trajectory
+                                            </div>
+                                            <div style={{ fontSize:'0.8rem', color:'var(--text)', fontWeight:500, lineHeight:1.4 }}>{branch.alternative_path.trajectory}</div>
+                                        </div>
+                                    )}
+                                    
+                                    {branch.alternative_path.future_prediction && (
+                                        <div style={{ marginTop:'0.5rem', padding:'0.875rem 1rem', background:'var(--bg)', borderRadius:10, border:'1px solid var(--border)', display:'flex', gap:'0.75rem', alignItems:'center' }}>
+                                            <div style={{ background:'var(--surface)', padding:'0.4rem', borderRadius:'50%', display:'flex' }}>
+                                                <Zap size={14} style={{ color:'var(--text)' }} />
+                                            </div>
+                                            <div style={{ fontSize:'0.75rem', color:'var(--text-muted)', lineHeight:1.4, fontWeight:500 }}>
+                                                {branch.alternative_path.future_prediction}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {branch.alternative_path.unlocked_paths && (
+                                        <div style={{ marginTop:'0.75rem', background:'var(--bg)', padding:'1rem', borderRadius:12, border:'1px solid var(--border)' }}>
+                                            <div style={{ fontSize:'0.55rem', fontWeight:800, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'0.75rem' }}>Paths Unlocked</div>
+                                            <div style={{ display:'flex', gap:'0.5rem', flexWrap:'wrap' }}>
+                                                {branch.alternative_path.unlocked_paths.map((path, idx) => (
+                                                    <div key={idx} style={{ display:'flex', alignItems:'center', gap:'0.3rem', fontSize:'0.65rem', background:'var(--surface)', border:'1px solid var(--border)', padding:'0.35rem 0.8rem', borderRadius:99, color:'var(--text)', fontWeight:600, boxShadow:'0 2px 4px rgba(0,0,0,0.02)' }}>
+                                                        <span style={{ color:'var(--text-dim)' }}>+</span> {path}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {branch.alternative_path.next_moves && !branch.alternative_path.unlocked_paths && (
+                                        <div style={{ marginTop:'0.75rem', display:'flex', gap:'0.5rem', flexWrap:'wrap' }}>
+                                            {branch.alternative_path.next_moves.map((move, idx) => (
+                                                <span key={idx} style={{ fontSize:'0.65rem', background:'var(--bg)', border:'1px solid var(--border)', padding:'0.3rem 0.75rem', borderRadius:99, color:'var(--text)', fontWeight:600 }}>{move}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+            )}
 
             <style>{`
-                .hv-stat-grid {
+                .hv-export-btn {
+                    background: var(--surface);
+                    border: 1px solid var(--border);
+                    color: var(--text);
+                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .hv-export-btn:hover:not(:disabled) {
+                    background: var(--text);
+                    color: var(--bg);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+                .hv-export-btn:active:not(:disabled) {
+                    transform: translateY(0);
+                    box-shadow: none;
+                }
+                .hv-header-split {
                     display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    gap: 1rem;
+                    grid-template-columns: 2fr 1.2fr;
+                    gap: 1.5rem;
                     margin-bottom: 2rem;
                 }
-                @media (max-width: 640px) {
-                    .hv-stat-grid {
-                        grid-template-columns: 1fr;
-                        gap: 0.75rem;
-                    }
+                .hv-card {
+                    background: var(--bg);
+                    border: 1px solid var(--border);
+                    border-radius: 20px;
+                    transition: all 0.3s ease;
+                }
+                .hv-card:hover {
+                    border-color: var(--text-muted);
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+                    transform: translateY(-2px);
+                }
+                .hv-branch-node, .hv-branch-path {
+                    transition: all 0.3s ease;
+                }
+                .hv-branch-path:hover {
+                    transform: scale(1.02);
                 }
                 @media (max-width: 860px) {
-                    .hv-stat-grid {
-                        grid-template-columns: 1fr 1fr;
+                    .hv-header-split {
+                        grid-template-columns: 1fr !important;
+                        gap: 1rem;
                     }
                 }
             `}</style>
@@ -209,6 +334,9 @@ const HistoryView = () => {
     const [downloading, setDownloading] = useState(null);
     const [error, setError] = useState(null);
     const [selected, setSelected] = useState(null);
+    const [selectedDetails, setSelectedDetails] = useState(null);
+    const [loadingDetails, setLoadingDetails] = useState(false);
+    const [sessionToDelete, setSessionToDelete] = useState(null);
 
     useEffect(() => { fetchHistory(); }, []);
 
@@ -223,6 +351,23 @@ const HistoryView = () => {
             setError(err.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSelectSession = async (callId) => {
+        setSelected(callId);
+        setLoadingDetails(true);
+        setSelectedDetails(null);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:8000/calls/${callId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (!res.ok) throw new Error('Failed to fetch session details');
+            const data = await res.json();
+            setSelectedDetails(data);
+        } catch (err) {
+            alert('Error loading details: ' + err.message);
+        } finally {
+            setLoadingDetails(false);
         }
     };
 
@@ -245,22 +390,27 @@ const HistoryView = () => {
         }
     };
 
-    const handleDelete = async (e, callId) => {
-        e.stopPropagation(); // prevent opening details
-        if (!window.confirm("Are you sure you want to delete this session log? This action cannot be undone.")) return;
+    const handleDeleteRequest = (e, callId) => {
+        e.stopPropagation();
+        setSessionToDelete(callId);
+    };
 
+    const confirmDelete = async () => {
+        if (!sessionToDelete) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8000/calls/${callId}`, {
+            const res = await fetch(`http://localhost:8000/calls/${sessionToDelete}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error('Failed to delete history item');
             
             // Remove from state immediately
-            setCalls(prev => prev.filter(c => c.id !== callId));
+            setCalls(prev => prev.filter(c => c.id !== sessionToDelete));
         } catch (err) {
             alert('Error deleting session: ' + err.message);
+        } finally {
+            setSessionToDelete(null);
         }
     };
 
@@ -280,8 +430,17 @@ const HistoryView = () => {
     );
 
     if (selected) {
-        const call = calls.find(c => c.id === selected);
-        return <SessionDetail call={call} onBack={() => setSelected(null)} onDownload={handleDownload} downloading={downloading} />;
+        if (loadingDetails) {
+            return (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'400px', gap:'1rem' }}>
+                    <Loader2 className="animate-spin" size={32} color="var(--accent)" />
+                    <p style={{ color:'var(--text-dim)', fontWeight:500 }}>Analyzing session data...</p>
+                </div>
+            );
+        }
+        if (selectedDetails) {
+            return <SessionDetail call={selectedDetails} onBack={() => setSelected(null)} onDownload={handleDownload} downloading={downloading} />;
+        }
     }
 
     if (calls.length === 0) return (
@@ -337,7 +496,7 @@ const HistoryView = () => {
                         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
                     >
                         <button
-                            onClick={() => setSelected(call.id)}
+                            onClick={() => handleSelectSession(call.id)}
                             style={{
                                 flex:1, textAlign:'left', background:'transparent', border:'none',
                                 padding:'1.75rem 2rem', cursor:'pointer',
@@ -362,13 +521,14 @@ const HistoryView = () => {
 
                         {/* Separate Delete Button */}
                         <button
-                            onClick={(e) => handleDelete(e, call.id)}
+                            onClick={(e) => handleDeleteRequest(e, call.id)}
                             title="Delete session log"
                             style={{
                                 background:'transparent', border:'none', padding:'1rem',
                                 color:'var(--text-muted)', cursor:'pointer', marginRight:'1.5rem',
                                 display:'flex', alignItems:'center', justifyContent:'center',
-                                borderRadius:'10px', transition:'all 0.2s', flexShrink:0
+                                borderRadius:'10px', transition:'all 0.2s', flexShrink:0,
+                                outline: 'none', WebkitTapHighlightColor: 'transparent'
                             }}
                             onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)'; }}
                             onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent'; }}
@@ -378,6 +538,75 @@ const HistoryView = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Premium Delete Confirmation Modal */}
+            {sessionToDelete && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    backdropFilter: 'blur(8px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    zIndex: 9999, animation: 'fadeIn 0.2s ease-out'
+                }}>
+                    <div style={{
+                        background: 'rgba(15, 15, 18, 0.85)', 
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '20px', padding: '2rem', maxWidth: '400px', width: '90%',
+                        boxShadow: '0 32px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+                        animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                        position: 'relative', overflow: 'hidden'
+                    }}>
+                        {/* Subtle red glow at top */}
+                        <div style={{ position:'absolute', top:0, left:'20%', right:'20%', height:'1px', background:'linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)', filter:'blur(2px)' }} />
+
+                        <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
+                            <div style={{ display:'flex', alignItems:'center', gap:'1rem' }}>
+                                <div style={{ width:'42px', height:'42px', borderRadius:'12px', background:'rgba(239, 68, 68, 0.1)', border:'1px solid rgba(239, 68, 68, 0.2)', display:'flex', alignItems:'center', justifyContent:'center', color:'#ef4444', flexShrink:0 }}>
+                                    <Trash2 size={20} />
+                                </div>
+                                <div style={{ textAlign:'left' }}>
+                                    <h3 style={{ fontSize:'1.125rem', fontWeight:700, margin:0, color:'#fff', letterSpacing:'-0.02em' }}>Delete session log?</h3>
+                                    <p style={{ fontSize:'0.8125rem', color:'rgba(255,255,255,0.5)', margin:'0.25rem 0 0 0' }}>Session #{sessionToDelete}</p>
+                                </div>
+                            </div>
+
+                            <p style={{ color:'rgba(255,255,255,0.6)', fontSize:'0.875rem', lineHeight:1.5, margin:'0.5rem 0 1.5rem 0', textAlign:'left' }}>
+                                This action will permanently remove this session and all its associated intelligence insights. This cannot be undone.
+                            </p>
+
+                            <div style={{ display:'flex', gap:'0.75rem', justifyContent:'flex-end' }}>
+                                <button 
+                                    onClick={() => setSessionToDelete(null)}
+                                    style={{
+                                        padding:'0.625rem 1.25rem', borderRadius:'10px',
+                                        background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.08)',
+                                        color:'rgba(255,255,255,0.8)', fontSize:'0.8125rem', fontWeight:600, cursor:'pointer',
+                                        transition:'all 0.2s'
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#fff' }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)' }}
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={confirmDelete}
+                                    style={{
+                                        padding:'0.625rem 1.25rem', borderRadius:'10px',
+                                        background:'#ef4444', border:'1px solid #dc2626',
+                                        color:'#fff', fontSize:'0.8125rem', fontWeight:600, cursor:'pointer',
+                                        transition:'all 0.2s', boxShadow:'0 2px 10px rgba(239,68,68,0.2)'
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(239,68,68,0.3)' }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#ef4444'; e.currentTarget.style.boxShadow = '0 2px 10px rgba(239,68,68,0.2)' }}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
