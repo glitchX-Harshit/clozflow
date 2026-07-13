@@ -338,6 +338,12 @@ const LiveCall = () => {
                                         <div style={{ color: 'var(--accent-mid)', marginBottom: '0.5rem' }}><BrainCircuit size={16} strokeWidth={2.5} /></div>
                                         <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>Product Pitch</div>
                                         <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>{callContext.product_name}</div>
+                                        {callContext.product_price && (
+                                            <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem', fontWeight: 'bold' }}>Price: {callContext.product_price}</div>
+                                        )}
+                                        {callContext.product_specification && (
+                                            <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>Spec: {callContext.product_specification}</div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

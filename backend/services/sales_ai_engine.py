@@ -446,19 +446,6 @@ class SalesAIEngine:
         if self.deal_state["stage"] == "objection":
             self.deal_state["pressure_level"] = min(self.deal_state["pressure_level"] + 1, 3)
 
-        if len(text.strip().split()) < 3 and len(text.strip()) < 15:
-            print("[AI_HELPER] Transcript too short, returning helper response.")
-            self.add_message(speaker, text)
-            return {
-                "intent": "unknown",
-                "stage": self.deal_state["stage"],
-                "strategy": "CLARIFY",
-                "confidence": 0.5,
-                "response": "Interesting... usually when people give a short answer there, it's because there's a bigger bottleneck they aren't mentioning yet. What's the real driver here?",
-                "next_question": "",
-                "coaching_tip": "Micro-response detected. Hold the silence for leverage, or drop a sharp pattern-interrupt to break their defensive shell.",
-                "quality_scores": {"diagnosis": 0.5, "curiosity": 0.8, "human_sound": 1.0, "persuasion": 0.5, "brevity": 1.0}
-            }
 
         now = time.time()
 
@@ -521,6 +508,10 @@ class SalesAIEngine:
             
             sim_guardrails += f"\\nSIMULATION MODE ACTIVE (STRICT ISOLATION)\\n"
             sim_guardrails += f"Product: {self.call_context.get('product_name')}\\n"
+            if self.call_context.get('product_price'):
+                sim_guardrails += f"Price/Value: {self.call_context.get('product_price')}\\n"
+            if self.call_context.get('product_specification'):
+                sim_guardrails += f"Specification: {self.call_context.get('product_specification')}\\n"
             sim_guardrails += f"Industry: {self.call_context.get('industry')}\\n"
             sim_guardrails += f"Prospect: {self.call_context.get('prospect_type')}\\n"
             sim_guardrails += f"Allowed Topics: {allowed}\\n"

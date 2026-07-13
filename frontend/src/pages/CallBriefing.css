@@ -6,13 +6,12 @@
     position: fixed;
     inset: 0;
     z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    display: block;
     background: var(--surface);
     padding: 2rem 1rem;
+    overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
 }
@@ -76,8 +75,7 @@
     z-index: 10;
     width: 100%;
     max-width: 680px;
-    margin-top: 5.5rem;
-    margin-bottom: 5.5rem;
+    margin: 5.5rem auto;
     background: var(--bg);
     border: 1px solid var(--border-strong);
     border-radius: var(--r-2xl);
