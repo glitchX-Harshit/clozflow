@@ -17,7 +17,8 @@ import {
     MessageSquare,
     Search,
     Loader2,
-    FileText
+    FileText,
+    Sparkle
 } from 'lucide-react';
 import { useDashboardStore } from '../store/useDashboardStore';
 import HistoryView from '../components/HistoryView';
@@ -31,77 +32,7 @@ import { gsap } from 'gsap';
 import ClozFlowLogo from '../components/ClozFlowLogo';
 import Pearl from './Pearl';
 
-const ViberCodeIcon = ({ size = 18, ...props }) => (
-    <svg 
-        width={size} 
-        height={size} 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="url(#viber-grad)" 
-        strokeWidth="2.2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        className="viber-code-svg"
-        {...props}
-    >
-        <defs>
-            <linearGradient id="viber-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#E23E6E" />
-                <stop offset="40%" stopColor="#8E74E2" />
-                <stop offset="80%" stopColor="#4856E3" />
-                <stop offset="100%" stopColor="#C2DCFB" />
-            </linearGradient>
-            
-            <style>{`
-                .viber-pulse-wave {
-                    animation: viber-wave-pulse 1.8s infinite ease-in-out;
-                    transform-origin: 12px 12px;
-                }
-                .viber-pulse-wave-2 {
-                    animation: viber-wave-pulse 1.8s infinite ease-in-out;
-                    animation-delay: 0.6s;
-                    transform-origin: 12px 12px;
-                }
-                .viber-dot-blink-1 {
-                    animation: viber-dot-blink 1.5s infinite ease-in-out;
-                }
-                .viber-dot-blink-2 {
-                    animation: viber-dot-blink 1.5s infinite ease-in-out;
-                    animation-delay: 0.5s;
-                }
-                .viber-dot-blink-3 {
-                    animation: viber-dot-blink 1.5s infinite ease-in-out;
-                    animation-delay: 1s;
-                }
-                @keyframes viber-wave-pulse {
-                    0% { transform: scale(0.95); opacity: 0.3; }
-                    50% { transform: scale(1.08); opacity: 0.9; stroke-width: 2.5; }
-                    100% { transform: scale(0.95); opacity: 0.3; }
-                }
-                @keyframes viber-dot-blink {
-                    0%, 100% { opacity: 0.2; transform: scale(0.8); }
-                    50% { opacity: 1; transform: scale(1.2); }
-                }
-            `}</style>
-        </defs>
 
-        {/* Viber speech bubble */}
-        <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.5181 20 9.12342 19.6548 7.9 19.04L3 21L4.5 16.5C3.55 15.1 3 13.4 3 11.5C3 6.8056 7.02944 3 12 3C16.9706 3 21 6.8056 21 11.5Z" />
-        
-        {/* Viber receiver symbol */}
-        <path d="M8.5 7H9.5C9.8 7 10 7.2 10.1 7.5L11 9.5C11.1 9.8 11 10.1 10.8 10.3L9.7 11.2C10.4 12.5 11.5 13.6 12.8 14.3L13.7 13.2C13.9 13 14.2 12.9 14.5 13L16.5 13.9C16.8 14 17 14.2 17 14.5V16C17 16.6 16.5 17 15.9 17C11.5 17 7 12.5 7 8.1C7 7.5 7.4 7 8 7" strokeWidth="1.8" />
-        
-        {/* Pulsing signal waves representing Viber connection */}
-        <path d="M14 6C15 6.5 16.5 8 17 9.5" stroke="url(#viber-grad)" strokeWidth="1.5" className="viber-pulse-wave" />
-        <path d="M15.5 4.5C17.5 5.5 19 8 19.5 10" stroke="url(#viber-grad)" strokeWidth="1.2" className="viber-pulse-wave-2" />
-
-        {/* Dynamic Binary Matrix code dots that blink inside/outside */}
-        <circle cx="16" cy="12" r="1.2" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-1" style={{ transformOrigin: '16px 12px' }} />
-        <circle cx="8" cy="14" r="1.2" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-2" style={{ transformOrigin: '8px 14px' }} />
-        <circle cx="11" cy="15" r="1.2" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-3" style={{ transformOrigin: '11px 15px' }} />
-        <circle cx="13" cy="8.5" r="1" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-1" style={{ transformOrigin: '13px 8.5px' }} />
-    </svg>
-);
 
 const STATS_DATA = [
     { label: 'Close Velocity', value: '37%', color: '#22c55e', trend: '+4.2%', desc: 'vs last week' },
@@ -360,7 +291,7 @@ const Dashboard = () => {
         { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
         { id: 'leads',      label: 'Lead Finder',   icon: Search },
         { id: 'history',    label: 'Session History', icon: History },
-        { id: 'pearl',      label: 'Pearl',         icon: ViberCodeIcon },
+        { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
         { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
         { id: 'playbooks',  label: 'Playbooks',      icon: Target },
         { id: 'settings',   label: 'Settings',       icon: Settings },
@@ -371,8 +302,7 @@ const Dashboard = () => {
             {/* Sidebar — desktop only */}
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <ClozFlowLogo />
-                    <span className="nb__wordmark db-logo-text" style={{ fontSize: '1.25rem' }}>ClozFlow</span>
+                    <ClozFlowLogo size={32} />
                 </div>
 
                 <nav className="db-nav" style={{ position: 'relative' }}>

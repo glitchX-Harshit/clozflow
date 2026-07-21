@@ -234,7 +234,6 @@ const LiveCall = () => {
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
                     <ClozFlowLogo size={28} />
-                    <span className="db-logo-text">ClozFlow</span>
                 </div>
 
                 <nav className="db-nav">
