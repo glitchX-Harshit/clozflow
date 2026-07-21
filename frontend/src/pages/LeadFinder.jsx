@@ -572,6 +572,12 @@ const LeadFinder = ({ onOutreach }) => {
     const [savedLeads, setSavedLeads] = useState([]);
     const [selectedLead, setSelectedLead] = useState(null);
 
+    const [deepSearchActive, setDeepSearchActive] = useState(false);
+    const [deepSearchProgress, setDeepSearchProgress] = useState(null);
+    const abortControllerRef = useRef(null);
+    const deepLeadsRef = useRef([]);
+    const [deepSearchEnabled, setDeepSearchEnabled] = useState(false);
+
     // Sync selected lead when viewMode, leads, or savedLeads change
     useEffect(() => {
         if (viewMode === 'discover') {
@@ -749,7 +755,102 @@ const LeadFinder = ({ onOutreach }) => {
     const effectiveOffer = userOffer.trim() || '';
 
     /* ── Search ──────────────────────────────────────── */
+    const handleDeepSearch = async (searchQuery) => {
+        const q = (searchQuery || query).trim();
+        if (!q || q.length < 2) return;
+        
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+        
+        setLoading(true);
+        setDeepSearchActive(true);
+        setDeepSearchProgress(null);
+        setLeads([]);
+        setSearched(true);
+        if (searchQuery) setQuery(searchQuery);
+        
+        deepLeadsRef.current = [];
+        const effectiveOfferStr = userOffer.trim() || '';
+        
+        try {
+            const response = await fetch(`${API_BASE}/leads/deep-search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    query: q,
+                    filters: activeFilters,
+                    search_mode: searchMode,
+                    user_offer: effectiveOfferStr,
+                }),
+                signal: controller.signal,
+            });
+            
+            if (!response.ok) throw new Error('Deep search failed');
+            
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+                
+                let eventType = '';
+                let eventData = '';
+                
+                for (const line of lines) {
+                    if (line.startsWith('event: ')) {
+                        eventType = line.slice(7).trim();
+                    } else if (line.startsWith('data: ')) {
+                        eventData = line.slice(6).trim();
+                    } else if (line === '' && eventType && eventData) {
+                        try {
+                            const parsed = JSON.parse(eventData);
+                            
+                            if (eventType === 'searching') {
+                                setDeepSearchProgress(parsed);
+                            } else if (eventType === 'lead_found') {
+                                deepLeadsRef.current = [...deepLeadsRef.current, parsed];
+                                setLeads(deepLeadsRef.current);
+                            } else if (eventType === 'area_done') {
+                                setDeepSearchProgress(prev => prev ? { ...prev, leads_found: parsed.total_leads } : prev);
+                            } else if (eventType === 'complete') {
+                                setLeads(parsed.leads || deepLeadsRef.current);
+                            }
+                        } catch (e) {
+                            console.warn('SSE parse error:', e);
+                        }
+                        eventType = '';
+                        eventData = '';
+                    }
+                }
+            }
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.error('Deep search error:', err);
+                showToast('Deep search failed. Try regular search.', '⚠️');
+            }
+        } finally {
+            setLoading(false);
+            setDeepSearchActive(false);
+            setDeepSearchProgress(null);
+            abortControllerRef.current = null;
+        }
+    };
+
     const handleSearch = async (searchQuery) => {
+        if (deepSearchEnabled) {
+            return handleDeepSearch(searchQuery);
+        }
+
         const q = (searchQuery || query).trim();
         if (!q || q.length < 2) return;
 
@@ -1040,7 +1141,15 @@ const LeadFinder = ({ onOutreach }) => {
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
-                            <div className="lf__search-btn-wrapper">
+                            <div className="lf__search-btn-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <button
+                                    className={`lf__deep-toggle ${deepSearchEnabled ? 'active' : ''}`}
+                                    onClick={() => setDeepSearchEnabled(prev => !prev)}
+                                    title="Deep Search — iterates through city neighborhoods to find leads without websites"
+                                >
+                                    <Crosshair size={14} />
+                                    <span>Deep Search</span>
+                                </button>
                                 <MagButton
                                     id="lead-search-btn"
                                     className="lf__search-btn"
@@ -1097,7 +1206,7 @@ const LeadFinder = ({ onOutreach }) => {
                     </div>
 
                     {/* Loading State */}
-                    {loading && (
+                    {loading && !deepSearchActive && (
                         <div className="lf__loading-wrapper animate-fade-in">
                             <FindingLeadsProgress query={query} />
                             <div className="lf__skeleton-grid" ref={gridRef}>
@@ -1107,65 +1216,90 @@ const LeadFinder = ({ onOutreach }) => {
                     )}
 
                     {/* Results */}
-                    {!loading && searched && leads.length > 0 && (
+                    {(!loading || deepSearchActive) && searched && (leads.length > 0 || deepSearchActive) && (
                         <div className="lf__results-wrapper animate-fade-in">
-                            <div className="lf__results-meta">
-                                <span className="lf__results-count">
-                                    Found <strong>{leads.length}</strong> opportunities
-                                    {effectiveOffer && (
-                                        <span className="lf__results-offer-context"> for {effectiveOffer}</span>
-                                    )}
-                                </span>
-                                <div className="lf__results-badges">
-                                    <span className="lf__results-badge">
-                                        <span className="lf__results-badge-dot" />
-                                        AI Enriched
-                                    </span>
-                                    <span className="lf__results-mode-badge">
-                                        {activeModeLabel}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="lf__workspace" ref={gridRef}>
-                                <div className="lf__workspace-list" data-lenis-prevent>
-                                    {leads.map((lead, idx) => {
-                                        const isSaved = !!getSavedLead(lead);
-                                        const isSelected = selectedLead && selectedLead.business_name === lead.business_name && selectedLead.city === lead.city;
-                                        return (
-                                            <LeadListItem
-                                                key={`${lead.business_name}-${idx}`}
-                                                lead={lead}
-                                                isSelected={isSelected}
-                                                isSaved={isSaved}
-                                                onSelect={() => setSelectedLead(lead)}
-                                                onSaveToggle={() => handleSave(lead)}
-                                            />
-                                        );
-                                    })}
-                                </div>
-                                <div className="lf__workspace-detail">
-                                    {selectedLead ? (
-                                        <LeadDetailPanel
-                                            lead={selectedLead}
-                                            isSaved={!!getSavedLead(selectedLead)}
-                                            onStartCall={handleStartCall}
-                                            onCopy={handleCopy}
-                                            onSave={handleSave}
-                                            onOutreach={handleOutreach}
+                            {deepSearchActive && deepSearchProgress && (
+                                <div className="lf__deep-progress">
+                                    <div className="lf__deep-progress-header">
+                                        <Crosshair size={18} className="lf__deep-progress-icon spinning" />
+                                        <span>Deep Searching — {deepSearchProgress.level_name || 'Neighborhood'}</span>
+                                    </div>
+                                    <div className="lf__deep-progress-area">
+                                        Scanning: <strong>{deepSearchProgress.area}</strong>
+                                    </div>
+                                    <div className="lf__deep-progress-bar-wrapper">
+                                        <div 
+                                            className="lf__deep-progress-bar" 
+                                            style={{ width: `${(deepSearchProgress.area_index / deepSearchProgress.total_areas) * 100}%` }}
                                         />
-                                    ) : (
-                                        <div className="lf__workspace-empty animate-fade-in">
-                                            <Sparkles size={24} className="lf__empty-spark" />
-                                            <span>Select a lead from the telemetry array to initialize the target profile interface.</span>
-                                        </div>
-                                    )}
+                                    </div>
+                                    <div className="lf__deep-progress-stats">
+                                        <span>Level {deepSearchProgress.level || 1} · Areas: {deepSearchProgress.area_index}/{deepSearchProgress.total_areas}</span>
+                                        <span>Leads found: {deepSearchProgress.leads_found}/20</span>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+                            {leads.length > 0 && (
+                                <>
+                                    <div className="lf__results-meta">
+                                        <span className="lf__results-count">
+                                            Found <strong>{leads.length}</strong> opportunities
+                                            {effectiveOffer && (
+                                                <span className="lf__results-offer-context"> for {effectiveOffer}</span>
+                                            )}
+                                        </span>
+                                        <div className="lf__results-badges">
+                                            <span className="lf__results-badge">
+                                                <span className="lf__results-badge-dot" />
+                                                AI Enriched
+                                            </span>
+                                            <span className="lf__results-mode-badge">
+                                                {activeModeLabel}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="lf__workspace" ref={gridRef}>
+                                        <div className="lf__workspace-list" data-lenis-prevent>
+                                            {leads.map((lead, idx) => {
+                                                const isSaved = !!getSavedLead(lead);
+                                                const isSelected = selectedLead && selectedLead.business_name === lead.business_name && selectedLead.city === lead.city;
+                                                return (
+                                                    <LeadListItem
+                                                        key={`${lead.business_name}-${idx}`}
+                                                        lead={lead}
+                                                        isSelected={isSelected}
+                                                        isSaved={isSaved}
+                                                        onSelect={() => setSelectedLead(lead)}
+                                                        onSaveToggle={() => handleSave(lead)}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                        <div className="lf__workspace-detail">
+                                            {selectedLead ? (
+                                                <LeadDetailPanel
+                                                    lead={selectedLead}
+                                                    isSaved={!!getSavedLead(selectedLead)}
+                                                    onStartCall={handleStartCall}
+                                                    onCopy={handleCopy}
+                                                    onSave={handleSave}
+                                                    onOutreach={handleOutreach}
+                                                />
+                                            ) : (
+                                                <div className="lf__workspace-empty animate-fade-in">
+                                                    <Sparkles size={24} className="lf__empty-spark" />
+                                                    <span>Select a lead from the telemetry array to initialize the target profile interface.</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     )}
 
                     {/* No Results */}
-                    {!loading && searched && leads.length === 0 && (
+                    {!loading && !deepSearchActive && searched && leads.length === 0 && (
                         <div className="lf__empty">
                             <div className="lf__empty-glow" />
                             <div className="lf__empty-icon"><Search size={40} /></div>

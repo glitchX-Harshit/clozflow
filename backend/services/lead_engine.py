@@ -12,8 +12,9 @@ import os
 import re
 import json
 import hashlib
+import asyncio
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, AsyncGenerator
 
 # ── Optional imports ─────────────────────────────────────────────────────────
 try:
@@ -770,3 +771,305 @@ async def search_leads(
 
     print(f"[LeadEngine] ── Search complete: returning {len(enriched)} leads ──")
     return enriched
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DYNAMIC SUB-AREA EXTRACTION FROM GOOGLE PLACES RESULTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Common geographic terms / noise to exclude when extracting sub-areas
+_NOISE_TERMS = {
+    # Countries
+    "india", "usa", "united states", "uk", "united kingdom", "uae",
+    "united arab emirates", "singapore", "canada", "australia", "germany",
+    "france", "japan", "china", "brazil", "south africa", "indonesia",
+    "thailand", "malaysia", "philippines", "vietnam", "south korea",
+    "saudi arabia", "qatar", "oman", "bahrain", "kuwait", "egypt",
+    "turkey", "russia", "mexico", "italy", "spain", "netherlands",
+    "pakistan", "bangladesh", "sri lanka", "nepal",
+    # Indian states
+    "maharashtra", "karnataka", "delhi", "tamil nadu", "telangana",
+    "west bengal", "gujarat", "rajasthan", "uttar pradesh", "madhya pradesh",
+    "andhra pradesh", "kerala", "punjab", "haryana", "bihar", "odisha",
+    "jharkhand", "chhattisgarh", "assam", "goa", "uttarakhand",
+    "himachal pradesh", "jammu and kashmir", "new delhi",
+    # US states
+    "new york", "california", "texas", "florida", "illinois", "pennsylvania",
+    "ohio", "georgia", "north carolina", "michigan", "new jersey", "virginia",
+    "washington", "arizona", "massachusetts", "tennessee", "indiana",
+    "missouri", "maryland", "wisconsin", "colorado", "minnesota",
+    # UK regions
+    "england", "scotland", "wales", "northern ireland", "greater london",
+    # Generic
+    "road", "street", "lane", "marg", "path", "nagar", "sector",
+}
+
+
+def _extract_sub_areas_from_results(results: list, city: str, already_seen: set) -> List[str]:
+    """
+    Dynamically extract unique sub-area/locality names from Google Places 
+    result addresses. This works for ANY city globally.
+    
+    E.g. from "Shop 5, Lokhandwala Complex, Andheri West, Mumbai 400053, India"
+    → extracts: "Lokhandwala Complex"
+    """
+    areas = []
+    city_lower = city.lower().strip()
+    city_words = set(city_lower.split())
+
+    for result in results:
+        address = result.get("address", "") or ""
+        if not address:
+            continue
+
+        parts = [p.strip() for p in address.split(",")]
+
+        for part in parts:
+            clean = part.strip()
+            part_lower = clean.lower().strip()
+
+            # Skip empty, too short, or too long
+            if len(clean) < 3 or len(clean) > 60:
+                continue
+
+            # Skip if contains digits (postal codes, shop numbers)
+            if any(c.isdigit() for c in clean):
+                continue
+
+            # Skip if it's the city name itself
+            if part_lower == city_lower or city_lower in part_lower or part_lower in city_lower:
+                continue
+
+            # Skip if overlaps with city words significantly
+            part_words = set(part_lower.split())
+            if part_words & city_words:
+                continue
+
+            # Skip noise terms (countries, states, generic words)
+            if part_lower in _NOISE_TERMS:
+                continue
+
+            # Skip if already seen
+            if part_lower in already_seen:
+                continue
+
+            already_seen.add(part_lower)
+            areas.append(clean)
+
+    # Cap at 40 discovered sub-areas to avoid excessive API calls
+    return areas[:40]
+
+
+async def deep_search_leads(
+    query: str,
+    filters: Optional[Dict] = None,
+    user_offer: str = "",
+    search_mode: str = "high_fit_leads",
+    target_count: int = 20,
+) -> AsyncGenerator:
+    """
+    Multi-level deep area iteration search with dynamic geographic discovery.
+    Works globally for ANY city — no hardcoding required.
+
+    Algorithm (3 levels of depth):
+    ─────────────────────────────────────────────────────────────
+    LEVEL 1 — NEIGHBORHOODS
+      Search known neighborhoods (from database) or dynamically
+      discovered ones. For Mumbai: Andheri, Bandra, Borivali...
+
+    LEVEL 2 — MICRO-AREAS (dynamically discovered)
+      Extract micro-area names from Level 1 result addresses.
+      E.g. from Andheri results → Lokhandwala, Four Bungalows,
+      DN Nagar, Oshiwara, etc. Search each one.
+
+    LEVEL 3 — STREETS (dynamically discovered)
+      Extract street-level names from Level 2 results.
+      E.g. from Lokhandwala results → Lokhandwala Complex Road,
+      Back Road, etc.
+
+    At every level:
+      - Only collect leads WITHOUT websites
+      - Deduplicate across all levels
+      - Stop immediately once target_count is reached
+    ─────────────────────────────────────────────────────────────
+    """
+    from services.sub_locations import get_sub_locations
+    import json
+
+    print(f"[DeepSearch] ══════════════════════════════════════════════════")
+    print(f"[DeepSearch] Multi-level deep search started")
+    print(f"[DeepSearch] Query: '{query}' | Offer: '{user_offer}'")
+
+    # ── Parse query ──────────────────────────────────────────────────────
+    parsed = parse_search_query(query)
+    business_type = parsed["business_type"]
+    location = parsed["location"]
+
+    if filters:
+        if filters.get("city"):
+            location = filters["city"]
+        if filters.get("business_category"):
+            business_type = filters["business_category"]
+
+    if not location:
+        location = "Delhi"
+
+    print(f"[DeepSearch] Business: '{business_type}' | City: '{location}'")
+
+    # ── State tracking ───────────────────────────────────────────────────
+    collected = []
+    seen_hashes = set()          # dedup leads by name+address hash
+    seen_area_names = set()      # dedup area names across all levels
+    areas_searched = 0
+    level2_queue = []            # (micro_area, parent_neighborhood)
+    level3_queue = []            # (street, parent_micro_area, parent_neighborhood)
+
+    # ── Helper: search one area, process leads, return (events, raw_results) ─
+    async def _search_and_process(area_label, search_query_loc, level, total_est):
+        nonlocal areas_searched
+        areas_searched += 1
+
+        level_labels = {1: "Neighborhood", 2: "Micro-Area", 3: "Street"}
+        level_name = level_labels.get(level, "Area")
+        events = []
+
+        events.append(
+            f"event: searching\ndata: {json.dumps({'area': area_label, 'area_index': areas_searched, 'total_areas': total_est, 'leads_found': len(collected), 'level': level, 'level_name': level_name})}\n\n"
+        )
+
+        results = await _search_google_places(business_type, search_query_loc)
+        if not results:
+            results = _search_mock(business_type, search_query_loc)
+
+        await asyncio.sleep(0.3)
+
+        # Filter enterprises
+        results = _filter_enterprises(results)
+        new_count = 0
+
+        for lead in results:
+            if len(collected) >= target_count:
+                break
+
+            # CORE FILTER: Skip leads that have a website
+            if lead.get("website"):
+                continue
+
+            name = lead.get("business_name", "")
+            addr = lead.get("address", "")
+            dedup_key = hashlib.md5(f"{name}{addr}".lower().encode()).hexdigest()
+
+            if dedup_key in seen_hashes:
+                continue
+            seen_hashes.add(dedup_key)
+
+            # Score and enrich
+            _compute_opportunity_score(lead, user_offer)
+            enriched_lead = await enrich_lead_ai(lead, user_offer)
+
+            # Apply user filters
+            skip = False
+            if filters:
+                min_rating = filters.get("rating")
+                if min_rating and (enriched_lead.get("google_rating", 0) or 0) < float(min_rating):
+                    skip = True
+                if filters.get("instagram_presence") and not enriched_lead.get("instagram"):
+                    skip = True
+
+            if skip:
+                continue
+
+            collected.append(enriched_lead)
+            new_count += 1
+            events.append(f"event: lead_found\ndata: {json.dumps(enriched_lead)}\n\n")
+
+        events.append(
+            f"event: area_done\ndata: {json.dumps({'area': area_label, 'new_leads': new_count, 'total_leads': len(collected), 'level': level})}\n\n"
+        )
+
+        return events, results  # Return both SSE events and raw results
+
+    # ═════════════════════════════════════════════════════════════════════
+    # LEVEL 1 — NEIGHBORHOODS
+    # ═════════════════════════════════════════════════════════════════════
+    level1_areas = get_sub_locations(location)
+    for a in level1_areas:
+        seen_area_names.add(a.lower().strip())
+
+    total_estimate = len(level1_areas)
+    print(f"[DeepSearch] Level 1: {len(level1_areas)} neighborhoods for '{location}'")
+
+    for area in level1_areas:
+        if len(collected) >= target_count:
+            break
+
+        search_loc = f"{area}, {location}"
+        events, raw_results = await _search_and_process(area, search_loc, 1, total_estimate)
+
+        for event in events:
+            yield event
+
+        # Extract micro-areas from these results for Level 2
+        if raw_results:
+            micro_areas = _extract_sub_areas_from_results(raw_results, location, seen_area_names)
+            for ma in micro_areas:
+                level2_queue.append((ma, area))
+            if micro_areas:
+                print(f"[DeepSearch]   └─ Discovered {len(micro_areas)} micro-areas from {area}: {micro_areas[:5]}...")
+
+    # ═════════════════════════════════════════════════════════════════════
+    # LEVEL 2 — MICRO-AREAS (dynamically discovered from Level 1)
+    # ═════════════════════════════════════════════════════════════════════
+    if len(collected) < target_count and level2_queue:
+        total_estimate = areas_searched + len(level2_queue)
+        print(f"[DeepSearch] Level 2: {len(level2_queue)} micro-areas discovered")
+
+        for micro_area, parent in level2_queue:
+            if len(collected) >= target_count:
+                break
+
+            search_loc = f"{micro_area}, {parent}, {location}"
+            events, raw_results = await _search_and_process(
+                f"{micro_area} ({parent})", search_loc, 2, total_estimate
+            )
+
+            for event in events:
+                yield event
+
+            # Extract street-level areas for Level 3
+            if raw_results:
+                streets = _extract_sub_areas_from_results(raw_results, location, seen_area_names)
+                for st in streets:
+                    level3_queue.append((st, micro_area, parent))
+                if streets:
+                    print(f"[DeepSearch]     └─ Discovered {len(streets)} streets from {micro_area}: {streets[:5]}...")
+
+    # ═════════════════════════════════════════════════════════════════════
+    # LEVEL 3 — STREETS (dynamically discovered from Level 2)
+    # ═════════════════════════════════════════════════════════════════════
+    if len(collected) < target_count and level3_queue:
+        total_estimate = areas_searched + len(level3_queue)
+        print(f"[DeepSearch] Level 3: {len(level3_queue)} street-level areas discovered")
+
+        for street, micro_area, parent in level3_queue:
+            if len(collected) >= target_count:
+                break
+
+            search_loc = f"{street}, {micro_area}, {parent}, {location}"
+            events, _ = await _search_and_process(
+                f"{street} ({micro_area}, {parent})", search_loc, 3, total_estimate
+            )
+
+            for event in events:
+                yield event
+
+    # ═════════════════════════════════════════════════════════════════════
+    # FINAL — Apply search mode and return
+    # ═════════════════════════════════════════════════════════════════════
+    collected = _apply_search_mode(collected, search_mode)
+
+    print(f"[DeepSearch] ══════════════════════════════════════════════════")
+    print(f"[DeepSearch] Complete: {len(collected)} leads from {areas_searched} areas searched")
+
+    yield f"event: complete\ndata: {json.dumps({'total_leads': len(collected), 'areas_searched': areas_searched, 'leads': collected})}\n\n"
+
