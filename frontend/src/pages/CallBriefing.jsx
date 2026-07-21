@@ -22,6 +22,8 @@ const CallBriefing = () => {
         client_industry: '',
         client_role: '',
         product_name: '',
+        product_price: '',
+        product_specification: '',
         call_goal: ''
     });
     const [loading, setLoading] = useState(false);
@@ -75,7 +77,7 @@ const CallBriefing = () => {
     };
 
     return (
-        <div className="cb-overlay">
+        <div className="cb-overlay" data-lenis-prevent>
             {/* Back button */}
             <button className="cb-back interactive" onClick={() => navigate(-1)}>
                 <ArrowLeft size={16} strokeWidth={2.5} />
@@ -140,6 +142,28 @@ const CallBriefing = () => {
                             required
                             value={formData.product_name}
                             onChange={(e) => setFormData({...formData, product_name: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="cb-field">
+                        <label className="cb-label"><Zap size={14} color="var(--accent)" /> Product Price / Value</label>
+                        <input 
+                            type="text" 
+                            className="cb-input" 
+                            placeholder="$50k/year or $5k setup"
+                            value={formData.product_price}
+                            onChange={(e) => setFormData({...formData, product_price: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="cb-field">
+                        <label className="cb-label"><Zap size={14} color="var(--accent)" /> Product Specification</label>
+                        <input 
+                            type="text" 
+                            className="cb-input" 
+                            placeholder="Key features or specs"
+                            value={formData.product_specification}
+                            onChange={(e) => setFormData({...formData, product_specification: e.target.value})}
                         />
                     </div>
 

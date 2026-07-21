@@ -64,6 +64,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 import json
 from pydantic import BaseModel
+from typing import Optional
 from services.websocket_service import websocket_manager
 from services.call_context_engine import call_context_engine
 
@@ -72,6 +73,8 @@ class CallStartRequest(BaseModel):
     client_industry: str
     client_role: str
     product_name: str
+    product_price: Optional[str] = None
+    product_specification: Optional[str] = None
     call_goal: str
 
 
@@ -91,6 +94,8 @@ async def start_call(request: CallStartRequest, current_user: User = Depends(get
         client_industry=request.client_industry,
         client_role=request.client_role,
         product_name=request.product_name,
+        product_price=request.product_price or "",
+        product_specification=request.product_specification or "",
         call_goal=request.call_goal
     )
     return {"context_id": context_id, "message": "Call session initialized"}
