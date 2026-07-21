@@ -8,6 +8,7 @@ DELETE /leads/saved/{id}    — Delete a saved lead
 """
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional, Dict, List
 from sqlalchemy.orm import Session
@@ -81,6 +82,34 @@ async def search_leads_endpoint(request: LeadSearchRequest):
         search_mode=request.search_mode,
     )
     return results
+
+
+@router.post("/deep-search")
+async def deep_search_leads_endpoint(request: LeadSearchRequest):
+    """Deep area-level iteration search with real-time SSE progress updates."""
+    from services.lead_engine import deep_search_leads
+    
+    if not request.query or len(request.query.strip()) < 2:
+        raise HTTPException(status_code=400, detail="Search query is too short")
+    
+    async def event_generator():
+        async for event in deep_search_leads(
+            request.query,
+            request.filters,
+            user_offer=request.user_offer,
+            search_mode=request.search_mode,
+        ):
+            yield event
+    
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @router.post("/save")
