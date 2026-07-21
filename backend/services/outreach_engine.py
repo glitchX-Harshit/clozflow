@@ -174,7 +174,8 @@ def _build_outreach_prompt(
     lead_data: dict,
     channel: str,
     user_offer: str,
-    angle_index: int = 0
+    angle_index: int = 0,
+    language: str = "english"
 ) -> str:
     channel_cfg = CHANNEL_CONFIG.get(channel, CHANNEL_CONFIG["whatsapp"])
     strategy_instruction = STRATEGY_CONFIG["default"]
@@ -229,10 +230,16 @@ def _build_outreach_prompt(
     user_offer_instruction = ""
     if user_offer:
         user_offer_instruction = f"\n═══ YOUR VALUE PROPOSITION: {user_offer.upper()} ═══\nYou are an expert providing '{user_offer}'. The observation and final question MUST be highly tailored to how a business in their specific category handles the domains related to '{user_offer}'.\nFor example, if '{user_offer}' is 'AI Receptionist', ask about how they handle busy hours or overflow calls. If '{user_offer}' is 'Website Development', observe their digital funnel.\nEnsure the observation naturally connects to '{user_offer}' without pitching it.\n"
+        
+    language_instruction = ""
+    if language.lower() == "hinglish":
+        language_instruction = "\n═══ LANGUAGE REQUIREMENT: HINGLISH ═══\nYou MUST write the final message in natural 'Hinglish' (a conversational mix of Hindi and English written in the Latin alphabet). Make it sound exactly like how an Indian business owner or creator texts on WhatsApp. Example: 'Bhai, ek quick question—website pe direct booking ka option nahi hai kya? Sirf Instagram se handle kar rahe ho?' DO NOT use pure Hindi or formal English.\n"
+    elif language.lower() != "english":
+        language_instruction = f"\n═══ LANGUAGE REQUIREMENT: {language.upper()} ═══\nYou MUST write the final message in natural {language}. Ensure it sounds like a native {language} speaker texting casually.\n"
 
     return f"""You are a casual business peer or digital creator. You communicate in a very short, raw, and text-like way. You never use marketing jargon, corporate words, statistics, or case studies.
 Your ultimate goal is to effortlessly build trust through a friendly, peer-to-peer operational observation and get them to reply. You never ask for a call or meeting in the first message. You've spent 10 minutes analyzing {biz_name} ({category}, {city}) and you're sending one highly tactical direct message to spark an organic conversation.
-{user_offer_instruction}
+{user_offer_instruction}{language_instruction}
 ═══ WHAT YOU KNOW ABOUT THIS BUSINESS ═══
 {signals_block}
 
@@ -258,7 +265,7 @@ Rules:
 - Exactly 2 to 3 sentences. No more.
 - EXTRAORDINARY PATTERN INTERRUPT: Your opening observation must feel extraordinary, sharp, and highly specific. It should be counter-intuitive or intriguing, making them immediately wonder how you noticed it. Never use obvious, weak observations.
 - NO BAIT-AND-SWITCH: NEVER pretend to be a customer trying to buy, book, or order from them (do NOT say 'I tried to book an appointment' or 'I tried to call/order'). Approach them honestly as a fellow business peer or creator asking about their digital/operational setup.
-- Use simple, everyday conversational English. Do not use advanced vocabulary, big words, or formal phrasing. Write exactly like a normal human texting a peer.
+- Use simple, everyday conversational style. Do not use advanced vocabulary, big words, or formal phrasing. Write exactly like a normal human texting a peer.
 - Absolutely NO greetings ("Hi", "Hey", "Hope you're well"). Start immediately mid-thought.
 - Absolutely NO introductions ("I am from", "We do").
 - Use a psychological pattern interrupt: state a surprising observation about their business or a mini-storyline.
@@ -287,6 +294,7 @@ async def generate_outreach_message(
     lead_data: dict,
     channel: str,
     user_offer: str = "",
+    language: str = "english"
 ) -> dict:
     channel = channel.lower() if channel else "whatsapp"
 
@@ -330,7 +338,7 @@ async def generate_outreach_message(
             try:
                 # Cycle angle index on retries to ensure a different prompt structure is tried
                 current_angle_index = (angle_index + attempt) % len(ANGLE_VECTORS)
-                prompt = _build_outreach_prompt(lead_data, channel, user_offer, current_angle_index)
+                prompt = _build_outreach_prompt(lead_data, channel, user_offer, current_angle_index, language)
 
                 response = await client.chat.completions.create(
                     model=model,

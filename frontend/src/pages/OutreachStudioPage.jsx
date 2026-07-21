@@ -64,6 +64,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
 
     const [generatedMessage, setGeneratedMessage] = useState(null);
     const [generating, setGenerating] = useState(false);
+    const [language, setLanguage] = useState('english');
     const [isEditing, setIsEditing] = useState(false);
     const [editedMessage, setEditedMessage] = useState('');
     const [copied, setCopied] = useState(false);
@@ -114,6 +115,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                     lead_data: lead,
                     channel: 'whatsapp',
                     user_offer: userOffer,
+                    language: language,
                 }),
             });
             if (!resp.ok) throw new Error('Message generation failed');
@@ -132,7 +134,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
         } finally {
             setGenerating(false);
         }
-    }, [lead, userOffer, targetPhone]);
+    }, [lead, userOffer, targetPhone, language]);
 
     // Automatically trigger generation on mount if not already done
     useEffect(() => {
@@ -276,6 +278,28 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                         <div className="os-v3-section-header">
                             <span className="os-v3-badge"><Sparkles size={12}/> AI Outreach Editor</span>
                             <div className="os-v3-message-actions">
+                                <select 
+                                    value={language}
+                                    onChange={(e) => setLanguage(e.target.value)}
+                                    className="os-v3-language-select"
+                                    style={{
+                                        background: 'var(--surface)',
+                                        border: '1px solid var(--border)',
+                                        color: 'var(--text-dim)',
+                                        borderRadius: '8px',
+                                        padding: '4px 8px',
+                                        fontSize: '0.75rem',
+                                        marginRight: '8px',
+                                        outline: 'none',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <option value="english">English</option>
+                                    <option value="hinglish">Hinglish</option>
+                                    <option value="hindi">Hindi</option>
+                                    <option value="spanish">Spanish</option>
+                                    <option value="french">French</option>
+                                </select>
                                 <button className="os-v3-icon-btn" onClick={() => handleCopy(messageText)} title="Copy message">
                                     {copied ? <CheckCircle2 size={16} color="#10b981"/> : <Copy size={16} />}
                                 </button>

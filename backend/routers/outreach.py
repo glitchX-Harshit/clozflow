@@ -18,6 +18,7 @@ class OutreachGenerateRequest(BaseModel):
     lead_data: dict
     channel: str = "whatsapp"
     user_offer: str = ""
+    language: str = "english"
 
 
 class OutreachGenerateResponse(BaseModel):
@@ -77,6 +78,7 @@ async def generate_outreach_endpoint(request: OutreachGenerateRequest):
         lead_data=request.lead_data,
         channel=request.channel,
         user_offer=request.user_offer,
+        language=request.language,
     )
     return result
 
