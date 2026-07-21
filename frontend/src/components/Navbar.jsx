@@ -114,10 +114,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                 <div className="nb__inner">
                     {/* Logo */}
                     <a href="#" className="nb__logo">
-                        <ClozFlowLogo />
-                        <div className="nb__wordmark-wrapper">
-                            <span className="nb__wordmark">ClozFlow</span>
-                        </div>
+                        <ClozFlowLogo size={32} />
                     </a>
 
                     {/* Center links */}

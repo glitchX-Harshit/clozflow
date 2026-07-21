@@ -9,9 +9,6 @@ const Footer = () => (
                 <div className="ft__brand">
                     <div className="ft__logo">
                         <ClozFlowLogo size={28} />
-                        <div className="nb__wordmark-wrapper">
-                            <span className="nb__wordmark" style={{ fontSize: '1.25rem' }}>ClozFlow</span>
-                        </div>
                     </div>
                     <p className="ft__brand-desc">
                         Behavioral intelligence for elite strategic closers.
