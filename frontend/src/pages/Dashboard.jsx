@@ -29,6 +29,79 @@ import LeadFinder from './LeadFinder';
 import OutreachStudioPage from './OutreachStudioPage';
 import { gsap } from 'gsap';
 import ClozFlowLogo from '../components/ClozFlowLogo';
+import Pearl from './Pearl';
+
+const ViberCodeIcon = ({ size = 18, ...props }) => (
+    <svg 
+        width={size} 
+        height={size} 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="url(#viber-grad)" 
+        strokeWidth="2.2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        className="viber-code-svg"
+        {...props}
+    >
+        <defs>
+            <linearGradient id="viber-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#E23E6E" />
+                <stop offset="40%" stopColor="#8E74E2" />
+                <stop offset="80%" stopColor="#4856E3" />
+                <stop offset="100%" stopColor="#C2DCFB" />
+            </linearGradient>
+            
+            <style>{`
+                .viber-pulse-wave {
+                    animation: viber-wave-pulse 1.8s infinite ease-in-out;
+                    transform-origin: 12px 12px;
+                }
+                .viber-pulse-wave-2 {
+                    animation: viber-wave-pulse 1.8s infinite ease-in-out;
+                    animation-delay: 0.6s;
+                    transform-origin: 12px 12px;
+                }
+                .viber-dot-blink-1 {
+                    animation: viber-dot-blink 1.5s infinite ease-in-out;
+                }
+                .viber-dot-blink-2 {
+                    animation: viber-dot-blink 1.5s infinite ease-in-out;
+                    animation-delay: 0.5s;
+                }
+                .viber-dot-blink-3 {
+                    animation: viber-dot-blink 1.5s infinite ease-in-out;
+                    animation-delay: 1s;
+                }
+                @keyframes viber-wave-pulse {
+                    0% { transform: scale(0.95); opacity: 0.3; }
+                    50% { transform: scale(1.08); opacity: 0.9; stroke-width: 2.5; }
+                    100% { transform: scale(0.95); opacity: 0.3; }
+                }
+                @keyframes viber-dot-blink {
+                    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+                    50% { opacity: 1; transform: scale(1.2); }
+                }
+            `}</style>
+        </defs>
+
+        {/* Viber speech bubble */}
+        <path d="M21 11.5C21 16.1944 16.9706 20 12 20C10.5181 20 9.12342 19.6548 7.9 19.04L3 21L4.5 16.5C3.55 15.1 3 13.4 3 11.5C3 6.8056 7.02944 3 12 3C16.9706 3 21 6.8056 21 11.5Z" />
+        
+        {/* Viber receiver symbol */}
+        <path d="M8.5 7H9.5C9.8 7 10 7.2 10.1 7.5L11 9.5C11.1 9.8 11 10.1 10.8 10.3L9.7 11.2C10.4 12.5 11.5 13.6 12.8 14.3L13.7 13.2C13.9 13 14.2 12.9 14.5 13L16.5 13.9C16.8 14 17 14.2 17 14.5V16C17 16.6 16.5 17 15.9 17C11.5 17 7 12.5 7 8.1C7 7.5 7.4 7 8 7" strokeWidth="1.8" />
+        
+        {/* Pulsing signal waves representing Viber connection */}
+        <path d="M14 6C15 6.5 16.5 8 17 9.5" stroke="url(#viber-grad)" strokeWidth="1.5" className="viber-pulse-wave" />
+        <path d="M15.5 4.5C17.5 5.5 19 8 19.5 10" stroke="url(#viber-grad)" strokeWidth="1.2" className="viber-pulse-wave-2" />
+
+        {/* Dynamic Binary Matrix code dots that blink inside/outside */}
+        <circle cx="16" cy="12" r="1.2" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-1" style={{ transformOrigin: '16px 12px' }} />
+        <circle cx="8" cy="14" r="1.2" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-2" style={{ transformOrigin: '8px 14px' }} />
+        <circle cx="11" cy="15" r="1.2" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-3" style={{ transformOrigin: '11px 15px' }} />
+        <circle cx="13" cy="8.5" r="1" fill="url(#viber-grad)" stroke="none" className="viber-dot-blink-1" style={{ transformOrigin: '13px 8.5px' }} />
+    </svg>
+);
 
 const STATS_DATA = [
     { label: 'Close Velocity', value: '37%', color: '#22c55e', trend: '+4.2%', desc: 'vs last week' },
@@ -247,78 +320,17 @@ const Dashboard = () => {
                 duration: 0.45,
                 ease: 'back.out(1.1)' // Elastic snap
             });
+
+            // Dynamically manage pearl class on indicator
+            if (activeTab === 'pearl') {
+                indicatorRef.current.classList.add('pearl-active');
+            } else {
+                indicatorRef.current.classList.remove('pearl-active');
+            }
         }
     }, [activeTab]);
 
-    // Awwwards magnetic hover animation
-    const handleMouseMove = (e) => {
-        if (window.innerWidth <= 1024) return;
-        const target = e.currentTarget;
-        const rect = target.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = (e.clientX - cx) * 0.15; // magnetic drag X
-        const dy = (e.clientY - cy) * 0.25; // magnetic drag Y
-        
-        gsap.to(target, {
-            x: dx,
-            y: dy,
-            duration: 0.3,
-            ease: 'power2.out'
-        });
-        
-        const icon = target.querySelector('svg');
-        if (icon) {
-            gsap.to(icon, {
-                x: dx * 0.3,
-                y: dy * 0.3,
-                scale: 1.08,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        }
-        
-        const label = target.querySelector('.db-nav-label');
-        if (label) {
-            gsap.to(label, {
-                x: dx * 0.15,
-                y: dy * 0.15,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        }
-    };
 
-    const handleMouseLeave = (e) => {
-        const target = e.currentTarget;
-        gsap.to(target, {
-            x: 0,
-            y: 0,
-            duration: 0.55,
-            ease: 'elastic.out(1, 0.45)' // smooth snap back
-        });
-        
-        const icon = target.querySelector('svg');
-        if (icon) {
-            gsap.to(icon, {
-                x: 0,
-                y: 0,
-                scale: 1,
-                duration: 0.55,
-                ease: 'elastic.out(1, 0.45)'
-            });
-        }
-        
-        const label = target.querySelector('.db-nav-label');
-        if (label) {
-            gsap.to(label, {
-                x: 0,
-                y: 0,
-                duration: 0.55,
-                ease: 'elastic.out(1, 0.45)'
-            });
-        }
-    };
 
     useEffect(() => {
         const fetchRecentCalls = async () => {
@@ -348,6 +360,7 @@ const Dashboard = () => {
         { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
         { id: 'leads',      label: 'Lead Finder',   icon: Search },
         { id: 'history',    label: 'Session History', icon: History },
+        { id: 'pearl',      label: 'Pearl',         icon: ViberCodeIcon },
         { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
         { id: 'playbooks',  label: 'Playbooks',      icon: Target },
         { id: 'settings',   label: 'Settings',       icon: Settings },
@@ -373,9 +386,7 @@ const Dashboard = () => {
                             <button
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
-                                className={`db-nav-item ${isActive ? 'active' : ''}`}
-                                onMouseMove={handleMouseMove}
-                                onMouseLeave={handleMouseLeave}
+                                className={`db-nav-item ${isActive ? 'active' : ''} ${item.id === 'pearl' ? 'db-nav-item-pearl' : ''}`}
                             >
                                 <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
                                 <span className="db-nav-label">{item.label}</span>
@@ -430,6 +441,7 @@ const Dashboard = () => {
                     )
                 )}
                 {activeTab === 'history'   && <HistoryView />}
+                {activeTab === 'pearl'     && <Pearl />}
                 {activeTab === 'analytics' && <AnalyticsPage />}
                 {activeTab === 'playbooks' && <PlaybooksPage />}
                 {activeTab === 'settings'  && <SettingsShell />}
@@ -443,7 +455,7 @@ const Dashboard = () => {
                         <button
                             key={item.id}
                             onClick={() => setActiveTab(item.id)}
-                            className={`db-bottom-tab ${isActive ? 'active' : ''}`}
+                            className={`db-bottom-tab ${isActive ? 'active' : ''} ${item.id === 'pearl' ? 'db-bottom-tab-pearl' : ''}`}
                         >
                             <Icon size={20} strokeWidth={isActive ? 2.5 : 1.75} />
                             <span>{item.label}</span>
@@ -563,8 +575,135 @@ const Dashboard = () => {
                     top: 0;
                     height: 0;
                 }
+                .db-nav-indicator.pearl-active {
+                    background: linear-gradient(135deg, rgba(226, 62, 110, 0.08) 0%, rgba(142, 116, 226, 0.08) 50%, rgba(72, 86, 227, 0.08) 100%) !important;
+                    border: 1px solid rgba(226, 62, 110, 0.35) !important;
+                    box-shadow: 0 0 20px rgba(226, 62, 110, 0.2), inset 0 0 8px rgba(142, 116, 226, 0.15) !important;
+                }
                 .db-nav-label { font-size: 0.9rem; font-weight: 500; }
                 .db-nav-item.active .db-nav-label { font-weight: 700; }
+
+                /* ── Pearl Custom Styles ── */
+                .db-nav-item-pearl {
+                    position: relative !important;
+                    background: rgba(226, 62, 110, 0.02) !important;
+                    border: 1px solid rgba(226, 62, 110, 0.25) !important;
+                    overflow: hidden !important;
+                    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                    box-shadow: 0 4px 15px rgba(226, 62, 110, 0.03),
+                                0 0 1px 1px rgba(142, 116, 226, 0.15) inset !important;
+                }
+                .db-nav-item-pearl::before {
+                    content: '';
+                    position: absolute;
+                    inset: -2px;
+                    background: linear-gradient(135deg, #E23E6E, #8E74E2, #4856E3, #C2DCFB, #E23E6E);
+                    background-size: 400% 400%;
+                    z-index: -2;
+                    animation: pearl-gradient-shift 8s ease infinite;
+                    opacity: 0.7;
+                    transition: opacity 0.5s;
+                }
+                .db-nav-item-pearl:hover::before {
+                    opacity: 1;
+                    animation: pearl-gradient-shift 4s ease infinite;
+                }
+                .db-nav-item-pearl::after {
+                    content: '';
+                    position: absolute;
+                    inset: 1.5px;
+                    background: var(--surface);
+                    border-radius: 11px;
+                    z-index: -1;
+                    transition: background 0.5s, inset 0.5s;
+                }
+                .db-nav-item-pearl:hover::after {
+                    inset: 2px;
+                    background: rgba(255, 255, 255, 0.85);
+                }
+                .db-nav-item-pearl .db-nav-label {
+                    background: linear-gradient(135deg, #E23E6E 0%, #8E74E2 40%, #4856E3 75%, #E23E6E 100%);
+                    background-size: 200% auto;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-weight: 800 !important;
+                    letter-spacing: 0.03em;
+                    animation: pearl-text-shimmer 5s linear infinite;
+                    transition: transform 0.5s;
+                }
+                .db-nav-item-pearl:hover .db-nav-label {
+                    transform: scale(1.02);
+                }
+                .db-nav-item-pearl.active {
+                    box-shadow: 0 0 25px rgba(226, 62, 110, 0.25), 
+                                0 0 45px rgba(142, 116, 226, 0.15),
+                                0 0 5px 1px rgba(226, 62, 110, 0.3) inset !important;
+                    border-color: transparent !important;
+                }
+                .db-nav-item-pearl.active::before {
+                    opacity: 1;
+                    animation: pearl-gradient-shift 3s ease infinite;
+                }
+                .db-nav-item-pearl.active::after {
+                    inset: 1.5px;
+                    background: var(--surface-2);
+                }
+                .db-nav-item-pearl svg {
+                    color: #E23E6E !important;
+                    filter: drop-shadow(0 0 3px rgba(226, 62, 110, 0.5));
+                    animation: pearl-icon-float 3s ease-in-out infinite alternate;
+                    transition: transform 0.5s;
+                }
+                .db-nav-item-pearl:hover svg {
+                    transform: rotate(180deg) scale(1.1);
+                }
+
+                .db-bottom-tab-pearl {
+                    position: relative;
+                    background: rgba(226, 62, 110, 0.04) !important;
+                    overflow: hidden;
+                    border-radius: 8px !important;
+                    border: 1px solid rgba(226, 62, 110, 0.2) !important;
+                }
+                .db-bottom-tab-pearl::before {
+                    content: '';
+                    position: absolute;
+                    inset: -1px;
+                    background: linear-gradient(135deg, #E23E6E, #8E74E2, #4856E3, #C2DCFB, #E23E6E);
+                    background-size: 300% 300%;
+                    z-index: -2;
+                    animation: pearl-gradient-shift 8s ease infinite;
+                    opacity: 0.6;
+                }
+                .db-bottom-tab-pearl::after {
+                    content: '';
+                    position: absolute;
+                    inset: 1px;
+                    background: var(--surface);
+                    border-radius: 7px;
+                    z-index: -1;
+                }
+                .db-bottom-tab-pearl svg {
+                    color: #E23E6E !important;
+                }
+                .db-bottom-tab-pearl.active {
+                    box-shadow: 0 0 15px rgba(226, 62, 110, 0.2);
+                    border-color: rgba(226, 62, 110, 0.4) !important;
+                }
+
+                @keyframes pearl-gradient-shift {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                @keyframes pearl-text-shimmer {
+                    0% { background-position: 0% center; }
+                    100% { background-position: 200% center; }
+                }
+                @keyframes pearl-icon-float {
+                    0% { transform: translateY(0px) scale(1); }
+                    100% { transform: translateY(-2px) scale(1.12); }
+                }
 
                 .db-user-section {
                     margin-top: auto;
