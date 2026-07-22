@@ -1644,214 +1644,75 @@
     height: auto;
 }
 
-/* ── Finding Leads Progress Loader — Awwwards Ticker Card ───────── */
-.lf__loader-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 2.25rem 2.5rem;
+/* ── Premium Flat Search Loader UI (Awwwards Grade) ── */
+.lf__premium-flat-loader {
+    background: transparent;
+    border: none;
+    padding: 1.5rem 0;
     margin-bottom: 2.5rem;
-    box-shadow: none;
     position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    transition: all 0.3s ease;
 }
 
-.lf__loader-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
-    opacity: 0.8;
-    filter: blur(40px);
-    pointer-events: none;
-    z-index: 1;
-    animation: lf-morph-glow 8s infinite alternate ease-in-out;
-}
-
-@keyframes lf-morph-glow {
-    0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    100% { transform: translate(-45%, -55%) scale(1.2) rotate(180deg); }
-}
-
-.lf__loader-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.lf__loader-header-row {
+.lf__flat-loader-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem;
-}
-
-@media (max-width: 576px) {
-    .lf__loader-header-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-}
-
-.lf__loader-left {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-}
-
-.lf__loader-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.68rem;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: 0.12em;
-    font-family: var(--font-display);
-    margin-bottom: 0.5rem;
-}
-
-.lf__loader-pulse {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-mid);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--accent-mid), 0 0 2px var(--accent-mid);
-    animation: lf-pulse 1.4s infinite ease-in-out;
-}
-
-.lf__loader-heading {
-    font-size: clamp(1.25rem, 2vw, 1.6rem);
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    margin: 0;
-    color: var(--text);
-    font-family: var(--font-display);
-    line-height: 1.15;
-}
-
-.lf__loader-heading span {
-    color: var(--accent);
-    font-weight: 800;
-}
-
-.lf__loader-percentage {
-    font-size: clamp(3rem, 6vw, 5rem);
-    font-weight: 300;
-    line-height: 0.8;
-    letter-spacing: -0.05em;
-    color: var(--text);
-    font-family: var(--font-display);
-    display: flex;
     align-items: baseline;
-    user-select: none;
-    flex-shrink: 0;
+    margin-bottom: 0.75rem;
 }
 
-.lf__loader-percentage-symbol {
-    font-size: 0.35em;
-    font-weight: 400;
-    color: var(--accent);
-    margin-left: 2px;
+.lf__flat-loader-status {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
 }
 
-/* Rolling Ticker Tape */
-.lf__loader-ticker {
-    height: 24px;
-    overflow: hidden;
-    position: relative;
-    border-left: 1.5px solid var(--border-strong);
-    padding-left: 0.75rem;
-}
-
-.lf__loader-ticker-track {
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.lf__loader-ticker-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    height: 24px;
-    opacity: 0.25;
-    filter: blur(0.5px);
-    transition: all 0.4s ease;
-}
-
-.lf__loader-ticker-item.active {
-    opacity: 1;
-    filter: blur(0px);
-}
-
-.lf__loader-ticker-num {
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    font-weight: 750;
-    color: var(--accent-mid);
-    letter-spacing: 0.02em;
-}
-
-.lf__loader-ticker-text {
-    font-size: 0.825rem;
-    font-weight: 600;
-    color: var(--text-dim);
-}
-
-.lf__loader-ticker-item.active .lf__loader-ticker-text {
+.lf__flat-loader-pct {
+    font-size: 1.25rem;
+    font-weight: 700;
     color: var(--text);
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
 }
 
-/* Awwwards-style Segmented Loader */
-.lf__loader-segments {
-    display: flex;
-    gap: 6px;
+.lf__flat-bar-wrapper {
     width: 100%;
-    margin-top: 1.75rem;
-    position: relative;
-    z-index: 10;
+    height: 2px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin: 0.75rem 0;
 }
 
-.lf__loader-segment {
-    flex: 1;
-    height: 4px;
-    background: var(--surface-2);
-    border-radius: 2px;
-    transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.lf__flat-bar {
+    height: 100%;
+    background: #e11d48;
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lf__loader-segment.active {
-    background: var(--accent-mid);
-    box-shadow: 0 0 6px var(--accent-glow);
+.lf__flat-loader-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
 }
 
-.lf__loader-bg-percentage {
-    position: absolute;
-    bottom: -2.5rem;
-    right: 0.5rem;
-    font-size: 10rem;
-    font-weight: 900;
+.lf__flat-loader-query {
     color: var(--text);
-    opacity: 0.1;
-    line-height: 1;
+}
+
+.lf__flat-loader-query strong {
+    font-weight: 700;
+    color: #e11d48;
+}
+
+.lf__flat-loader-time {
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.72rem;
     font-family: var(--font-display);
-    pointer-events: none;
-    letter-spacing: -0.05em;
-    user-select: none;
-    z-index: 1;
+    letter-spacing: 0.04em;
 }
 
 /* ── Skeleton Card Loader ────────────────────────────────────────── */
@@ -2803,37 +2664,20 @@
     font-weight: 600;
 }
 
-.lf__deep-progress-bar-wrapper {
+.lf__clean-deep-bar-wrapper {
     width: 100%;
-    height: 6px;
-    background: rgba(142, 116, 226, 0.12);
-    border-radius: 3px;
+    height: 2px;
+    background: var(--border);
+    border-radius: 99px;
     overflow: hidden;
     margin-bottom: 12px;
 }
 
-.lf__deep-progress-bar {
+.lf__clean-deep-bar {
     height: 100%;
-    background: linear-gradient(90deg, #E23E6E, #8E74E2, #4856E3);
-    border-radius: 3px;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.lf__deep-progress-bar::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: deep-shimmer 1.5s infinite;
-}
-
-@keyframes deep-shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    background: #e11d48;
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .lf__deep-progress-stats {
@@ -2843,4 +2687,85 @@
     color: var(--text-dim, #6b7280);
     font-weight: 600;
     font-family: var(--font-body, 'Outfit', sans-serif);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+    .lf {
+        padding: 1rem 0.5rem 5rem;
+    }
+    .lf__tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    .lf__offer-section {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+    .lf__offer-chips {
+        gap: 0.4rem;
+    }
+    .lf__offer-chip {
+        padding: 0.4rem 0.85rem;
+        font-size: 0.75rem;
+    }
+    .lf__search-bar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 1rem !important;
+        border-radius: 16px !important;
+        gap: 0.75rem !important;
+    }
+    .lf__search-icon {
+        display: none !important;
+    }
+    .lf__search-input {
+        width: 100% !important;
+        height: 40px !important;
+    }
+    .lf__search-btn-wrapper {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 0.5rem !important;
+        margin-top: 0.25rem;
+    }
+    .lf__search-btn-wrapper button,
+    .lf__search-btn-wrapper .lf__search-btn,
+    .lf__search-btn-wrapper .lf__deep-toggle {
+        width: 100% !important;
+        justify-content: center !important;
+        height: 44px !important;
+        box-sizing: border-box !important;
+    }
+    .lf__workspace-list {
+        height: 240px;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+    .lf__workspace-detail {
+        height: auto;
+        min-height: 400px;
+        padding: 1.25rem 1rem;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+    .lf__row-details-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    .lf__row-detail-panel {
+        padding: 0.85rem;
+    }
+}
+
+.lf__export-btn:hover {
+    background: var(--surface) !important;
+    border-color: var(--border-hover) !important;
+    color: var(--text) !important;
+    transform: translateY(-1px);
+}
+.lf__export-btn:active {
+    transform: translateY(0);
 }

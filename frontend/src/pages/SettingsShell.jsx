@@ -1,11 +1,87 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { gsap } from 'gsap';
 import {
     User, Building2, Brain, Bell, Shield, CreditCard, AlertTriangle,
-    ChevronRight, LogOut, Zap, Check, Loader2, X
+    ChevronRight, LogOut, Zap, Check, Loader2, X, Search, Sparkles, Terminal, ShieldAlert, Sliders, KeyRound, Radio
 } from 'lucide-react';
 import { ProfilePanel, WorkspacePanel, AiPanel, SectionCard, Field, Input, Toggle, SaveBtn, useSave, authFetch } from './SettingsPage';
+
+// ── PROMPT DIRECTIVE WORKSHOP PANEL ──────────────────────────────────────────
+const PromptDirectivePanel = () => {
+    const { user, updateUser } = useAuth();
+    const [promptText, setPromptText] = useState(user?.ai_override_prompt || '');
+    const { saving, saved, save } = useSave(updateUser);
+
+    const presets = [
+        { label: 'Strict Objections', text: 'Prioritize disarming price objections by asking for cost-of-inaction numbers before discussing packages.' },
+        { label: 'Hinglish DM Warmth', text: 'Structure response in natural Hinglish. Keep it casual like a WhatsApp note: "Bhai quick question..."' },
+        { label: 'High-Ticket ROI Frame', text: 'Frame value directly around high-ticket contract sizes ($5k+). Focus on decision-maker leverage.' }
+    ];
+
+    const injectPreset = (text) => {
+        setPromptText(prev => prev ? `${prev}\n${text}` : text);
+    };
+
+    return (
+        <div className="animate-fade-in">
+            <SectionCard title="Prompt Directives" sub="Add custom instructions to guide the AI suggestions.">
+                <div style={{ marginBottom: '1.75rem' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dim)', marginBottom: '0.75rem' }}>
+                        Preset Templates
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {presets.map(p => (
+                            <button
+                                key={p.label}
+                                onClick={() => injectPreset(p.text)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                    background: 'var(--surface)', border: '1px solid var(--border)',
+                                    borderRadius: 99, padding: '0.5rem 1.1rem', fontSize: '0.8rem',
+                                    fontWeight: 600, cursor: 'pointer', color: 'var(--text)',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--text)'}
+                                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                            >
+                                <Sparkles size={13} color="#e11d48" /> {p.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <Field label="Custom Instruction Payload" hint="Commands entered here are added to suggestion and template generators.">
+                    <textarea
+                        value={promptText}
+                        onChange={e => setPromptText(e.target.value)}
+                        placeholder="e.g. Always challenge prospect assumptions when they mention existing agency contracts..."
+                        rows={6}
+                        style={{
+                            width: '100%', boxSizing: 'border-box', resize: 'vertical',
+                            background: 'transparent', border: 'none', borderBottom: '1px solid var(--border)',
+                            borderRadius: 0, padding: '0.75rem 0',
+                            fontSize: '0.95rem', color: 'var(--text)', outline: 'none',
+                            fontFamily: 'inherit', lineHeight: 1.6
+                        }}
+                    />
+                </Field>
+
+                <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '1.25rem', marginTop: '1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem' }}>
+                        <Terminal size={14} color="#e11d48" /> Prompt status
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>
+                        {promptText ? `"${promptText}"` : 'Default ClozFlow persuasion rules active.'}
+                    </div>
+                </div>
+
+                <SaveBtn saving={saving} saved={saved} onClick={() => save({ ai_override_prompt: promptText })} />
+            </SectionCard>
+        </div>
+    );
+};
 
 // ── NOTIFICATIONS PANEL ───────────────────────────────────────────────────────
 const NotificationsPanel = () => {
@@ -21,17 +97,19 @@ const NotificationsPanel = () => {
     const toggle = (k) => setForm(p => ({ ...p, [k]: !p[k] }));
 
     return (
-        <SectionCard title="Notification Preferences" sub="Choose which alerts you receive after sessions.">
-            <Toggle checked={form.notif_call_summary} onChange={() => toggle('notif_call_summary')}
-                label="Call Summary Emails" sub="Receive a structured summary after each session" />
-            <Toggle checked={form.notif_objection_alerts} onChange={() => toggle('notif_objection_alerts')}
-                label="Objection Alerts" sub="Get notified when new objection patterns are detected" />
-            <Toggle checked={form.notif_deal_risk} onChange={() => toggle('notif_deal_risk')}
-                label="Deal Risk Notifications" sub="Alerts when a deal is flagged as high-risk" />
-            <Toggle checked={form.notif_coaching} onChange={() => toggle('notif_coaching')}
-                label="AI Coaching Insights" sub="Weekly digest of behavioral coaching tips" />
-            <SaveBtn saving={saving} saved={saved} onClick={() => save(form)} />
-        </SectionCard>
+        <div className="animate-fade-in">
+            <SectionCard title="Notification Preferences" sub="Manage post-session alerts and automated digests.">
+                <Toggle checked={form.notif_call_summary} onChange={() => toggle('notif_call_summary')}
+                    label="Post-Session Digest Emails" sub="Receive a structured diagnostic summary after every call." />
+                <Toggle checked={form.notif_objection_alerts} onChange={() => toggle('notif_objection_alerts')}
+                    label="Objection Pattern Alerts" sub="Instant notification when new buyer friction patterns are detected." />
+                <Toggle checked={form.notif_deal_risk} onChange={() => toggle('notif_deal_risk')}
+                    label="High-Risk Deal Flags" sub="Alerts when a deal drops below the 40% close probability threshold." />
+                <Toggle checked={form.notif_coaching} onChange={() => toggle('notif_coaching')}
+                    label="Weekly Behavioral Digest" sub="Curated summary of closer behavioral improvements and gaps." />
+                <SaveBtn saving={saving} saved={saved} onClick={() => save(form)} />
+            </SectionCard>
+        </div>
     );
 };
 
@@ -60,9 +138,9 @@ const SecurityPanel = () => {
     };
 
     return (
-        <>
-            <SectionCard title="Change Password" sub="Use a strong password with at least 8 characters.">
-                {err && <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: '0.75rem 1rem', fontSize: '0.85rem', color: '#ef4444', marginBottom: '1rem' }}>{err}</div>}
+        <div className="animate-fade-in">
+            <SectionCard title="Authentication & Password" sub="Use a strong password with at least 8 characters.">
+                {err && <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: '0.75rem 1rem', fontSize: '0.85rem', color: '#ef4444', marginBottom: '1.25rem' }}>{err}</div>}
                 <Field label="Current Password">
                     <Input type="password" value={pw.current} onChange={e => setPw(p => ({ ...p, current: e.target.value }))} placeholder="••••••••" />
                 </Field>
@@ -75,94 +153,83 @@ const SecurityPanel = () => {
                 <SaveBtn saving={saving} saved={saved} onClick={changePassword} />
             </SectionCard>
 
-            <SectionCard title="Sessions" sub="Manage where you're logged in.">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.875rem 0', borderBottom: '1px solid var(--border)' }}>
+            <SectionCard title="Active Connections" sub="Manage active connections across your devices.">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 0', borderBottom: '1px solid var(--border)' }}>
                     <div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Current Session</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Active right now · This device</div>
+                        <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text)' }}>Current Browser Session</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: 4 }}>Active now · Secure Connection</div>
                     </div>
-                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#22c55e', background: 'rgba(34,197,94,0.1)', padding: '0.25rem 0.6rem', borderRadius: 99, textTransform: 'uppercase' }}>Active</span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', background: 'var(--surface)', border: '1px solid var(--border)', padding: '0.25rem 0.75rem', borderRadius: 99 }}>Active</span>
                 </div>
                 <button
                     onClick={async () => { await logout(); navigate('/'); }}
-                    style={{ marginTop: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '0.7rem 1.25rem', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text)' }}
+                    style={{ marginTop: '1.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 99, padding: '0.6rem 1.35rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text)', transition: 'all 0.2s' }}
                 >
-                    <LogOut size={15} /> Log out all devices
+                    <LogOut size={14} /> Terminate other sessions
                 </button>
             </SectionCard>
-
-            <SectionCard title="Two-Factor Authentication" sub="Add an extra layer of security to your account.">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                        <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Authenticator App</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>2FA via authenticator — coming soon</div>
-                    </div>
-                    <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#f59e0b', background: 'rgba(245,158,11,0.1)', padding: '0.25rem 0.6rem', borderRadius: 99, textTransform: 'uppercase' }}>Soon</span>
-                </div>
-            </SectionCard>
-        </>
+        </div>
     );
 };
 
 // ── BILLING PANEL ─────────────────────────────────────────────────────────────
 const BillingPanel = () => {
     const { user } = useAuth();
-    const plan = 'Free';
+    const plan = 'Pro Tier';
     const usage = { calls: 12, limit: 25, tokens: 48200, reports: 3 };
 
     return (
-        <>
-            <SectionCard title="Current Plan">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div className="animate-fade-in">
+            <SectionCard title="Subscription" sub="Manage active plans and consumption quotas.">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem' }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.375rem' }}>
-                            <span style={{ fontSize: '1.5rem', fontWeight: 900 }}>{plan}</span>
-                            <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#6366f1', background: 'rgba(99,102,241,0.1)', padding: '0.2rem 0.6rem', borderRadius: 99, textTransform: 'uppercase' }}>Current</span>
+                            <span style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em' }}>{plan}</span>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text)', background: 'var(--surface)', border: '1px solid var(--border)', padding: '0.2rem 0.6rem', borderRadius: 99 }}>ACTIVE PLAN</span>
                         </div>
-                        <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>12 AI sessions · 25MB storage · Basic analytics</div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)' }}>Unlimited AI DMs · Deep Analytics · Priority AI Engine</div>
                     </div>
-                    <button style={{ background: 'var(--accent)', color: 'white', border: 'none', borderRadius: 12, padding: '0.75rem 1.75rem', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer' }}>
-                        Upgrade to Pro →
+                    <button style={{ background: 'var(--text)', color: 'var(--bg)', border: 'none', borderRadius: 99, padding: '0.7rem 1.5rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}>
+                        Manage Plan
                     </button>
                 </div>
             </SectionCard>
 
-            <SectionCard title="Usage This Month">
+            <SectionCard title="Usage metrics" sub="Current monthly usage limits.">
                 {[
-                    { label: 'AI Sessions Used', used: usage.calls, total: usage.limit, color: '#6366f1' },
-                    { label: 'Tokens Consumed', used: usage.tokens, total: 100000, color: '#22c55e' },
-                    { label: 'Reports Generated', used: usage.reports, total: 10, color: '#f59e0b' },
+                    { label: 'AI Sessions & DMs Parsed', used: usage.calls, total: usage.limit },
+                    { label: 'Intelligence Tokens Consumed', used: usage.tokens, total: 100000 },
+                    { label: 'Diagnostic Reports', used: usage.reports, total: 10 },
                 ].map((u, i) => {
                     const pct = Math.round((u.used / u.total) * 100);
                     return (
-                        <div key={i} style={{ marginBottom: '1.25rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>{u.label}</span>
-                                <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>{u.used.toLocaleString()} / {u.total.toLocaleString()}</span>
+                        <div key={i} style={{ marginBottom: '1.75rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+                                <span style={{ fontWeight: 600, color: 'var(--text)' }}>{u.label}</span>
+                                <span style={{ color: 'var(--text-dim)' }}>{u.used.toLocaleString()} / {u.total.toLocaleString()}</span>
                             </div>
-                            <div style={{ height: 6, borderRadius: 99, background: 'var(--surface)', overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: `${pct}%`, background: u.color, borderRadius: 99, transition: 'width 0.8s ease' }} />
+                            <div style={{ height: 4, borderRadius: 99, background: 'rgba(0,0,0,0.05)', overflow: 'hidden' }}>
+                                <div style={{ height: '100%', width: `${pct}%`, background: '#e11d48', borderRadius: 99, transition: 'width 0.8s ease' }} />
                             </div>
                         </div>
                     );
                 })}
             </SectionCard>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
                 {[
-                    { name: 'Free', price: '$0', features: ['12 sessions/mo', 'Basic analytics', 'Email support'], accent: '#6b7280' },
-                    { name: 'Pro', price: '$29', features: ['Unlimited sessions', 'Full intelligence suite', 'Priority support'], accent: '#6366f1', hot: true },
-                    { name: 'Enterprise', price: 'Custom', features: ['Team management', 'Custom AI personas', 'Dedicated CSM'], accent: '#a855f7' },
+                    { name: 'Free Operator', price: '$0', features: ['12 DMs/mo', 'Basic Analytics', 'Standard AI'] },
+                    { name: 'Pro Closer', price: '$29', features: ['Unlimited DMs', 'Deep Analytics', 'Hinglish Support', 'Priority Engine'], hot: true },
+                    { name: 'Enterprise Team', price: 'Custom', features: ['Multi-User Workspace', 'Custom AI Personas', 'Dedicated CSM'] },
                 ].map(p => (
-                    <div key={p.name} style={{ background: 'var(--bg)', border: `1px solid ${p.hot ? p.accent : 'var(--border)'}`, borderRadius: 16, padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
-                        {p.hot && <div style={{ position: 'absolute', top: 10, right: 12, fontSize: '0.55rem', fontWeight: 800, color: p.accent, background: `${p.accent}15`, padding: '0.2rem 0.5rem', borderRadius: 99, textTransform: 'uppercase' }}>Popular</div>}
-                        <div style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '0.25rem' }}>{p.name}</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 900, color: p.accent, marginBottom: '1rem' }}>{p.price}<span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-muted)' }}>{p.price !== 'Custom' ? '/mo' : ''}</span></div>
-                        {p.features.map((f, i) => <div key={i} style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '0.375rem', display: 'flex', gap: '0.4rem' }}><Check size={12} color={p.accent} style={{ flexShrink: 0, marginTop: 2 }} />{f}</div>)}
+                    <div key={p.name} style={{ background: 'var(--surface)', border: `1px solid ${p.hot ? 'var(--text)' : 'var(--border)'}`, borderRadius: 16, padding: '1.5rem', position: 'relative' }}>
+                        {p.hot && <div style={{ position: 'absolute', top: 12, right: 12, fontSize: '0.65rem', fontWeight: 600, color: 'var(--bg)', background: 'var(--text)', padding: '0.15rem 0.5rem', borderRadius: 99 }}>Active</div>}
+                        <div style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.25rem' }}>{p.name}</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)', marginBottom: '1rem' }}>{p.price}<span style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--text-dim)' }}>{p.price !== 'Custom' ? '/mo' : ''}</span></div>
                     </div>
                 ))}
             </div>
-        </>
+        </div>
     );
 };
 
@@ -170,7 +237,7 @@ const BillingPanel = () => {
 const DangerPanel = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
-    const [modal, setModal] = useState(null); // 'history' | 'account'
+    const [modal, setModal] = useState(null);
     const [confirm, setConfirm] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -188,256 +255,251 @@ const DangerPanel = () => {
     };
 
     return (
-        <>
-            <div style={{ background: 'var(--bg)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 20, padding: '2rem', marginBottom: '1.5rem' }}>
+        <div className="animate-fade-in">
+            <div style={{ background: 'var(--bg)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 20, padding: '2rem' }}>
                 <div style={{ marginBottom: '1.75rem', paddingBottom: '1.25rem', borderBottom: '1px solid rgba(239,68,68,0.15)' }}>
-                    <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ef4444' }}>Danger Zone</div>
-                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 3 }}>These actions are permanent and cannot be undone.</div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ef4444', letterSpacing: '-0.02em' }}>Danger Zone</div>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: 3 }}>Destructive system operations. These actions are permanent.</div>
                 </div>
 
-                {[
-                    { id: 'history', label: 'Clear Call History', sub: 'Delete all session data, transcripts, and AI analysis permanently.', btn: 'Clear History' },
-                    { id: 'account', label: 'Delete Account', sub: 'Permanently remove your account and all associated data. No recovery.', btn: 'Delete Account' },
-                ].map(action => (
-                    <div key={action.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', borderBottom: '1px solid rgba(239,68,68,0.08)', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)' }}>
                         <div>
-                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{action.label}</div>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>{action.sub}</div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 700 }}>Purge Conversation History</div>
+                            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>Permanently erase all parsed call transcripts and statistics.</div>
                         </div>
-                        <button
-                            onClick={() => { setModal(action.id); setConfirm(''); }}
-                            style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', borderRadius: 10, padding: '0.6rem 1.25rem', fontSize: '0.8125rem', fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
-                        >{action.btn}</button>
+                        <button onClick={() => setModal('history')} style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10, padding: '0.6rem 1.25rem', fontSize: '0.8125rem', fontWeight: 800, cursor: 'pointer' }}>
+                            Purge History
+                        </button>
                     </div>
-                ))}
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                        <div>
+                            <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#ef4444' }}>Delete Account & Workspace</div>
+                            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>Delete account, workspace credentials, and subscription state.</div>
+                        </div>
+                        <button onClick={() => setModal('account')} style={{ background: '#ef4444', color: '#ffffff', border: 'none', borderRadius: 10, padding: '0.6rem 1.25rem', fontSize: '0.8125rem', fontWeight: 800, cursor: 'pointer' }}>
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {/* Confirmation Modal */}
+            {/* Modal */}
             {modal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                    <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 20, padding: '2rem', maxWidth: 420, width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
-                            <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ef4444' }}>{modal === 'account' ? 'Delete Account?' : 'Clear All History?'}</div>
-                            <button onClick={() => setModal(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={18} /></button>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999, padding: '1rem' }}>
+                    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, padding: '2rem', maxWidth: 440, width: '100%' }}>
+                        <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ef4444', marginBottom: '0.5rem' }}>
+                            {modal === 'history' ? 'Purge History?' : 'Delete Account?'}
                         </div>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                            This action is <strong>permanent</strong> and cannot be reversed. Type <strong>CONFIRM</strong> to proceed.
-                        </p>
-                        <Input value={confirm} onChange={e => setConfirm(e.target.value)} placeholder="Type CONFIRM" />
-                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem' }}>
-                            <button onClick={() => setModal(null)} style={{ flex: 1, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '0.75rem', fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text)' }}>Cancel</button>
-                            <button
-                                onClick={dangerAction}
-                                disabled={confirm !== 'CONFIRM' || loading}
-                                style={{ flex: 1, background: confirm === 'CONFIRM' ? '#ef4444' : 'rgba(239,68,68,0.2)', color: confirm === 'CONFIRM' ? 'white' : '#ef4444', border: 'none', borderRadius: 10, padding: '0.75rem', fontSize: '0.875rem', fontWeight: 700, cursor: confirm === 'CONFIRM' ? 'pointer' : 'not-allowed', transition: 'all 0.2s' }}
-                            >{loading ? <Loader2 size={15} className="animate-spin" /> : 'Confirm'}</button>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+                            {modal === 'history'
+                                ? 'This will delete all stored transcripts, AI coaching notes, and call performance analytics.'
+                                : 'This action cannot be undone. Type CONFIRM below to authorize account deletion.'}
+                        </div>
+                        <Input value={confirm} onChange={e => setConfirm(e.target.value)} placeholder="Type CONFIRM to proceed" />
+                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end' }}>
+                            <button onClick={() => { setModal(null); setConfirm(''); }} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 10, padding: '0.6rem 1.25rem', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer' }}>Cancel</button>
+                            <button disabled={confirm !== 'CONFIRM' || loading} onClick={dangerAction} style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: 10, padding: '0.6rem 1.5rem', fontSize: '0.85rem', fontWeight: 800, cursor: confirm === 'CONFIRM' ? 'pointer' : 'not-allowed', opacity: confirm === 'CONFIRM' ? 1 : 0.5 }}>
+                                {loading ? 'Processing...' : 'Authorize Action'}
+                            </button>
                         </div>
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
-// ── MAIN SETTINGS SHELL ───────────────────────────────────────────────────────
-const NAV = [
-    { id: 'profile',       label: 'Profile',         Icon: User },
-    { id: 'workspace',     label: 'Workspace',       Icon: Building2 },
-    { id: 'ai',            label: 'AI Preferences',  Icon: Brain },
-    { id: 'notifications', label: 'Notifications',   Icon: Bell },
-    { id: 'security',      label: 'Security',        Icon: Shield },
-    { id: 'billing',       label: 'Billing',         Icon: CreditCard },
-    { id: 'danger',        label: 'Danger Zone',     Icon: AlertTriangle },
+// ── PILLARED NAVIGATION CONFIG ────────────────────────────────────────────────
+const NAV_GROUPS = [
+    {
+        title: 'Account',
+        items: [
+            { id: 'profile', label: 'Profile Identity', icon: User },
+            { id: 'workspace', label: 'Workspace Environment', icon: Building2 },
+        ]
+    },
+    {
+        title: 'AI Directives',
+        items: [
+            { id: 'ai', label: 'AI Parameters', icon: Brain },
+            { id: 'directives', label: 'Prompt Override', icon: Terminal },
+        ]
+    },
+    {
+        title: 'Security & System',
+        items: [
+            { id: 'notifications', label: 'Notifications', icon: Bell },
+            { id: 'security', label: 'Security Vault', icon: Shield },
+            { id: 'billing', label: 'Subscription Tier', icon: CreditCard },
+            { id: 'danger', label: 'Danger Zone', icon: AlertTriangle },
+        ]
+    }
 ];
 
 const PANELS = {
-    profile:       <ProfilePanel />,
-    workspace:     <WorkspacePanel />,
-    ai:            <AiPanel />,
+    profile: <ProfilePanel />,
+    workspace: <WorkspacePanel />,
+    ai: <AiPanel />,
+    directives: <PromptDirectivePanel />,
     notifications: <NotificationsPanel />,
-    security:      <SecurityPanel />,
-    billing:       <BillingPanel />,
-    danger:        <DangerPanel />,
+    security: <SecurityPanel />,
+    billing: <BillingPanel />,
+    danger: <DangerPanel />,
 };
 
+// ── SETTINGS SHELL ARCHITECTURE ──────────────────────────────────────────────
 const SettingsShell = () => {
+    const { user } = useAuth();
     const [active, setActive] = useState('profile');
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const userInitials = (user?.full_name || user?.email || 'U').charAt(0).toUpperCase();
 
     return (
-        <div className="animate-fade-in">
-            {/* Awwwards-Grade Editorial Header */}
-            <div className="editorial-header">
-                <div className="editorial-title-area">
-                    <div className="editorial-meta-label">
-                        <span className="editorial-meta-dot" />
-                        <span>PREFERENCES PANEL / 05</span>
+        <div className="animate-fade-in" style={{ paddingBottom: '4rem' }}>
+            
+            {/* Top Bar & Search Control */}
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, padding: '1.25rem 1.75rem', marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--bg)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>
+                        {userInitials}
                     </div>
-                    <h1 className="editorial-heading-hero">
-                        Settings<span className="editorial-period">.</span>
-                    </h1>
+                    <div>
+                        <div style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
+                            Settings<span className="editorial-period">.</span>
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span>{user?.email || 'operator@clozflow.ai'}</span>
+                            <span>·</span>
+                            <span style={{ fontWeight: 600, color: '#e11d48' }}>Pro Plan</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="editorial-desc-area">
-                    <p className="editorial-desc-text">
-                        Configure workspace credentials, tweak AI prompting thresholds, fine-tune outbound scraping preferences, and manage account parameters.
-                    </p>
-                    <div className="editorial-system-status">
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">CONFIG</span>
-                            <span className="editorial-status-val">PERSISTED</span>
-                        </span>
-                        <span className="editorial-status-divider">/</span>
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">SECURITY</span>
-                            <span className="editorial-status-val">TLS_V1.3</span>
-                        </span>
-                    </div>
+
+                {/* Instant Search Bar */}
+                <div style={{ position: 'relative', width: 280 }}>
+                    <Search size={14} color="var(--text-dim)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        placeholder="Search settings..."
+                        style={{
+                            width: '100%', boxSizing: 'border-box',
+                            background: 'var(--bg)', border: '1px solid var(--border)',
+                            borderRadius: 99, padding: '0.55rem 0.85rem 0.55rem 2.25rem',
+                            fontSize: '0.85rem', color: 'var(--text)', outline: 'none',
+                            fontFamily: 'inherit'
+                        }}
+                    />
                 </div>
             </div>
- 
-            <div className="settings-layout">
-                {/* Sidebar */}
-                <nav className="settings-sidebar">
-                    {NAV.map(({ id, label, Icon }) => {
-                        const isActive = active === id;
-                        const isDanger = id === 'danger';
-                        return (
-                            <button
-                                key={id}
-                                onClick={() => setActive(id)}
-                                className={`settings-sidebar-btn ${isActive ? 'active' : ''} ${isDanger ? 'danger' : ''}`}
-                            >
-                                <Icon size={16} strokeWidth={isActive ? 2.5 : 2} />
-                                <span className="settings-nav-label">{label}</span>
-                                {isActive && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.5 }} />}
-                            </button>
-                        );
-                    })}
+
+            {/* Split Grid Layout */}
+            <div className="cmd-settings-grid">
+                
+                {/* Left Command Nav Matrix */}
+                <nav className="cmd-nav-matrix">
+                    {NAV_GROUPS.map((group, gIdx) => (
+                        <div key={gIdx} className="cmd-nav-group">
+                            <div className="cmd-nav-group-title">{group.title}</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                                {group.items
+                                    .filter(item => !searchQuery || item.label.toLowerCase().includes(searchQuery.toLowerCase()))
+                                    .map(item => {
+                                        const Icon = item.icon;
+                                        const isActive = active === item.id;
+                                        const isDanger = item.id === 'danger';
+
+                                        return (
+                                            <button
+                                                key={item.id}
+                                                onClick={() => setActive(item.id)}
+                                                className={`cmd-nav-btn ${isActive ? 'active' : ''} ${isDanger ? 'danger' : ''}`}
+                                            >
+                                                <Icon size={15} strokeWidth={isActive ? 2.5 : 2} />
+                                                <span style={{ fontWeight: isActive ? 700 : 500 }}>{item.label}</span>
+                                                {isActive && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+                                            </button>
+                                        );
+                                    })}
+                            </div>
+                        </div>
+                    ))}
                 </nav>
- 
-                {/* Content */}
-                <div className="settings-content">
+
+                {/* Right Viewport */}
+                <main className="cmd-viewport">
                     {PANELS[active]}
-                </div>
+                </main>
             </div>
- 
+
             <style>{`
-                .settings-layout {
+                .cmd-settings-grid {
                     display: grid;
-                    grid-template-columns: 240px 1fr;
+                    grid-template-columns: 280px 1fr;
                     gap: 4rem;
                     align-items: start;
                 }
-                .settings-sidebar {
-                    background: transparent;
-                    border: none;
-                    padding: 0;
-                    position: sticky;
-                    top: 2rem;
+                .cmd-nav-matrix {
                     display: flex;
                     flex-direction: column;
-                    gap: 0.25rem;
+                    gap: 2rem;
+                    position: sticky;
+                    top: 2rem;
                 }
-                .settings-sidebar-btn {
+                .cmd-nav-group-title {
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    color: var(--text-dim);
+                    margin-bottom: 0.75rem;
+                    padding-left: 0.5rem;
+                }
+                .cmd-nav-btn {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    padding: 0.75rem 1rem;
-                    border: none;
+                    padding: 0.7rem 0.875rem;
+                    border-radius: 99px;
+                    border: 1px solid transparent;
                     background: transparent;
                     color: var(--text-dim);
-                    font-size: 0.875rem;
-                    font-weight: 500;
+                    font-size: 0.9rem;
                     cursor: pointer;
                     width: 100%;
                     text-align: left;
-                    transition: all 0.2s;
-                    border-left: 2px solid transparent;
+                    transition: all 0.2s ease;
                 }
-                .settings-sidebar-btn:hover {
+                .cmd-nav-btn:hover {
+                    background: var(--surface);
                     color: var(--text);
                 }
-                .settings-sidebar-btn.active {
+                .cmd-nav-btn.active {
+                    background: var(--surface);
+                    border-color: var(--border);
                     color: var(--text);
-                    font-weight: 800;
-                    border-left-color: var(--text);
+                    box-shadow: var(--shadow-sm);
                 }
-                .settings-sidebar-btn.danger {
+                .cmd-nav-btn.danger {
                     color: #ef4444;
                 }
-                .settings-sidebar-btn.danger.active {
-                    border-left-color: #ef4444;
-                    font-weight: 800;
+                .cmd-nav-btn.danger.active {
+                    border-color: rgba(239,68,68,0.25);
+                    background: rgba(239,68,68,0.04);
                 }
-                .settings-content {
+                .cmd-viewport {
                     min-width: 0;
                 }
- 
-                /* ── Settings Sections (Flat Grid) ── */
-                .settings-section {
-                    display: grid;
-                    grid-template-columns: 240px 1fr;
-                    gap: 3rem;
-                    border-top: 1px solid var(--border);
-                    padding: 3rem 0;
-                }
-                .settings-section:first-of-type {
-                    border-top: none;
-                    padding-top: 0;
-                }
-                .settings-section-meta {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-                .settings-section-title {
-                    font-size: 1.1rem;
-                    font-weight: 800;
-                    letter-spacing: -0.02em;
-                    color: var(--text);
-                    margin: 0;
-                }
-                .settings-section-sub {
-                    font-size: 0.8125rem;
-                    color: var(--text-muted);
-                    line-height: 1.5;
-                    margin: 0;
-                }
-                .settings-section-fields {
-                    display: flex;
-                    flex-direction: column;
-                    min-width: 0;
-                }
- 
+
                 @media (max-width: 960px) {
-                    .settings-layout {
+                    .cmd-settings-grid {
                         grid-template-columns: 1fr;
                         gap: 2rem;
                     }
-                    .settings-sidebar {
+                    .cmd-nav-matrix {
                         position: static;
-                        flex-direction: row;
-                        flex-wrap: wrap;
-                        gap: 0.25rem;
-                        border-bottom: 1px solid var(--border);
-                        padding-bottom: 1rem;
-                    }
-                    .settings-sidebar-btn {
-                        width: auto !important;
-                        padding: 0.5rem 0.75rem !important;
-                        border-left: none;
-                        border-bottom: 2px solid transparent;
-                    }
-                    .settings-sidebar-btn.active {
-                        border-left-color: transparent;
-                        border-bottom-color: var(--text);
-                    }
-                    .settings-sidebar-btn.danger.active {
-                        border-left-color: transparent;
-                        border-bottom-color: #ef4444;
-                    }
-                    .settings-section {
-                        grid-template-columns: 1fr;
-                        gap: 1.5rem;
                         padding: 2rem 0;
                     }
                 }

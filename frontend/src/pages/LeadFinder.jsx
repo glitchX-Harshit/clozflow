@@ -29,6 +29,7 @@ import {
     ChevronDown,
     ChevronUp,
     Mail,
+    Download,
 } from 'lucide-react';
 import { useLeadFinderStore } from '../store/useLeadFinderStore';
 import MagButton from '../components/MagButton';
@@ -491,59 +492,23 @@ const FindingLeadsProgress = ({ query }) => {
     const displayName = query ? query.trim() : "target businesses";
 
     return (
-        <div className="lf__loader-card" style={{ position: 'relative', overflow: 'hidden' }}>
-            <div className="lf__loader-glow" />
-            
-            {/* Giant Background Typographic Counter */}
-            <div className="lf__loader-bg-percentage">
-                {Math.round(progress)}
+        <div className="lf__premium-flat-loader animate-fade-in">
+            <div className="lf__flat-loader-header">
+                <span className="lf__flat-loader-status">{STATUSES[statusIndex]}</span>
+                <span className="lf__flat-loader-pct">{Math.round(progress)}%</span>
             </div>
-            
-            <div className="lf__loader-content">
-                <div className="lf__loader-header-row">
-                    <div className="lf__loader-left">
-                        <div className="lf__loader-tag">
-                            <span className="lf__loader-pulse" />
-                            <span>COGNITIVE HARVESTER ACTIVE</span>
-                        </div>
-                        <h3 className="lf__loader-heading">
-                            Crawling <span>"{displayName}"</span>
-                        </h3>
-                    </div>
-                    
-                    <div className="lf__loader-percentage">
-                        {Math.round(progress)}<span className="lf__loader-percentage-symbol">%</span>
-                    </div>
-                </div>
 
-                {/* Vertical ticker for current actions */}
-                <div className="lf__loader-ticker">
-                    <div className="lf__loader-ticker-track" style={{ transform: `translateY(-${statusIndex * 24}px)` }}>
-                        {STATUSES.map((status, idx) => (
-                            <div 
-                                key={idx} 
-                                className={`lf__loader-ticker-item ${idx === statusIndex ? 'active' : ''}`}
-                            >
-                                <span className="lf__loader-ticker-num">[{String(idx + 1).padStart(2, '0')}]</span>
-                                <span className="lf__loader-ticker-text">{status}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            {/* Flat progress line */}
+            <div className="lf__flat-bar-wrapper">
+                <div 
+                    className="lf__flat-bar" 
+                    style={{ width: `${progress}%` }}
+                />
+            </div>
 
-                {/* Segmented Awwwards-style progress indicator */}
-                <div className="lf__loader-segments">
-                    {Array.from({ length: 16 }).map((_, idx) => {
-                        const segmentThreshold = (idx / 16) * 100;
-                        const isActive = progress >= segmentThreshold;
-                        return (
-                            <div 
-                                key={idx} 
-                                className={`lf__loader-segment ${isActive ? 'active' : ''}`} 
-                            />
-                        );
-                    })}
-                </div>
+            <div className="lf__flat-loader-footer">
+                <span className="lf__flat-loader-query">Scanning: <strong>{displayName}</strong></span>
+                <span className="lf__flat-loader-time">EST: {Math.max(1, Math.round((STATUSES.length - statusIndex) * 2.8))}s</span>
             </div>
         </div>
     );
@@ -846,6 +811,67 @@ const LeadFinder = ({ onOutreach }) => {
         }
     };
 
+    const handleExportToExcel = () => {
+        const targetList = viewMode === 'saved' ? savedLeads : leads;
+        if (!targetList || targetList.length === 0) return;
+        
+        const headers = [
+            'Business Name',
+            'Category',
+            'Rating',
+            'Reviews Count',
+            'Phone',
+            'Website',
+            'Instagram',
+            'Opportunity Score',
+            'Buying Probability',
+            'Address',
+            'AI Summary',
+            'Likely Pain Point',
+            'Outreach Angle',
+            'Service Fit Reason',
+            'Insights'
+        ];
+        
+        const rows = targetList.map(lead => [
+            lead.business_name || '',
+            lead.category || '',
+            lead.google_rating || '',
+            lead.reviews_count || '',
+            lead.phone_number || '',
+            lead.website || '',
+            lead.instagram || '',
+            lead.opportunity_score || '',
+            lead.buying_probability || '',
+            lead.address || '',
+            lead.ai_summary || '',
+            lead.likely_pain_point || '',
+            lead.outreach_angle || '',
+            lead.service_fit_reason || '',
+            lead.insights ? lead.insights.join('; ') : ''
+        ]);
+        
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(val => {
+                const escaped = String(val).replace(/"/g, '""');
+                return `"${escaped}"`;
+            }).join(','))
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        const filename = viewMode === 'saved' 
+            ? 'clozflow_saved_leads.csv' 
+            : `clozflow_leads_${query.toLowerCase().replace(/[^a-z0-9]/g, '_')}.csv`;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const handleSearch = async (searchQuery) => {
         if (deepSearchEnabled) {
             return handleDeepSearch(searchQuery);
@@ -1022,37 +1048,17 @@ const LeadFinder = ({ onOutreach }) => {
 
     return (
         <div className="lf">
-            {/* ── Awwwards-Grade Minimal Header ── */}
+            {/* Minimal Header */}
             <div className="editorial-header">
                 <div className="editorial-title-area">
-                    <div className="editorial-meta-label">
-                        <span className="editorial-meta-dot" />
-                        <span>DISCOVERY MODULE / 01</span>
-                    </div>
                     <h1 className="editorial-heading-hero">
                         Lead Finder<span className="editorial-period">.</span>
                     </h1>
                 </div>
                 <div className="editorial-desc-area">
                     <p className="editorial-desc-text">
-                        An autonomous intelligence layer designed to map local business footprints, quantify conversion deficiencies, and pre-structure outreach arguments.
+                        Discover local businesses, analyze digital presence, and generate customized outreach campaigns.
                     </p>
-                    <div className="editorial-system-status">
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">STATUS</span>
-                            <span className="editorial-status-val">READY</span>
-                        </span>
-                        <span className="editorial-status-divider">/</span>
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">ENGINE</span>
-                            <span className="editorial-status-val">HEX_V4</span>
-                        </span>
-                        <span className="editorial-status-divider">/</span>
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">SPEED</span>
-                            <span className="editorial-status-val">124MS</span>
-                        </span>
-                    </div>
                 </div>
             </div>
 
@@ -1227,9 +1233,9 @@ const LeadFinder = ({ onOutreach }) => {
                                     <div className="lf__deep-progress-area">
                                         Scanning: <strong>{deepSearchProgress.area}</strong>
                                     </div>
-                                    <div className="lf__deep-progress-bar-wrapper">
+                                    <div className="lf__clean-deep-bar-wrapper">
                                         <div 
-                                            className="lf__deep-progress-bar" 
+                                            className="lf__clean-deep-bar" 
                                             style={{ width: `${(deepSearchProgress.area_index / deepSearchProgress.total_areas) * 100}%` }}
                                         />
                                     </div>
@@ -1248,7 +1254,30 @@ const LeadFinder = ({ onOutreach }) => {
                                                 <span className="lf__results-offer-context"> for {effectiveOffer}</span>
                                             )}
                                         </span>
-                                        <div className="lf__results-badges">
+                                        <div className="lf__results-badges" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                            <button 
+                                                className="lf__export-btn"
+                                                onClick={handleExportToExcel}
+                                                title="Extract all leads into Excel (CSV) file"
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.4rem',
+                                                    background: 'var(--surface-2)',
+                                                    border: '1px solid var(--border)',
+                                                    borderRadius: '10px',
+                                                    padding: '0.45rem 0.85rem',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 700,
+                                                    color: 'var(--text)',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    fontFamily: 'var(--font-body, inherit)'
+                                                }}
+                                            >
+                                                <Download size={12} />
+                                                <span>Export Excel</span>
+                                            </button>
                                             <span className="lf__results-badge">
                                                 <span className="lf__results-badge-dot" />
                                                 AI Enriched
@@ -1350,9 +1379,34 @@ const LeadFinder = ({ onOutreach }) => {
                                 <span className="lf__results-count">
                                     You have <strong>{savedLeads.length}</strong> saved leads
                                 </span>
-                                <span className="lf__results-badge" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>
-                                    TARGET PIPELINE
-                                </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <button 
+                                        className="lf__export-btn"
+                                        onClick={handleExportToExcel}
+                                        title="Extract all saved leads into Excel (CSV) file"
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            background: 'var(--surface-2)',
+                                            border: '1px solid var(--border)',
+                                            borderRadius: '10px',
+                                            padding: '0.45rem 0.85rem',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            color: 'var(--text)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease',
+                                            fontFamily: 'var(--font-body, inherit)'
+                                        }}
+                                    >
+                                        <Download size={12} />
+                                        <span>Export Excel</span>
+                                    </button>
+                                    <span className="lf__results-badge" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>
+                                        TARGET PIPELINE
+                                    </span>
+                                </div>
                             </div>
                             <div className="lf__workspace" ref={gridRef}>
                                 <div className="lf__workspace-list" data-lenis-prevent>

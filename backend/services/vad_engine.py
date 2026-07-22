@@ -78,10 +78,10 @@ class SileroVADEngine:
             await loop.run_in_executor(
                 None, lambda: load_silero_vad(onnx=True)
             )
-            print("✅ Silero VAD model pre-loaded and cached")
+            print("[VAD] Silero VAD model pre-loaded and cached")
             return True
         except Exception as e:
-            print(f"❌ Failed to pre-load Silero VAD model: {e}")
+            print(f"[VAD ERROR] Failed to pre-load Silero VAD model: {e}")
             return False
 
     async def initialize(self) -> bool:
@@ -96,10 +96,10 @@ class SileroVADEngine:
                 None, lambda: load_silero_vad(onnx=True)
             )
             self._initialized = True
-            print("✅ Silero VAD engine initialized (ONNX)")
+            print("[VAD] Silero VAD engine initialized (ONNX)")
             return True
         except Exception as e:
-            print(f"❌ Silero VAD initialization failed: {e}")
+            print(f"[VAD ERROR] Silero VAD initialization failed: {e}")
             return False
 
     def process_chunk(self, pcm16_bytes: bytes) -> list[VADEvent]:

@@ -18,7 +18,9 @@ import {
     Search,
     Loader2,
     FileText,
-    Sparkle
+    Sparkle,
+    Menu,
+    X
 } from 'lucide-react';
 import { useDashboardStore } from '../store/useDashboardStore';
 import HistoryView from '../components/HistoryView';
@@ -34,22 +36,20 @@ import Pearl from './Pearl';
 
 
 
-const STATS_DATA = [
-    { label: 'Close Velocity', value: '37%', color: '#22c55e', trend: '+4.2%', desc: 'vs last week' },
-    { label: 'Psychological Leverage', value: '148', color: '#6366f1', trend: '+18', desc: 'active cues' },
-    { label: 'Momentum Index', value: '41%', color: '#f59e0b', trend: '+1.5%', desc: 'stable' },
-    { label: 'Risk Intensity', value: '22%', color: '#ef4444', trend: '-3.1%', desc: 'decreasing' }
-];
+const getModuleIcon = (id) => {
+    switch(id) {
+        case 1: return <ShieldCheck size={20} />;
+        case 2: return <TrendingUp size={20} />;
+        case 3: return <MessageSquare size={20} />;
+        default: return <Zap size={20} />;
+    }
+};
 
-const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) => (
+const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, stats, modules }) => (
     <div className="animate-fade-in">
-        {/* Awwwards-Grade Editorial Header */}
+        {/* Editorial Header */}
         <div className="editorial-header">
             <div className="editorial-title-area">
-                <div className="editorial-meta-label">
-                    <span className="editorial-meta-dot" />
-                    <span>INTELLIGENCE COCKPIT / 00</span>
-                </div>
                 <h1 className="editorial-heading-hero">
                     Overview<span className="editorial-period">.</span>
                 </h1>
@@ -71,69 +71,42 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll }) =
             </div>
             <div className="editorial-desc-area">
                 <p className="editorial-desc-text">
-                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. The Deal Intelligence layer is currently active, scanning live conversations, decoding conversational friction, and mapping close velocities.
+                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. Review live sales performance, active deals, and recent conversation insights.
                 </p>
-                <div className="editorial-system-status">
-                    <span className="editorial-status-item">
-                        <span className="editorial-status-lbl">SYSTEM</span>
-                        <span className="editorial-status-val">ONLINE</span>
-                    </span>
-                    <span className="editorial-status-divider">/</span>
-                    <span className="editorial-status-item">
-                        <span className="editorial-status-lbl">DECODERS</span>
-                        <span className="editorial-status-val">ACTIVE</span>
-                    </span>
-                    <span className="editorial-status-divider">/</span>
-                    <span className="editorial-status-item">
-                        <span className="editorial-status-lbl">LATENCY</span>
-                        <span className="editorial-status-val">28MS</span>
-                    </span>
-                </div>
             </div>
         </div>
 
         {/* Stats Row */}
         <div className="ov-stats-grid">
-            {STATS_DATA.map((stat, idx) => (
-                <div key={idx} className="ov-stat-card">
+            {stats.map((stat, idx) => (
+                <div key={idx} className="ov-stat-card" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
                     <div className="ov-stat-top">
-                        <span className="ov-stat-label">{stat.label}</span>
-                        <span className={`ov-stat-trend ${stat.trend.startsWith('+') ? 'up' : 'down'}`}>
+                        <span className="ov-stat-label" style={{ fontFamily: 'monospace', fontSize: '0.65rem', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>{stat.label}</span>
+                        <span className="ov-stat-trend" style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--text)' }}>
                             {stat.trend}
                         </span>
                     </div>
-                    <div className="ov-stat-value">{stat.value}</div>
-                    <div className="ov-stat-desc">{stat.desc}</div>
+                    <div className="ov-stat-value" style={{ color: 'var(--text)', fontFamily: 'sans-serif', fontWeight: 900 }}>{stat.value}</div>
+                    <div className="ov-stat-desc" style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{stat.desc}</div>
                 </div>
             ))}
         </div>
 
         {/* Intelligence Modules */}
         <div className="ov-modules-grid">
-            <div className="card card-hover">
-                <span className="ov-module-number">01</span>
-                <div className="ov-module-icon-wrap">
-                    <ShieldCheck size={20} />
+            {modules.map((mod, idx) => (
+                <div key={idx} className="card card-hover" style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                    <span className="ov-module-number" style={{ fontFamily: 'monospace', opacity: 0.4 }}>0{mod.id}</span>
+                    <div className="ov-module-icon-wrap" style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}>
+                        {getModuleIcon(mod.id)}
+                    </div>
+                    <h3 className="ov-module-heading" style={{ fontSize: '1.05rem', fontWeight: 800, letterSpacing: '-0.02em' }}>{mod.title}</h3>
+                    <p className="ov-module-desc" style={{ marginBottom: '0.75rem', fontSize: '0.8rem', color: 'var(--text-dim)' }}>{mod.desc}</p>
+                    <div className="ov-module-value" style={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace', color: 'var(--text)' }}>
+                        {mod.value}
+                    </div>
                 </div>
-                <h3 className="ov-module-heading">Risk Mitigation</h3>
-                <p className="ov-module-desc">Detect hesitation and trust failure in real-time. Every deal risk is mapped against behavioral benchmarks.</p>
-            </div>
-            <div className="card card-hover">
-                <span className="ov-module-number">02</span>
-                <div className="ov-module-icon-wrap">
-                    <TrendingUp size={20} />
-                </div>
-                <h3 className="ov-module-heading">Strategic Influence</h3>
-                <p className="ov-module-desc">Track which persuasion frameworks close deals. Controlled challenge and perspective shifts — measured.</p>
-            </div>
-            <div className="card card-hover">
-                <span className="ov-module-number">03</span>
-                <div className="ov-module-icon-wrap">
-                    <MessageSquare size={20} />
-                </div>
-                <h3 className="ov-module-heading">Behavioral Patterning</h3>
-                <p className="ov-module-desc">AI identifies missed moments and high-leverage opportunities that logic usually hides.</p>
-            </div>
+            ))}
         </div>
 
         {/* Recent Sessions */}
@@ -192,8 +165,20 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [recentCalls, setRecentCalls] = useState([]);
     const [loadingCalls, setLoadingCalls] = useState(true);
+    const [statsData, setStatsData] = useState([
+        { label: 'Close Velocity', value: '-', color: '#22c55e', trend: '-', desc: 'loading' },
+        { label: 'Psychological Leverage', value: '-', color: '#6366f1', trend: '-', desc: 'loading' },
+        { label: 'Momentum Index', value: '-', color: '#f59e0b', trend: '-', desc: 'loading' },
+        { label: 'Risk Intensity', value: '-', color: '#ef4444', trend: '-', desc: 'loading' }
+    ]);
+    const [modulesData, setModulesData] = useState([
+        { id: 1, title: 'Risk Mitigation', value: '-', desc: 'Detect hesitation and trust failure in real-time. Every deal risk is mapped against behavioral benchmarks.' },
+        { id: 2, title: 'Strategic Influence', value: '-', desc: 'Track which persuasion frameworks close deals. Controlled challenge and perspective shifts — measured.' },
+        { id: 3, title: 'Behavioral Patterning', value: '-', desc: 'AI identifies missed moments and high-leverage opportunities that logic usually hides.' }
+    ]);
     const [currentLeadForOutreach, setCurrentLeadForOutreach] = useState(null);
     const [outreachUserOffer, setOutreachUserOffer] = useState('');
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         setCurrentLeadForOutreach(null);
@@ -264,26 +249,35 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        const fetchRecentCalls = async () => {
+        const fetchDashboardData = async () => {
             try {
                 const token = localStorage.getItem('token');
                 const headers = {};
                 if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                const res = await fetch('http://localhost:8000/calls/', { headers });
-                if (res.ok) {
-                    const data = await res.json();
+                // Fetch recent calls
+                const callsRes = await fetch('http://localhost:8000/calls/', { headers });
+                if (callsRes.ok) {
+                    const data = await callsRes.json();
                     setRecentCalls(data.slice(0, 3));
                 }
+
+                // Fetch real intelligence stats
+                const statsRes = await fetch('http://localhost:8000/calls/stats', { headers });
+                if (statsRes.ok) {
+                    const statsData = await statsRes.json();
+                    if (statsData.stats && statsData.stats.length > 0) setStatsData(statsData.stats);
+                    if (statsData.modules && statsData.modules.length > 0) setModulesData(statsData.modules);
+                }
             } catch (err) {
-                console.error('Failed to fetch recent calls:', err);
+                console.error('Failed to fetch dashboard data:', err);
             } finally {
                 setLoadingCalls(false);
             }
         };
         
         if (activeTab === 'overview') {
-            fetchRecentCalls();
+            fetchDashboardData();
         }
     }, [activeTab]);
 
@@ -354,6 +348,8 @@ const Dashboard = () => {
                         recentCalls={recentCalls}
                         loadingCalls={loadingCalls}
                         onViewAll={() => setActiveTab('history')}
+                        stats={statsData}
+                        modules={modulesData}
                     />
                 )}
                 {activeTab === 'leads'     && (
@@ -376,23 +372,122 @@ const Dashboard = () => {
                 {activeTab === 'playbooks' && <PlaybooksPage />}
                 {activeTab === 'settings'  && <SettingsShell />}
             </main>
-            {/* Bottom tab bar — mobile only */}
-            <nav className="db-bottom-nav">
-                {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = activeTab === item.id;
-                    return (
-                        <button
-                            key={item.id}
-                            onClick={() => setActiveTab(item.id)}
-                            className={`db-bottom-tab ${isActive ? 'active' : ''} ${item.id === 'pearl' ? 'db-bottom-tab-pearl' : ''}`}
-                        >
-                            <Icon size={20} strokeWidth={isActive ? 2.5 : 1.75} />
-                            <span>{item.label}</span>
+            {/* Floating pill dock — mobile only */}
+            <div className="db-bottom-nav">
+                {/* Overview */}
+                <button
+                    onClick={() => { setActiveTab('overview'); setMenuOpen(false); }}
+                    className={`db-bottom-tab ${activeTab === 'overview' ? 'active' : ''}`}
+                >
+                    <LayoutGrid size={20} strokeWidth={activeTab === 'overview' ? 2.5 : 1.75} />
+                    <span>Overview</span>
+                </button>
+
+                {/* Pearl */}
+                <button
+                    onClick={() => { setActiveTab('pearl'); setMenuOpen(false); }}
+                    className={`db-bottom-tab ${activeTab === 'pearl' ? 'active' : ''} db-bottom-tab-pearl`}
+                >
+                    <Sparkle size={20} strokeWidth={activeTab === 'pearl' ? 2.5 : 1.75} />
+                    <span>Pearl</span>
+                </button>
+
+                {/* Intelligence */}
+                <button
+                    onClick={() => { setActiveTab('analytics'); setMenuOpen(false); }}
+                    className={`db-bottom-tab ${activeTab === 'analytics' ? 'active' : ''}`}
+                >
+                    <BarChart3 size={20} strokeWidth={activeTab === 'analytics' ? 2.5 : 1.75} />
+                    <span>Intelligence</span>
+                </button>
+
+                {/* More Menu Toggle */}
+                <button
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    className={`db-bottom-tab ${menuOpen ? 'active' : ''}`}
+                >
+                    {menuOpen ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={1.75} />}
+                    <span>Menu</span>
+                </button>
+            </div>
+
+            {/* Fullscreen Mobile Navigation Drawer Overlay */}
+            {menuOpen && (
+                <div className="db-mobile-overlay animate-fade-in">
+                    <div className="db-mobile-overlay-header">
+                        <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>Navigation</span>
+                        <button onClick={() => setMenuOpen(false)} className="db-mobile-overlay-close">
+                            <X size={20} />
                         </button>
-                    );
-                })}
-            </nav>
+                    </div>
+                    
+                    <div className="db-mobile-overlay-content">
+                        {[
+                            { id: 'overview', label: 'Overview', desc: 'Performance overview & analytics stats', icon: LayoutGrid },
+                            { id: 'leads', label: 'Lead Finder', desc: 'Multi-level geographic lead discovery', icon: Search },
+                            { id: 'history', label: 'Session History', desc: 'Call transcripts & diagnostic ratings', icon: History },
+                            { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
+                            { id: 'analytics', label: 'Intelligence', desc: 'Comparative gap matrix & objection lists', icon: BarChart3 },
+                            { id: 'playbooks', label: 'Playbooks', desc: 'Persuasion techniques & strategies', icon: Target },
+                            { id: 'settings', label: 'Settings', desc: 'Workspace details & prompt overrides', icon: Settings },
+                        ].map((item) => {
+                            const Icon = item.icon;
+                            const isActive = activeTab === item.id;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => { setActiveTab(item.id); setMenuOpen(false); }}
+                                    className={`db-mobile-overlay-item ${isActive ? 'active' : ''}`}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: '1rem',
+                                        width: '100%', padding: '1rem 1.25rem', background: isActive ? 'var(--surface)' : 'transparent',
+                                        borderRadius: 16, border: isActive ? '1px solid var(--border)' : '1px solid transparent',
+                                        textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s'
+                                    }}
+                                >
+                                    <div style={{
+                                        width: 40, height: 40, borderRadius: 10,
+                                        background: isActive ? 'var(--text)' : 'var(--bg)',
+                                        color: isActive ? 'var(--bg)' : 'var(--text)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                                    }}>
+                                        <Icon size={18} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '0.925rem', fontWeight: 700, color: 'var(--text)' }}>{item.label}</div>
+                                        <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginTop: 2 }}>{item.desc}</div>
+                                    </div>
+                                    <ChevronRight size={15} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }} />
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <div className="db-mobile-overlay-footer">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
+                                {user?.username?.charAt(0).toUpperCase() || 'U'}
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{user?.username || 'Operator'}</div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{user?.email}</div>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => { handleLogout(); setMenuOpen(false); }}
+                            className="interactive"
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)',
+                                borderRadius: 99, padding: '0.75rem 1.5rem', width: '100%',
+                                justifyContent: 'center', color: '#ef4444', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer'
+                            }}
+                        >
+                            <LogOut size={15} /> Log out
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <style>{`
                 /* ── Logo Styles ── */
@@ -1108,35 +1203,87 @@ const Dashboard = () => {
                     }
                     .db-bottom-nav {
                         display: flex;
+                        justify-content: space-around;
+                        align-items: center;
                         position: fixed;
-                        bottom: 0; left: 0; right: 0;
-                        height: 70px;
-                        background: var(--bg);
-                        border-top: 1px solid var(--border);
-                        z-index: 200;
-                        padding: 0 0.25rem;
-                        padding-bottom: env(safe-area-inset-bottom, 0px);
+                        bottom: 1.25rem; 
+                        left: 1rem; 
+                        right: 1rem;
+                        height: 64px;
+                        background: var(--surface);
+                        border: 1px solid var(--border);
+                        border-radius: 20px;
+                        z-index: 990;
+                        padding: 0 0.5rem;
+                        box-shadow: var(--shadow-lg);
                     }
                     .db-bottom-tab {
-                        flex: 1;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
                         justify-content: center;
-                        gap: 0.25rem;
                         background: none;
                         border: none;
+                        color: var(--text-dim);
                         cursor: pointer;
-                        color: var(--text-muted);
-                        padding: 0.5rem 0.125rem;
-                        transition: color 0.2s;
+                        padding: 0.5rem;
+                        transition: all 0.2s ease;
+                        gap: 0.25rem;
+                        outline: none;
                     }
-                    .db-bottom-tab.active { color: var(--accent); }
+                    .db-bottom-tab.active { 
+                        color: var(--text); 
+                        transform: scale(1.05);
+                    }
                     .db-bottom-tab span {
-                        font-size: 0.56rem;
+                        font-size: 0.68rem;
                         font-weight: 700;
-                        letter-spacing: 0.04em;
-                        text-transform: uppercase;
+                        letter-spacing: -0.01em;
+                    }
+                    
+                    /* Mobile Overlay Menu Drawer */
+                    .db-mobile-overlay {
+                        position: fixed;
+                        inset: 0;
+                        background: var(--bg);
+                        z-index: 999;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 2rem 1.5rem;
+                        overflow-y: auto;
+                    }
+                    .db-mobile-overlay-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 2rem;
+                    }
+                    .db-mobile-overlay-close {
+                        background: var(--surface);
+                        border: 1px solid var(--border);
+                        border-radius: 50%;
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        color: var(--text);
+                    }
+                    .db-mobile-overlay-content {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.75rem;
+                        flex: 1;
+                    }
+                    .db-mobile-overlay-item:hover, .db-mobile-overlay-item.active {
+                        background: var(--surface);
+                        border-color: var(--border);
+                    }
+                    .db-mobile-overlay-footer {
+                        margin-top: 2rem;
+                        padding-top: 1.5rem;
+                        border-top: 1px solid var(--border);
                     }
                     .db-header-grid { padding: 1.5rem 0 2rem; margin-bottom: 2rem; }
                     .ov-stats-grid {

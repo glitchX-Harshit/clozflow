@@ -341,6 +341,67 @@ _CITY_LOCALITIES = {
 _DEFAULT_LOCALITIES = ["Main Road", "Market Area", "City Center", "Station Road", "Ring Road", "Commercial Street", "High Street", "Business Park", "Old Town", "New Extension"]
 
 
+def get_country_code_for_location(location: str) -> str:
+    loc = location.lower().strip()
+    
+    # 1. Spain
+    if any(k in loc for k in ["spain", "madrid", "barcelona", "valencia", "seville", "zaragoza", "malaga"]):
+        return "+34"
+    # 2. USA
+    if any(k in loc for k in ["usa", "united states", "new york", "los angeles", "chicago", "houston", "miami", "san francisco", "boston", "seattle"]):
+        return "+1"
+    # 3. UK
+    if any(k in loc for k in ["uk", "united kingdom", "london", "manchester", "birmingham", "leeds", "glasgow", "liverpool"]):
+        return "+44"
+    # 4. Germany
+    if any(k in loc for k in ["germany", "berlin", "munich", "frankfurt", "hamburg", "cologne"]):
+        return "+49"
+    # 5. France
+    if any(k in loc for k in ["france", "paris", "marseille", "lyon", "toulouse", "nice"]):
+        return "+33"
+    # 6. Italy
+    if any(k in loc for k in ["italy", "rome", "milan", "naples", "turin", "palermo"]):
+        return "+39"
+    # 7. Canada
+    if any(k in loc for k in ["canada", "toronto", "vancouver", "montreal", "ottawa", "calgary"]):
+        return "+1"
+    # 8. Australia
+    if any(k in loc for k in ["australia", "sydney", "melbourne", "brisbane", "perth", "adelaide"]):
+        return "+61"
+    # 9. UAE
+    if any(k in loc for k in ["uae", "dubai", "abu dhabi", "sharjah"]):
+        return "+971"
+    # 10. Singapore
+    if any(k in loc for k in ["singapore"]):
+        return "+65"
+    # 11. Japan
+    if any(k in loc for k in ["japan", "tokyo", "osaka", "kyoto", "yokohama"]):
+        return "+81"
+    # 12. Brazil
+    if any(k in loc for k in ["brazil", "sao paulo", "rio de janeiro", "brasilia"]):
+        return "+55"
+    # 13. Mexico
+    if any(k in loc for k in ["mexico", "mexico city", "guadalajara", "monterrey"]):
+        return "+52"
+    # 14. India
+    if any(k in loc for k in ["india", "delhi", "mumbai", "bangalore", "hyderabad", "pune", "chennai", "kolkata", "jaipur", "ahmedabad", "lucknow"]):
+        return "+91"
+        
+    common_countries = {
+        "netherlands": "+31", "belgium": "+32", "switzerland": "+41", "austria": "+43",
+        "sweden": "+46", "norway": "+47", "denmark": "+45", "finland": "+358",
+        "portugal": "+351", "greece": "+30", "russia": "+7", "china": "+86",
+        "south korea": "+82", "new zealand": "+64", "south africa": "+27",
+        "turkey": "+90", "saudi arabia": "+966", "malaysia": "+60", "thailand": "+66",
+        "vietnam": "+84", "indonesia": "+62", "philippines": "+63", "ireland": "+353"
+    }
+    for c, code in common_countries.items():
+        if c in loc:
+            return code
+            
+    return "+91"
+
+
 def _generate_mock_leads(business_type: str, location: str, count: int = 20) -> List[Dict]:
     """
     Dynamically generate realistic mock leads for ANY business type in ANY city.
@@ -388,9 +449,19 @@ def _generate_mock_leads(business_type: str, location: str, count: int = 20) -> 
         has_ig = rng.random() > 0.4
 
         # Generate a realistic phone number
-        phone_prefix = rng.choice(["98", "99", "88", "87", "91", "70", "80"])
-        phone_rest = "".join([str(rng.randint(0, 9)) for _ in range(8)])
-        phone = f"+91 {phone_prefix}{phone_rest[:3]} {phone_rest[3:]}"
+        country_code = get_country_code_for_location(location)
+        if country_code == "+34":
+            phone_rest = "".join([str(rng.randint(0, 9)) for _ in range(7)])
+            phone_prefix = rng.choice(["6", "7", "9"])
+            phone = f"+34 {phone_prefix}{phone_rest[:4]} {phone_rest[4:]}"
+        elif country_code in ["+1", "+44", "+49", "+33", "+39", "+61"]:
+            phone_rest = "".join([str(rng.randint(0, 9)) for _ in range(8)])
+            phone_prefix = rng.choice(["6", "7", "8", "9"])
+            phone = f"{country_code} {phone_prefix}{phone_rest[:3]} {phone_rest[3:]}"
+        else:
+            phone_prefix = rng.choice(["98", "99", "88", "87", "91", "70", "80"])
+            phone_rest = "".join([str(rng.randint(0, 9)) for _ in range(8)])
+            phone = f"{country_code} {phone_prefix}{phone_rest[:3]} {phone_rest[3:]}"
 
         # Generate website slug
         slug = name.lower().replace(" ", "").replace("&", "and")[:18]
@@ -401,6 +472,9 @@ def _generate_mock_leads(business_type: str, location: str, count: int = 20) -> 
         ig_city_tag = city.lower()[:3]
         instagram = f"@{ig_slug}.{ig_city_tag}" if has_ig else ""
 
+        # Generate reviews count
+        reviews_count = rng.randint(5, 450)
+
         leads.append({
             "business_name": name,
             "category": bt_title,
@@ -409,6 +483,7 @@ def _generate_mock_leads(business_type: str, location: str, count: int = 20) -> 
             "website": website,
             "instagram": instagram,
             "google_rating": rating,
+            "reviews_count": reviews_count,
             "address": f"{locality}, {city}",
         })
 
@@ -519,6 +594,7 @@ async def _search_google_places(business_type: str, location: str) -> List[Dict]
             "website": place.get("websiteUri", ""),
             "instagram": "",   # Google Places doesn't return social handles
             "google_rating": place.get("rating", 0),
+            "reviews_count": place.get("userRatingCount", 0),
             "address": place.get("shortFormattedAddress", "") or address,
         })
 

@@ -229,32 +229,17 @@ const PlaybooksPage = () => {
                 '--pb-accent-rgb': activeColorRgb
             }}
         >
-            {/* Awwwards-Grade Editorial Header */}
+            {/* Editorial Header */}
             <div className="editorial-header">
                 <div className="editorial-title-area">
-                    <div className="editorial-meta-label">
-                        <span className="editorial-meta-dot" />
-                        <span>PERSUASION VAULT / 04</span>
-                    </div>
                     <h1 className="editorial-heading-hero">
                         Playbooks<span className="editorial-period">.</span>
                     </h1>
                 </div>
                 <div className="editorial-desc-area">
                     <p className="editorial-desc-text">
-                        Tactical frameworks decoded from high-performing sales conversations, providing precise psychological response protocols for every critical deal pivot.
+                        Tactical frameworks decoded from high-performing sales conversations, providing precise response protocols for critical deal pivots.
                     </p>
-                    <div className="editorial-system-status">
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">PLAYBOOKS</span>
-                            <span className="editorial-status-val">7 ACTIVE</span>
-                        </span>
-                        <span className="editorial-status-divider">/</span>
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">MODE</span>
-                            <span className="editorial-status-val">TACTICAL</span>
-                        </span>
-                    </div>
                 </div>
             </div>
 
