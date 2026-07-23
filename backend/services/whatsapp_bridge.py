@@ -5,12 +5,13 @@ Communicates with the Node.js Baileys bridge server.
 
 • get_qr()         → Get QR code for WhatsApp Web connection
 • get_status()     → Check connection status
-• send_message()   → Send a single WhatsApp message
+• send_message()   → Send a single WhatsApp message (with retry)
 • send_bulk()      → Send multiple messages with rate limiting
 • disconnect()     → Disconnect WhatsApp session
 """
 
 import httpx
+import asyncio
 import logging
 from typing import Optional, Dict, Any, List
 
@@ -45,20 +46,39 @@ async def get_status() -> Dict[str, Any]:
         return {"status": "error", "phone": None}
 
 
-async def send_message(phone: str, message: str) -> Dict[str, Any]:
-    """Send a single WhatsApp message."""
-    try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(
-                f"{BRIDGE_URL}/send",
-                json={"phone": phone, "message": message}
-            )
-            return response.json()
-    except httpx.ConnectError:
-        return {"success": False, "error": "WhatsApp bridge is not running"}
-    except Exception as e:
-        logger.error(f"Send message error: {e}")
-        return {"success": False, "error": str(e)}
+async def send_message(phone: str, message: str, retries: int = 2) -> Dict[str, Any]:
+    """Send a single WhatsApp message with automatic retries."""
+    last_error = None
+    for attempt in range(1, retries + 1):
+        try:
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                response = await client.post(
+                    f"{BRIDGE_URL}/send",
+                    json={"phone": phone, "message": message}
+                )
+                data = response.json()
+                if data.get("success"):
+                    return data
+                # Bridge returned an error response — retry if not a 4xx
+                if response.status_code >= 400 and response.status_code < 500:
+                    return data  # Don't retry client errors (bad phone, etc.)
+                last_error = data.get("error", "Unknown bridge error")
+                logger.warning(f"Send attempt {attempt} failed: {last_error}")
+        except httpx.ConnectError:
+            last_error = "WhatsApp bridge is not running"
+            logger.warning(f"Send attempt {attempt}: bridge not reachable")
+        except httpx.ReadTimeout:
+            last_error = "Bridge timed out sending message"
+            logger.warning(f"Send attempt {attempt}: read timeout")
+        except Exception as e:
+            last_error = str(e)
+            logger.warning(f"Send attempt {attempt} error: {e}")
+        
+        if attempt < retries:
+            await asyncio.sleep(3)  # Wait 3s before retry
+    
+    logger.error(f"Send message failed after {retries} attempts: {last_error}")
+    return {"success": False, "error": last_error}
 
 
 async def send_bulk(messages: List[Dict[str, str]], delay: int = 3000) -> Dict[str, Any]:

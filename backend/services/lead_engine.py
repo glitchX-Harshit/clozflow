@@ -590,7 +590,9 @@ async def _search_google_places(business_type: str, location: str) -> List[Dict]
             "business_name": name,
             "category": category,
             "city": location.title() if location else "",
-            "phone_number": place.get("nationalPhoneNumber", "") or place.get("internationalPhoneNumber", ""),
+            # Prefer international phone number because it contains the country code 
+            # and avoids local trunk prefixes (like leading 0s) which break WhatsApp.
+            "phone_number": place.get("internationalPhoneNumber", "") or place.get("nationalPhoneNumber", ""),
             "website": place.get("websiteUri", ""),
             "instagram": "",   # Google Places doesn't return social handles
             "google_rating": place.get("rating", 0),
@@ -844,6 +846,15 @@ async def search_leads(
             enriched = [r for r in enriched if r.get("website")]
         if filters.get("instagram_presence"):
             enriched = [r for r in enriched if r.get("instagram")]
+            
+    # Apply STRICT filters based on user_offer text
+    offer_lower = user_offer.lower() if user_offer else ""
+    if "no website" in offer_lower or "without website" in offer_lower:
+        print("[LeadEngine] STRICT FILTER: Dropping leads that already have a website.")
+        enriched = [r for r in enriched if not r.get("website")]
+    elif "must have website" in offer_lower or "with website" in offer_lower:
+        print("[LeadEngine] STRICT FILTER: Keeping only leads that have a website.")
+        enriched = [r for r in enriched if r.get("website")]
 
     print(f"[LeadEngine] ── Search complete: returning {len(enriched)} leads ──")
     return enriched

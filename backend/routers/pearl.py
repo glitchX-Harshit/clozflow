@@ -35,6 +35,13 @@ class MissionCreateRequest(BaseModel):
     approval_mode: str = "Auto-approve qualified leads"
     safety_rules: str = "No follow-up after rejection"
 
+class ApproveMessageRequest(BaseModel):
+    mission_id: int
+    lead_id: int
+    approved_message: str
+    action: str  # "approve" or "skip"
+
+
 
 class MissionResponse(BaseModel):
     id: int
@@ -211,6 +218,27 @@ async def pause_mission(
     mission.status = 'paused'
     db.commit()
     return {"status": "paused"}
+
+
+@router.post("/missions/approve-message")
+async def approve_mission_message(
+    request: ApproveMessageRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """Approve or skip a message during a manual review."""
+    from services.pearl_orchestrator import pending_approvals
+    key = f"{request.mission_id}_{request.lead_id}"
+    
+    if key in pending_approvals:
+        future = pending_approvals[key]
+        if not future.done():
+            if request.action == "skip":
+                future.set_result(None)
+            else:
+                future.set_result(request.approved_message)
+            return {"success": True}
+    return {"success": False, "error": "No pending approval found for this message."}
+
 
 
 # ── WebSocket endpoint for mission live updates ──────────────────────

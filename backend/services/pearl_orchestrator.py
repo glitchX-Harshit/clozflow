@@ -25,6 +25,9 @@ from datetime import datetime
 from typing import Optional, Dict, Any, Callable
 from sqlalchemy.orm import Session
 
+pending_approvals = {}  # Global dict to store futures: "mission_id_lead_id" -> asyncio.Future
+
+
 STAGES = [
     'planning',
     'geographic_expansion',
@@ -203,14 +206,66 @@ class PearlOrchestrator:
         # Call existing lead_engine
         try:
             from services.lead_engine import search_leads
+            from models import Lead
+            
             query = f'{mission.industry or "businesses"} in {mission.location or "Mumbai"}'
-            leads = await search_leads(query, user_offer=mission.filters or '')
-            found_count = len(leads) if leads else 0
+            leads_data = await search_leads(query, user_offer=mission.filters or '')
+            found_count = len(leads_data) if leads_data else 0
+            
+            print(f"[Pearl] Lead discovery returned {found_count} leads. Saving to database...")
+            
+            # Save discovered leads to the Lead database table
+            saved_count = 0
+            for lead_dict in (leads_data or []):
+                business_name = lead_dict.get('business_name') or lead_dict.get('name', '')
+                if not business_name:
+                    continue
+                
+                # Check if this lead already exists (avoid duplicates)
+                existing = self.db.query(Lead).filter(
+                    Lead.business_name == business_name,
+                    Lead.city == (lead_dict.get('city') or lead_dict.get('location', ''))
+                ).first()
+                
+                if existing:
+                    # Update existing lead with new data if phone was missing
+                    if not existing.phone_number and lead_dict.get('phone_number'):
+                        existing.phone_number = lead_dict.get('phone_number', '')
+                    if not existing.lead_score and lead_dict.get('lead_score'):
+                        existing.lead_score = lead_dict.get('lead_score', 0)
+                    print(f"[Pearl]   Lead '{business_name}' already exists, updated.")
+                else:
+                    # Create new lead
+                    new_lead = Lead(
+                        business_name=business_name,
+                        category=lead_dict.get('category', ''),
+                        city=lead_dict.get('city') or lead_dict.get('location', ''),
+                        phone_number=lead_dict.get('phone_number', ''),
+                        website=lead_dict.get('website', ''),
+                        instagram=lead_dict.get('instagram', ''),
+                        google_rating=str(lead_dict.get('google_rating', '')) if lead_dict.get('google_rating') else None,
+                        ai_summary=lead_dict.get('ai_summary', ''),
+                        likely_pain_point=lead_dict.get('likely_pain_point', ''),
+                        outreach_angle=lead_dict.get('outreach_angle', ''),
+                        lead_score=lead_dict.get('lead_score', 0),
+                    )
+                    self.db.add(new_lead)
+                    saved_count += 1
+                    phone_info = f" (phone: {lead_dict.get('phone_number', 'none')})" if lead_dict.get('phone_number') else " (no phone)"
+                    print(f"[Pearl]   Saved lead: '{business_name}'{phone_info}")
+            
+            self.db.commit()
+            
             mission.leads_found = found_count
             self.db.commit()
-            await self._add_activity(mission.id, f'Found {found_count} businesses', 'success')
+            
+            print(f"[Pearl] Saved {saved_count} new leads to database.")
+            await self._add_activity(mission.id, f'Found {found_count} businesses ({saved_count} new leads saved)', 'success')
         except Exception as e:
             # Mock fallback
+            print(f"[Pearl] Lead discovery error: {e}")
+            import traceback
+            traceback.print_exc()
             import random
             found_count = random.randint(15, 45)
             mission.leads_found = found_count
@@ -285,13 +340,16 @@ class PearlOrchestrator:
             try:
                 from services.whatsapp_bridge import get_status
                 wa_status = await get_status()
+                print(f"[Pearl] WhatsApp bridge status response: {wa_status}")
                 wa_connected = wa_status.get('status') == 'connected'
                 if wa_connected:
                     await self._add_activity(mission.id, '📱 WhatsApp connected — sending real messages', 'success')
                 else:
-                    await self._add_activity(mission.id, '⚠️ WhatsApp not connected — simulating outreach', 'warning')
-            except Exception:
-                await self._add_activity(mission.id, '⚠️ WhatsApp bridge unavailable — simulating outreach', 'warning')
+                    print(f"[Pearl] WhatsApp NOT connected. Status: {wa_status.get('status')}")
+                    await self._add_activity(mission.id, f'⚠️ WhatsApp not connected (status: {wa_status.get("status")}) — simulating outreach', 'warning')
+            except Exception as e:
+                print(f"[Pearl] WhatsApp bridge check failed: {e}")
+                await self._add_activity(mission.id, f'⚠️ WhatsApp bridge unavailable ({e}) — simulating outreach', 'warning')
         
         import random
         sent = min(mission.leads_qualified, mission.daily_limit or 50)
@@ -309,6 +367,10 @@ class PearlOrchestrator:
                     Lead.phone_number.isnot(None),
                     Lead.phone_number != ''
                 ).order_by(Lead.lead_score.desc()).limit(sent).all()
+                
+                print(f"[Pearl] Found {len(leads)} leads with phone numbers to message")
+                if len(leads) == 0:
+                    await self._add_activity(mission.id, '⚠️ No leads with phone numbers found — cannot send WhatsApp messages', 'warning')
                 
                 for i, lead in enumerate(leads):
                     if mission.status == 'paused':
@@ -340,11 +402,46 @@ class PearlOrchestrator:
                     if not message_text:
                         continue
                     
-                    # Clean phone number
-                    phone = lead.phone_number.replace('+', '').replace(' ', '').replace('-', '')
+                    # Clean phone number (strip +, -, spaces, and parentheses)
+                    phone = lead.phone_number.replace('+', '').replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+                    
+                    # If it's a local Indian number starting with 0, strip the 0 and add 91
+                    if phone.startswith('0') and len(phone) >= 10:
+                        phone = '91' + phone[1:]
+                    
+                    # Wait for manual review if required
+                    if getattr(mission, 'approval_mode', '') == 'Manual review required':
+                        await self._add_activity(mission.id, f'Manual review required for {lead.business_name}', 'warning')
+                        await self.emit_event('manual_review_required', {
+                            'mission_id': mission.id,
+                            'lead_id': lead.id,
+                            'business_name': lead.business_name,
+                            'phone': phone,
+                            'message': message_text
+                        })
+                        
+                        loop = asyncio.get_event_loop()
+                        future = loop.create_future()
+                        key = f"{mission.id}_{lead.id}"
+                        pending_approvals[key] = future
+                        
+                        try:
+                            # Wait until frontend hits the approve endpoint
+                            approved_message = await future
+                            if not approved_message:
+                                await self._add_activity(mission.id, f'Skipped message to {lead.business_name}', 'default')
+                                continue
+                            message_text = approved_message
+                        except Exception as e:
+                            await self._add_activity(mission.id, f'Error during manual review: {str(e)}', 'warning')
+                            continue
+                        finally:
+                            pending_approvals.pop(key, None)
                     
                     # Send via WhatsApp
+                    print(f"[Pearl] Sending message to {lead.business_name} ({phone})...")
                     result = await send_message(phone, message_text)
+                    print(f"[Pearl] Send result: {result}")
                     
                     if result.get('success'):
                         actual_sent += 1
@@ -383,6 +480,9 @@ class PearlOrchestrator:
                 
                 mission.messages_sent = actual_sent
             except Exception as e:
+                print(f"[Pearl] OUTREACH STAGE ERROR: {e}")
+                import traceback
+                traceback.print_exc()
                 await self._add_activity(mission.id, f'Outreach error: {str(e)}', 'warning')
                 mission.messages_sent = 0
         else:
