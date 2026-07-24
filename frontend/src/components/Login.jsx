@@ -183,7 +183,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
 
                 <p className="su-login-prompt">
                     New to ClozFlow?{' '}
-                    <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}>
+                    <a href="/signup" onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}>
                         Create account
                     </a>
                 </p>

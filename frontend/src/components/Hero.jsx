@@ -40,7 +40,7 @@ const Hero = ({ onGetStarted }) => {
             <div className="hero__grain" aria-hidden="true" />
 
             <div className="hero__container" ref={headRef}>
-                <div className="hero__typography">
+                <h1 className="hero__typography">
 
                     {/* Row 1 — Left aligned */}
                     <div className="hero__row hero__row--1">
@@ -85,18 +85,18 @@ const Hero = ({ onGetStarted }) => {
                             <span className="hero__line hero__line--italic">DOES.</span>
                         </div>
                     </div>
-                </div>
+                </h1>
 
                 <div className="hero__cta-row" ref={actionsRef}>
                     <MagButton
                         label="Enter Workspace"
                         variant="dark"
-                        icon={<ArrowRight size={16} />}
+                        icon={<ArrowRight size={16} aria-hidden="true" />}
                         onClick={onGetStarted}
                         disableMagnet
                     />
                     <div className="hero__cta-meta">
-                        <ArrowDownRight size={14} className="hero__cta-arrow" />
+                        <ArrowDownRight size={14} className="hero__cta-arrow" aria-hidden="true" />
                         <span>Strategic Mode Active</span>
                     </div>
                 </div>

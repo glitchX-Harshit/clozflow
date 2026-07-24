@@ -35,7 +35,7 @@
     line-height: 1.15;
     letter-spacing: -0.04em;
     color: var(--text);
-    text-transform: none; /* Make it case-natural for editorial minimal feel */
+    text-transform: none; /* Case-natural for editorial minimal feel */
 }
 
 .pearl-minimal-desc {
@@ -43,6 +43,27 @@
     line-height: 1.65;
     color: var(--text-dim);
     margin: 0;
+}
+
+/* GEO Stats Grid */
+.pearl-geo-stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.geo-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.geo-stat-icon {
+    color: var(--accent);
+    flex-shrink: 0;
 }
 
 /* Right Column Waitlist Form Box */
@@ -176,6 +197,7 @@
     gap: 2rem;
     border-top: 1px solid var(--border);
     padding-top: 3.5rem;
+    margin-bottom: 4rem;
 }
 
 .pearl-minimal-feature-card {
@@ -202,6 +224,79 @@
     color: var(--text-dim);
     line-height: 1.55;
     margin: 0;
+}
+
+/* Q&A / System Specifications Section */
+.pearl-minimal-faq {
+    border-top: 1px solid var(--border);
+    padding-top: 3.5rem;
+    margin-bottom: 2rem;
+}
+
+.faq-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.faq-header-icon {
+    color: var(--accent);
+}
+
+.faq-section-header h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+@media (max-width: 768px) {
+    .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.faq-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.faq-item h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    text-transform: none;
+}
+
+.faq-item p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Accessibility / Screen Reader Only Utility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 /* Pulse animation */

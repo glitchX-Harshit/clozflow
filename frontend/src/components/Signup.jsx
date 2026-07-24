@@ -191,7 +191,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
 
                 <p className="su-login-prompt">
                     Already using ClozFlow?{' '}
-                    <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>
+                    <a href="/login" onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}>
                         Log in
                     </a>
                 </p>
