@@ -65,6 +65,26 @@ def migrate():
         else:
             print(f"  · Skipped call_logs.{col_name} (already exists)")
 
+    # ── capsules table ────────────────────────────────
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS capsules (
+            id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id               INTEGER NOT NULL REFERENCES users(id),
+            name                  TEXT NOT NULL,
+            product_name          TEXT NOT NULL,
+            product_price         TEXT,
+            product_specification TEXT,
+            target_audience       TEXT,
+            key_differentiators   TEXT,
+            pain_points_solved    TEXT,
+            additional_context    TEXT,
+            is_default            INTEGER DEFAULT 0,
+            created_at            DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at            DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    print("  [+] Ensured capsules table exists")
+
     conn.commit()
     conn.close()
     print(f"\nMigration complete. {added} column(s) added.")

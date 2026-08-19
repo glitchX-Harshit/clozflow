@@ -4,9 +4,391 @@ import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import {
     User, Building2, Brain, Bell, Shield, CreditCard, AlertTriangle,
-    ChevronRight, LogOut, Zap, Check, Loader2, X, Search, Sparkles, Terminal, ShieldAlert, Sliders, KeyRound, Radio
+    ChevronRight, LogOut, Zap, Check, Loader2, X, Search, Sparkles, Terminal, ShieldAlert, Sliders, KeyRound, Radio, Pill, Plus, Pencil, Trash2, Star, Package, ArrowLeft
 } from 'lucide-react';
-import { ProfilePanel, WorkspacePanel, AiPanel, SectionCard, Field, Input, Toggle, SaveBtn, useSave, authFetch } from './SettingsPage';
+import { ProfilePanel, WorkspacePanel, AiPanel, SectionCard, Field, Input, TextArea, Toggle, SaveBtn, useSave, authFetch } from './SettingsPage';
+
+// ── CAPSULES PANEL ────────────────────────────────────────────────────────────
+const CapsulesPanel = () => {
+    const [capsules, setCapsules] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [view, setView] = useState('list'); // 'list', 'create', 'edit'
+    const [editingId, setEditingId] = useState(null);
+    const [form, setForm] = useState({});
+    const [saving, setSaving] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
+    const [deleteTarget, setDeleteTarget] = useState('');
+
+    const loadCapsules = async () => {
+        setLoading(true);
+        try {
+            const res = await authFetch('/api/capsules');
+            if (res.ok) setCapsules(await res.json());
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => { loadCapsules(); }, []);
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const method = editingId ? 'PATCH' : 'POST';
+            const url = editingId ? `/api/capsules/${editingId}` : '/api/capsules';
+            const res = await authFetch(url, {
+                method,
+                body: JSON.stringify(form)
+            });
+            if (res.ok) {
+                setEditingId(null);
+                setForm({});
+                setView('list');
+                loadCapsules();
+            }
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        await authFetch(`/api/capsules/${id}`, { method: 'DELETE' });
+        setDeletingId(null);
+        setDeleteTarget('');
+        loadCapsules();
+    };
+
+    const openCreateForm = () => {
+        setEditingId(null);
+        setForm({
+            name: '', product_name: '', product_price: '',
+            product_specification: '', target_audience: '',
+            key_differentiators: '', pain_points_solved: '',
+            additional_context: '', is_default: false
+        });
+        setView('create');
+    };
+
+    const openEditForm = (cap) => {
+        setEditingId(cap.id);
+        setForm({ ...cap });
+        setView('edit');
+    };
+
+    const set = (k) => (e) => setForm(p => ({ ...p, [k]: e.target.value }));
+
+    const capsuleCount = capsules.length;
+
+    // RENDER LIST VIEW
+    if (view === 'list') {
+        return (
+            <div className="animate-fade-in">
+                {/* Header Row */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2.5rem', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+                            Product Capsules
+                        </h2>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-dim)' }}>
+                            Reusable product context templates for AI-powered sales conversations.
+                        </p>
+                    </div>
+                    <button
+                        onClick={openCreateForm}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: '0.5rem',
+                            background: 'var(--text)', color: 'var(--bg)', border: 'none',
+                            borderRadius: 99, padding: '0.65rem 1.35rem',
+                            fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+                            transition: 'all 0.2s ease', flexShrink: 0, letterSpacing: '-0.01em'
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+                    >
+                        <Plus size={16} strokeWidth={2.5} /> New Capsule
+                    </button>
+                </div>
+
+                {/* Count badge */}
+                {capsuleCount > 0 && (
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 99, padding: '0.35rem 1rem', marginBottom: '1.5rem', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-dim)' }}>
+                        <Pill size={13} color="#e11d48" /> {capsuleCount} capsule{capsuleCount !== 1 ? 's' : ''}
+                    </div>
+                )}
+
+                {loading ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem 0' }}>
+                        <Loader2 className="animate-spin" size={24} color="var(--text-dim)" />
+                    </div>
+                ) : capsules.length === 0 ? (
+                    <div style={{
+                        textAlign: 'center', padding: '4rem 2rem',
+                        background: 'var(--surface)', border: '1px solid var(--border)',
+                        borderRadius: 20, position: 'relative', overflow: 'hidden'
+                    }}>
+                        <div style={{
+                            position: 'absolute', top: -40, right: -40,
+                            width: 160, height: 160, borderRadius: '50%',
+                            background: 'radial-gradient(circle, rgba(225,29,72,0.06) 0%, transparent 70%)',
+                            pointerEvents: 'none'
+                        }} />
+                        <div style={{
+                            width: 64, height: 64, borderRadius: 16,
+                            background: 'rgba(225,29,72,0.06)', border: '1px solid rgba(225,29,72,0.12)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            margin: '0 auto 1.25rem'
+                        }}>
+                            <Pill size={28} color="#e11d48" />
+                        </div>
+                        <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>
+                            No capsules yet
+                        </div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginBottom: '2rem', lineHeight: 1.6, maxWidth: 380, margin: '0 auto 2rem' }}>
+                            Create a product capsule to store specs, pricing, and context so your AI always knows what you're selling.
+                        </div>
+                        <button
+                            onClick={openCreateForm}
+                            style={{
+                                display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                                background: 'var(--text)', color: 'var(--bg)', border: 'none',
+                                borderRadius: 99, padding: '0.7rem 1.5rem',
+                                fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <Plus size={15} /> Create First Capsule
+                        </button>
+                    </div>
+                ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+                        {capsules.map(cap => (
+                            <div
+                                key={cap.id}
+                                style={{
+                                    background: 'var(--surface)',
+                                    border: cap.is_default ? '1.5px solid var(--text)' : '1px solid var(--border)',
+                                    borderRadius: 16, padding: '1.5rem',
+                                    transition: 'all 0.2s ease', position: 'relative'
+                                }}
+                                onMouseEnter={e => { if (!cap.is_default) e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
+                                onMouseLeave={e => { if (!cap.is_default) e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
+                            >
+                                {cap.is_default && (
+                                    <div style={{
+                                        position: 'absolute', top: 12, right: 12,
+                                        fontSize: '0.65rem', fontWeight: 700,
+                                        color: '#e11d48', background: 'rgba(225,29,72,0.08)',
+                                        padding: '0.15rem 0.6rem', borderRadius: 99,
+                                        letterSpacing: '0.02em', textTransform: 'uppercase'
+                                    }}>
+                                        Default
+                                    </div>
+                                )}
+                                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text)', marginBottom: '0.75rem', letterSpacing: '-0.01em', paddingRight: cap.is_default ? '4.5rem' : 0 }}>
+                                    {cap.name}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-dim)' }}>
+                                        <Package size={13} /> {cap.product_name}
+                                    </div>
+                                    {cap.product_price && (
+                                        <span style={{ fontSize: '0.72rem', fontWeight: 700, background: 'var(--bg)', border: '1px solid var(--border)', padding: '0.15rem 0.5rem', borderRadius: 6, color: 'var(--text)' }}>
+                                            {cap.product_price}
+                                        </span>
+                                    )}
+                                </div>
+                                <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: '1.25rem', minHeight: '2.5em' }}>
+                                    {cap.product_specification || cap.target_audience || 'No specifications added.'}
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.5rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+                                    <button
+                                        onClick={() => openEditForm(cap)}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                            background: 'var(--bg)', border: '1px solid var(--border)',
+                                            borderRadius: 8, padding: '0.45rem 0.85rem',
+                                            fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text)',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--text)'}
+                                        onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                                    >
+                                        <Pencil size={12} /> Edit
+                                    </button>
+                                    <button
+                                        onClick={() => { setDeletingId(cap.id); setDeleteTarget(cap.name); }}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                            background: 'transparent', border: '1px solid transparent',
+                                            borderRadius: 8, padding: '0.45rem 0.85rem',
+                                            fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text-dim)',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                        onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.05)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.background = 'transparent'; }}
+                                    >
+                                        <Trash2 size={12} /> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* ══ DELETE CONFIRMATION OVERLAY ══════════════════════════════ */}
+                {deletingId && (
+                    <div
+                        style={{
+                            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
+                            backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            zIndex: 1000, padding: '1rem'
+                        }}
+                        onClick={(e) => { if (e.target === e.currentTarget) { setDeletingId(null); setDeleteTarget(''); } }}
+                    >
+                        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, padding: '2rem', maxWidth: 420, width: '100%', boxShadow: 'var(--shadow-xl)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Trash2 size={18} color="#ef4444" />
+                                </div>
+                                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>Delete Capsule</div>
+                            </div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--text-dim)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                                Are you sure you want to delete <strong style={{ color: 'var(--text)' }}>"{deleteTarget}"</strong>? This action cannot be undone.
+                            </div>
+                            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+                                <button onClick={() => { setDeletingId(null); setDeleteTarget(''); }} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 99, padding: '0.6rem 1.25rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', color: 'var(--text)' }}>Cancel</button>
+                                <button onClick={() => handleDelete(deletingId)} style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: 99, padding: '0.6rem 1.5rem', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer' }}>Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    // RENDER INLINE FORM VIEW ('create' or 'edit')
+    return (
+        <div className="animate-fade-in">
+            {/* Header row with navigation back */}
+            <div style={{ marginBottom: '2rem' }}>
+                <button
+                    onClick={() => setView('list')}
+                    style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                        background: 'transparent', border: 'none', color: 'var(--text-dim)',
+                        fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer', padding: 0,
+                        transition: 'color 0.2s ease', fontFamily: 'inherit'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
+                >
+                    <ArrowLeft size={16} /> Back to Product Capsules
+                </button>
+            </div>
+
+            <SectionCard 
+                title={editingId ? "Edit Product Capsule" : "New Product Capsule"} 
+                sub={editingId ? "Modify specifications for your reusable product template." : "Define your product context to ground real-time AI suggestions."}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <Field label="Capsule Identifier" hint="An internal label to quickly identify this product template.">
+                        <Input value={form.name} onChange={set('name')} placeholder="e.g. Standard Enterprise Package" />
+                    </Field>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem' }}>
+                        <Field label="Product / Service Name">
+                            <Input value={form.product_name} onChange={set('product_name')} placeholder="e.g. Acme Sales Copilot" />
+                        </Field>
+                        <Field label="Pricing / Value Tier">
+                            <Input value={form.product_price} onChange={set('product_price')} placeholder="e.g. $2,500/month or custom" />
+                        </Field>
+                    </div>
+
+                    <Field label="Features & Specifications" hint="Detail specifications, key deliverables, terms of delivery, and technical properties.">
+                        <TextArea 
+                            value={form.product_specification} 
+                            onChange={set('product_specification')} 
+                            placeholder="Detail features, requirements, technical scope of work, etc..." 
+                            rows={4}
+                        />
+                    </Field>
+
+                    <Field label="Target Prospect Profile" hint="Outline target client profile (e.g. industries, business size, job roles).">
+                        <Input value={form.target_audience} onChange={set('target_audience')} placeholder="e.g. Mid-market CTOs, enterprise heads of IT..." />
+                    </Field>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem' }}>
+                        <Field label="Key Differentiators" hint="Why choose this product over competitive products?">
+                            <TextArea 
+                                value={form.key_differentiators} 
+                                onChange={set('key_differentiators')} 
+                                placeholder="What sets this apart..." 
+                                rows={3}
+                            />
+                        </Field>
+                        <Field label="Pain Points Addressed" hint="Core customer challenges this product resolves.">
+                            <TextArea 
+                                value={form.pain_points_solved} 
+                                onChange={set('pain_points_solved')} 
+                                placeholder="Core problems solved..." 
+                                rows={3}
+                            />
+                        </Field>
+                    </div>
+
+                    <Field label="AI Guidance Instructions" hint="Special instructions for AI meeting assistant suggestions.">
+                        <TextArea 
+                            value={form.additional_context} 
+                            onChange={set('additional_context')} 
+                            placeholder="e.g. Focus on ROI first, don't mention raw pricing terms until key value is established..." 
+                            rows={3}
+                        />
+                    </Field>
+
+                    <Toggle
+                        checked={form.is_default || false}
+                        onChange={val => setForm({ ...form, is_default: val })}
+                        label="Set as default capsule"
+                        sub="Automatically select this product specification template for new briefings."
+                    />
+
+                    {/* Action buttons matching SaveBtn aesthetic */}
+                    <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                        <button
+                            onClick={() => setView('list')}
+                            style={{
+                                background: 'transparent', border: '1.5px solid var(--border)',
+                                color: 'var(--text)', borderRadius: 99,
+                                padding: '0.8rem 2.25rem', fontSize: '0.875rem', fontWeight: 700,
+                                cursor: 'pointer', transition: 'all 0.2s ease', fontFamily: 'inherit'
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--text)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; }}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            disabled={saving || !form.name || !form.product_name}
+                            onClick={handleSave}
+                            style={{
+                                background: 'var(--text)', color: 'var(--bg)', border: 'none',
+                                borderRadius: 99, padding: '0.8rem 2.5rem', fontSize: '0.875rem', fontWeight: 700,
+                                cursor: (saving || !form.name || !form.product_name) ? 'not-allowed' : 'pointer',
+                                opacity: (saving || !form.name || !form.product_name) ? 0.5 : 1,
+                                transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', gap: '0.5rem',
+                                fontFamily: 'inherit'
+                            }}
+                        >
+                            {saving && <Loader2 size={16} className="animate-spin" />}
+                            {editingId ? 'Update Capsule' : 'Create Capsule'}
+                        </button>
+                    </div>
+                </div>
+            </SectionCard>
+        </div>
+    );
+};
 
 // ── PROMPT DIRECTIVE WORKSHOP PANEL ──────────────────────────────────────────
 const PromptDirectivePanel = () => {
@@ -328,6 +710,12 @@ const NAV_GROUPS = [
         ]
     },
     {
+        title: 'Sales Context',
+        items: [
+            { id: 'capsules', label: 'Product Capsules', icon: Pill },
+        ]
+    },
+    {
         title: 'Security & System',
         items: [
             { id: 'notifications', label: 'Notifications', icon: Bell },
@@ -343,6 +731,7 @@ const PANELS = {
     workspace: <WorkspacePanel />,
     ai: <AiPanel />,
     directives: <PromptDirectivePanel />,
+    capsules: <CapsulesPanel />,
     notifications: <NotificationsPanel />,
     security: <SecurityPanel />,
     billing: <BillingPanel />,
@@ -377,24 +766,6 @@ const SettingsShell = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Instant Search Bar */}
-                <div style={{ position: 'relative', width: 280 }}>
-                    <Search size={14} color="var(--text-dim)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                        placeholder="Search settings..."
-                        style={{
-                            width: '100%', boxSizing: 'border-box',
-                            background: 'var(--bg)', border: '1px solid var(--border)',
-                            borderRadius: 99, padding: '0.55rem 0.85rem 0.55rem 2.25rem',
-                            fontSize: '0.85rem', color: 'var(--text)', outline: 'none',
-                            fontFamily: 'inherit'
-                        }}
-                    />
-                </div>
             </div>
 
             {/* Split Grid Layout */}
@@ -404,11 +775,13 @@ const SettingsShell = () => {
                 <nav className="cmd-nav-matrix">
                     {NAV_GROUPS.map((group, gIdx) => (
                         <div key={gIdx} className="cmd-nav-group">
-                            <div className="cmd-nav-group-title">{group.title}</div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                            <div className="cmd-nav-group-title">
+                                {group.title}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                                 {group.items
                                     .filter(item => !searchQuery || item.label.toLowerCase().includes(searchQuery.toLowerCase()))
-                                    .map(item => {
+                                    .map((item) => {
                                         const Icon = item.icon;
                                         const isActive = active === item.id;
                                         const isDanger = item.id === 'danger';
@@ -419,9 +792,39 @@ const SettingsShell = () => {
                                                 onClick={() => setActive(item.id)}
                                                 className={`cmd-nav-btn ${isActive ? 'active' : ''} ${isDanger ? 'danger' : ''}`}
                                             >
-                                                <Icon size={15} strokeWidth={isActive ? 2.5 : 2} />
-                                                <span style={{ fontWeight: isActive ? 700 : 500 }}>{item.label}</span>
-                                                {isActive && <ChevronRight size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
+                                                {/* Clean interactive sidebar icon */}
+                                                <Icon 
+                                                    size={15} 
+                                                    strokeWidth={isActive ? 2.5 : 2} 
+                                                    style={{ 
+                                                        color: isActive ? 'var(--text)' : 'var(--text-dim)',
+                                                        transition: 'color 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                                                    }} 
+                                                />
+                                                <span style={{ 
+                                                    fontWeight: isActive ? 600 : 500,
+                                                    color: isActive ? 'var(--text)' : 'var(--text-dim)',
+                                                    transition: 'color 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                                                }}>
+                                                    {item.label}
+                                                </span>
+                                                
+                                                {/* Glowing indicator dot for Awwwards luxury aesthetic */}
+                                                {isActive && (
+                                                    <div 
+                                                        className="active-glow-dot"
+                                                        style={{
+                                                            width: 6,
+                                                            height: 6,
+                                                            borderRadius: '50%',
+                                                            background: isDanger ? '#ef4444' : 'var(--accent)',
+                                                            boxShadow: isDanger 
+                                                                ? '0 0 10px rgba(239,68,68,0.5)' 
+                                                                : '0 0 10px rgba(30,64,175,0.4)',
+                                                            marginLeft: 'auto'
+                                                        }} 
+                                                    />
+                                                )}
                                             </button>
                                         );
                                     })}
@@ -430,64 +833,93 @@ const SettingsShell = () => {
                     ))}
                 </nav>
 
-                {/* Right Viewport */}
+                {/* Right Viewport - Luxury Floating Paper Card */}
                 <main className="cmd-viewport">
-                    {PANELS[active]}
+                    <div className="premium-panel-container">
+                        {PANELS[active]}
+                    </div>
                 </main>
             </div>
 
             <style>{`
                 .cmd-settings-grid {
                     display: grid;
-                    grid-template-columns: 280px 1fr;
-                    gap: 4rem;
+                    grid-template-columns: 240px 1fr;
+                    gap: 4.5rem;
                     align-items: start;
                 }
                 .cmd-nav-matrix {
                     display: flex;
                     flex-direction: column;
-                    gap: 2rem;
+                    gap: 2.25rem;
                     position: sticky;
                     top: 2rem;
                 }
+                .cmd-nav-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
                 .cmd-nav-group-title {
-                    font-size: 0.78rem;
+                    font-family: var(--font-display);
+                    font-size: 0.65rem;
                     font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.18em;
                     color: var(--text-dim);
-                    margin-bottom: 0.75rem;
-                    padding-left: 0.5rem;
+                    opacity: 0.6;
+                    margin-bottom: 0.25rem;
+                    padding-left: 0.75rem;
                 }
                 .cmd-nav-btn {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    padding: 0.7rem 0.875rem;
-                    border-radius: 99px;
+                    padding: 0.65rem 0.85rem;
+                    border-radius: 12px;
                     border: 1px solid transparent;
                     background: transparent;
                     color: var(--text-dim);
-                    font-size: 0.9rem;
+                    font-size: 0.88rem;
                     cursor: pointer;
                     width: 100%;
                     text-align: left;
-                    transition: all 0.2s ease;
+                    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                    font-family: inherit;
                 }
                 .cmd-nav-btn:hover {
                     background: var(--surface);
                     color: var(--text);
+                    transform: translateX(2px);
+                }
+                .cmd-nav-btn:hover span {
+                    color: var(--text) !important;
                 }
                 .cmd-nav-btn.active {
                     background: var(--surface);
                     border-color: var(--border);
-                    color: var(--text);
                     box-shadow: var(--shadow-sm);
                 }
                 .cmd-nav-btn.danger {
                     color: #ef4444;
                 }
-                .cmd-nav-btn.danger.active {
-                    border-color: rgba(239,68,68,0.25);
+                .cmd-nav-btn.danger:hover {
                     background: rgba(239,68,68,0.04);
+                    border-color: rgba(239,68,68,0.1);
+                }
+                .cmd-nav-btn.danger.active {
+                    border-color: rgba(239,68,68,0.2);
+                    background: rgba(239,68,68,0.04);
+                }
+                
+                /* Luxury viewport container style */
+                .premium-panel-container {
+                    background: var(--surface);
+                    border: 1px solid var(--border-strong);
+                    border-radius: 28px;
+                    padding: 3.5rem;
+                    box-shadow: var(--shadow-premium);
+                    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
                 }
                 .cmd-viewport {
                     min-width: 0;

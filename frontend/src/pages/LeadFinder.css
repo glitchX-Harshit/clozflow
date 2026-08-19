@@ -2769,3 +2769,164 @@
 .lf__export-btn:active {
     transform: translateY(0);
 }
+
+/* ── Premium History Dropdown ────────────────────────────────────── */
+.lf__history-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--border);
+    z-index: 100;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: lfHistoryFadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: top center;
+}
+
+@keyframes lfHistoryFadeUp {
+    0% { opacity: 0; transform: translateY(-10px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lf__history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid var(--border);
+}
+
+.lf__history-header span {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+}
+
+.lf__history-clear-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.lf__history-clear-btn:hover {
+    color: var(--accent);
+}
+
+.lf__history-list {
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 10px;
+    scrollbar-width: thin;
+}
+
+.lf__history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    background: transparent;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+}
+
+.lf__history-item:last-child {
+    margin-bottom: 0;
+}
+
+.lf__history-item:hover {
+    background: var(--surface-2);
+    border-color: var(--border);
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.lf__history-query-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.lf__history-query {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.lf__history-meta-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lf__history-mode {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.lf__history-badge {
+    background: var(--surface);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.lf__history-item:hover .lf__history-badge {
+    background: var(--text);
+    color: var(--text-inv);
+    border-color: var(--text);
+}
+
+.lf__history-icon {
+    color: var(--text-dim);
+    transition: all 0.2s ease;
+}
+
+.lf__history-item:hover .lf__history-icon {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+/* ── Inline History List (Empty state) ──────────────────────────── */
+.lf__inline-history {
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto 0;
+    text-align: left;
+}
+
+.lf__inline-history .lf__history-list {
+    padding: 0;
+}
+
+.lf__inline-history .lf__history-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+}
+
+.lf__inline-history .lf__history-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--accent-rgb, 99, 91, 255), 0.15);
+}

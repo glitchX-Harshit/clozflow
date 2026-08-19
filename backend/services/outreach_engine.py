@@ -55,15 +55,25 @@ CHANNEL_CONFIG = {
 }
 
 STRATEGY_CONFIG = {
-    "default": "Execute a psychological pattern interrupt. You are an cold outreacher, who knows every objection before it happens. Your goal is NEVER to sell a product and NEVER to ask for a call, meeting, or Zoom in the first message. Your goal is strictly to spark intense curiosity and get a reply by sharing a brief, tactical observation or asking a sharp question that shows you understand their operations. Do not sound salesy or corporate."
+    "default": "You are not selling anything and you are not a stranger doing 'research' on them. You noticed one real, specific thing while looking at how their business actually runs, and it's bugging you enough that you want to ask about it. NEVER pitch, NEVER mention a call/meeting/Zoom/demo, NEVER use the word 'help' in a sales sense. The entire message only works if it reads like it was written by someone who runs a similar business and stumbled onto something odd — not by someone trying to get their attention. If it could be mistaken for a template, it has failed."
 }
 
 ANGLE_VECTORS = [
-    "Ask a very simple, direct question about a specific detail on their website or phone setup, like you're just trying to verify how it works.",
-    "Make a casual, friendly observation about a minor friction point you encountered (e.g. line was busy, booking link was buried), without dropping stats or pitches.",
-    "Drop a 1-sentence thought about their customer flow (e.g. trying to book a slot) and ask a quick, curiosity-based question.",
-    "Ask a peer-to-peer question about how they handle their busy hours, keeping the language extremely raw and short.",
-    "Act as a helpful neighbor business owner who noticed a small glitch in their digital setup and is just calling it out to be helpful."
+    "Ask a very simple, direct question about a specific detail on their website or phone setup, like you're just trying to verify how it works — genuinely unsure, not performing curiosity.",
+    "Make a casual, friendly observation about a minor friction point you personally ran into (e.g. line was busy, booking link was buried), without dropping stats or pitches.",
+    "Drop a 1-sentence thought about their customer flow (e.g. trying to book a slot) and ask a quick, curiosity-based question that assumes they'll know the answer off the top of their head.",
+    "Ask a peer-to-peer question about how they handle their busy hours, keeping the language extremely raw and short, like a voice note typed out.",
+    "Act as a helpful neighbor business owner who noticed a small glitch in their digital setup and is just calling it out to be helpful, no ask attached.",
+    "Make a backhanded-compliment observation — something genuinely impressive about their setup paired with one thing that doesn't match it, and ask why the gap exists.",
+    "State a blunt, slightly risky guess about how they currently handle something operationally (e.g. 'guessing you're doing X manually right now') and ask them to confirm or correct you.",
+    "Open with 'almost didn't message you but' framing — a small hesitation that signals you're not doing mass outreach, followed by the one specific thing that made you send it anyway.",
+    "Take a mild contrarian stance on something most businesses in their category do, note they seem to be the exception (or not), and ask which side of it they're actually on.",
+]
+
+BANNED_CLOSING_PHRASES = [
+    "is that intentional", "was that intentional", "just wondering", "just curious",
+    "let me know if", "would love to", "quick question for you", "no pressure",
+    "just checking in", "reaching out because", "hope this helps",
 ]
 
 SCORING_WEIGHTS = {
@@ -130,6 +140,11 @@ def _score_message(message: str, lead_data: dict, channel: str) -> dict:
     for cp in corporate_phrases:
         if cp in msg_lower:
             human_sound -= 15
+
+    # Penalize the exact template-y closing phrases that make a message feel mass-sent
+    for bp in BANNED_CLOSING_PHRASES:
+        if bp in msg_lower:
+            human_sound -= 25
     human_sound = max(0, human_sound)
 
     # Spam risk (separate from weighted score)
@@ -206,21 +221,33 @@ def _build_outreach_prompt(
     rewrites = random.sample([
         (
             "I noticed your website lacks a booking system. I can help with that.",
-            "Quick question—does your site let people book slots directly? I noticed you guys are very active here on Instagram but couldn't find a booking link."
+            "Your site looks sharp but I couldn't find a way to actually book a slot on it. Are people just DMing you directly, or am I missing a link somewhere?"
         ),
         (
             "You have no social media presence. We should get on a call.",
-            "Love the portfolio on your site. Was looking for your Instagram to share with a colleague, do you guys have a handle or run mostly on word of mouth?"
+            "Was about to send your page to a friend and realized there's no Instagram tag anywhere. Do you run this purely offline or is there a handle you keep private?"
         ),
         (
             "I was trying to place an order but there's no link.",
-            "Menu looks great. Do you guys process digital orders manually over WhatsApp, or is there a checkout link I missed on the site?"
+            "Weird thing I noticed — your menu's all laid out but there's no way to actually order from it online. Is that on purpose, like you'd rather people call in?"
         ),
         (
             "I noticed you don't use an AI receptionist.",
-            "Incredible reviews on Google. Quick thought—when the shop gets busy, do you guys have a backup number for calls, or does it go straight to voicemail?"
+            "Called around lunch and it rang out twice before someone picked up. Genuinely curious, does that happen a lot during your rush hours?"
         ),
-    ], k=2)
+        (
+            "I noticed your prices aren't listed anywhere online.",
+            "Almost didn't message but noticed something odd — every competitor near you lists pricing upfront and you don't. Is that a deliberate call, or just hasn't come up yet?"
+        ),
+        (
+            "Your business hours online seem outdated, please fix that.",
+            "Guessing this is a long shot, but does your team update hours manually on three different places, or is there one source of truth somewhere?"
+        ),
+        (
+            "I'd love to help you get more leads through better outreach.",
+            "Your work looks genuinely better than most of what's around you, which made the lack of a contact form kind of jump out. What's the actual first step for someone who wants to reach you?"
+        ),
+    ], k=3)
 
     rewrite_block = "\n\n".join(
         f"  ✗ WEAK: \"{bad}\"\n  ✓ SHARP: \"{good}\""
@@ -269,8 +296,10 @@ Rules:
 - Absolutely NO greetings ("Hi", "Hey", "Hope you're well"). Start immediately mid-thought.
 - Absolutely NO introductions ("I am from", "We do").
 - Use a psychological pattern interrupt: state a surprising observation about their business or a mini-storyline.
-- The final sentence MUST be a highly specific "pro cold DM" question — frame it as if you are studying their space, genuinely confused, or asking for their expert input (e.g. "Am I missing something hidden?", "How are you guys actually handling X?").
-- NEVER use: "word of mouth", "is that intentional", "was that intentional", reviews, stars, rating, online presence, or marketing jargon.
+- The final sentence should either be a highly specific "pro cold DM" question (frame it as if you are studying their space, genuinely confused, or asking for their expert input — e.g. "Am I missing something hidden?", "How are you guys actually handling X?") OR a blunt guess about how they operate that invites a correction. Whichever you use, it must be impossible to answer with just "yes" or "no" without adding something — that's what actually gets a reply typed out.
+- Vary sentence length on purpose — one short punchy line, then one slightly longer one. Two sentences of identical length in a row reads like a template.
+- No exclamation marks. No emojis unless the channel is whatsapp or instagram AND it's a single, natural one at most.
+- NEVER use: "word of mouth", "is that intentional", "was that intentional", "just wondering", "just curious", "no pressure", "reaching out because", reviews, stars, rating, online presence, or marketing jargon. These phrases are exactly what makes a message look mass-sent — a single one of them anywhere in the message ruins it.
 
 Return ONLY valid JSON:
 {{
@@ -373,7 +402,7 @@ async def generate_outreach_message(
                     continue
 
                 # Originality (insight_score) gate
-                if True or scores.get("insight_score", 100) >= 80:
+                if scores.get("insight_score", 100) >= 65:
                     print(f"[OutreachEngine] Passed originality gate on attempt {attempt+1} (Score: {scores.get('insight_score')})")
                     # Update cache state
                     GENERATED_HISTORY[lead_id]["last_angle_index"] = current_angle_index

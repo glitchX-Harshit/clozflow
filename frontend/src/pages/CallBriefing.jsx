@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     ArrowLeft, 
@@ -8,7 +8,8 @@ import {
     Sparkles, 
     CheckCircle2, 
     Briefcase,
-    Zap
+    Zap,
+    Pill
 } from 'lucide-react';
 import useCopilotStore from '../store/copilotStore';
 import { openCopilotWindow } from '../utils/copilotWindow';
@@ -28,6 +29,72 @@ const CallBriefing = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [capsules, setCapsules] = useState([]);
+    const [showCapsuleFeedback, setShowCapsuleFeedback] = useState(false);
+    const [selectedCapsuleId, setSelectedCapsuleId] = useState(null);
+
+    useEffect(() => {
+        const fetchCapsules = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                
+                const response = await fetch('http://localhost:8000/api/capsules', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    setCapsules(data);
+                    
+                    // Auto-load default if form is empty
+                    const defaultCap = data.find(c => c.is_default);
+                    if (defaultCap && !formData.product_name && !formData.product_price && !formData.product_specification) {
+                        applyCapsule(defaultCap);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to fetch capsules", err);
+            }
+        };
+        fetchCapsules();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const applyCapsule = (capsule) => {
+        let specString = capsule.product_specification || '';
+        
+        if (capsule.target_audience) specString += `\nTarget Audience: ${capsule.target_audience}`;
+        if (capsule.key_differentiators) specString += `\nKey Differentiators: ${capsule.key_differentiators}`;
+        if (capsule.pain_points_solved) specString += `\nPain Points Solved: ${capsule.pain_points_solved}`;
+        if (capsule.additional_context) specString += `\nAdditional Context: ${capsule.additional_context}`;
+
+        setFormData(prev => ({
+            ...prev,
+            product_name: capsule.product_name || prev.product_name,
+            product_price: capsule.product_price || prev.product_price,
+            product_specification: specString.trim() || prev.product_specification
+        }));
+        setSelectedCapsuleId(capsule.id);
+
+        setShowCapsuleFeedback(true);
+        setTimeout(() => setShowCapsuleFeedback(false), 2000);
+    };
+
+    const handleCapsuleSelect = (capsule) => {
+        if (selectedCapsuleId === capsule.id) {
+            // If already selected, deselect and clear product fields
+            setFormData(prev => ({
+                ...prev,
+                product_name: '',
+                product_price: '',
+                product_specification: ''
+            }));
+            setSelectedCapsuleId(null);
+        } else {
+            applyCapsule(capsule);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -133,15 +200,91 @@ const CallBriefing = () => {
                         </div>
                     </div>
 
-                    <div className="cb-field">
-                        <label className="cb-label"><Zap size={14} color="var(--accent)" /> Your Product or Service</label>
+                    <div className="cb-field" style={{ position: 'relative' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            <label className="cb-label" style={{ margin: 0 }}>
+                                <Zap size={14} color="var(--accent)" /> Your Product or Service
+                            </label>
+                            {showCapsuleFeedback && (
+                                <span className="animate-fade-in" style={{
+                                    color: '#10b981', fontSize: '0.72rem', fontWeight: 700,
+                                    display: 'flex', alignItems: 'center', gap: '0.25rem',
+                                    background: 'rgba(16,185,129,0.06)',
+                                    padding: '0.2rem 0.6rem', borderRadius: 99,
+                                    textTransform: 'uppercase', letterSpacing: '0.04em'
+                                }}>
+                                    ✓ Applied Specs
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Awwwards-style horizontal scrolling pill track for Saved Product Capsules */}
+                        {capsules.length > 0 && (
+                            <div 
+                                style={{ 
+                                    display: 'flex', gap: '0.5rem', overflowX: 'auto', 
+                                    padding: '0.25rem 0.25rem 0.85rem', margin: '0 -0.25rem 0.5rem',
+                                    scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch'
+                                }} 
+                                className="no-scrollbar"
+                            >
+                                {capsules.map(c => {
+                                    const isSelected = selectedCapsuleId === c.id;
+                                    return (
+                                        <button
+                                            key={c.id}
+                                            type="button"
+                                            onClick={() => handleCapsuleSelect(c)}
+                                            style={{
+                                                display: 'inline-flex', alignItems: 'center', gap: '0.45rem',
+                                                background: isSelected ? 'var(--text)' : 'var(--surface-2)',
+                                                border: `1px solid ${isSelected ? 'var(--text)' : 'var(--border-strong)'}`,
+                                                borderRadius: 99, padding: '0.45rem 1rem',
+                                                fontSize: '0.78rem', fontWeight: 600,
+                                                color: isSelected ? 'var(--bg)' : 'var(--text)',
+                                                cursor: 'pointer', whiteSpace: 'nowrap',
+                                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                                                boxShadow: isSelected ? 'var(--shadow-sm)' : 'none',
+                                                outline: 'none'
+                                            }}
+                                            onMouseEnter={e => {
+                                                if (!isSelected) {
+                                                    e.currentTarget.style.borderColor = 'var(--text)';
+                                                    e.currentTarget.style.background = 'var(--surface)';
+                                                }
+                                            }}
+                                            onMouseLeave={e => {
+                                                if (!isSelected) {
+                                                    e.currentTarget.style.borderColor = 'var(--border-strong)';
+                                                    e.currentTarget.style.background = 'var(--surface-2)';
+                                                }
+                                            }}
+                                        >
+                                            <Pill 
+                                                size={11} 
+                                                color={isSelected ? 'var(--bg)' : '#e11d48'} 
+                                                style={{ transition: 'color 0.25s ease' }} 
+                                            />
+                                            {c.name}
+                                            {c.is_default && (
+                                                <span style={{ fontSize: '0.65rem', opacity: 0.8 }}>⭐</span>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+
                         <input 
                             type="text" 
                             className="cb-input" 
                             placeholder="Enterprise Sales Acceleration Platform"
                             required
                             value={formData.product_name}
-                            onChange={(e) => setFormData({...formData, product_name: e.target.value})}
+                            onChange={(e) => {
+                                setFormData({...formData, product_name: e.target.value});
+                                setSelectedCapsuleId(null);
+                            }}
                         />
                     </div>
 

@@ -30,6 +30,7 @@ import {
     ChevronUp,
     Mail,
     Download,
+    Clock,
 } from 'lucide-react';
 import { useLeadFinderStore } from '../store/useLeadFinderStore';
 import MagButton from '../components/MagButton';
@@ -529,7 +530,8 @@ const LeadFinder = ({ onOutreach }) => {
         searchMode, setSearchMode,
         viewMode, setViewMode,
         scrollPosition, setScrollPosition,
-        lastUpdated
+        lastUpdated,
+        searchHistory, addSearchHistory, clearSearchHistory
     } = useLeadFinderStore();
 
     const [loading, setLoading] = useState(false);
@@ -542,6 +544,7 @@ const LeadFinder = ({ onOutreach }) => {
     const abortControllerRef = useRef(null);
     const deepLeadsRef = useRef([]);
     const [deepSearchEnabled, setDeepSearchEnabled] = useState(false);
+    const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
 
     // Sync selected lead when viewMode, leads, or savedLeads change
     useEffect(() => {
@@ -788,7 +791,14 @@ const LeadFinder = ({ onOutreach }) => {
                             } else if (eventType === 'area_done') {
                                 setDeepSearchProgress(prev => prev ? { ...prev, leads_found: parsed.total_leads } : prev);
                             } else if (eventType === 'complete') {
-                                setLeads(parsed.leads || deepLeadsRef.current);
+                                const finalLeads = parsed.leads || deepLeadsRef.current;
+                                setLeads(finalLeads);
+                                addSearchHistory({
+                                    query: q,
+                                    timestamp: Date.now(),
+                                    results: finalLeads.length,
+                                    mode: 'Deep Search'
+                                });
                             }
                         } catch (e) {
                             console.warn('SSE parse error:', e);
@@ -904,6 +914,14 @@ const LeadFinder = ({ onOutreach }) => {
 
             const data = await resp.json();
             setLeads(data);
+            
+            const activeModeLabel = SEARCH_MODES.find(m => m.value === searchMode)?.label || 'Search';
+            addSearchHistory({
+                query: q,
+                timestamp: Date.now(),
+                results: data.length,
+                mode: activeModeLabel
+            });
         } catch (err) {
             console.error('Lead search error:', err);
             showToast('Search failed — check backend connection', '⚠️');
@@ -1136,7 +1154,7 @@ const LeadFinder = ({ onOutreach }) => {
 
                     {/* Search Deck */}
                     <div className="lf__search-section">
-                        <div className="lf__search-bar">
+                        <div className="lf__search-bar" style={{ position: 'relative' }}>
                             <Search size={18} className="lf__search-icon" />
                             <input
                                 id="lead-search-input"
@@ -1146,8 +1164,17 @@ const LeadFinder = ({ onOutreach }) => {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyDown={handleKeyDown}
+                                onFocus={() => setShowHistoryDropdown(false)}
                             />
                             <div className="lf__search-btn-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <button
+                                    className={`lf__deep-toggle ${showHistoryDropdown ? 'active' : ''}`}
+                                    onClick={() => setShowHistoryDropdown(prev => !prev)}
+                                    title="View Recent Searches"
+                                    style={{ padding: '0.5rem' }}
+                                >
+                                    <Clock size={14} />
+                                </button>
                                 <button
                                     className={`lf__deep-toggle ${deepSearchEnabled ? 'active' : ''}`}
                                     onClick={() => setDeepSearchEnabled(prev => !prev)}
@@ -1167,6 +1194,40 @@ const LeadFinder = ({ onOutreach }) => {
                                     magnetStrength={0.25}
                                 />
                             </div>
+                            
+                            {/* History Dropdown */}
+                            {showHistoryDropdown && searchHistory && searchHistory.length > 0 && (
+                                <div className="lf__history-dropdown">
+                                    <div className="lf__history-header">
+                                        <span>RECENT SEARCHES</span>
+                                        <button onClick={() => { clearSearchHistory(); setShowHistoryDropdown(false); }} className="lf__history-clear-btn">
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <div className="lf__history-list">
+                                        {searchHistory.map((h, idx) => (
+                                            <div 
+                                                key={idx}
+                                                className="lf__history-item"
+                                                onClick={() => {
+                                                    setQuery(h.query);
+                                                    setShowHistoryDropdown(false);
+                                                    handleSearch(h.query);
+                                                }}
+                                            >
+                                                <div className="lf__history-query-wrap">
+                                                    <Clock size={15} className="lf__history-icon" />
+                                                    <span className="lf__history-query">{h.query}</span>
+                                                </div>
+                                                <div className="lf__history-meta-wrap">
+                                                    <span className="lf__history-mode">{h.mode}</span>
+                                                    <span className="lf__history-badge">{h.results} leads</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Filters & Mode grid */}
@@ -1348,7 +1409,43 @@ const LeadFinder = ({ onOutreach }) => {
                             <p className="lf__empty-desc">
                                 Search for any niche, business, or category across local regions. Let our agent decode target digital presence, calculate fit, and structure briefings.
                             </p>
-                            <div className="lf__empty-examples-label">RECOMMENDED DISCOVERY SCRIPTS:</div>
+                            
+                            {searchHistory && searchHistory.length > 0 && (
+                                <div className="lf__inline-history">
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                        <div className="lf__empty-examples-label" style={{ margin: 0 }}>RECENT SEARCHES:</div>
+                                        <button 
+                                            onClick={clearSearchHistory}
+                                            className="lf__history-clear-btn"
+                                        >
+                                            Clear History
+                                        </button>
+                                    </div>
+                                    <div className="lf__history-list">
+                                        {searchHistory.map((h, idx) => (
+                                            <div 
+                                                key={idx} 
+                                                className="lf__history-item"
+                                                onClick={() => {
+                                                    setQuery(h.query);
+                                                    handleSearch(h.query);
+                                                }}
+                                            >
+                                                <div className="lf__history-query-wrap">
+                                                    <Clock size={15} className="lf__history-icon" />
+                                                    <span className="lf__history-query">{h.query}</span>
+                                                </div>
+                                                <div className="lf__history-meta-wrap">
+                                                    <span className="lf__history-mode">{h.mode}</span>
+                                                    <span className="lf__history-badge">{h.results} leads</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="lf__empty-examples-label" style={{ marginTop: '2rem' }}>RECOMMENDED DISCOVERY SCRIPTS:</div>
                             <div className="lf__empty-examples">
                                 {EXAMPLES.map((ex) => (
                                     <button

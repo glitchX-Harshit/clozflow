@@ -33,7 +33,7 @@ import OutreachStudioPage from './OutreachStudioPage';
 import { gsap } from 'gsap';
 import ClozFlowLogo from '../components/ClozFlowLogo';
 import Pearl from './Pearl';
-
+import './DashboardOverview.css';
 
 
 const getModuleIcon = (id) => {
@@ -46,115 +46,182 @@ const getModuleIcon = (id) => {
 };
 
 const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, stats, modules }) => (
-    <div className="animate-fade-in">
-        {/* Editorial Header */}
-        <div className="editorial-header">
-            <div className="editorial-title-area">
-                <h1 className="editorial-heading-hero">
-                    Overview<span className="editorial-period">.</span>
+    <div className="overview-container">
+        {/* Editorial Hero Area with Quantum Sales Matrix SVG */}
+        <div className="ov-hero">
+            <div className="ov-hero-text">
+                <h1 className="ov-hero-title">
+                    Quantum<br />Console<span className="editorial-period">.</span>
                 </h1>
-                <div className="db-header-actions" style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem' }}>
+                <p className="ov-hero-subtitle">
+                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. The ClozFlow autonomous intelligence layer is active, monitoring digital presence signals and dialing telemetry in real-time.
+                </p>
+                <div className="ov-hero-actions">
                     <MagButton
-                        label="Start Strategic Mode"
+                        label="Deploy Pearl Agent"
                         variant="dark"
-                        icon={<Phone size={17} />}
+                        icon={<Phone size={16} />}
                         onClick={() => navigate('/call-brief')}
-                        magnetStrength={0.3}
+                        magnetStrength={0.25}
                     />
                     <MagButton
-                        label="Analyze Conversations"
+                        label="Telemetry Log"
                         variant="outline"
                         onClick={onViewAll}
-                        magnetStrength={0.3}
+                        magnetStrength={0.2}
                     />
                 </div>
             </div>
-            <div className="editorial-desc-area">
-                <p className="editorial-desc-text">
-                    Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. Review live sales performance, active deals, and recent conversation insights.
-                </p>
+            
+            {/* Interactive SVG Network Graphic */}
+            <div className="ov-console-graphic">
+                <div className="ov-console-grid-overlay" />
+                <svg className="ov-network-svg" viewBox="0 0 400 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {/* Glowing Connections */}
+                    <path d="M 60 120 L 160 60" stroke="var(--border)" strokeWidth="1.5" className="line-flow" />
+                    <path d="M 60 120 L 160 180" stroke="var(--border)" strokeWidth="1.5" className="line-flow" />
+                    <path d="M 160 60 L 260 60" stroke="var(--border)" strokeWidth="1.5" className="line-flow" />
+                    <path d="M 160 180 L 260 180" stroke="var(--border)" strokeWidth="1.5" className="line-flow" />
+                    <path d="M 260 60 L 340 120" stroke="var(--border)" strokeWidth="1.5" className="line-flow" />
+                    <path d="M 260 180 L 340 120" stroke="var(--border)" strokeWidth="1.5" className="line-flow" />
+                    <path d="M 160 60 L 160 180" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+                    <path d="M 260 60 L 260 180" stroke="var(--border)" strokeWidth="1" strokeDasharray="4 4" />
+
+                    {/* Discovery Node */}
+                    <circle cx="60" cy="120" r="10" fill="var(--bg)" stroke="var(--accent)" strokeWidth="3" className="node-pulse" />
+                    <text x="60" y="145" fill="var(--text)" fontSize="8" fontWeight="800" textAnchor="middle" letterSpacing="0.5">DISCOVER</text>
+
+                    {/* Research Node */}
+                    <circle cx="160" cy="60" r="8" fill="var(--bg)" stroke="var(--text)" strokeWidth="2.5" />
+                    <text x="160" y="45" fill="var(--text-dim)" fontSize="8" fontWeight="700" textAnchor="middle">RESEARCH</text>
+
+                    {/* Outreach Node */}
+                    <circle cx="160" cy="180" r="8" fill="var(--bg)" stroke="var(--text)" strokeWidth="2.5" />
+                    <text x="160" y="200" fill="var(--text-dim)" fontSize="8" fontWeight="700" textAnchor="middle">OUTREACH</text>
+
+                    {/* Phone/Voice Node */}
+                    <circle cx="260" cy="60" r="8" fill="var(--bg)" stroke="var(--text)" strokeWidth="2.5" />
+                    <text x="260" y="45" fill="var(--text-dim)" fontSize="8" fontWeight="700" textAnchor="middle">VOICE AI</text>
+
+                    {/* CRM Node */}
+                    <circle cx="260" cy="180" r="8" fill="var(--bg)" stroke="var(--text)" strokeWidth="2.5" />
+                    <text x="260" y="200" fill="var(--text-dim)" fontSize="8" fontWeight="700" textAnchor="middle">CRM SYNC</text>
+
+                    {/* Pearl Master Node */}
+                    <circle cx="340" cy="120" r="12" fill="var(--accent)" stroke="var(--accent)" strokeWidth="4" className="node-pulse" style={{ animationDuration: '1.5s' }} />
+                    <text x="340" y="147" fill="var(--accent)" fontSize="9" fontWeight="900" textAnchor="middle" letterSpacing="1">PEARL</text>
+                </svg>
             </div>
         </div>
 
-        {/* Stats Row */}
-        <div className="ov-stats-grid">
-            {stats.map((stat, idx) => (
-                <div key={idx} className="ov-stat-card" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                    <div className="ov-stat-top">
-                        <span className="ov-stat-label" style={{ fontFamily: 'monospace', fontSize: '0.65rem', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>{stat.label}</span>
-                        <span className="ov-stat-trend" style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--text)' }}>
-                            {stat.trend}
-                        </span>
-                    </div>
-                    <div className="ov-stat-value" style={{ color: 'var(--text)', fontFamily: 'sans-serif', fontWeight: 900 }}>{stat.value}</div>
-                    <div className="ov-stat-desc" style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{stat.desc}</div>
-                </div>
-            ))}
-        </div>
-
-        {/* Intelligence Modules */}
-        <div className="ov-modules-grid">
-            {modules.map((mod, idx) => (
-                <div key={idx} className="card card-hover" style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
-                    <span className="ov-module-number" style={{ fontFamily: 'monospace', opacity: 0.4 }}>0{mod.id}</span>
-                    <div className="ov-module-icon-wrap" style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}>
-                        {getModuleIcon(mod.id)}
-                    </div>
-                    <h3 className="ov-module-heading" style={{ fontSize: '1.05rem', fontWeight: 800, letterSpacing: '-0.02em' }}>{mod.title}</h3>
-                    <p className="ov-module-desc" style={{ marginBottom: '0.75rem', fontSize: '0.8rem', color: 'var(--text-dim)' }}>{mod.desc}</p>
-                    <div className="ov-module-value" style={{ fontWeight: 800, fontSize: '0.85rem', fontFamily: 'monospace', color: 'var(--text)' }}>
-                        {mod.value}
-                    </div>
-                </div>
-            ))}
-        </div>
-
-        {/* Recent Sessions */}
-        <div style={{ marginTop: '3.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.45rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.625rem', letterSpacing: '-0.03em', textTransform: 'none' }}>
-                    <History size={20} color="var(--text-dim)" /> Recent Sessions
-                </h2>
-                <MagButton label="View all" variant="outline" onClick={onViewAll} magnetStrength={0.2} />
+        {/* Telemetry Array (Advanced Bento Cards) */}
+        <div className="ov-telemetry-section">
+            <div className="ov-section-header">
+                <h3 className="ov-section-title">Cognitive Telemetry Array</h3>
+                <span style={{ fontSize: '0.7rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>SYS.STATUS // ACTIVE</span>
             </div>
             
-            {loadingCalls ? (
-                <div className="card" style={{ padding: '3rem 2rem', textAlign: 'center', background: 'var(--bg)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Loader2 className="animate-spin" size={24} color="var(--accent)" />
+            <div className="ov-telemetry-grid">
+                {stats.map((stat, idx) => {
+                    const cleanVal = parseFloat(stat.value) || 75;
+                    const cardAccent = idx === 0 ? 'var(--accent)' : idx === 1 ? '#6366f1' : idx === 2 ? '#f59e0b' : '#ef4444';
+                    return (
+                        <div key={idx} className="ov-telemetry-card" style={{ '--card-accent': cardAccent }}>
+                            <div className="ov-telemetry-header">
+                                <span className="ov-telemetry-label">{stat.label}</span>
+                                <span className="ov-telemetry-index">0{idx + 1}</span>
+                            </div>
+                            <div className="ov-telemetry-value-wrap">
+                                <span className="ov-telemetry-value">{stat.value}</span>
+                                <span className="ov-telemetry-trend" style={{ color: cardAccent }}>{stat.trend}</span>
+                            </div>
+                            <span className="ov-bento-desc">{stat.desc}</span>
+                            <div className="ov-telemetry-bar">
+                                <div className="ov-telemetry-progress" style={{ transform: `scaleX(${cleanVal / 100})`, background: cardAccent }} />
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+
+        {/* Asymmetrical Neural Directives */}
+        <div className="ov-telemetry-section">
+            <div className="ov-section-header">
+                <h3 className="ov-section-title">Neural Persuasion Architecture</h3>
+            </div>
+            <div className="ov-directives-grid">
+                {modules.map((mod, idx) => {
+                    const isEven = idx % 2 === 0;
+                    return (
+                        <div key={idx} className={`ov-directive-card ${isEven ? 'span-2' : ''}`}>
+                            <div className="ov-directive-bg-glow" />
+                            <span className="ov-module-number">0{mod.id}</span>
+                            
+                            <div className="ov-directive-info">
+                                <span className="ov-directive-num">MODULE // 0{mod.id}</span>
+                                <h3 className="ov-directive-title">{mod.title}</h3>
+                                <p className="ov-directive-desc">{mod.desc}</p>
+                            </div>
+                            
+                            <div className="ov-directive-interactive">
+                                <div className="ov-directive-knob">
+                                    <Sparkle size={12} style={{ marginRight: '6px' }} />
+                                    <span>{mod.value}</span>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+
+        {/* Telemetry Feed / Timeline */}
+        <div className="ov-feed-wrapper">
+            <div className="ov-feed-sidebar">
+                <h2 className="ov-feed-title">Telemetric<br />Timeline<span className="editorial-period">.</span></h2>
+                <p className="ov-feed-desc">
+                    Review and replay live call streams, behavioral audits, and deal closures processed through the dialogue engine.
+                </p>
+                <div>
+                    <MagButton label="Launch Full Archives" variant="outline" onClick={onViewAll} magnetStrength={0.25} />
                 </div>
-            ) : recentCalls && recentCalls.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {recentCalls.map((call, idx) => (
+            </div>
+            
+            <div className="ov-feed-timeline">
+                {loadingCalls ? (
+                    <div className="ov-empty-state" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Loader2 className="animate-spin" size={32} color="var(--accent)" />
+                    </div>
+                ) : recentCalls && recentCalls.length > 0 ? (
+                    recentCalls.map((call, idx) => (
                         <div
                             key={call.id || `call-${idx}`}
                             onClick={onViewAll}
-                            className="session-list-item"
+                            className="ov-timeline-node"
                         >
-                            <div className="session-icon-box">
-                                <FileText size={20} />
-                            </div>
-                            <div className="session-meta-info">
-                                <div className="session-title-row">
-                                    <span className="session-title-text">Session #{call.id}</span>
-                                    <span className="session-tag-badge">Analyzed</span>
+                            <div className="ov-timeline-details">
+                                <div className="ov-timeline-meta">
+                                    <span className="ov-timeline-tag">Session #{call.id}</span>
+                                    <span className="ov-timeline-time">{new Date(call.timestamp).toLocaleDateString()}</span>
                                 </div>
-                                <div className="session-details-row">
-                                    <span className="meta-pill"><Clock size={11} />{new Date(call.timestamp).toLocaleDateString()}</span>
-                                    <span className="meta-pill"><MessageSquare size={11} />{call.message_count} messages</span>
-                                    <span className="meta-pill"><Zap size={11} />{call.insight_count} insights</span>
+                                <h4 className="ov-timeline-title">Cognitive Dialogue Audit</h4>
+                                <div className="ov-timeline-stats">
+                                    <span className="ov-timeline-stat"><MessageSquare size={12} /> {call.message_count} Turns</span>
+                                    <span className="ov-timeline-stat"><Zap size={12} /> {call.insight_count} Insights</span>
                                 </div>
                             </div>
-                            <ChevronRight size={18} className="session-chevron" />
+                            <ChevronRight size={20} className="ov-timeline-arrow" />
                         </div>
-                    ))}
-                </div>
-            ) : (
-                <div className="card" style={{ padding: '4rem 2rem', textAlign: 'center', background: 'var(--bg)' }}>
-                    <div style={{ marginBottom: '1.25rem', opacity: 0.1 }}><History size={56} /></div>
-                    <p style={{ fontWeight: 700, fontSize: '1rem' }}>No conversations analyzed yet.</p>
-                    <p style={{ fontSize: '0.8375rem', color: 'var(--text-dim)', marginTop: '0.375rem' }}>The intelligence layer activates once conversations begin.</p>
-                </div>
-            )}
+                    ))
+                ) : (
+                    <div className="ov-empty-state">
+                        <div style={{ marginBottom: '1.5rem', opacity: 0.15 }}><History size={56} /></div>
+                        <p style={{ fontWeight: 800, fontSize: '1.25rem', fontFamily: 'var(--font-display)' }}>No conversations analyzed yet.</p>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-dim)', marginTop: '0.5rem' }}>The intelligence layer activates once conversations begin.</p>
+                    </div>
+                )}
+            </div>
         </div>
     </div>
 );

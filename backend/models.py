@@ -37,6 +37,28 @@ class User(Base):
     notif_coaching          = Column(Boolean, default=True)
 
     call_logs = relationship("CallLog", back_populates="user")
+    capsules  = relationship("Capsule", back_populates="user")
+
+
+# ── Product Capsule (reusable product context template) ─────────────────────
+class Capsule(Base):
+    __tablename__ = "capsules"
+    id                    = Column(Integer, primary_key=True, index=True)
+    user_id               = Column(Integer, ForeignKey("users.id"))
+    name                  = Column(String, index=True)                      # Display name e.g. "Enterprise Platform"
+    product_name          = Column(String)                                   # Product / service name
+    product_price         = Column(String, nullable=True)                    # Price or pricing model
+    product_specification = Column(Text, nullable=True)                      # Key features & specs
+    target_audience       = Column(Text, nullable=True)                      # Who this product is for
+    key_differentiators   = Column(Text, nullable=True)                      # What makes it unique vs competitors
+    pain_points_solved    = Column(Text, nullable=True)                      # Customer problems it addresses
+    additional_context    = Column(Text, nullable=True)                      # Any extra AI context
+    is_default            = Column(Boolean, default=False)                   # Auto-select on briefing form
+    created_at            = Column(DateTime, default=datetime.utcnow)
+    updated_at            = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", back_populates="capsules")
+
 
 class CallLog(Base):
     __tablename__ = "call_logs"

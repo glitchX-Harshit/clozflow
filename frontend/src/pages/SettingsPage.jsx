@@ -395,4 +395,4 @@ const AiPanel = () => {
     );
 };
 
-export { ProfilePanel, WorkspacePanel, AiPanel, SectionCard, Field, Input, Toggle, SaveBtn, useSave, authFetch };
+export { ProfilePanel, WorkspacePanel, AiPanel, SectionCard, Field, Input, TextArea, Toggle, SaveBtn, useSave, authFetch };
