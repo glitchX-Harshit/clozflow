@@ -16,6 +16,7 @@ async def run_tests():
     for case in test_cases:
         print(f"\n--- Test Case: '{case}' ---")
         start_time = time.time()
+
         
         # Test RAG retrieval directly first
         rag_results = engine.rag.retrieve(case)

@@ -30,19 +30,19 @@ const Footer = () => (
                     <div>
                         <div className="ft__col-title">Company</div>
                         <ul className="ft__col-links">
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a href="/about">About</a></li>
+                            <li><a href="/blog">Blog</a></li>
+                            <li><a href="/careers">Careers</a></li>
+                            <li><a href="/contact">Contact</a></li>
                         </ul>
                     </div>
                     <div>
                         <div className="ft__col-title">Legal</div>
                         <ul className="ft__col-links">
-                            <li><a href="#">Privacy</a></li>
-                            <li><a href="#">Terms</a></li>
-                            <li><a href="#">Security</a></li>
-                            <li><a href="#">GDPR</a></li>
+                            <li><a href="/privacy">Privacy</a></li>
+                            <li><a href="/terms">Terms</a></li>
+                            <li><a href="/security">Security</a></li>
+                            <li><a href="/gdpr">GDPR</a></li>
                         </ul>
                     </div>
                 </div>
@@ -51,8 +51,8 @@ const Footer = () => (
             <div className="ft__bottom">
                 <p className="ft__copy">© 2025 ClozFlow — All rights reserved.</p>
                 <div className="ft__bottom-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-of-service">Terms of Service</a>
                 </div>
             </div>
         </div>

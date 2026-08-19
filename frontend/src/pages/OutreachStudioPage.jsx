@@ -33,16 +33,40 @@ const guessCountryCode = (text) => {
     if (!text) return null;
     const t = text.toLowerCase();
     
-    // Expanded US list with common typos, abbreviations (CA, NY, TX, FL) and partial matches
+    if (/\b(spain|espana|madrid|barcelona|valencia|seville|zaragoza|malaga|murcia|palma|las palmas|bilbao|alicante|cordoba)\b/.test(t)) return '+34';
     if (/\b(us|usa|united states|america|new york|los angeles|chicago|houston|phoenix|san fran|san farnsico|california|texas|florida|boston|seattle|miami|canada|toronto|vancouver|montreal|calgary)\b/.test(t) || t.includes('san fran') || /\b(ca|ny|tx|fl)\b/.test(t)) return '+1';
-    
     if (/\b(uk|united kingdom|london|manchester|birmingham|liverpool|edinburgh|glasgow)\b/.test(t)) return '+44';
     if (/\b(australia|sydney|melbourne|brisbane|perth|adelaide)\b/.test(t)) return '+61';
     if (/\b(uae|united arab emirates|dubai|abu dhabi|sharjah)\b/.test(t)) return '+971';
     if (/\b(germany|berlin|munich|hamburg|frankfurt)\b/.test(t)) return '+49';
     if (/\b(france|paris|marseille|lyon|toulouse)\b/.test(t)) return '+33';
+    if (/\b(italy|rome|milan|naples|turin|palermo|genoa|bologna|florence)\b/.test(t)) return '+39';
     if (/\b(india|delhi|mumbai|pune|hyderabad|jaipur|bangalore|chennai|lucknow|kolkata|ahmedabad|surat|noida|gurgaon|kochi|indore|chandigarh)\b/.test(t)) return '+91';
     if (/\b(nepal|kathmandu|pokhara|lalitpur|bhaktapur)\b/.test(t)) return '+977';
+    if (/\b(netherlands|amsterdam|rotterdam|hague|utrecht)\b/.test(t)) return '+31';
+    if (/\b(belgium|brussels|antwerp|ghent|bruges)\b/.test(t)) return '+32';
+    if (/\b(switzerland|zurich|geneva|basel|bern)\b/.test(t)) return '+41';
+    if (/\b(austria|vienna|salzburg|innsbruck|graz)\b/.test(t)) return '+43';
+    if (/\b(sweden|stockholm|gothenburg|malmo)\b/.test(t)) return '+46';
+    if (/\b(norway|oslo|bergen|trondheim)\b/.test(t)) return '+47';
+    if (/\b(denmark|copenhagen|aarhus|odense)\b/.test(t)) return '+45';
+    if (/\b(finland|helsinki|espoo|tampere)\b/.test(t)) return '+358';
+    if (/\b(portugal|lisbon|porto|amadora)\b/.test(t)) return '+351';
+    if (/\b(greece|athens|thessaloniki|patras)\b/.test(t)) return '+30';
+    if (/\b(russia|moscow|saint petersburg|novosibirsk)\b/.test(t)) return '+7';
+    if (/\b(china|beijing|shanghai|shenzhen|guangzhou)\b/.test(t)) return '+86';
+    if (/\b(japan|tokyo|osaka|kyoto|yokohama)\b/.test(t)) return '+81';
+    if (/\b(south korea|seoul|busan|incheon)\b/.test(t)) return '+82';
+    if (/\b(new zealand|auckland|wellington|christchurch)\b/.test(t)) return '+64';
+    if (/\b(south africa|johannesburg|cape town|durban|pretoria)\b/.test(t)) return '+27';
+    if (/\b(turkey|istanbul|ankara|izmir)\b/.test(t)) return '+90';
+    if (/\b(saudi arabia|riyadh|jeddah|mecca|medina)\b/.test(t)) return '+966';
+    if (/\b(malaysia|kuala lumpur|penang|johor)\b/.test(t)) return '+60';
+    if (/\b(thailand|bangkok|phuket|chiang mai)\b/.test(t)) return '+66';
+    if (/\b(vietnam|hanoi|ho chi minh|da nang)\b/.test(t)) return '+84';
+    if (/\b(indonesia|jakarta|bali|surabaya)\b/.test(t)) return '+62';
+    if (/\b(philippines|manila|cebu|davao)\b/.test(t)) return '+63';
+    if (/\b(ireland|dublin|cork|galway)\b/.test(t)) return '+353';
     
     return null;
 };
@@ -64,6 +88,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
 
     const [generatedMessage, setGeneratedMessage] = useState(null);
     const [generating, setGenerating] = useState(false);
+    const [language, setLanguage] = useState('english');
     const [isEditing, setIsEditing] = useState(false);
     const [editedMessage, setEditedMessage] = useState('');
     const [copied, setCopied] = useState(false);
@@ -114,6 +139,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                     lead_data: lead,
                     channel: 'whatsapp',
                     user_offer: userOffer,
+                    language: language,
                 }),
             });
             if (!resp.ok) throw new Error('Message generation failed');
@@ -132,7 +158,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
         } finally {
             setGenerating(false);
         }
-    }, [lead, userOffer, targetPhone]);
+    }, [lead, userOffer, targetPhone, language]);
 
     // Automatically trigger generation on mount if not already done
     useEffect(() => {
@@ -276,6 +302,28 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                         <div className="os-v3-section-header">
                             <span className="os-v3-badge"><Sparkles size={12}/> AI Outreach Editor</span>
                             <div className="os-v3-message-actions">
+                                <select 
+                                    value={language}
+                                    onChange={(e) => setLanguage(e.target.value)}
+                                    className="os-v3-language-select"
+                                    style={{
+                                        background: 'var(--surface)',
+                                        border: '1px solid var(--border)',
+                                        color: 'var(--text-dim)',
+                                        borderRadius: '8px',
+                                        padding: '4px 8px',
+                                        fontSize: '0.75rem',
+                                        marginRight: '8px',
+                                        outline: 'none',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <option value="english">English</option>
+                                    <option value="hinglish">Hinglish</option>
+                                    <option value="hindi">Hindi</option>
+                                    <option value="spanish">Spanish</option>
+                                    <option value="french">French</option>
+                                </select>
                                 <button className="os-v3-icon-btn" onClick={() => handleCopy(messageText)} title="Copy message">
                                     {copied ? <CheckCircle2 size={16} color="#10b981"/> : <Copy size={16} />}
                                 </button>

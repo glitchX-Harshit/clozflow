@@ -1,6 +1,8 @@
 import os
 import sys
 from contextlib import asynccontextmanager
+import asyncio
+from datetime import datetime, timedelta
 
 # Add parent directory to sys.path to allow importing sibling modules like 'rag'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -15,6 +17,9 @@ from routers import user as user_router
 from routers import leads as leads_router
 from routers import outreach as outreach_router
 from routers import copilot as copilot_router
+from routers import pearl as pearl_router
+from routers import whatsapp as whatsapp_router
+from routers import capsules as capsules_router
 from routers.auth import get_current_user
 from models import User
 from fastapi import Depends
@@ -35,8 +40,26 @@ async def lifespan(app):
     # Startup: pre-load Silero VAD model
     from services.vad_engine import SileroVADEngine
     await SileroVADEngine.warmup()
+    
+    # Start nightly report scheduler
+    async def _nightly_report_loop():
+        from services.pearl_report_service import run_nightly_reports
+        while True:
+            now = datetime.now()
+            # Calculate seconds until 11 PM tonight
+            target = now.replace(hour=23, minute=0, second=0, microsecond=0)
+            if now >= target:
+                target += timedelta(days=1)
+            wait_seconds = (target - now).total_seconds()
+            await asyncio.sleep(wait_seconds)
+            try:
+                await run_nightly_reports()
+            except Exception as e:
+                print(f"Nightly report error: {e}")
+    
+    report_task = asyncio.create_task(_nightly_report_loop())
     yield
-    # Shutdown: nothing to clean up
+    report_task.cancel()
 
 app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
 
@@ -55,6 +78,9 @@ app.include_router(user_router.router)
 app.include_router(leads_router.router)
 app.include_router(outreach_router.router)
 app.include_router(copilot_router.router, prefix="/api/copilot", tags=["copilot"])
+app.include_router(pearl_router.router)
+app.include_router(whatsapp_router.router)
+app.include_router(capsules_router.router)
 
 # Serve uploaded avatars
 os.makedirs("static/avatars", exist_ok=True)

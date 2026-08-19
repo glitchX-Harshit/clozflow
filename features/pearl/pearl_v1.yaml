@@ -1,0 +1,547 @@
+project:
+  name: Clozflow
+  module: Pearl AI
+  version: v1
+  type: Autonomous AI Sales Agent
+
+objective: >
+  Design a world-class, premium SaaS interface for Pearl AI.
+  Pearl is NOT an AI chatbot like ChatGPT.
+  Pearl is an autonomous AI employee that executes complete sales missions
+  independently while the user focuses on their work, sleeps, travels, or is offline.
+
+design_language:
+  inspiration:
+    - Linear
+    - Notion
+    - Cursor
+    - Arc Browser
+    - Stripe Dashboard
+    - Apple
+    - Vercel
+  principles:
+    - Minimal
+    - Premium
+    - Modern
+    - Invisible Complexity
+    - AI-first
+    - Enterprise Ready
+    - Motion Rich
+    - Clean Typography
+    - Soft Shadows
+    - Glassmorphism only where necessary
+    - No clutter
+    - Black and White with Clozflow Magenta accent
+
+philosophy: >
+  Users should never feel like they are chatting with an AI.
+  They should feel like they are assigning work to an intelligent employee.
+
+  Pearl receives a mission.
+
+  Pearl plans.
+
+  Pearl executes.
+
+  Pearl reports back.
+
+  The UI should reflect this employee relationship rather than a conversation.
+
+pages:
+
+  pearl_home:
+
+    purpose: >
+      Landing page for assigning new missions.
+
+    hero:
+
+      title: "Pearl"
+
+      subtitle: >
+        Your autonomous AI sales employee.
+
+      description: >
+        Tell Pearl what you want accomplished.
+        It will research, find leads, personalize outreach,
+        manage conversations, qualify prospects,
+        and report back automatically.
+
+    mission_input:
+
+      style: >
+        Large centered prompt box similar to ChatGPT,
+        Cursor or Claude.
+
+      placeholder: >
+        Example:
+        Find 100 marketing agencies in Mumbai without websites.
+
+      auto_ai_detection:
+        enabled: true
+
+      extracted_fields:
+        - Industry
+        - Location
+        - Quantity
+        - Filters
+        - Outreach Channel
+        - Working Hours
+
+      live_preview:
+        enabled: true
+
+    quick_templates:
+
+      title: Suggested Missions
+
+      cards:
+
+        - Find businesses without websites
+
+        - Find local businesses with poor reviews
+
+        - Find SaaS founders hiring SDRs
+
+        - Find agencies with inactive Instagram
+
+        - Find restaurants without online booking
+
+        - Find businesses with outdated branding
+
+        - Find high-ticket consultants
+
+        - Find dentists with no CRM
+
+    primary_button:
+
+      text: Deploy Pearl
+
+      style:
+        premium_gradient: true
+        rounded: xl
+
+workflow:
+
+  step_1:
+
+    title: Mission Understanding
+
+    description: >
+      Pearl understands natural language
+      and extracts structured objectives.
+
+  step_2:
+
+    title: Mission Review
+
+    ui:
+
+      sections:
+
+        Industry
+
+        Target Location
+
+        Quantity
+
+        Qualification Rules
+
+        Outreach Channels
+
+        Daily Outreach Limit
+
+        Working Hours
+
+        Approval Mode
+
+        Safety Rules
+
+      actions:
+
+        Cancel
+
+        Deploy Mission
+
+  step_3:
+
+    title: Mission Running
+
+    layout:
+
+      left:
+
+        Mission Progress
+
+      center:
+
+        Live Workflow Visualization
+
+      right:
+
+        Activity Feed
+
+mission_progress:
+
+  stages:
+
+    - Planning
+
+    - Geographic Expansion
+
+    - Lead Discovery
+
+    - Qualification
+
+    - AI Verification
+
+    - Lead Enrichment
+
+    - Personalization
+
+    - Outreach
+
+    - Conversation
+
+    - Follow-up
+
+    - CRM Sync
+
+    - Reporting
+
+activity_feed:
+
+  updates:
+
+    - Mission Started
+
+    - Discovering Businesses
+
+    - Qualified Lead Found
+
+    - Website Missing
+
+    - Instagram Detected
+
+    - Personalized Message Generated
+
+    - WhatsApp Message Delivered
+
+    - Reply Received
+
+    - Meeting Booked
+
+    - Human Intervention Required
+
+mission_dashboard:
+
+  metrics:
+
+    Businesses Found
+
+    Qualified Leads
+
+    Messages Generated
+
+    Messages Sent
+
+    Replies
+
+    Interested Prospects
+
+    Meetings Booked
+
+    Follow-ups Scheduled
+
+    Human Reviews Required
+
+lead_discovery_engine:
+
+  architecture:
+
+    Geographic Expansion
+
+    Multi-source Discovery
+
+    Business Merge
+
+    Qualification Engine
+
+    AI Verification
+
+    Lead Enrichment
+
+geographic_expansion:
+
+  description: >
+    Never rely on a single city-level search.
+
+    Automatically divide regions into:
+
+    Country
+
+    →
+
+    State
+
+    →
+
+    City
+
+    →
+
+    District
+
+    →
+
+    Locality
+
+    →
+
+    Neighborhood
+
+    →
+
+    Street Cluster (future)
+
+    Every locality should be explored independently.
+
+multi_source_discovery:
+
+  current_sources:
+
+    Google Maps
+
+    Google Search
+
+    Business Directories
+
+    User CSV
+
+  future_sources:
+
+    Instagram
+
+    Facebook
+
+    LinkedIn
+
+    Apollo
+
+    Crunchbase
+
+    Yellow Pages
+
+    IndiaMART
+
+    Justdial
+
+business_merge:
+
+  description: >
+    Merge duplicate businesses from multiple sources
+    into one unified business profile.
+
+qualification_engine:
+
+  user_rules:
+
+    Has Website
+
+    Has Booking System
+
+    Has Instagram
+
+    Has WhatsApp
+
+    Google Rating
+
+    Minimum Reviews
+
+    Industry
+
+    Employee Size
+
+    Contact Available
+
+    Active Business
+
+    Already Contacted
+
+    Franchise
+
+  philosophy: >
+    Users should be able to create their own lead rules.
+
+    Example:
+
+      Website = False
+
+      Instagram = True
+
+      Rating > 4
+
+      Reviews > 50
+
+      City = Mumbai
+
+ai_verification:
+
+  checks:
+
+    Website Working
+
+    Business Active
+
+    Last Instagram Post
+
+    Booking System
+
+    Owner Detection
+
+    Email Verification
+
+    WhatsApp Availability
+
+    Social Presence
+
+lead_enrichment:
+
+  enrichments:
+
+    Owner Name
+
+    Email
+
+    Phone
+
+    Website
+
+    Instagram
+
+    Facebook
+
+    Reviews
+
+    Industry
+
+    Opportunity Summary
+
+opportunity_detection:
+
+  examples:
+
+    No Website
+
+    Poor Reviews
+
+    Outdated Branding
+
+    No Booking System
+
+    No WhatsApp
+
+    Inactive Social Media
+
+    Weak SEO
+
+channel_connectors:
+
+  architecture:
+
+    description: >
+      Pearl should never directly communicate with platforms.
+
+      Instead,
+      use modular channel adapters.
+
+  connectors:
+
+    WhatsApp
+
+    Email
+
+    LinkedIn
+
+    Instagram
+
+    X
+
+conversation_engine:
+
+  responsibilities:
+
+    Memory
+
+    Context
+
+    Personalized Replies
+
+    Follow-up Scheduling
+
+    Escalation
+
+    Meeting Booking
+
+handoff_rules:
+
+  examples:
+
+    Customer Requests Pricing
+
+    Complex Negotiation
+
+    Enterprise Deal
+
+    Custom Quote
+
+    Human Requested
+
+daily_report:
+
+  delivery:
+
+    Dashboard
+
+    Email
+
+  includes:
+
+    Businesses Found
+
+    Qualified
+
+    Outreach
+
+    Replies
+
+    Meetings
+
+    Interested
+
+    Lost
+
+    Human Required
+
+future_scalability:
+
+  principles:
+
+    Every module must be independently replaceable.
+
+    Every connector must be pluggable.
+
+    Lead Discovery should work independently from Pearl.
+
+    Pearl orchestrates services rather than containing business logic.
+
+    New channels should require only connector implementations.
+
+    New lead sources should plug directly into the Lead Discovery Engine.
+
+    The architecture should support millions of businesses, thousands of concurrent missions, and future multi-agent orchestration.
+
+final_goal: >
+  The final experience should feel like assigning work to a highly intelligent sales employee rather than chatting with an AI assistant.
+  The user spends less than 30 seconds creating a mission.
+  Pearl autonomously executes the mission, continuously updates progress, and returns measurable business outcomes.

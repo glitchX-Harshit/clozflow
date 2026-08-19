@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ClozFlow Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --accent: #0055FF;
+    --border: #e2e8f0;
+  }
+  @page { size: 1920px 1080px; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  .slide {
+    width: 1920px;
+    height: 1080px;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .grid-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: 50px 50px;
+    background-image: linear-gradient(to right, #f1f5f9 1px, transparent 1px), linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+    z-index: -1;
+    opacity: 0.5;
+  }
+  /* Slide 1: Cover */
+  .title-slide { text-align: center; }
+  .title-slide h1 { font-size: 140px; font-weight: 800; letter-spacing: -3px; color: var(--text); margin-bottom: 20px; }
+  .title-slide h1 span { color: var(--accent); }
+  .title-slide p { font-size: 42px; font-weight: 300; color: var(--text-muted); }
+  
+  /* Standard Slide layout */
+  .header { margin-bottom: 80px; }
+  .header h2 { font-size: 80px; font-weight: 800; letter-spacing: -2px; }
+  .header h2 span { color: var(--accent); }
+  .header p.subtitle { font-size: 32px; color: var(--text-muted); font-weight: 400; margin-top: 20px; }
+  
+  .content { flex: 1; display: flex; flex-direction: column; justify-content: center; font-size: 38px; line-height: 1.5; font-family: 'Inter', sans-serif; color: #334155; }
+  
+  /* Two column layout */
+  .two-col { display: flex; gap: 80px; align-items: center; }
+  .col { flex: 1; }
+  
+  /* Cards */
+  .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+  .card { border: 2px solid var(--border); border-radius: 24px; padding: 50px; background: #fff; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05); }
+  .card h3 { font-family: 'Outfit', sans-serif; font-size: 48px; font-weight: 800; margin-bottom: 20px; color: var(--text); }
+  .card p { font-size: 28px; color: var(--text-muted); }
+  
+  /* List */
+  ul.clean-list { list-style: none; }
+  ul.clean-list li { padding: 30px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+  ul.clean-list li:last-child { border-bottom: none; }
+  ul.clean-list li strong { color: var(--text); width: 350px; display: inline-block; font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 800; }
+  ul.clean-list li span { flex: 1; font-size: 32px; color: var(--text-muted); }
+
+  /* Accent shapes */
+  .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.1; z-index: -1; }
+  .blob-1 { top: -100px; right: -100px; width: 600px; height: 600px; background: var(--accent); }
+  
+  /* Flywheel diagram */
+  .flywheel { display: flex; justify-content: space-between; align-items: center; margin-top: 80px; padding: 60px; background: #f8fafc; border-radius: 32px; }
+  .fw-step { text-align: center; font-family: 'Outfit', sans-serif; }
+  .fw-step h4 { font-size: 36px; font-weight: 800; color: var(--text); }
+  .fw-arrow { font-size: 48px; color: var(--accent); font-weight: 800; }
+  
+  /* Footer */
+  .footer-stamp { position: absolute; bottom: 50px; left: 120px; font-family: 'Inter', sans-serif; font-size: 20px; color: #94a3b8; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; }
+  .page-num { position: absolute; bottom: 50px; right: 120px; font-family: 'Inter', sans-serif; font-size: 20px; color: #94a3b8; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<section class="slide title-slide">
+  <div class="grid-bg"></div>
+  <div class="blob blob-1"></div>
+  <h1>CLOZ<span>FLOW</span></h1>
+  <p>The AI Sales Operating System</p>
+</section>
+
+<!-- Slide 2: The Problem -->
+<section class="slide">
+  <div class="footer-stamp">Confidential — ClozFlow</div>
+  <div class="page-num">02</div>
+  <div class="header">
+    <h2>The <span>Broken</span> Sales Stack</h2>
+    <p class="subtitle">Sales teams are drowning in context-switching and siloed data.</p>
+  </div>
+  <div class="content two-col">
+    <div class="col" style="font-size: 42px; font-weight: 300;">
+      <p style="margin-bottom: 40px;">Reps jump between Salesforce, Apollo, Aircall, and Gong just to execute a single workflow.</p>
+      <p><strong>The Core Problem:</strong> Most CRMs tell you what happened in the past. They do not tell you <em>what to do next.</em></p>
+    </div>
+    <div class="col">
+       <div style="background: #f8fafc; border: 2px solid var(--border); border-radius: 32px; padding: 60px; text-align: center;">
+         <h3 style="font-family: 'Outfit'; font-size: 48px; color: #e11d48; margin-bottom: 20px;">Fragmented Execution</h3>
+         <p style="font-size: 28px; color: var(--text-muted);">Siloed tools mean lost revenue. When data doesn't flow naturally, sales reps freeze under pressure.</p>
+       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 3: The Solution -->
+<section class="slide">
+  <div class="grid-bg"></div>
+  <div class="footer-stamp">Confidential — ClozFlow</div>
+  <div class="page-num">03</div>
+  <div class="header">
+    <h2>One <span>Central</span> Intelligence Layer</h2>
+    <p class="subtitle">Connecting every customer acquisition step from first touch to closed deal.</p>
+  </div>
+  <div class="content">
+    <div class="cards-grid">
+      <div class="card">
+        <h3>1. Find</h3>
+        <p>Discover active buyers and decision-makers instantly using automated intent signals.</p>
+      </div>
+      <div class="card">
+        <h3>2. Prepare</h3>
+        <p>Know every prospect deeply via automated research and objection prediction algorithms.</p>
+      </div>
+      <div class="card">
+        <h3>3. Sell</h3>
+        <p>Win live conversations with real-time behavioral intelligence and live coaching.</p>
+      </div>
+      <div class="card">
+        <h3>4. Execute</h3>
+        <p>Scale revenue with Pearl, our autonomous outreach agent handling pipelines 24/7.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 4: Sell -->
+<section class="slide">
+  <div class="blob blob-1"></div>
+  <div class="footer-stamp">Confidential — ClozFlow</div>
+  <div class="page-num">04</div>
+  <div class="header">
+    <h2>Conversation <span>Intelligence</span></h2>
+    <p class="subtitle">Selling beyond words with real-time AI.</p>
+  </div>
+  <div class="content">
+    <ul class="clean-list">
+      <li>
+        <strong>Live Coaching</strong>
+        <span>Real-time contextual prompts delivered to the rep during high-pressure negotiations.</span>
+      </li>
+      <li>
+        <strong>Behavioral Insights</strong>
+        <span>Sub-200ms latency sentiment analysis and intent detection on live calls.</span>
+      </li>
+      <li>
+        <strong>Objection Handling</strong>
+        <span>AI-generated rebuttals fed directly to the rep before they can freeze or stutter.</span>
+      </li>
+      <li>
+        <strong>Confidence Support</strong>
+        <span>Systematically turning average performers into elite, strategic closers.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- Slide 5: Pearl -->
+<section class="slide" style="background: #0f172a; color: #fff;">
+  <div class="footer-stamp" style="color: #475569;">Confidential — ClozFlow</div>
+  <div class="page-num" style="color: #475569;">05</div>
+  <div class="header">
+    <h2 style="color: #fff; border-bottom: none;">Meet <span>Pearl</span></h2>
+    <p class="subtitle" style="color: #94a3b8;">The AI Sales Employee. Autonomous. Tireless. Intelligent.</p>
+  </div>
+  <div class="content two-col">
+    <div class="col" style="color: #cbd5e1; font-weight: 300;">
+      <p style="margin-bottom: 40px; font-size: 42px;">Pearl is not just a copilot. Pearl is an autonomous workflow engine designed to execute outbound pipelines while you sleep.</p>
+    </div>
+    <div class="col">
+       <ul class="clean-list" style="border-top: 1px solid #334155;">
+         <li style="border-bottom: 1px solid #334155;"><strong style="color: #fff;">Prospects</strong> <span style="color: #94a3b8;">Finds local leads automatically.</span></li>
+         <li style="border-bottom: 1px solid #334155;"><strong style="color: #fff;">Drafts</strong> <span style="color: #94a3b8;">Sends hyper-personalized multi-channel campaigns.</span></li>
+         <li style="border-bottom: 1px solid #334155;"><strong style="color: #fff;">Qualifies</strong> <span style="color: #94a3b8;">Handles initial inbound interest and basic objections.</span></li>
+         <li style="border-bottom: none;"><strong style="color: #fff;">Books</strong> <span style="color: #94a3b8;">Schedules meetings directly onto your calendar.</span></li>
+       </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 6: Flywheel -->
+<section class="slide">
+  <div class="grid-bg"></div>
+  <div class="footer-stamp">Confidential — ClozFlow</div>
+  <div class="page-num">06</div>
+  <div class="header">
+    <h2>The Product <span>Flywheel</span></h2>
+    <p class="subtitle">A proprietary moat built on continuous behavioral data.</p>
+  </div>
+  <div class="content">
+    <p style="font-size: 42px; text-align: center; font-weight: 300; margin-bottom: 40px;">Every interaction feeds the Clozflow Engine, continuously optimizing strategies.</p>
+    
+    <div class="flywheel">
+      <div class="fw-step"><h4>More<br/>Conversations</h4></div>
+      <div class="fw-arrow">➔</div>
+      <div class="fw-step"><h4>Better<br/>Intelligence</h4></div>
+      <div class="fw-arrow">➔</div>
+      <div class="fw-step"><h4>Smarter<br/>Recommendations</h4></div>
+      <div class="fw-arrow">➔</div>
+      <div class="fw-step"><h4>Higher<br/>Win Rates</h4></div>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 7: Vision -->
+<section class="slide title-slide" style="background: var(--accent); color: #fff;">
+  <div class="footer-stamp" style="color: rgba(255,255,255,0.5);">Confidential — ClozFlow</div>
+  <div class="page-num" style="color: rgba(255,255,255,0.5);">07</div>
+  <h2 style="font-size: 80px; color: #fff; border: none; margin-bottom: 40px;">The Vision</h2>
+  <p style="font-size: 56px; color: rgba(255,255,255,0.9); font-weight: 300;">We are building the definitive<br/><strong>operating system for modern sales.</strong></p>
+</section>
+
+</body>
+</html>

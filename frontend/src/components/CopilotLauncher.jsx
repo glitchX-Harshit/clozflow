@@ -107,7 +107,7 @@ const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
                         <Rocket className="cl-title-icon" size={20} />
                         Launch Copilot
                     </h3>
-                    <button onClick={handleClose} className="cl-close-btn" title="Close">
+                    <button onClick={handleClose} className="cl-close-btn" title="Close" aria-label="Close Copilot Launcher">
                         <X size={20} />
                     </button>
                 </div>

@@ -558,3 +558,41 @@
 .spin {
     animation: spin 1s linear infinite;
 }
+
+@media (max-width: 640px) {
+    .os-v3-section-card, .os-v3-sidebar-card {
+        padding: 1.25rem;
+        border-radius: 16px;
+    }
+    .os-v3-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .os-v3-header-right {
+        width: 100%;
+    }
+    .os-v3-header-right button {
+        width: 100%;
+        justify-content: center;
+    }
+    .os-v3-generator-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    .os-v3-dialects-row {
+        gap: 0.35rem;
+    }
+    .os-v3-dialect-chip {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.78rem;
+    }
+    .os-v3-actions-bar {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .os-v3-actions-bar button {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -321,6 +321,21 @@ const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
                         gap: 1rem;
                     }
                 }
+                @media (max-width: 640px) {
+                    .hv-card {
+                        padding: 1.25rem !important;
+                    }
+                    .hv-session-btn {
+                        padding: 1.25rem 1rem !important;
+                        gap: 1rem !important;
+                    }
+                    .hv-session-icon {
+                        display: none !important;
+                    }
+                    .hv-delete-btn {
+                        margin-right: 0.5rem !important;
+                    }
+                }
             `}</style>
         </div>
     );
@@ -455,32 +470,17 @@ const HistoryView = () => {
 
     return (
         <div className="animate-fade-in">
-            {/* Awwwards-Grade Editorial Header */}
+            {/* Editorial Header */}
             <div className="editorial-header">
                 <div className="editorial-title-area">
-                    <div className="editorial-meta-label">
-                        <span className="editorial-meta-dot" />
-                        <span>SESSION LOGS / 02</span>
-                    </div>
                     <h1 className="editorial-heading-hero">
                         History<span className="editorial-period">.</span>
                     </h1>
                 </div>
                 <div className="editorial-desc-area">
                     <p className="editorial-desc-text">
-                        Deep-session records of parsed calls, showcasing conversation transcripts, psychological strategies, buyer momentum trackers, and custom growth analytics.
+                        Session records of parsed calls, showcasing conversation transcripts, strategies, and buyer momentum.
                     </p>
-                    <div className="editorial-system-status">
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">TOTAL SESSIONS</span>
-                            <span className="editorial-status-val">{calls.length}</span>
-                        </span>
-                        <span className="editorial-status-divider">/</span>
-                        <span className="editorial-status-item">
-                            <span className="editorial-status-lbl">INTELLIGENCE STATE</span>
-                            <span className="editorial-status-val">PERSISTED</span>
-                        </span>
-                    </div>
                 </div>
             </div>
 
@@ -497,13 +497,14 @@ const HistoryView = () => {
                     >
                         <button
                             onClick={() => handleSelectSession(call.id)}
+                            className="hv-session-btn"
                             style={{
                                 flex:1, textAlign:'left', background:'transparent', border:'none',
                                 padding:'1.75rem 2rem', cursor:'pointer',
                                 display:'flex', alignItems:'center', gap:'1.5rem', width:'100%', fontFamily: 'inherit'
                             }}
                         >
-                            <div style={{ width:52, height:52, borderRadius:14, background:'var(--surface)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'var(--accent)' }}>
+                            <div className="hv-session-icon" style={{ width:52, height:52, borderRadius:14, background:'var(--surface)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'var(--accent)' }}>
                                 <FileText size={22} />
                             </div>
                             <div style={{ flex:1 }}>
@@ -523,6 +524,7 @@ const HistoryView = () => {
                         <button
                             onClick={(e) => handleDeleteRequest(e, call.id)}
                             title="Delete session log"
+                            className="hv-delete-btn"
                             style={{
                                 background:'transparent', border:'none', padding:'1rem',
                                 color:'var(--text-muted)', cursor:'pointer', marginRight:'1.5rem',

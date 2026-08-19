@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+body {
+  font-family: 'Outfit', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #0f172a;
+  background-color: #ffffff;
+  padding: 60px;
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 52px;
+  color: #635bff;
+  margin-top: 150px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+h2 {
+  font-size: 38px;
+  color: #0f172a;
+  border-bottom: 3px solid #635bff;
+  padding-bottom: 12px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+p {
+  font-size: 24px;
+  color: #334155;
+  margin-bottom: 20px;
+}
+
+ul, ol {
+  font-size: 24px;
+  color: #334155;
+  margin-bottom: 30px;
+}
+
+li {
+  margin-bottom: 15px;
+}
+
+strong {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+hr {
+  page-break-after: always;
+  border: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the sub-title on first page */
+p:first-of-type {
+  text-align: center;
+  font-size: 28px;
+  color: #64748b;
+  font-style: italic;
+}
+
+blockquote {
+  background: #f8fafc;
+  border-left: 6px solid #635bff;
+  padding: 20px 25px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 40px 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+code {
+  background-color: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  color: #635bff;
+  font-weight: 800;
+  display: block;
+  text-align: center;
+  margin: 40px 0;
+  border: 1px solid #e2e8f0;
+}

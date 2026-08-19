@@ -113,7 +113,7 @@ const Navbar = ({ onSignup, onLogin }) => {
             <nav className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''}`}>
                 <div className="nb__inner">
                     {/* Logo */}
-                    <a href="#" className="nb__logo">
+                    <a href="/" className="nb__logo" aria-label="Go to ClozFlow homepage">
                         <ClozFlowLogo size={32} />
                     </a>
 

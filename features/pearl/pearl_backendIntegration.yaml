@@ -1,0 +1,411 @@
+project:
+  name: Clozflow
+  architecture: Production Ready
+  goal: >
+    This is NOT a frontend prototype.
+    Generate a real production-ready application architecture that can
+    scale into a commercial SaaS.
+
+    Every page should be connected with real backend APIs.
+    Use mock endpoints only if backend implementation is missing.
+    Never hardcode fake data inside components.
+
+tech_stack:
+
+  frontend:
+    framework: current framework that is being used
+    language: TypeScript
+    styling: TailwindCSS
+    animations: Framer Motion
+    state: Zustand
+    api: TanStack Query
+    realtime: Socket.io Client
+
+  backend:
+    framework: FastAPI
+    language: Python
+    queue: Redis
+    workers: Celery
+    websocket: Socket.io
+    database: PostgreSQL
+    orm: SQLAlchemy
+
+  ai:
+    providers:
+      - OpenAI
+      - Anthropic
+
+architecture:
+
+  philosophy: >
+    Pearl must never directly perform work.
+
+    Pearl is only the orchestrator.
+
+    Every responsibility should exist as an independent service.
+
+services:
+
+  pearl:
+    responsibility:
+      - Mission Planning
+      - Task Scheduling
+      - Agent Orchestration
+
+  lead_discovery:
+    responsibility:
+      - Geographic Expansion
+      - Business Discovery
+      - Deduplication
+
+  research:
+    responsibility:
+      - Website Analysis
+      - Social Analysis
+      - Google Review Analysis
+      - Opportunity Detection
+
+  outreach:
+    responsibility:
+      - Generate Messages
+      - Send Messages
+      - Schedule Follow Ups
+
+  conversations:
+    responsibility:
+      - Handle Replies
+      - AI Memory
+      - Escalation
+
+  crm:
+    responsibility:
+      - Contacts
+      - Companies
+      - Pipelines
+      - Notes
+      - Activities
+
+  analytics:
+    responsibility:
+      - Mission Reports
+      - Daily Reports
+      - Conversion Metrics
+
+folder_structure:
+
+  frontend:
+
+    src/
+
+      app/
+
+      components/
+
+        pearl/
+
+        dashboard/
+
+        crm/
+
+        outreach/
+
+        analytics/
+
+        ui/
+
+      features/
+
+        missions/
+
+        lead-discovery/
+
+        outreach/
+
+        conversations/
+
+        crm/
+
+      hooks/
+
+      services/
+
+        api/
+
+        websocket/
+
+      store/
+
+      types/
+
+      lib/
+
+      layouts/
+
+      providers/
+
+      utils/
+
+  backend:
+
+    app/
+
+      api/
+
+      core/
+
+      database/
+
+      websocket/
+
+      workers/
+
+      models/
+
+      schemas/
+
+      services/
+
+          pearl/
+
+          lead_discovery/
+
+          research/
+
+          outreach/
+
+          conversations/
+
+          crm/
+
+          analytics/
+
+      repositories/
+
+      routes/
+
+      middleware/
+
+      utils/
+
+      tasks/
+
+      connectors/
+
+          whatsapp/
+
+          email/
+
+          linkedin/
+
+          instagram/
+
+mission_flow:
+
+  step_1:
+
+    frontend:
+
+      Pearl Home
+
+  step_2:
+
+    frontend:
+
+      Mission Review
+
+  step_3:
+
+    backend:
+
+      POST /missions
+
+  step_4:
+
+    backend:
+
+      Queue Mission
+
+  step_5:
+
+    worker:
+
+      Execute Mission
+
+realtime:
+
+  use_websocket: true
+
+  events:
+
+    mission_created
+
+    mission_started
+
+    discovering_leads
+
+    leads_found
+
+    qualifying
+
+    researching
+
+    generating_messages
+
+    sending_messages
+
+    replies_received
+
+    meeting_booked
+
+    mission_completed
+
+frontend_pages:
+
+  PearlHome:
+
+    connects_to:
+
+      POST /missions
+
+  MissionDashboard:
+
+    connects_to:
+
+      GET /missions/{id}
+
+      WebSocket
+
+  MissionHistory:
+
+    connects_to:
+
+      GET /missions
+
+  MissionReport:
+
+    connects_to:
+
+      GET /reports/{mission}
+
+lead_discovery:
+
+  api:
+
+    POST /lead-discovery/start
+
+    GET /lead-discovery/status
+
+    GET /lead-discovery/results
+
+research:
+
+  api:
+
+    POST /research/start
+
+    GET /research/status
+
+outreach:
+
+  api:
+
+    POST /outreach/send
+
+    GET /outreach/history
+
+conversation:
+
+  api:
+
+    POST /conversation/reply
+
+    GET /conversation/history
+
+crm:
+
+  api:
+
+    GET /companies
+
+    GET /contacts
+
+    GET /activities
+
+analytics:
+
+  api:
+
+    GET /dashboard
+
+    GET /daily-report
+
+connectors:
+
+  philosophy: >
+    Every external platform should exist as an independent adapter.
+
+  whatsapp:
+
+    responsibilities:
+
+      Session Management
+
+      QR Authentication
+
+      Send Message
+
+      Receive Message
+
+      Webhooks
+
+  instagram:
+
+    responsibilities:
+
+      Future Integration
+
+  linkedin:
+
+    responsibilities:
+
+      Future Integration
+
+development_mode:
+
+  if_backend_missing:
+
+    Create API layer.
+
+    Use mocked JSON responses.
+
+    Components must consume APIs exactly as they would in production.
+
+    Never hardcode values directly inside UI components.
+
+scalability:
+
+  rules:
+
+    Never tightly couple Pearl to messaging platforms.
+
+    Never tightly couple Lead Discovery to Pearl.
+
+    Every service should be independently replaceable.
+
+    New connectors should require only creating another adapter.
+
+    Every mission should execute asynchronously.
+
+    Frontend should receive live updates through websocket events.
+
+final_goal:
+
+  The generated project should resemble the architecture of a production SaaS company rather than a prototype.
+
+  UI should already be wired to backend APIs.
+
+  Backend should expose modular services.
+
+  Folder structure should support long-term scaling.
+
+  Pearl should orchestrate independent engines rather than contain business logic.

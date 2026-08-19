@@ -504,11 +504,16 @@ section {
 }
 
 .editorial-meta-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--accent-mid);
+  width: 6px;
+  height: 6px;
+  background: #e11d48;
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-mid);
+  box-shadow: 0 0 10px #e11d48, 0 0 3px #ff007f;
+}
+
+.editorial-period {
+  color: #e11d48;
+  text-shadow: 0 0 12px rgba(225, 29, 72, 0.4);
 }
 
 .editorial-heading-hero {
@@ -519,10 +524,6 @@ section {
   margin: 0;
   font-family: var(--font-display);
   color: var(--text);
-}
-
-.editorial-period {
-  color: var(--accent-mid);
 }
 
 .editorial-desc-area {

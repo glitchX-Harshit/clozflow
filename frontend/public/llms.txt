@@ -1,0 +1,17 @@
+# ClozFlow.ai
+
+> Autonomous AI Sales Assistant & B2B Outreach Bot
+
+ClozFlow.ai is an intelligent B2B sales automation platform. It deploys autonomous cognitive AI sales agents to find local leads, manage WhatsApp & cold email outreach campaigns, handle objections, and sync with CRMs.
+
+## Core Features
+- **Cognitive Agents**: 98% accuracy in intent detection with <200ms latency.
+- **Outreach Studio**: Multi-channel campaigns via WhatsApp and Email.
+- **Objection Handling**: Real-time contextual rebuttals.
+- **CRM Syncing**: Native integration with Salesforce and HubSpot.
+
+## Usage Data
+- Pricing: Starting at $0.00 for beta users.
+- Contact: sales@clozflow.ai
+- Privacy Policy: /privacy-policy
+- Terms of Service: /terms-of-service

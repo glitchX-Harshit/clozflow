@@ -1,0 +1,306 @@
+.pearl-minimal-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    font-family: var(--font-body);
+    color: var(--text);
+    background-color: transparent;
+}
+
+.pearl-minimal-content {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 5rem;
+}
+
+@media (max-width: 900px) {
+    .pearl-minimal-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+}
+
+/* Left Column Styling */
+.pearl-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.pearl-minimal-title {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    text-transform: none; /* Case-natural for editorial minimal feel */
+}
+
+.pearl-minimal-desc {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+/* GEO Stats Grid */
+.pearl-geo-stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.geo-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.geo-stat-icon {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* Right Column Waitlist Form Box */
+.pearl-minimal-form-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+}
+
+.pearl-fomo-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    background-color: var(--accent-dim);
+    padding: 6px 12px;
+    border-radius: var(--r-sm);
+    align-self: flex-start;
+}
+
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    animation: simplePulse 1.8s infinite ease-in-out;
+}
+
+.pearl-minimal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.pearl-minimal-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.pearl-input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    opacity: 0.7;
+}
+
+.pearl-minimal-input {
+    width: 100%;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 0.9rem 1rem 0.9rem 2.8rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.pearl-minimal-input:focus {
+    border-color: var(--accent);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.pearl-submit-btn {
+    width: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.9rem 1.5rem;
+}
+
+.pearl-minimal-form-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    display: block;
+}
+
+/* Success State */
+.pearl-minimal-success {
+    text-align: center;
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.success-check-circle {
+    width: 48px;
+    height: 48px;
+    background-color: var(--accent-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.pearl-minimal-success h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+    text-transform: none;
+}
+
+.pearl-minimal-success p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Features Grid */
+.pearl-minimal-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    border-top: 1px solid var(--border);
+    padding-top: 3.5rem;
+    margin-bottom: 4rem;
+}
+
+.pearl-minimal-feature-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feature-icon {
+    color: var(--accent);
+}
+
+.pearl-minimal-feature-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: -0.01em;
+}
+
+.pearl-minimal-feature-card p {
+    font-size: 0.925rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* Q&A / System Specifications Section */
+.pearl-minimal-faq {
+    border-top: 1px solid var(--border);
+    padding-top: 3.5rem;
+    margin-bottom: 2rem;
+}
+
+.faq-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.faq-header-icon {
+    color: var(--accent);
+}
+
+.faq-section-header h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+@media (max-width: 768px) {
+    .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.faq-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.faq-item h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    text-transform: none;
+}
+
+.faq-item p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Accessibility / Screen Reader Only Utility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Pulse animation */
+@keyframes simplePulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
