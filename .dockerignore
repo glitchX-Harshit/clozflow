@@ -1,0 +1,13 @@
+.venv
+node_modules
+__pycache__
+*.pyc
+.git
+.vscode
+.env
+hexagon.db
+klyro.db
+frontend
+whatsapp-bridge
+logs
+test

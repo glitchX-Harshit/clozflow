@@ -1,0 +1,50 @@
+# ─── Core Web Framework ───
+fastapi
+uvicorn
+websockets
+starlette
+python-multipart
+
+# ─── Config & Auth ───
+python-dotenv
+pydantic
+pydantic-settings
+passlib[bcrypt]
+PyJWT
+
+# ─── Database ───
+sqlalchemy
+asyncpg
+greenlet
+
+# ─── HTTP Client ───
+httpx
+requests
+
+# ─── AI / LLM ───
+openai
+deepgram-sdk
+
+# ─── ML Pipeline (backend + ml/) ───
+scikit-learn
+xgboost
+joblib
+pandas
+numpy>=1.24.0
+scipy
+
+# ─── VAD (Voice Activity Detection) ───
+silero-vad>=5.1
+onnxruntime>=1.17.0
+
+# ─── RAG (Retrieval Augmented Generation) ───
+faiss-cpu
+sentence-transformers
+
+# ─── PDF Reports ───
+reportlab
+
+# ─── Misc Utilities ───
+PyYAML
+phonenumbers
+aiofiles

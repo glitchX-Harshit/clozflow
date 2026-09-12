@@ -1,0 +1,34 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    libmagic1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy backend requirements
+COPY backend/requirements_full.txt ./requirements.txt
+
+# Install PyTorch CPU-only first (keeps image ~1.5GB smaller than full CUDA torch)
+RUN pip install --no-cache-dir torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all necessary directories
+COPY backend/ ./backend/
+COPY ml/ ./ml/
+COPY rag/ ./rag/
+
+# Add root directory to PYTHONPATH so imports like `from ml...` work
+ENV PYTHONPATH=/app
+
+WORKDIR /app/backend
+
+# Expose backend port
+EXPOSE 8000
+
+CMD ["python", "main.py"]
