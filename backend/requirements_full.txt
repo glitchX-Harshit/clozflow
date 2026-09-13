@@ -16,6 +16,7 @@ PyJWT
 sqlalchemy
 asyncpg
 greenlet
+psycopg2-binary
 
 # ─── HTTP Client ───
 httpx

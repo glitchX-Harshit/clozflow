@@ -356,8 +356,7 @@ class SalesAIEngine:
             self.model = None
             print(f"[AI_CLIENT] WARNING: No Groq API key found for {self.mode} mode — LLM calls will use fallback.")
 
-        self.rag = RAGEngine()
-        self.rag.load_index()
+        self.rag = RAGEngine.get_instance()
 
     # ──────────────────────────────────────────────────────────────────────────
     # Stability systems

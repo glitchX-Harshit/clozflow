@@ -39,6 +39,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend/
 COPY ml/ ./ml/
 COPY rag/ ./rag/
+COPY models/ ./models/
 
 # Copy Frontend Build from Stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend_dist

@@ -13,6 +13,16 @@ from sentence_transformers import SentenceTransformer
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class RAGEngine:
+    # Singleton: avoid loading ~90MB SentenceTransformer per WebSocket connection
+    _instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = cls()
+            cls._instance.load_index()
+        return cls._instance
+
     def __init__(self):
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         self.index = None

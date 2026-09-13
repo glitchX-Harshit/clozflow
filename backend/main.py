@@ -63,10 +63,12 @@ async def lifespan(app):
 app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
 
 # Configure CORS for frontend access
+# In production, frontend and backend share the same origin via Nginx reverse proxy,
+# so CORS is only relevant for local development where frontend is on port 5173.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins for development
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
