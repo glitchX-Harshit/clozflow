@@ -23,7 +23,7 @@ requests
 
 # ─── AI / LLM ───
 openai
-deepgram-sdk
+deepgram-sdk==3.7.0
 
 # ─── ML Pipeline (backend + ml/) ───
 scikit-learn
