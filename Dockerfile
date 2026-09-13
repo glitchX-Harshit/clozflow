@@ -41,6 +41,9 @@ COPY ml/ ./ml/
 COPY rag/ ./rag/
 COPY models/ ./models/
 
+# Pre-download ML models into Docker cache
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
 # Copy Frontend Build from Stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend_dist
 

@@ -4,9 +4,6 @@ import faiss
 import numpy as np
 import pickle
 
-# Force offline mode — skip HuggingFace network checks, use local cache
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
-os.environ["HF_DATASETS_OFFLINE"] = "1"
 
 from sentence_transformers import SentenceTransformer
 
