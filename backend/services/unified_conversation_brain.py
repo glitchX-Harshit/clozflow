@@ -24,7 +24,7 @@ class UnifiedConversationBrain:
                 self.model = "gemini-3.5-flash"
             elif api_key.startswith("gsk_"):
                 base_url = "https://api.groq.com/openai/v1"
-                self.model = "llama-3.3-70b-versatile"
+                self.model = "openai/gpt-oss-120b"
             else:
                 base_url = "https://api.openai.com/v1"
                 self.model = "gpt-4o-mini"

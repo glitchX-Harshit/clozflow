@@ -349,8 +349,8 @@ class SalesAIEngine:
                 api_key=groq_key,
                 base_url="https://api.groq.com/openai/v1"
             )
-            self.model = "llama-3.3-70b-versatile"
-            print(f"[AI_CLIENT] Groq client initialized for {self.mode} mode using llama-3.3-70b-versatile.")
+            self.model = "openai/gpt-oss-120b"
+            print(f"[AI_CLIENT] Groq client initialized for {self.mode} mode using openai/gpt-oss-120b.")
         else:
             self.client = None
             self.model = None
