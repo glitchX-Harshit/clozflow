@@ -17,6 +17,7 @@ RUN npm run build
 FROM node:18-alpine AS bridge-builder
 WORKDIR /app/whatsapp-bridge
 COPY whatsapp-bridge/package*.json ./
+RUN apk add --no-cache python3 make g++
 RUN npm install --production
 COPY whatsapp-bridge/ .
 

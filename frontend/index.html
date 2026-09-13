@@ -67,8 +67,9 @@
   </head>
   <body>
     <script>
-      window.APP_API_BASE = "";
-      window.APP_WS_BASE = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
+      const isLocalDev = window.location.hostname === 'localhost' && window.location.port === '5173';
+      window.APP_API_BASE = isLocalDev ? "http://localhost:8000" : "";
+      window.APP_WS_BASE = isLocalDev ? "ws://localhost:8000" : ((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host);
     </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
