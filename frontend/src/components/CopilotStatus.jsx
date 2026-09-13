@@ -4,7 +4,7 @@ import { Bot, X, Phone, MessageSquare, Linkedin, Instagram, Activity } from 'luc
 import useCopilotStore from '../store/copilotStore';
 import './CopilotStatus.css';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.APP_API_BASE;
 
 const CopilotStatus = () => {
     const { activeSessions, fetchActiveSessions, removeActiveSession } = useCopilotStore();

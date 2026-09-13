@@ -21,7 +21,7 @@ import CopilotLauncher from '../components/CopilotLauncher';
 import MagButton from '../components/MagButton';
 import useCopilotStore from '../store/copilotStore';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.APP_API_BASE;
 
 const scoreLevel = (score) => {
     if (score >= 70) return 'high';

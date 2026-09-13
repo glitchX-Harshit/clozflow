@@ -5,7 +5,7 @@ import MagButton from './MagButton';
 import useCopilotStore from '../store/copilotStore';
 import './CopilotLauncher.css';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.APP_API_BASE;
 
 const CopilotLauncher = ({ isOpen, onClose, lead, platform }) => {
     const [step, setStep] = useState(1);

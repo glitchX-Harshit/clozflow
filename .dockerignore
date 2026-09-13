@@ -7,7 +7,9 @@ __pycache__
 .env
 hexagon.db
 klyro.db
-frontend
-whatsapp-bridge
 logs
 test
+frontend/node_modules
+frontend/dist
+whatsapp-bridge/node_modules
+whatsapp-bridge/auth_info

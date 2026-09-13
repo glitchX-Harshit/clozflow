@@ -358,7 +358,7 @@ const HistoryView = () => {
     const fetchHistory = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:8000/calls/', { headers: { 'Authorization': `Bearer ${token}` } });
+            const res = await fetch(`${window.APP_API_BASE}/calls/`, { headers: { 'Authorization': `Bearer ${token}` } });
             if (!res.ok) throw new Error('Failed to fetch history');
             const data = await res.json();
             setCalls(data);
@@ -375,7 +375,7 @@ const HistoryView = () => {
         setSelectedDetails(null);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8000/calls/${callId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const res = await fetch(`${window.APP_API_BASE}/calls/${callId}`, { headers: { 'Authorization': `Bearer ${token}` } });
             if (!res.ok) throw new Error('Failed to fetch session details');
             const data = await res.json();
             setSelectedDetails(data);
@@ -390,7 +390,7 @@ const HistoryView = () => {
         setDownloading(callId);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8000/calls/${callId}/report`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const res = await fetch(`${window.APP_API_BASE}/calls/${callId}/report`, { headers: { 'Authorization': `Bearer ${token}` } });
             if (!res.ok) throw new Error('Report generation failed');
             const blob = await res.blob();
             const url = window.URL.createObjectURL(blob);
@@ -414,7 +414,7 @@ const HistoryView = () => {
         if (!sessionToDelete) return;
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8000/calls/${sessionToDelete}`, {
+            const res = await fetch(`${window.APP_API_BASE}/calls/${sessionToDelete}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
