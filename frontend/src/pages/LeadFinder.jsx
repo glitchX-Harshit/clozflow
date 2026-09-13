@@ -38,7 +38,7 @@ import CopilotStatus from '../components/CopilotStatus';
 import { gsap } from 'gsap';
 import './LeadFinder.css';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.APP_API_BASE;
 
 /* ══════════════════════════════════════════════════════════════════
    SEARCH EXAMPLES — quick-fill chips

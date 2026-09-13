@@ -96,7 +96,7 @@ const LiveCall = () => {
     }, [resetCopilot]);
     
     // MICROPHONE WEBSOCKET STREAM
-    const wsUrl = contextId ? `ws://localhost:8000/ws/audio?context_id=${contextId}` : 'ws://localhost:8000/ws/audio';
+    const wsUrl = contextId ? `${window.APP_WS_BASE}/ws/audio?context_id=${contextId}` : `${window.APP_WS_BASE}/ws/audio`;
     const { startRecording, stopRecording, isRecording } = useAudioStream(wsUrl);
 
     // Call Timer

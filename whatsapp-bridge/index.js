@@ -170,7 +170,8 @@ async function connectToWhatsApp() {
                         push_name: pushName
                     };
 
-                    fetch('http://localhost:8000/whatsapp/webhook', {
+                    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
+                    fetch(`${backendUrl}/whatsapp/webhook`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)

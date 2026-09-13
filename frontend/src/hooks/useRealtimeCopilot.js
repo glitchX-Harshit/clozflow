@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-export const useRealtimeCopilot = (wsUrl = 'ws://localhost:8000/ws') => {
+export const useRealtimeCopilot = (wsUrl = `${window.APP_WS_BASE}/ws`) => {
     const [isConnected, setIsConnected] = useState(false);
     const [transcript, setTranscript] = useState([]);
     const [latestObjection, setLatestObjection] = useState(null);

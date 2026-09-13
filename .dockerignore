@@ -1,0 +1,15 @@
+.venv
+node_modules
+__pycache__
+*.pyc
+.git
+.vscode
+.env
+hexagon.db
+klyro.db
+logs
+test
+frontend/node_modules
+frontend/dist
+whatsapp-bridge/node_modules
+whatsapp-bridge/auth_info

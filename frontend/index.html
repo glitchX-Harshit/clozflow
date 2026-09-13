@@ -66,6 +66,10 @@
     </script>
   </head>
   <body>
+    <script>
+      window.APP_API_BASE = "";
+      window.APP_WS_BASE = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host;
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

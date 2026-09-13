@@ -323,14 +323,14 @@ const Dashboard = () => {
                 if (token) headers['Authorization'] = `Bearer ${token}`;
 
                 // Fetch recent calls
-                const callsRes = await fetch('http://localhost:8000/calls/', { headers });
+                const callsRes = await fetch(`${window.APP_API_BASE}/calls/`, { headers });
                 if (callsRes.ok) {
                     const data = await callsRes.json();
                     setRecentCalls(data.slice(0, 3));
                 }
 
                 // Fetch real intelligence stats
-                const statsRes = await fetch('http://localhost:8000/calls/stats', { headers });
+                const statsRes = await fetch(`${window.APP_API_BASE}/calls/stats`, { headers });
                 if (statsRes.ok) {
                     const statsData = await statsRes.json();
                     if (statsData.stats && statsData.stats.length > 0) setStatsData(statsData.stats);
@@ -391,7 +391,7 @@ const Dashboard = () => {
                     <div className="db-user-info">
                         <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)', overflow: 'hidden' }}>
                             {user?.profile_image
-                                ? <img src={`http://localhost:8000${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                                ? <img src={`${window.APP_API_BASE}${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
                                 : user?.email?.charAt(0).toUpperCase() || 'U'
                             }
                         </div>

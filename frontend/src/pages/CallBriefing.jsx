@@ -39,7 +39,7 @@ const CallBriefing = () => {
                 const token = localStorage.getItem('token');
                 if (!token) return;
                 
-                const response = await fetch('http://localhost:8000/api/capsules', {
+                const response = await fetch(`${window.APP_API_BASE}/api/capsules`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -115,7 +115,7 @@ const CallBriefing = () => {
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
-            const response = await fetch('http://localhost:8000/call/start', {
+            const response = await fetch(`${window.APP_API_BASE}/call/start`, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(formData)

@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Camera, Check, Loader2 } from 'lucide-react';
 
-const API = 'http://localhost:8000';
+const API = window.APP_API_BASE;
 
 const token = () => localStorage.getItem('token');
 const authFetch = (url, opts = {}) =>

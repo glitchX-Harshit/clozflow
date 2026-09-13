@@ -65,7 +65,7 @@ const useCopilotStore = create((set, get) => ({
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = `Bearer ${token}`;
             
-            const API_BASE = 'http://localhost:8000';
+            const API_BASE = window.APP_API_BASE;
             const res = await fetch(`${API_BASE}/api/copilot/sessions/active`, { headers });
             if (res.ok) {
                 const data = await res.json();

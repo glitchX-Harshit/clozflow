@@ -32,7 +32,7 @@ const AnalyticsPage = () => {
                 const headers = {};
                 if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                const res = await fetch('http://localhost:8000/calls/stats', { headers });
+                const res = await fetch(`${window.APP_API_BASE}/calls/stats`, { headers });
                 if (res.ok) {
                     const result = await res.json();
                     setData(result);
