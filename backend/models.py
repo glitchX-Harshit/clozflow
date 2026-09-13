@@ -157,38 +157,6 @@ class MissionActivity(Base):
     mission = relationship("Mission")
 
 
-class WhatsAppSession(Base):
-    __tablename__ = "whatsapp_sessions"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    status = Column(String, default="disconnected")  # disconnected, connecting, connected
-    phone_number = Column(String, nullable=True)
-    connected_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    user = relationship("User")
-
-
-class WhatsAppMessage(Base):
-    __tablename__ = "whatsapp_messages"
-    id = Column(Integer, primary_key=True, index=True)
-    mission_id = Column(Integer, ForeignKey("missions.id"), nullable=True)
-    lead_id = Column(Integer, ForeignKey("leads.id"), nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    direction = Column(String)  # 'outbound' or 'inbound'
-    phone_number = Column(String)
-    message_text = Column(Text)
-    wa_message_id = Column(String, nullable=True)
-    status = Column(String, default="pending")  # pending, sent, delivered, read, failed
-    push_name = Column(String, nullable=True)  # Contact name from WhatsApp
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    mission = relationship("Mission")
-    lead = relationship("Lead")
-    user = relationship("User")
-
-
 class PearlReport(Base):
     __tablename__ = "pearl_reports"
     id = Column(Integer, primary_key=True, index=True)

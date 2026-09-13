@@ -11,5 +11,5 @@ ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 # Remove default nginx html to be safe
 rm -f /etc/nginx/sites-enabled/default.bak || true
 
-# Start Supervisor which will start Nginx, Backend, and WhatsApp Bridge
+# Start Supervisor which will start Nginx and Python Backend
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

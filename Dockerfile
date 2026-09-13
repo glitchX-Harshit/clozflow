@@ -13,16 +13,7 @@ ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 RUN npm run build
 
 
-# ─── Stage 2: Build WhatsApp Bridge dependencies ──────────────────────────────
-FROM node:18-alpine AS bridge-builder
-WORKDIR /app/whatsapp-bridge
-COPY whatsapp-bridge/package*.json ./
-RUN apk add --no-cache python3 make g++
-RUN npm install --production
-COPY whatsapp-bridge/ .
-
-
-# ─── Stage 3: Final Universal Image (Python + Node.js + Nginx + Supervisor) ───
+# ─── Stage 2: Final Universal Image (Python + Nginx + Supervisor) ───
 FROM python:3.11-slim
 
 # Install system dependencies
@@ -34,8 +25,6 @@ RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
     gettext-base \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -53,9 +42,6 @@ COPY rag/ ./rag/
 
 # Copy Frontend Build from Stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend_dist
-
-# Copy WhatsApp Bridge from Stage 2
-COPY --from=bridge-builder /app/whatsapp-bridge ./whatsapp-bridge
 
 # Copy Supervisor and Nginx configs
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

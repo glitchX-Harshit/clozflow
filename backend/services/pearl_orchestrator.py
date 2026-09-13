@@ -327,172 +327,34 @@ class PearlOrchestrator:
         await self._update_progress(mission, 100)
 
     async def _stage_outreach(self, mission):
-        """Stage 7: Send messages via WhatsApp and configured channels."""
-        channel = mission.outreach_channel or 'WhatsApp + Email'
+        """Stage 7: Send messages via simulated channels."""
+        channel = mission.outreach_channel or 'Email'
         await self._add_activity(mission.id, f'Sending messages via {channel}', 'default')
         await self._update_progress(mission, 10)
         
-        # Check if WhatsApp is connected
-        use_whatsapp = 'whatsapp' in channel.lower()
-        wa_connected = False
-        
-        if use_whatsapp:
-            try:
-                from services.whatsapp_bridge import get_status
-                wa_status = await get_status()
-                print(f"[Pearl] WhatsApp bridge status response: {wa_status}")
-                wa_connected = wa_status.get('status') == 'connected'
-                if wa_connected:
-                    await self._add_activity(mission.id, '📱 WhatsApp connected — sending real messages', 'success')
-                else:
-                    print(f"[Pearl] WhatsApp NOT connected. Status: {wa_status.get('status')}")
-                    await self._add_activity(mission.id, f'⚠️ WhatsApp not connected (status: {wa_status.get("status")}) — simulating outreach', 'warning')
-            except Exception as e:
-                print(f"[Pearl] WhatsApp bridge check failed: {e}")
-                await self._add_activity(mission.id, f'⚠️ WhatsApp bridge unavailable ({e}) — simulating outreach', 'warning')
+        await self._add_activity(mission.id, f'WhatsApp has been disabled. Simulating outreach.', 'warning')
         
         import random
+        import asyncio
         sent = min(mission.leads_qualified, mission.daily_limit or 50)
         actual_sent = 0
         
-        if wa_connected:
-            # Real WhatsApp outreach
-            try:
-                from services.whatsapp_bridge import send_message
-                from services.outreach_engine import generate_outreach_message
-                from models import Lead, WhatsAppMessage
+        # Simulated outreach
+        for i in range(sent):
+            if mission.status == 'paused':
+                break
+            actual_sent += 1
+            progress = 10 + int((i / sent) * 90)
+            await self._update_progress(mission, progress)
+            
+            if i % 5 == 0 and i > 0:
+                await self._add_activity(mission.id, f'Sent {actual_sent} messages...', 'default')
                 
-                # Get leads with phone numbers
-                leads = self.db.query(Lead).filter(
-                    Lead.phone_number.isnot(None),
-                    Lead.phone_number != ''
-                ).order_by(Lead.lead_score.desc()).limit(sent).all()
-                
-                print(f"[Pearl] Found {len(leads)} leads with phone numbers to message")
-                if len(leads) == 0:
-                    await self._add_activity(mission.id, '⚠️ No leads with phone numbers found — cannot send WhatsApp messages', 'warning')
-                
-                for i, lead in enumerate(leads):
-                    if mission.status == 'paused':
-                        await self._add_activity(mission.id, 'Mission paused — outreach stopped', 'warning')
-                        break
-                    
-                    # Generate personalized message
-                    lead_data = {
-                        'business_name': lead.business_name,
-                        'category': lead.category,
-                        'city': lead.city,
-                        'phone_number': lead.phone_number,
-                        'website': lead.website,
-                        'instagram': lead.instagram,
-                        'google_rating': lead.google_rating,
-                    }
-                    
-                    try:
-                        msg_result = await generate_outreach_message(
-                            lead_data=lead_data,
-                            channel='whatsapp',
-                            user_offer=mission.filters or '',
-                            language='english'
-                        )
-                        message_text = msg_result.get('opening_message', msg_result.get('message', ''))
-                    except Exception:
-                        message_text = f"Hi, I came across {lead.business_name} and had a quick question about your business."
-                    
-                    if not message_text:
-                        continue
-                    
-                    # Clean phone number (strip +, -, spaces, and parentheses)
-                    phone = lead.phone_number.replace('+', '').replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
-                    
-                    # If it's a local Indian number starting with 0, strip the 0 and add 91
-                    if phone.startswith('0') and len(phone) >= 10:
-                        phone = '91' + phone[1:]
-                    
-                    # Wait for manual review if required
-                    if getattr(mission, 'approval_mode', '') == 'Manual review required':
-                        await self._add_activity(mission.id, f'Manual review required for {lead.business_name}', 'warning')
-                        await self.emit_event('manual_review_required', {
-                            'mission_id': mission.id,
-                            'lead_id': lead.id,
-                            'business_name': lead.business_name,
-                            'phone': phone,
-                            'message': message_text
-                        })
-                        
-                        loop = asyncio.get_event_loop()
-                        future = loop.create_future()
-                        key = f"{mission.id}_{lead.id}"
-                        pending_approvals[key] = future
-                        
-                        try:
-                            # Wait until frontend hits the approve endpoint
-                            approved_message = await future
-                            if not approved_message:
-                                await self._add_activity(mission.id, f'Skipped message to {lead.business_name}', 'default')
-                                continue
-                            message_text = approved_message
-                        except Exception as e:
-                            await self._add_activity(mission.id, f'Error during manual review: {str(e)}', 'warning')
-                            continue
-                        finally:
-                            pending_approvals.pop(key, None)
-                    
-                    # Send via WhatsApp
-                    print(f"[Pearl] Sending message to {lead.business_name} ({phone})...")
-                    result = await send_message(phone, message_text)
-                    print(f"[Pearl] Send result: {result}")
-                    
-                    if result.get('success'):
-                        actual_sent += 1
-                        # Log to WhatsApp messages table
-                        wa_msg = WhatsAppMessage(
-                            mission_id=mission.id,
-                            lead_id=lead.id,
-                            user_id=mission.user_id,
-                            direction='outbound',
-                            phone_number=phone,
-                            message_text=message_text,
-                            wa_message_id=result.get('messageId'),
-                            status='sent'
-                        )
-                        self.db.add(wa_msg)
-                        self.db.commit()
-                        
-                        await self._add_activity(
-                            mission.id,
-                            f'📱 Message sent to {lead.business_name}',
-                            'success'
-                        )
-                    else:
-                        await self._add_activity(
-                            mission.id,
-                            f'❌ Failed to send to {lead.business_name}: {result.get("error", "unknown")}',
-                            'warning'
-                        )
-                    
-                    # Update progress
-                    progress = int(10 + (80 * (i + 1) / max(len(leads), 1)))
-                    await self._update_progress(mission, min(progress, 90))
-                    
-                    # Rate limit: wait 3-5 seconds between messages
-                    await asyncio.sleep(random.uniform(3, 5))
-                
-                mission.messages_sent = actual_sent
-            except Exception as e:
-                print(f"[Pearl] OUTREACH STAGE ERROR: {e}")
-                import traceback
-                traceback.print_exc()
-                await self._add_activity(mission.id, f'Outreach error: {str(e)}', 'warning')
-                mission.messages_sent = 0
-        else:
-            # Simulated outreach (original behavior)
-            await asyncio.sleep(1)
-            mission.messages_sent = sent
-            actual_sent = sent
-        
+            await asyncio.sleep(0.5)
+            
+        mission.messages_sent = actual_sent
         self.db.commit()
-        await self._add_activity(mission.id, f'{actual_sent} messages delivered via {channel}', 'success')
+        await self._add_activity(mission.id, f'Successfully sent {actual_sent} messages', 'success')
         await self._update_progress(mission, 100)
         await self.emit_event('metrics_updated', {
             'mission_id': mission.id,
@@ -505,60 +367,14 @@ class PearlOrchestrator:
         await self._add_activity(mission.id, 'Monitoring for replies', 'default')
         await self._update_progress(mission, 10)
         
-        # Check if WhatsApp is connected for real reply monitoring
-        try:
-            from services.whatsapp_bridge import get_status
-            wa_status = await get_status()
-            wa_connected = wa_status.get('status') == 'connected'
-        except Exception:
-            wa_connected = False
-        
-        if wa_connected:
-            # Real reply monitoring: wait up to 2 minutes for initial replies
-            from models import WhatsAppMessage
-            
-            await self._add_activity(mission.id, '📱 Monitoring WhatsApp for live replies (2 min window)', 'default')
-            
-            check_intervals = [15, 15, 15, 15, 15, 15, 15, 15]  # 8 checks over 2 minutes
-            initial_replies = mission.replies_received or 0
-            
-            for i, wait_time in enumerate(check_intervals):
-                await asyncio.sleep(wait_time)
-                
-                # Count new inbound messages for this mission
-                current_replies = self.db.query(WhatsAppMessage).filter(
-                    WhatsAppMessage.mission_id == mission.id,
-                    WhatsAppMessage.direction == 'inbound'
-                ).count()
-                
-                new_replies = current_replies - initial_replies
-                if new_replies > 0:
-                    mission.replies_received = initial_replies + new_replies
-                    self.db.commit()
-                    await self._add_activity(
-                        mission.id,
-                        f'📱 {new_replies} new reply(ies) received!',
-                        'accent'
-                    )
-                    initial_replies = mission.replies_received
-                
-                progress = int(10 + (90 * (i + 1) / len(check_intervals)))
-                await self._update_progress(mission, progress)
-            
-            total_replies = mission.replies_received or 0
-            await self._add_activity(
-                mission.id,
-                f'{total_replies} total replies received — monitoring continues in background',
-                'accent' if total_replies > 0 else 'default'
-            )
-        else:
-            # Simulated conversation monitoring (original behavior)
-            await asyncio.sleep(2)
-            import random
-            replies = max(1, int(mission.messages_sent * random.uniform(0.1, 0.25)))
-            mission.replies_received = replies
-            self.db.commit()
-            await self._add_activity(mission.id, f'{replies} replies received', 'accent')
+
+        # Simulated conversation monitoring
+        await asyncio.sleep(2)
+        import random
+        replies = max(1, int(mission.messages_sent * random.uniform(0.1, 0.25)))
+        mission.replies_received = replies
+        self.db.commit()
+        await self._add_activity(mission.id, f'{replies} replies received', 'accent')
         
         await self._update_progress(mission, 100)
         await self.emit_event('metrics_updated', {

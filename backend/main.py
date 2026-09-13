@@ -18,7 +18,6 @@ from routers import leads as leads_router
 from routers import outreach as outreach_router
 from routers import copilot as copilot_router
 from routers import pearl as pearl_router
-from routers import whatsapp as whatsapp_router
 from routers import capsules as capsules_router
 from routers.auth import get_current_user
 from models import User
@@ -79,7 +78,6 @@ app.include_router(leads_router.router)
 app.include_router(outreach_router.router)
 app.include_router(copilot_router.router, prefix="/api/copilot", tags=["copilot"])
 app.include_router(pearl_router.router)
-app.include_router(whatsapp_router.router)
 app.include_router(capsules_router.router)
 
 # Serve uploaded avatars
