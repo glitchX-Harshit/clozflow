@@ -2693,6 +2693,16 @@
 @media (max-width: 640px) {
     .lf {
         padding: 1rem 0.5rem 5rem;
+        overflow-x: hidden;
+    }
+    .lf__tabs-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+        scrollbar-width: none;
+    }
+    .lf__tabs-container::-webkit-scrollbar {
+        display: none;
     }
     .lf__tab {
         padding: 0.5rem 0.75rem;
@@ -2715,6 +2725,7 @@
         padding: 1rem !important;
         border-radius: 16px !important;
         gap: 0.75rem !important;
+        box-sizing: border-box;
     }
     .lf__search-icon {
         display: none !important;
@@ -2750,6 +2761,7 @@
         width: 100% !important;
         min-width: 0 !important;
         max-width: none !important;
+        box-sizing: border-box;
     }
     .lf__row-details-grid {
         grid-template-columns: 1fr !important;
@@ -2757,6 +2769,33 @@
     }
     .lf__row-detail-panel {
         padding: 0.85rem;
+    }
+    .lf__detail-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .lf__detail-title {
+        font-size: 1.35rem;
+        word-break: break-word;
+    }
+    .lf__detail-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .lf__detail-actions-left,
+    .lf__detail-actions-right {
+        width: 100%;
+        justify-content: center;
+    }
+    .lf__detail-actions button {
+        width: 100%;
+        justify-content: center;
+    }
+    .editorial-heading-hero {
+        font-size: 2.25rem !important;
+    }
+    .lf__channels-list {
+        flex-wrap: wrap;
     }
 }
 
