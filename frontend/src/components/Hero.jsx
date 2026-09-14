@@ -180,22 +180,29 @@ const Hero = ({ onGetStarted }) => {
                             </div>
                         </div>
 
-                        {/* Delicate vector orbit rings */}
+                        {/* Vector orbit rings */}
                         <svg className="hero__orbit-svg" viewBox="0 0 500 500" fill="none">
-                            {/* Orbit Ring 1 */}
+                            {/* Orbit Ring 1 - Primary crisp ring */}
                             <ellipse 
-                                cx="250" cy="250" rx="220" ry="110" 
-                                stroke="rgba(15, 23, 42, 0.08)" 
-                                strokeWidth="1" 
-                                strokeDasharray="3 4"
+                                cx="250" cy="250" rx="225" ry="115" 
+                                stroke="rgba(15, 23, 42, 0.22)" 
+                                strokeWidth="1.25" 
                                 transform="rotate(-26 250 250)" 
                             />
-                            {/* Orbit Ring 2 */}
+                            {/* Orbit Ring 2 - Secondary crisp ring */}
                             <ellipse 
-                                cx="250" cy="250" rx="190" ry="95" 
-                                stroke="rgba(15, 23, 42, 0.06)" 
-                                strokeWidth="1" 
+                                cx="250" cy="250" rx="195" ry="100" 
+                                stroke="rgba(15, 23, 42, 0.18)" 
+                                strokeWidth="1.2" 
                                 transform="rotate(22 250 250)" 
+                            />
+                            {/* Orbit Ring 3 - Outer subtle accent */}
+                            <ellipse 
+                                cx="250" cy="250" rx="245" ry="128" 
+                                stroke="rgba(15, 23, 42, 0.14)" 
+                                strokeWidth="1" 
+                                strokeDasharray="5 6"
+                                transform="rotate(-6 250 250)" 
                             />
                         </svg>
 
