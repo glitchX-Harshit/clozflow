@@ -638,8 +638,70 @@ Context: The user sells "{user_offer}" services. Tailor your analysis to explain
 Return ONLY valid JSON, no markdown or explanation."""
 
 
+def _parse_json_safely(raw_text: str) -> Optional[Dict]:
+    """Parse JSON safely with markdown stripping, bracket matching, string repair, and regex fallback."""
+    if not raw_text or not raw_text.strip():
+        return None
+    text = raw_text.strip()
+
+    # 1. Strip markdown code fences if present
+    if "```" in text:
+        match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", text)
+        if match:
+            text = match.group(1).strip()
+        else:
+            parts = text.split("```")
+            if len(parts) > 1:
+                text = parts[1]
+                if text.startswith("json"):
+                    text = text[4:]
+                text = text.strip()
+
+    # 2. Extract outermost JSON block { ... }
+    json_match = re.search(r"\{[\s\S]*\}", text)
+    if json_match:
+        text = json_match.group(0)
+
+    # 3. Direct parse
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+
+    # 4. Clean unescaped control characters / newlines inside strings
+    try:
+        cleaned = re.sub(r"[\r\n]+", " ", text)
+        return json.loads(cleaned)
+    except Exception:
+        pass
+
+    # 5. Try auto-repairing truncated strings (common if token limit reached)
+    repaired = text.strip()
+    if repaired.count('"') % 2 != 0:
+        repaired += '"'
+    if not repaired.endswith("}"):
+        repaired += "}"
+    try:
+        return json.loads(repaired)
+    except Exception:
+        pass
+
+    # 6. Regex fallback: extract key-value pairs individually
+    extracted = {}
+    for key in ["ai_summary", "likely_pain_point", "outreach_angle", "opportunity_summary", "service_fit_reason"]:
+        m = re.search(rf'"{key}"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)', text)
+        if m:
+            extracted[key] = m.group(1).replace('\\"', '"')
+
+    score_m = re.search(r'"lead_score"\s*:\s*(\d+)', text)
+    if score_m:
+        extracted["lead_score"] = int(score_m.group(1))
+
+    return extracted if extracted else None
+
+
 async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
-    """Enrich a single lead with AI analysis via Groq."""
+    """Enrich a single lead with AI analysis via Groq / Gemini / OpenAI."""
     api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
 
     if not api_key or not HAS_OPENAI:
@@ -661,22 +723,30 @@ async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
 
         prompt_data = {**lead, "user_offer": user_offer or "general business services"}
         prompt = ENRICHMENT_PROMPT.format(**prompt_data)
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=400,
-        )
+
+        kwargs = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.7,
+            "max_tokens": 1500,
+        }
+
+        # Try with JSON object mode first; fall back to standard if unsupported
+        try:
+            response = client.chat.completions.create(
+                **kwargs,
+                response_format={"type": "json_object"}
+            )
+        except Exception:
+            response = client.chat.completions.create(**kwargs)
+
         content = response.choices[0].message.content.strip()
 
-        # Parse JSON from response (handle possible markdown wrapping)
-        if "```" in content:
-            content = content.split("```")[1]
-            if content.startswith("json"):
-                content = content[4:]
-            content = content.strip()
+        enrichment = _parse_json_safely(content)
+        if not enrichment:
+            print(f"[LeadEngine] AI enrichment parse failed for content: {content[:100]}... falling back to mock")
+            return _mock_enrich(lead, user_offer)
 
-        enrichment = json.loads(content)
         lead["ai_summary"] = enrichment.get("ai_summary", "")
         lead["likely_pain_point"] = enrichment.get("likely_pain_point", "")
         lead["outreach_angle"] = enrichment.get("outreach_angle", "")
