@@ -13,7 +13,8 @@ const Shape = () => {
     const { viewport, mouse } = useThree();
 
     const isMobile = viewport.width < 5; 
-    const responsiveScale = isMobile ? 0.65 : 1.3;
+    // Reduced from 1.3 to 0.88 on desktop for generous breathing room and no collision with headline
+    const responsiveScale = isMobile ? 0.52 : (viewport.width < 7.5 ? 0.68 : 0.88);
 
     const uniforms = useMemo(() => ({
         time: { value: 0 }
@@ -24,8 +25,9 @@ const Shape = () => {
         meshRef.current.rotation.x += delta * 0.2;
         meshRef.current.rotation.y += delta * 0.25;
         
-        const targetX = (mouse.x * viewport.width) / 10;
-        const targetY = (mouse.y * viewport.height) / 10;
+        // Restrained, elegant mouse parallax
+        const targetX = (mouse.x * viewport.width) / 24;
+        const targetY = (mouse.y * viewport.height) / 24;
         meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
         meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
 
@@ -134,19 +136,25 @@ const ThreeBackground = () => {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        // Visibility Logic - using a more robust check
+        // Refined scroll-driven transition into next homepage section
         let ctx = gsap.context(() => {
-            const triggerElement = document.querySelector('.crowd__section');
-            if (triggerElement) {
-                gsap.to(containerRef.current, {
-                    opacity: 0,
-                    scrollTrigger: {
-                        trigger: triggerElement,
-                        start: 'top 80%',
-                        end: 'bottom 20%',
-                        toggleActions: 'play reverse play reverse'
+            const heroEl = document.querySelector('.hero');
+            if (heroEl && containerRef.current) {
+                gsap.fromTo(containerRef.current, 
+                    { opacity: 1, scale: 1, y: 0 },
+                    {
+                        opacity: 0,
+                        scale: 0.72,
+                        y: -60,
+                        ease: 'power1.out',
+                        scrollTrigger: {
+                            trigger: heroEl,
+                            start: 'top top',
+                            end: 'bottom 25%',
+                            scrub: true
+                        }
                     }
-                });
+                );
             }
         }, containerRef);
 
