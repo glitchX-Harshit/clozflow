@@ -78,9 +78,13 @@ const Hero = ({ onGetStarted }) => {
                 { opacity: 0, y: 25 },
                 { opacity: 1, y: 0, duration: 1.0 }, 1.0
             )
+            .fromTo('.hero__wave-img',
+                { opacity: 0, y: 35 },
+                { opacity: 0.52, y: 0, duration: 1.5, ease: 'power3.out' }, 0.55
+            )
             .fromTo('.hero__mountains-img',
                 { opacity: 0, y: 30 },
-                { opacity: 0.95, y: 0, duration: 1.4, ease: 'power3.out' }, 0.7
+                { opacity: 0.92, y: 0, duration: 1.4, ease: 'power3.out' }, 0.7
             );
         }, heroRef);
 
@@ -317,6 +321,16 @@ const Hero = ({ onGetStarted }) => {
 
                 {/* Subtle ethereal bottom curve landscape background */}
                 <div className="hero__bottom-wave" aria-hidden="true" />
+            </div>
+
+            {/* Iridescent Wave Asset on Right Bottom */}
+            <div className="hero__wave-wrap" aria-hidden="true">
+                <img 
+                    src="/images/hero-wave.png" 
+                    alt="" 
+                    className="hero__wave-img"
+                    loading="eager"
+                />
             </div>
 
             {/* Misty Mountain Ridge Landscape on Right Bottom */}

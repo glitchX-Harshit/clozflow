@@ -664,6 +664,35 @@
   filter: blur(20px);
 }
 
+/* ── Iridescent Dome Wave (Right Bottom, lower opacity, blurry) ── */
+.hero__wave-wrap {
+  position: absolute;
+  right: 1;
+  bottom: 0;
+  width: clamp(320px, 45vw, 780px);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  user-select: none;
+  overflow: hidden;
+}
+
+.hero__wave-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: right bottom;
+  opacity: 0.52;
+  filter: blur(6px) contrast(1.04);
+  -webkit-filter: blur(2px) contrast(1.04);
+  transform: scale(1.04);
+  transform-origin: right bottom;
+  pointer-events: none;
+}
+
 /* ── Misty Mountain Ridge Landscape (Reference Exact) ── */
 .hero__mountains-wrap {
   position: absolute;
@@ -671,7 +700,7 @@
   bottom: 0;
   width: clamp(280px, 36vw, 620px);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -687,7 +716,7 @@
   object-position: right bottom;
   opacity: 0.92;
   filter: blur(4px) contrast(1.04);
-  -webkit-filter: blur(2px) contrast(1.04);
+  -webkit-filter: blur(4px) contrast(1.04);
   transform: scale(1.04);
   transform-origin: right bottom;
   pointer-events: none;
@@ -889,6 +918,10 @@
   .hero__col--right {
     justify-content: flex-start;
   }
+  .hero__wave-wrap {
+    width: clamp(260px, 45vw, 540px);
+    opacity: 0.42;
+  }
   .hero__mountains-wrap {
     width: clamp(280px, 48vw, 540px);
     opacity: 0.85;
@@ -941,6 +974,11 @@
   .hero__scroll-cue {
     align-self: flex-start;
   }
+  .hero__wave-wrap {
+    width: 75vw;
+    max-width: 360px;
+    opacity: 0.35;
+  }
   .hero__mountains-wrap {
     width: 75vw;
     max-width: 380px;
@@ -964,6 +1002,11 @@
   }
   .hero__logo-svg {
     height: 17px;
+  }
+  .hero__wave-wrap {
+    width: 80vw;
+    max-width: 300px;
+    opacity: 0.3;
   }
   .hero__mountains-wrap {
     width: 80vw;
