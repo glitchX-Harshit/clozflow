@@ -136,25 +136,19 @@ const ThreeBackground = () => {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        // Refined scroll-driven transition into next homepage section
+        // Visibility Logic - original setup: stays visible across page and only hides at crowd section
         let ctx = gsap.context(() => {
-            const heroEl = document.querySelector('.hero');
-            if (heroEl && containerRef.current) {
-                gsap.fromTo(containerRef.current, 
-                    { opacity: 1, scale: 1, y: 0 },
-                    {
-                        opacity: 0,
-                        scale: 0.72,
-                        y: -60,
-                        ease: 'power1.out',
-                        scrollTrigger: {
-                            trigger: heroEl,
-                            start: 'top top',
-                            end: 'bottom 25%',
-                            scrub: true
-                        }
+            const triggerElement = document.querySelector('.crowd__section');
+            if (triggerElement && containerRef.current) {
+                gsap.to(containerRef.current, {
+                    opacity: 0,
+                    scrollTrigger: {
+                        trigger: triggerElement,
+                        start: 'top 80%',
+                        end: 'bottom 20%',
+                        toggleActions: 'play reverse play reverse'
                     }
-                );
+                });
             }
         }, containerRef);
 

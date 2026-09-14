@@ -29,24 +29,7 @@
   z-index: 0;
 }
 
-/* ── Soft Ambient Top & Center Lighting ── */
-.hero__ambient-glow {
-  position: absolute;
-  top: -10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90vw;
-  max-width: 1200px;
-  height: 60vh;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(244, 246, 248, 0.5) 45%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
+
 
 /* ── Main Container ── */
 .hero__container {
@@ -903,19 +886,26 @@
 @media (max-width: 1080px) {
   .hero {
     min-height: auto;
+    height: auto;
     padding-top: 100px;
   }
   .hero__container {
     padding: 2rem 5vw;
   }
   .hero__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .hero__col--left {
+    order: 1;
   }
   .hero__col--center {
-    display: none; /* Let the fixed orb breathe in center or tablet background */
+    order: 2;
+    height: 340px;
+    display: flex;
   }
   .hero__col--right {
+    order: 3;
     justify-content: flex-start;
   }
   .hero__wave-wrap {
