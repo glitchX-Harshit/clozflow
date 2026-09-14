@@ -662,6 +662,33 @@
   filter: blur(20px);
 }
 
+/* ── Misty Mountain Ridge Landscape (Reference Exact) ── */
+.hero__mountains-wrap {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(480px, 54vw, 1050px);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  user-select: none;
+  overflow: hidden;
+}
+
+.hero__mountains-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  object-position: right bottom;
+  opacity: 0.95;
+  filter: contrast(1.02);
+  transform-origin: right bottom;
+  pointer-events: none;
+}
+
 /* ══════════════════════════════════════════════════════════════════
    INTERACTIVE VIDEO / COPILOT MODAL
    ══════════════════════════════════════════════════════════════════ */
@@ -858,6 +885,10 @@
   .hero__col--right {
     justify-content: flex-start;
   }
+  .hero__mountains-wrap {
+    width: clamp(380px, 60vw, 750px);
+    opacity: 0.85;
+  }
 }
 
 /* 768px Mobile & Tablet Portrait */
@@ -906,6 +937,11 @@
   .hero__scroll-cue {
     align-self: flex-start;
   }
+  .hero__mountains-wrap {
+    width: 88vw;
+    max-width: 460px;
+    opacity: 0.6;
+  }
 }
 
 /* 480px Small Mobile */
@@ -924,5 +960,9 @@
   }
   .hero__logo-svg {
     height: 17px;
+  }
+  .hero__mountains-wrap {
+    width: 95vw;
+    opacity: 0.45;
   }
 }

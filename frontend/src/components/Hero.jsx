@@ -77,6 +77,10 @@ const Hero = ({ onGetStarted }) => {
             .fromTo(bottomRef.current,
                 { opacity: 0, y: 25 },
                 { opacity: 1, y: 0, duration: 1.0 }, 1.0
+            )
+            .fromTo('.hero__mountains-img',
+                { opacity: 0, y: 30 },
+                { opacity: 0.95, y: 0, duration: 1.4, ease: 'power3.out' }, 0.7
             );
         }, heroRef);
 
@@ -313,6 +317,16 @@ const Hero = ({ onGetStarted }) => {
 
                 {/* Subtle ethereal bottom curve landscape background */}
                 <div className="hero__bottom-wave" aria-hidden="true" />
+            </div>
+
+            {/* Misty Mountain Ridge Landscape on Right Bottom */}
+            <div className="hero__mountains-wrap" aria-hidden="true">
+                <img 
+                    src="/images/hero-mountains.png" 
+                    alt="" 
+                    className="hero__mountains-img"
+                    loading="eager"
+                />
             </div>
 
             {/* Video Demo Modal */}
