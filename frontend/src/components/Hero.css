@@ -5,6 +5,8 @@
 
 .hero {
   position: relative;
+  height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
@@ -12,7 +14,7 @@
   justify-content: space-between;
   background: transparent;
   overflow: hidden;
-  padding-top: 85px; /* Navbar clearance */
+  padding-top: 80px; /* Navbar clearance */
   z-index: 1;
 }
 
@@ -667,7 +669,7 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  width: clamp(480px, 54vw, 1050px);
+  width: clamp(280px, 36vw, 620px);
   pointer-events: none;
   z-index: 1;
   display: flex;
@@ -683,8 +685,10 @@
   display: block;
   object-fit: contain;
   object-position: right bottom;
-  opacity: 0.95;
-  filter: contrast(1.02);
+  opacity: 0.92;
+  filter: blur(4px) contrast(1.04);
+  -webkit-filter: blur(2px) contrast(1.04);
+  transform: scale(1.04);
   transform-origin: right bottom;
   pointer-events: none;
 }
@@ -886,7 +890,7 @@
     justify-content: flex-start;
   }
   .hero__mountains-wrap {
-    width: clamp(380px, 60vw, 750px);
+    width: clamp(280px, 48vw, 540px);
     opacity: 0.85;
   }
 }
@@ -938,9 +942,9 @@
     align-self: flex-start;
   }
   .hero__mountains-wrap {
-    width: 88vw;
-    max-width: 460px;
-    opacity: 0.6;
+    width: 75vw;
+    max-width: 380px;
+    opacity: 0.55;
   }
 }
 
@@ -962,7 +966,8 @@
     height: 17px;
   }
   .hero__mountains-wrap {
-    width: 95vw;
+    width: 80vw;
+    max-width: 320px;
     opacity: 0.45;
   }
 }
