@@ -1,4 +1,4 @@
-// Converts Float32Array to 16-bit PCM binary format suited for Deepgram
+// Converts Float32Array to 16-bit PCM binary format suited for Gemini streaming transcription
 export function floatTo16BitPCM(input) {
     let offset = 0;
     const buffer = new ArrayBuffer(input.length * 2);

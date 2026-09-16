@@ -30,8 +30,8 @@ Base.metadata.create_all(bind=engine)
 # Load environment variables
 load_dotenv()
 
-# [DEBUG LOG] Check if deepgram key was found in .env
-print("Deepgram key loaded:", bool(os.getenv("DEEPGRAM_API_KEY")))
+# [DEBUG LOG] Check if Gemini key was found in .env
+print("Gemini API key loaded:", bool(os.getenv("GEMINI_API_KEY")))
 
 # ── Lifespan: runs once on startup / shutdown ──
 @asynccontextmanager

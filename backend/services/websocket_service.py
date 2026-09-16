@@ -4,7 +4,7 @@ from typing import Any, Optional
 from fastapi import WebSocket, WebSocketDisconnect
 from services.transcript_manager import TranscriptManager
 from services.sales_ai_engine import SalesAIEngine
-from services.deepgram_stream import DeepgramStream
+from services.gemini_stream import GeminiStream
 from services.vad_engine import SileroVADEngine, VADEvent, SILERO_AVAILABLE
 from services.turn_detector import TurnDetector
 from database import SessionLocal
@@ -16,7 +16,7 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
         self.transcript_manager = TranscriptManager()
-        self.deepgram_sessions: dict[WebSocket, Any] = {}
+        self.gemini_sessions: dict[WebSocket, Any] = {}
         self.ai_engines: dict[WebSocket, SalesAIEngine] = {}
         from services.call_context_engine import call_context_engine
         self.call_context_engine = call_context_engine
@@ -102,8 +102,8 @@ class ConnectionManager:
             self.debounce_tasks[websocket].cancel()
         self.debounce_tasks.pop(websocket, None)
 
-        # Note: Deepgram session is closed in handle_audio_stream's finally block (async)
-        self.deepgram_sessions.pop(websocket, None)
+        # Note: Gemini session is closed in handle_audio_stream's finally block (async)
+        self.gemini_sessions.pop(websocket, None)
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
         try:
@@ -125,7 +125,7 @@ class ConnectionManager:
     async def handle_new_transcript(self, speaker: str, text: str, websocket: WebSocket,
                                      is_final: bool = True, speech_final: bool = False):
         """Route transcript events to TurnDetector or legacy timer."""
-        # ── PROSPECT-ONLY MODE: ignore any speaker label from Deepgram ──
+        # ── PROSPECT-ONLY MODE: ignore any speaker label from Gemini ──
         speaker = "prospect"
 
         td = self.turn_detectors.get(websocket)
@@ -230,30 +230,30 @@ class ConnectionManager:
 
     async def handle_audio_stream(self, websocket: WebSocket):
 
-        print("🎧 Initializing audio stream (Deepgram + VAD)...")
+        print("🎧 Initializing audio stream (Gemini + VAD)...")
 
         async def on_transcript(speaker: str, text: str, is_final: bool = True, speech_final: bool = False):
             await self.handle_new_transcript(speaker, text, websocket,
                                               is_final=is_final, speech_final=speech_final)
 
-        dg_stream = DeepgramStream(transcript_callback=on_transcript)
+        gemini_stream = GeminiStream(transcript_callback=on_transcript)
 
-        connected = await dg_stream.connect()
+        connected = await gemini_stream.connect()
 
         if not connected:
-            print("❌ Failed to connect to Deepgram")
+            print("❌ Failed to connect to Gemini")
             return
 
-        print("✅ Deepgram stream connected")
+        print("✅ Gemini transcription stream connected")
 
-        self.deepgram_sessions[websocket] = dg_stream
+        self.gemini_sessions[websocket] = gemini_stream
 
         # Get VAD + TurnDetector for this connection (may be None if unavailable)
         vad = self.vad_engines.get(websocket)
         td = self.turn_detectors.get(websocket)
 
         if vad and td:
-            print("🧠 Multi-layer turn detection active (Silero VAD + Deepgram + Semantic)")
+            print("🧠 Multi-layer turn detection active (Silero VAD + Gemini + Semantic)")
         else:
             print("⏱️  Legacy timer-based turn detection active (2.5s debounce)")
 
@@ -272,10 +272,10 @@ class ConnectionManager:
                     data = message["bytes"]
                     print(f"📥 received audio chunk: {len(data)} bytes")
 
-                    # ── Send to Deepgram for transcription (unchanged) ──
-                    await dg_stream.send_audio(data)
+                    # ── Send to Gemini for transcription ──
+                    await gemini_stream.send_audio(data)
 
-                    # ── Feed to Silero VAD for voice activity detection (NEW) ──
+                    # ── Feed to Silero VAD for voice activity detection ──
                     if vad and td:
                         vad_events = vad.process_chunk(data)
                         for event in vad_events:
@@ -296,13 +296,13 @@ class ConnectionManager:
             print(f"⚠️ WebSocket runtime error (likely disconnect): {e}")
 
         finally:
-            # Close Deepgram session properly (async) before disconnecting
-            dg = self.deepgram_sessions.get(websocket)
-            if dg:
+            # Close Gemini session properly (async) before disconnecting
+            gm = self.gemini_sessions.get(websocket)
+            if gm:
                 try:
-                    await dg.close()
+                    await gm.close()
                 except Exception as e:
-                    print(f"Deepgram close error: {e}")
+                    print(f"Gemini close error: {e}")
             self.disconnect(websocket)
 
 

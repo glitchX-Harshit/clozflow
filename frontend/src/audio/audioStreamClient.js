@@ -117,7 +117,7 @@ export const useAudioStream = (wsUrl) => {
                 const audioData = e.inputBuffer.getChannelData(0);
                 const pcm16 = floatTo16BitPCM(audioData);
 
-                // Send raw binary PCM directly for zero-overhead Deepgram streaming
+                // Send raw binary PCM directly for zero-overhead Gemini streaming
                 wsRef.current.send(pcm16);
                 console.log("📤 audio chunk sent:", pcm16.byteLength);
             };
@@ -158,7 +158,7 @@ export const useAudioStream = (wsUrl) => {
             audioContextRef.current = null;
         }
         if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-            // Signal Deepgram end of stream
+            // Signal Gemini end of stream
             wsRef.current.send(JSON.stringify({ type: 'close_stream' }));
         }
     }, []);

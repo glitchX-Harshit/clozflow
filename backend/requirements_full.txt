@@ -24,7 +24,7 @@ requests
 
 # ─── AI / LLM ───
 openai
-deepgram-sdk==3.7.0
+google-genai
 
 # ─── ML Pipeline (backend + ml/) ───
 scikit-learn

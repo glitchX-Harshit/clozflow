@@ -3,7 +3,7 @@ Multi-Layer Turn Detection Engine
 
 Combines three signals to detect when a speaker's turn is complete:
   Layer 1 — Silero VAD:       Detects voice → silence transitions (~96ms)
-  Layer 2 — Deepgram is_final: Confirms utterance transcription is complete
+  Layer 2 — Gemini is_final:  Confirms utterance transcription is complete
   Layer 3 — Semantic endpoint: Checks for sentence-final punctuation (. ? !)
 
 State Machine:
@@ -46,7 +46,7 @@ class TurnDetector:
 
     Receives events from two sources:
       1. VAD engine  → on_speech_start(), on_speech_end()
-      2. Deepgram    → on_transcript(text, is_final), on_speech_final()
+      2. Gemini     → on_transcript(text, is_final), on_speech_final()
 
     When the turn is determined complete, calls on_turn_complete(text) with
     the accumulated transcript buffer.
@@ -54,7 +54,7 @@ class TurnDetector:
     Usage:
         detector = TurnDetector(on_turn_complete=my_callback)
         detector.on_speech_start()          # VAD detected voice
-        detector.on_transcript("hello", True)  # Deepgram finalized text
+        detector.on_transcript("hello", True)  # Gemini finalized text
         detector.on_speech_end()            # VAD detected silence
         # → after 300-400ms, my_callback("hello") is called
     """
@@ -107,11 +107,11 @@ class TurnDetector:
         self._monitor_task = asyncio.create_task(self._silence_monitor())
 
     # ──────────────────────────────────────────────────────────────────────────
-    # Layer 2: Deepgram Transcript Signal Input
+    # Layer 2: Gemini Transcript Signal Input
     # ──────────────────────────────────────────────────────────────────────────
 
     def on_transcript(self, text: str, is_final: bool):
-        """Called when Deepgram sends a finalized transcript segment."""
+        """Called when Gemini sends a finalized transcript segment."""
         if not text or not text.strip():
             return
 
@@ -125,10 +125,10 @@ class TurnDetector:
                 self.state = TurnState.LISTENING
 
     def on_speech_final(self):
-        """Called when Deepgram sends speech_final=True (its own endpoint detection).
+        """Called when Gemini sends turn_complete=True (its own endpoint detection).
         Acts as a redundant silence detector — if VAD missed the speech end, this catches it."""
         if self.state == TurnState.LISTENING:
-            # Treat Deepgram's speech_final like a VAD speech end
+            # Treat Gemini's turn_complete like a VAD speech end
             self.on_speech_end()
 
     # ──────────────────────────────────────────────────────────────────────────
