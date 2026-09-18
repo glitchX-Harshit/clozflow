@@ -1,146 +1,203 @@
 import { useState, useEffect, useRef } from 'react';
-import { Zap, MessageSquare, Award, Copy, Check } from 'lucide-react';
+import { Copy, Check, ArrowRight, Zap } from 'lucide-react';
 import { gsap } from 'gsap';
-import MagButton from './MagButton';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './ResponseSuggestion.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const SCENARIOS = [
     {
         id: 0,
-        name: "Pricing Concern",
-        objection: "We already have a solution in place for this. Switching costs and licensing fees are going to be a nightmare.",
+        code: '01',
+        tabLabel: 'COMPETITOR IS CHEAPER',
+        shortTab: 'PRICING',
+        objection: 'Why should we pay double when Competitor X does the same thing for half the cost?',
+        mobileObjection: '“Why pay double when Competitor X does the same for half?”',
         rebuttals: {
-            Professional: "We understand cost is a consideration. However, ClozFlow usually pays for itself within 45 days by increasing sales-cycle speed by 22%. Let's look at our custom ROI modeling based on your current team size.",
-            Empathetic: "I completely hear you — switching costs are a real concern. Many of our current clients had the exact same hesitation before seeing how our white-glove migration team handles 100% of data porting in under 48 hours.",
-            Direct: "Switching friction is a one-time issue, but running inefficient sales processes is a continuous cost. ClozFlow reduces representative administrative tasks by 12 hours a week from day one."
+            Direct: 'Competitors record why you lost the deal after you hang up. ClozFlow guides you during the call so you actually win it.',
+            Disarming: 'If you just want basic call transcripts, they are fine. But if you want reps to stop fumbling objections and close 40% more pipeline, that is why teams switch to us.',
+            'ROI Re-Anchor': 'Cheaper software that does not rescue deals is the most expensive mistake in sales. One saved contract pays for ClozFlow for the next three years.'
         },
-        confidence: 98,
-        strategy: "ROI Re-anchoring & Risk Mitigation",
-        blueprint: [
-            "Acknowledge integration pain points directly.",
-            "Pivot focus to long-term operational costs.",
-            "De-risk using white-glove transition proof-points."
-        ]
+        mobileRebuttals: {
+            Direct: '“Competitors record why you lost after you hang up. ClozFlow guides you live so you actually win it.”',
+            Disarming: '“If you just want transcripts, they work. If you want reps to close 40% more pipeline, teams switch to us.”',
+            'ROI Re-Anchor': '“Cheaper software that doesn’t rescue deals is the costliest mistake. One saved deal covers three years.”'
+        },
+        confidence: '96% WIN RATE',
+        strategy: 'Value Differentiation & Real-Time Advantage'
     },
     {
         id: 1,
-        name: "Competitor Comparison",
-        objection: "Your competitors offer similar email sequencing and transcript notes for about half the cost. Why should we pay premium?",
+        code: '02',
+        tabLabel: 'NO TIME TO LEARN',
+        shortTab: 'NO TIME',
+        objection: 'Our reps are slammed right now. We cannot introduce another complicated software tool.',
+        mobileObjection: '“Reps are slammed. We can’t learn another complex tool.”',
         rebuttals: {
-            Professional: "While standard platforms focus on passive logging and generic sequencing, ClozFlow operates as an active, in-call behavioral guidance layer. We don't just record data — we prevent lost deals in real-time.",
-            Empathetic: "It's smart to compare options. What our clients appreciate most about ClozFlow is that we don't just dump analytics post-call. We actively guide sales reps during live moments when it actually impacts the outcome.",
-            Direct: "Competitors analyze why you lost a deal after the call is over. ClozFlow is the only engine that gives suggestions during the call so you can win it."
+            Direct: 'Zero onboarding. Zero training. It is a silent whisper widget in Zoom. If your reps know how to talk, they already know how to use it.',
+            Disarming: 'I hear you 100%. That is why reps love it—it auto-fills their CRM notes silently and hands them back eight hours a week from day one.',
+            'ROI Re-Anchor': 'The tool saves time on call one. Reps spend 30% less time on manual admin, giving them more hours back to close.'
         },
-        confidence: 95,
-        strategy: "Value Differentiation & Real-Time Advantage",
-        blueprint: [
-            "Validate cost comparison approach.",
-            "Establish the separation between logging vs. live guiding.",
-            "Benchmark active win-rate metrics against passive reporting."
-        ]
+        mobileRebuttals: {
+            Direct: '“Zero onboarding. It is a headless Zoom whisper layer. If reps know how to talk, they know how to use it.”',
+            Disarming: '“That’s why reps love it—it auto-fills CRM notes silently and hands them back 8 hours a week.”',
+            'ROI Re-Anchor': '“Saves time on call one. Reps spend 30% less time on manual admin and more hours closing.”'
+        },
+        confidence: '94% WIN RATE',
+        strategy: 'Zero-Disruption Passive Overlay'
     },
     {
         id: 2,
-        name: "Implementation Timeline",
-        objection: "Our sales team is completely slammed right now. Introducing another software tool will just distract them and hurt our numbers.",
+        code: '03',
+        tabLabel: 'LOCKED INTO CONTRACT',
+        shortTab: 'CONTRACT',
+        objection: 'We already signed an annual contract with our current vendor through next year.',
+        mobileObjection: '“We already signed an annual contract through next year.”',
         rebuttals: {
-            Professional: "ClozFlow does not require workflow training. Our UI overlays seamlessly on your existing Zoom or dialer system, and our dedicated engineers handle integrations behind the scenes in under 5 business days.",
-            Empathetic: "I respect how busy your reps are. We designed onboarding to be completely passive for reps — they simply log in, open their dialer, and immediately receive real-time cues. Zero setup friction.",
-            Direct: "The tool is designed to save time immediately, not add to it. Within 48 hours of launch, your reps will spend 30% less time writing CRM follow-ups, giving them more hours back to sell."
+            Direct: 'Keep your vendor. ClozFlow runs as an invisible live guidance layer on top of your existing stack with zero migration.',
+            Disarming: 'We hear that often. Let us run a pilot on your next five biggest deals. If you do not close more, you pay zero.',
+            'ROI Re-Anchor': 'You do not have to rip anything out. We plug into your current dialer in 10 minutes and make your current tools work twice as hard.'
         },
-        confidence: 92,
-        strategy: "Onboarding De-escalation & Speed to Value",
-        blueprint: [
-            "Acknowledge representative workload sensitivity.",
-            "Prove zero workflow disruption using passive UI overlay.",
-            "Deliver immediate time-saving guarantees (CRM automation)."
-        ]
+        mobileRebuttals: {
+            Direct: '“Keep your vendor. ClozFlow runs as an invisible guidance layer over your stack with zero migration.”',
+            Disarming: '“Run a pilot on your next 5 biggest deals. If you don’t close more, you pay zero.”',
+            'ROI Re-Anchor': '“Plugs into your current dialer in 10 minutes. Zero rip-and-replace required.”'
+        },
+        confidence: '91% WIN RATE',
+        strategy: 'Side-by-Side Coexistence'
     }
 ];
 
 const ResponseSuggestion = () => {
     const [selectedScenario, setSelectedScenario] = useState(0);
-    const [selectedTone, setSelectedTone] = useState('Empathetic');
+    const [selectedTone, setSelectedTone] = useState('Direct');
     const [copied, setCopied] = useState(false);
     
+    const sectionRef = useRef(null);
     const outputRef = useRef(null);
-    const gaugeRef = useRef(null);
 
     const activeData = SCENARIOS[selectedScenario];
     const activeRebuttal = activeData.rebuttals[selectedTone];
+    const activeMobileRebuttal = activeData.mobileRebuttals[selectedTone];
 
-    // Trigger typing/fade animations on content update
     useEffect(() => {
+        const ctx = gsap.context(() => {
+            gsap.fromTo('.resp__anim-hdr',
+                { y: 25, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: '.resp__hdr-wrap',
+                        start: 'top 85%'
+                    }
+                }
+            );
+
+            gsap.fromTo('.resp__frame',
+                { y: 25, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.9,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: '.resp__section',
+                        start: 'top 80%'
+                    }
+                }
+            );
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        setCopied(false);
         if (outputRef.current) {
             gsap.fromTo(outputRef.current,
-                { opacity: 0, y: 10 },
+                { opacity: 0.3, y: 5 },
                 { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
             );
         }
-
-        // Animate circular gauge
-        if (gaugeRef.current) {
-            const circle = gaugeRef.current.querySelector('.resp__gauge-circle-fill');
-            if (circle) {
-                const radius = circle.r.baseVal.value;
-                const circumference = 2 * Math.PI * radius;
-                const offset = circumference - (activeData.confidence / 100) * circumference;
-                
-                gsap.to(circle, {
-                    strokeDashoffset: offset,
-                    duration: 0.6,
-                    ease: 'power2.out'
-                });
-            }
-        }
-    }, [selectedScenario, selectedTone, activeData.confidence]);
+    }, [selectedScenario, selectedTone]);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(activeRebuttal);
+        const textToCopy = activeMobileRebuttal
+            ? activeMobileRebuttal.replace(/^[“"]|[”"]$/g, '')
+            : activeRebuttal;
+        navigator.clipboard.writeText(textToCopy);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
     return (
-        <section className="resp__section" id="response">
+        <section className="resp__section" id="response" ref={sectionRef}>
             <div className="container">
-                <div className="resp__layout">
-                    {/* Left: Text & Interactive controls */}
-                    <div className="resp__text">
-                        <span className="resp__eyebrow">Strategic Guidance</span>
-                        <h2 className="resp__title">
-                            Strategic Response Guidance
-                        </h2>
-                        <p className="resp__desc">
-                            Sales conversations break when confidence disappears. ClozFlow 
-                            provides the psychological response frameworks needed to 
-                            maintain momentum in high‑stakes moments.
-                        </p>
+                {/* Header */}
+                <div className="resp__hdr-wrap">
+                    <div className="resp__meta-tag resp__anim-hdr">
+                        <span>[ 03 — LIVE TELEPROMPTER ]</span>
+                        <span className="resp__meta-divider">/</span>
+                        <span>INSTANT REBUTTALS</span>
+                    </div>
 
-                        {/* Interactive Scenario Controls */}
-                        <div className="resp__controls">
-                            <div className="resp__control-sec">
-                                <span className="resp__control-label">1. Select Objection Scenario</span>
-                                <div className="resp__scenario-tabs">
-                                    {SCENARIOS.map((sc, i) => (
-                                        <button
-                                            key={sc.id}
-                                            className={`resp__tab-btn ${selectedScenario === i ? 'active' : ''}`}
-                                            onClick={() => setSelectedScenario(i)}
-                                        >
-                                            {sc.name}
-                                        </button>
-                                    ))}
-                                </div>
+                    <h2 className="resp__main-title resp__anim-hdr">
+                        Never freeze on a live call.
+                    </h2>
+
+                    <p className="resp__main-sub resp__anim-hdr">
+                        When a buyer drops an objection, reps freeze for three seconds.
+                        ClozFlow feeds the exact comeback before they can say "uhm".
+                    </p>
+                </div>
+
+                {/* ── DESKTOP VIEW: The Teleprompter Frame (Untouched) ── */}
+                <div className="resp__frame">
+                    {/* Top Case Selector Bar */}
+                    <div className="resp__top-bar">
+                        <div className="resp__cases-nav">
+                            {SCENARIOS.map((sc, i) => (
+                                <button
+                                    key={sc.id}
+                                    className={`resp__case-btn ${selectedScenario === i ? 'resp__case-btn--active' : ''}`}
+                                    onClick={() => setSelectedScenario(i)}
+                                >
+                                    <span className="resp__case-num">{sc.code}</span>
+                                    <span className="resp__case-lbl">{sc.tabLabel}</span>
+                                </button>
+                            ))}
+                        </div>
+                        <div className="resp__live-badge">
+                            <span className="resp__live-dot" />
+                            <span>WHISPER ACTIVE</span>
+                        </div>
+                    </div>
+
+                    {/* Dual-Track Layout */}
+                    <div className="resp__content-grid">
+                        {/* Left Track: The Objection & Tone Switcher */}
+                        <div className="resp__left-track">
+                            <div className="resp__block">
+                                <span className="resp__track-label">PROSPECT SAYS</span>
+                                <p className="resp__obj-quote">
+                                    "{activeData.objection}"
+                                </p>
                             </div>
 
-                            <div className="resp__control-sec">
-                                <span className="resp__control-label">2. Adjust Rebuttal Tone</span>
-                                <div className="resp__tone-selector">
-                                    {['Professional', 'Empathetic', 'Direct'].map((tone) => (
+                            <div className="resp__divider" />
+
+                            <div className="resp__block">
+                                <span className="resp__track-label">SELECT REBUTTAL TONE</span>
+                                <div className="resp__tones-list">
+                                    {['Direct', 'Disarming', 'ROI Re-Anchor'].map((tone) => (
                                         <button
                                             key={tone}
-                                            className={`resp__tone-btn ${selectedTone === tone ? 'active' : ''}`}
+                                            className={`resp__tone-pill ${selectedTone === tone ? 'resp__tone-pill--active' : ''}`}
                                             onClick={() => setSelectedTone(tone)}
                                         >
                                             {tone}
@@ -150,89 +207,134 @@ const ResponseSuggestion = () => {
                             </div>
                         </div>
 
-                        <div className="resp__cta-wrap">
-                            <MagButton label="Try Live Simulator" variant="dark" magnetStrength={0.35} />
-                        </div>
-                    </div>
+                        {/* Right Track: The Live Teleprompter Rebuttal */}
+                        <div className="resp__right-track">
+                            <div className="resp__prompter-header">
+                                <span className="resp__prompter-tag">SAY THIS NOW</span>
+                                <span className="resp__prompter-conf">{activeData.confidence}</span>
+                            </div>
 
-                    {/* Right: AI Playground Console */}
-                    <div className="resp__visual">
-                        <div className="resp__console-card">
-                            {/* Visual Objection Bubble */}
-                            <div className="resp__bubble-obj">
-                                <div className="resp__bubble-header">
-                                    <MessageSquare size={12} />
-                                    <span>Objection Detected</span>
-                                </div>
-                                <p className="resp__bubble-text">
-                                    "{activeData.objection}"
+                            <div className="resp__prompter-body" ref={outputRef}>
+                                <p className="resp__rebuttal-quote">
+                                    "{activeRebuttal}"
                                 </p>
                             </div>
 
-                            {/* Hexagon Response Box */}
-                            <div className="resp__bubble-rebuttal">
-                                <div className="resp__rebuttal-header">
-                                    <div className="resp__ai-mark">
-                                        <Zap size={11} className="resp__zap-glow" />
-                                        <span>CLOZFLOW REBUTTAL</span>
-                                    </div>
-                                    <button 
-                                        className={`resp__copy-btn ${copied ? 'copied' : ''}`}
-                                        onClick={handleCopy}
-                                        title="Copy response"
-                                    >
-                                        {copied ? <Check size={12} /> : <Copy size={12} />}
-                                        <span>{copied ? 'Copied' : 'Copy'}</span>
-                                    </button>
-                                </div>
+                            <div className="resp__prompter-actions">
+                                <button 
+                                    className="resp__copy-btn" 
+                                    onClick={handleCopy}
+                                    aria-label="Copy rebuttal"
+                                >
+                                    {copied ? (
+                                        <>
+                                            <Check size={12} />
+                                            <span>COPIED</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Copy size={12} />
+                                            <span>COPY REBUTTAL</span>
+                                        </>
+                                    )}
+                                </button>
+                                <span className="resp__action-meta">DELIVERED IN &lt;12MS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                <div className="resp__rebuttal-body" ref={outputRef}>
-                                    <p className="resp__rebuttal-text">
-                                        "{activeRebuttal}"
-                                    </p>
-                                </div>
+                {/* ── MOBILE / PHONE VIEW: Lean Interactive Teleprompter HUD (Zero bulky cards, Zero text dumps) ── */}
+                <div className="resp__mobile-view">
+                    {/* Compact Scenario Switcher */}
+                    <div className="resp__mobile-tabs" role="tablist">
+                        {SCENARIOS.map((sc, idx) => {
+                            const isActive = selectedScenario === idx;
+                            return (
+                                <button
+                                    key={sc.id}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={isActive}
+                                    className={`resp__mobile-tab ${isActive ? 'resp__mobile-tab--active' : ''}`}
+                                    onClick={() => setSelectedScenario(idx)}
+                                >
+                                    <span className="resp__mobile-tab-num">{sc.code}</span>
+                                    <span>{sc.shortTab}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
 
-                                {/* Extra Spec Details Footer */}
-                                <div className="resp__rebuttal-meta-footer">
-                                    <div className="resp__meta-stat">
-                                        <Award size={13} style={{ color: 'var(--accent)' }} />
-                                        <span>Strategy: <strong>{activeData.strategy}</strong></span>
-                                    </div>
+                    {/* Active Teleprompter Stage */}
+                    <div className="resp__mobile-stage" key={activeData.id}>
+                        {/* Top: Tone Selector Pills */}
+                        <div className="resp__mobile-tones-bar">
+                            <span className="resp__mobile-tones-lbl">TONE:</span>
+                            <div className="resp__mobile-tones-group">
+                                {['Direct', 'Disarming', 'ROI Re-Anchor'].map((tone) => {
+                                    const isActive = selectedTone === tone;
+                                    const shortName = tone === 'ROI Re-Anchor' ? 'ROI' : tone;
+                                    return (
+                                        <button
+                                            key={tone}
+                                            type="button"
+                                            className={`resp__mobile-tone-btn ${isActive ? 'resp__mobile-tone-btn--active' : ''}`}
+                                            onClick={() => setSelectedTone(tone)}
+                                        >
+                                            {shortName}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Dialogue Soundbites (Airy, Open, Zero Boxes) */}
+                        <div className="resp__mobile-lines">
+                            {/* Buyer Objection */}
+                            <div className="resp__mobile-line">
+                                <div className="resp__mobile-line-hdr">
+                                    <span className="resp__mobile-dot--buyer" />
+                                    <span className="resp__mobile-lbl">BUYER OBJECTION</span>
                                 </div>
+                                <p className="resp__mobile-quote resp__mobile-quote--buyer">
+                                    {activeData.mobileObjection}
+                                </p>
                             </div>
 
-                            {/* Strategic Blueprint & Confidence HUD */}
-                            <div className="resp__hud-grid">
-                                <div className="resp__blueprint-box">
-                                    <span className="resp__hud-label">TACTICAL BLUEPRINT</span>
-                                    <ul className="resp__blueprint-list">
-                                        {activeData.blueprint.map((step, i) => (
-                                            <li key={i} className="resp__blueprint-step">
-                                                <span className="resp__step-dot" />
-                                                <span>{step}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
+                            {/* ClozFlow Teleprompter */}
+                            <div className="resp__mobile-line">
+                                <div className="resp__mobile-line-hdr">
+                                    <Zap size={12} className="resp__mobile-icon--prompter" />
+                                    <span className="resp__mobile-lbl resp__mobile-lbl--prompter">SAY THIS NOW</span>
+                                    <span className="resp__mobile-conf">{activeData.confidence}</span>
                                 </div>
-
-                                <div className="resp__confidence-gauge" ref={gaugeRef}>
-                                    <span className="resp__hud-label">CONFIDENCE</span>
-                                    <div className="resp__gauge-svg-wrap">
-                                        <svg className="resp__gauge-svg" viewBox="0 0 80 80">
-                                            <circle className="resp__gauge-circle-bg" cx="40" cy="40" r="32" />
-                                            <circle 
-                                                className="resp__gauge-circle-fill" 
-                                                cx="40" 
-                                                cy="40" 
-                                                r="32" 
-                                                strokeDasharray="201.06"
-                                                strokeDashoffset="201.06"
-                                            />
-                                        </svg>
-                                        <span className="resp__gauge-percent">{activeData.confidence}%</span>
-                                    </div>
-                                </div>
+                                <p className="resp__mobile-quote resp__mobile-quote--prompter">
+                                    {activeMobileRebuttal}
+                                </p>
                             </div>
+                        </div>
+
+                        {/* Action Bar */}
+                        <div className="resp__mobile-action-bar">
+                            <button 
+                                className="resp__mobile-copy-btn"
+                                onClick={handleCopy}
+                                aria-label="Copy rebuttal"
+                            >
+                                {copied ? (
+                                    <>
+                                        <Check size={12} />
+                                        <span>COPIED TO CLIPBOARD</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Copy size={12} />
+                                        <span>COPY LIVE PROMPT</span>
+                                    </>
+                                )}
+                            </button>
+                            <span className="resp__mobile-meta">&lt;12MS WHISPER</span>
                         </div>
                     </div>
                 </div>

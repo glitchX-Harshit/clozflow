@@ -1,202 +1,220 @@
 import { useState, useEffect, useRef } from 'react';
-import { Target, Users, TrendingUp, Handshake, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import MagButton from './MagButton';
 import './UseCases.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PERSONAS = [
+const BATTLEGROUNDS = [
     {
-        id: 'ae',
-        label: 'Account Executives',
-        icon: <Target size={16} />,
-        stat: '22%',
-        statLabel: 'Higher Close Rate',
-        heading: 'Win more deals, faster.',
-        desc: 'Stay fully present during discovery calls. ClozFlow handles objection tracking and script navigation so you can focus on building trust.',
-        preview: '"Your pricing is high compared to XYZ." → ClozFlow: "We offer 24/7 priority support and custom integrations which XYZ lacks. Want to see the ROI dashboard?"'
+        num: '01',
+        title: 'THE MULTI-MILLION DEMO',
+        shortTitle: 'DEMO',
+        role: 'Account Executives',
+        stat: '+22%',
+        statLabel: 'WIN RATE ELEVATION',
+        nightmare: 'Your pricing is 40% higher than Competitor X.',
+        weapon: 'ClozFlow feeds the deferred-billing pilot clause in real-time. Margin defended, contract closed at full price.',
+        mobileTrap: '“Your pricing is 40% higher than Competitor X.”',
+        mobileWeapon: 'Auto-injects deferred-billing clause. Margin defended at full price.',
+        tag: 'MARGIN PRESERVED'
     },
     {
-        id: 'sdr',
-        label: 'SDRs & BDRs',
-        icon: <Users size={16} />,
-        stat: '40%',
-        statLabel: 'More Meetings Set',
-        heading: 'Convert cold calls to meetings.',
-        desc: 'Never get flustered by a brush-off. Instant rebuttals for "send me an email" or "not interested right now" while you\'re still on the phone.',
-        preview: '"Just send me an email." → ClozFlow: "Usually people say that when they\'re busy or it\'s bad timing — which is it for you right now?"'
+        num: '02',
+        title: 'THE 30-SECOND COLD CALL',
+        shortTitle: 'COLD CALL',
+        role: 'SDRs & Pipeline Hunters',
+        stat: '+40%',
+        statLabel: 'MORE MEETINGS BOOKED',
+        nightmare: 'Can you just email me a one-pager? (click, dial tone).',
+        weapon: 'Instant 8-second disarm: "Usually people say that when swamped—which is it right now for your team?" Call rescued.',
+        mobileTrap: '“Can you just email me a one-pager?” (click).',
+        mobileWeapon: 'Instant 8-second disarm script. Hang-up converted to booked meeting.',
+        tag: 'HANG-UP PREVENTED'
     },
     {
-        id: 'managers',
-        label: 'Sales Managers',
-        icon: <TrendingUp size={16} />,
-        stat: '100%',
-        statLabel: 'Playbook Compliance',
-        heading: 'Coach your team at scale.',
-        desc: 'Ensure every rep follows the approved playbook. ClozFlow automatically surfaces the right script at the right time during live calls.',
-        preview: '"Manager Hint: Rep hasn\'t yet mentioned the Q3 enterprise discount. Nudge now."'
-    },
-    {
-        id: 'leaders',
-        label: 'Sales Leaders',
-        icon: <Handshake size={16} />,
-        stat: '12%',
-        statLabel: 'Market Insight Gain',
-        heading: 'Real-time market intelligence.',
-        desc: 'Understand exactly why deals are stalling across your entire organization. Aggregate objection data to refine product and pricing strategy.',
-        preview: '"Insight: 44% of Q3 lost deals cited the same missing integration. Now your #1 priority."'
+        num: '03',
+        title: 'THE FORECAST WAR ROOM',
+        shortTitle: 'WAR ROOM',
+        role: 'VPs of Sales & Founders',
+        stat: 'ZERO',
+        statLabel: 'PIPELINE BLINDSPOTS',
+        nightmare: 'Deals stalling in procurement with reps hiding bad news until end of quarter.',
+        weapon: 'Aggregated hesitation trend alerts you 3 weeks early. Surface missing legal & SOC2 paperwork before the deal dies.',
+        mobileTrap: '“Deal stalling silently in procurement.”',
+        mobileWeapon: 'Hesitation radar flags missing legal & SOC2 paperwork 3 weeks early.',
+        tag: 'REVENUE DEFENDED'
     }
 ];
 
 const UseCases = () => {
-    const [active, setActive] = useState('ae');
-    const panelRef = useRef(null);
     const sectionRef = useRef(null);
-    const persona = PERSONAS.find(p => p.id === active);
+    const [hoveredIdx, setHoveredIdx] = useState(null);
+    const [activeMobileIdx, setActiveMobileIdx] = useState(0);
 
-    // Animate section in
     useEffect(() => {
         let ctx = gsap.context(() => {
-            gsap.fromTo('.uc__header-animate',
+            gsap.fromTo('.uc__anim-hdr',
+                { y: 25, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'power3.out',
+                    scrollTrigger: { trigger: '.uc__hdr-wrap', start: 'top 85%' }
+                }
+            );
+
+            gsap.fromTo('.uc__matrix-row',
                 { y: 30, opacity: 0 },
                 {
-                    y: 0, 
-                    opacity: 1, 
-                    duration: 1, 
-                    stagger: 0.1, 
-                    ease: 'power2.out',
-                    scrollTrigger: { trigger: '.uc__header', start: 'top 85%' }
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.85,
+                    stagger: 0.12,
+                    ease: 'power3.out',
+                    scrollTrigger: { trigger: '.uc__matrix-wrap', start: 'top 80%' }
                 }
             );
         }, sectionRef);
+
         return () => ctx.revert();
     }, []);
 
-    // Animate panel on tab switch
-    useEffect(() => {
-        if (panelRef.current) {
-            gsap.fromTo(panelRef.current.children,
-                { opacity: 0, y: 10 },
-                { opacity: 1, y: 0, duration: 0.35, stagger: 0.05, ease: 'power2.out' }
-            );
-        }
-    }, [active]);
+    const activeItem = BATTLEGROUNDS[activeMobileIdx];
 
     return (
         <section className="uc__section" id="use-cases" ref={sectionRef}>
             <div className="container">
-                <div className="uc__header">
-                    <span className="uc__eyebrow uc__header-animate">Personas</span>
-                    <h2 className="uc__title uc__header-animate">
-                        Empowering every sales role
+                {/* Header */}
+                <div className="uc__hdr-wrap">
+                    <div className="uc__meta-tag uc__anim-hdr">
+                        <span>[ 04 — WHO IT IS FOR ]</span>
+                        <span className="uc__meta-divider">/</span>
+                        <span>THE SALES MATRIX</span>
+                    </div>
+
+                    <h2 className="uc__main-title uc__anim-hdr">
+                        Three battlegrounds. Unfair advantage.
                     </h2>
-                    <p className="uc__subtitle uc__header-animate">
-                        Whether you're on the front lines or leading the team,
-                        ClozFlow gives everyone an edge.
+
+                    <p className="uc__main-sub uc__anim-hdr">
+                        Whether defending contract margin on an enterprise demo or hunting cold pipeline,
+                        ClozFlow removes the hesitation that kills deals.
                     </p>
                 </div>
 
-                {/* Desktop View Layout */}
-                <div className="uc__desktop-layout">
-                    <div className="uc__grid-layout">
-                        {/* Left: Role Navigation Sidebar */}
-                        <div className="uc__selector">
-                            <div className="uc__persona-list">
-                                {PERSONAS.map(p => {
-                                    const isActive = active === p.id;
-                                    return (
-                                        <button
-                                            key={p.id}
-                                            className={`uc__persona-btn ${isActive ? 'active' : ''}`}
-                                            onClick={() => setActive(p.id)}
-                                        >
-                                            <div className="uc__btn-icon-label">
-                                                <span className="uc__btn-icon" style={{ color: isActive ? 'var(--accent)' : 'var(--text-muted)' }}>
-                                                    {p.icon}
-                                                </span>
-                                                <span className="uc__btn-label">{p.label}</span>
-                                            </div>
-                                            <ChevronRight size={14} className="uc__btn-arrow" />
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* Right: Role Details Panel */}
-                        <div className="uc__panel" ref={panelRef}>
-                            <div className="uc__panel-meta">
-                                <div className="uc__panel-stat-pill">
-                                    <span className="stat-n">{persona.stat}</span>
-                                    <span className="stat-l">{persona.statLabel}</span>
+                {/* ── DESKTOP VIEW: Horizontal Matrix with Minimal Frosted Glass Hover ── */}
+                <div className="uc__matrix-wrap">
+                    {BATTLEGROUNDS.map((row, index) => {
+                        const isHovered = hoveredIdx === index;
+                        return (
+                            <div
+                                key={row.num}
+                                className={`uc__matrix-row ${isHovered ? 'uc__matrix-row--active' : ''}`}
+                                onMouseEnter={() => setHoveredIdx(index)}
+                                onMouseLeave={() => setHoveredIdx(null)}
+                            >
+                                {/* Left: Index & Battleground Title */}
+                                <div className="uc__cell-lead">
+                                    <div className="uc__lead-meta">
+                                        <span className="uc__lead-num">{row.num}</span>
+                                        <span className="uc__lead-role">{row.role}</span>
+                                    </div>
+                                    <h3 className="uc__lead-title">{row.title}</h3>
                                 </div>
-                            </div>
-                            <h3 className="uc__panel-heading">{persona.heading}</h3>
-                            <p className="uc__panel-desc">{persona.desc}</p>
-                            
-                            <div className="uc__preview">
-                                <span className="uc__preview-label">Live Example Interaction</span>
-                                <p className="uc__preview-text">{persona.preview}</p>
-                            </div>
-                            
-                            <div className="uc__cta-wrap">
-                                <MagButton label="Learn more" variant="dark" magnetStrength={0.35} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                {/* Mobile Accordion Layout */}
-                <div className="uc__mobile-layout">
-                    <div className="uc__accordion-list">
-                        {PERSONAS.map(p => {
-                            const isActive = active === p.id;
-                            return (
-                                <div 
-                                    key={p.id} 
-                                    className={`uc__accordion-item ${isActive ? 'active' : ''}`}
-                                >
-                                    <button 
-                                        className="uc__accordion-header"
-                                        onClick={() => setActive(p.id)}
-                                    >
-                                        <div className="uc__accordion-header-left">
-                                            <span className="uc__accordion-icon" style={{ color: isActive ? 'var(--accent)' : 'var(--text-muted)' }}>
-                                                {p.icon}
-                                            </span>
-                                            <span className="uc__accordion-label">{p.label}</span>
+                                {/* Center: The Nightmare vs The Weapon */}
+                                <div className="uc__cell-dialogue">
+                                    <div className="uc__dialogue-side uc__dialogue-side--nightmare">
+                                        <span className="uc__side-label">THE PROSPECT TRAP</span>
+                                        <p className="uc__side-quote">"{row.nightmare}"</p>
+                                    </div>
+
+                                    <div className="uc__dialogue-arrow">
+                                        <ArrowRight size={14} className="uc__arrow-icon" />
+                                    </div>
+
+                                    <div className="uc__dialogue-side uc__dialogue-side--weapon">
+                                        <div className="uc__weapon-header">
+                                            <span className="uc__side-label uc__side-label--weapon">CLOZFLOW COUNTER-STRIKE</span>
+                                            <span className="uc__tag-badge">{row.tag}</span>
                                         </div>
-                                        <ChevronRight size={16} className="uc__accordion-arrow" />
-                                    </button>
-                                    
-                                    <div className="uc__accordion-body-wrapper">
-                                        <div className="uc__accordion-body">
-                                            <div className="uc__accordion-content">
-                                                <div className="uc__panel-meta">
-                                                    <div className="uc__panel-stat-pill">
-                                                        <span className="stat-n">{p.stat}</span>
-                                                        <span className="stat-l">{p.statLabel}</span>
-                                                    </div>
-                                                </div>
-                                                <h3 className="uc__panel-heading">{p.heading}</h3>
-                                                <p className="uc__panel-desc">{p.desc}</p>
-                                                
-                                                <div className="uc__preview">
-                                                    <span className="uc__preview-label">Live Example Interaction</span>
-                                                    <p className="uc__preview-text">{p.preview}</p>
-                                                </div>
-                                                
-                                                <div className="uc__cta-wrap">
-                                                    <MagButton label="Learn more" variant="dark" magnetStrength={0.35} />
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <p className="uc__side-quote uc__side-quote--weapon">
+                                            {row.weapon}
+                                        </p>
                                     </div>
                                 </div>
+
+                                {/* Right: Stat & Indicator */}
+                                <div className="uc__cell-stat">
+                                    <div className="uc__stat-number">{row.stat}</div>
+                                    <div className="uc__stat-description">{row.statLabel}</div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* ── MOBILE / PHONE VIEW: Lean Interactive Clash HUD (Zero cards, zero text dumps) ── */}
+                <div className="uc__mobile-view">
+                    {/* Segment Pill Switcher */}
+                    <div className="uc__mobile-tabs" role="tablist">
+                        {BATTLEGROUNDS.map((item, idx) => {
+                            const isActive = activeMobileIdx === idx;
+                            return (
+                                <button
+                                    key={item.num}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={isActive}
+                                    className={`uc__mobile-tab ${isActive ? 'uc__mobile-tab--active' : ''}`}
+                                    onClick={() => setActiveMobileIdx(idx)}
+                                >
+                                    <span className="uc__mobile-tab-num">{item.num}</span>
+                                    <span>{item.shortTitle}</span>
+                                </button>
                             );
                         })}
+                    </div>
+
+                    {/* Active Clash Stage */}
+                    <div className="uc__mobile-stage" key={activeItem.num}>
+                        {/* Meta Bar: Persona & Result */}
+                        <div className="uc__mobile-meta-bar">
+                            <span className="uc__mobile-role-badge">FOR: {activeItem.role}</span>
+                            <div className="uc__mobile-stat-wrap">
+                                <span className="uc__mobile-stat-num">{activeItem.stat}</span>
+                                <span className="uc__mobile-stat-label">{activeItem.statLabel}</span>
+                            </div>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="uc__mobile-title">{activeItem.title}</h3>
+
+                        {/* Minimalist Soundbites (No Nested Boxes) */}
+                        <div className="uc__mobile-exchange">
+                            {/* Objection */}
+                            <div className="uc__mobile-line uc__mobile-line--trap">
+                                <div className="uc__mobile-line-hdr">
+                                    <span className="uc__mobile-dot uc__mobile-dot--trap" />
+                                    <span className="uc__mobile-label">THE OBJECTION</span>
+                                </div>
+                                <p className="uc__mobile-quote">{activeItem.mobileTrap}</p>
+                            </div>
+
+                            {/* Live Disarm */}
+                            <div className="uc__mobile-line uc__mobile-line--weapon">
+                                <div className="uc__mobile-line-hdr">
+                                    <ArrowRight size={12} className="uc__mobile-icon" />
+                                    <span className="uc__mobile-label uc__mobile-label--weapon">CLOZFLOW LIVE DISARM</span>
+                                    <span className="uc__mobile-tag">{activeItem.tag}</span>
+                                </div>
+                                <p className="uc__mobile-quote uc__mobile-quote--weapon">{activeItem.mobileWeapon}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
