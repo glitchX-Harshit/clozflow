@@ -7,6 +7,7 @@ from services.sales_ai_engine import SalesAIEngine
 from services.gemini_stream import GeminiStream
 from services.vad_engine import SileroVADEngine, VADEvent, SILERO_AVAILABLE
 from services.turn_detector import TurnDetector
+from services.latency_tracker import LatencyTracker
 from database import SessionLocal
 from models import CallLog
 
@@ -29,6 +30,12 @@ class ConnectionManager:
         # ── Legacy timer-based fallback ──
         self.final_buffers: dict[WebSocket, str] = {}
         self.debounce_tasks: dict[WebSocket, asyncio.Task] = {}
+
+        # ── Latency measurement ──
+        self.latency_trackers: dict[WebSocket, LatencyTracker] = {}
+
+        # ── Speculative AI execution (runs AI during silence wait) ──
+        self._speculative_ai: dict[WebSocket, tuple[asyncio.Task, str]] = {}
 
     async def connect(self, websocket: WebSocket, context_id: str | None = None):
         await websocket.accept()
@@ -102,6 +109,12 @@ class ConnectionManager:
             self.debounce_tasks[websocket].cancel()
         self.debounce_tasks.pop(websocket, None)
 
+        # ── Cleanup latency tracker & speculative AI ──
+        self.latency_trackers.pop(websocket, None)
+        spec_task, _ = self._speculative_ai.pop(websocket, (None, ""))
+        if spec_task and not spec_task.done():
+            spec_task.cancel()
+
         # Note: Gemini session is closed in handle_audio_stream's finally block (async)
         self.gemini_sessions.pop(websocket, None)
 
@@ -130,10 +143,32 @@ class ConnectionManager:
 
         td = self.turn_detectors.get(websocket)
 
+        # ── Latency tracking: mark transcript arrival ──
+        lt = self.latency_trackers.get(websocket)
+        if lt and is_final and text.strip():
+            lt.on_transcript_received()
+
         if td:
             # ── VAD-based path: feed signals to TurnDetector ──
             if is_final and text.strip():
                 td.on_transcript(text, is_final=True)
+                
+                # ── Speculative AI Execution ──
+                # Start AI analysis early during silence wait if sentence looks complete
+                current_text = td.transcript_buffer.strip()
+                if TurnDetector._has_endpoint(current_text) or TurnDetector._is_question(current_text):
+                    existing_task, existing_text = self._speculative_ai.get(websocket, (None, ""))
+                    # Only kick off a new task if the text changed
+                    if current_text != existing_text:
+                        if existing_task and not existing_task.done():
+                            existing_task.cancel()
+                        
+                        ai_engine = self.ai_engines.get(websocket)
+                        if ai_engine:
+                            print(f"🔮 Speculative AI started: {current_text[:50]}...")
+                            task = asyncio.create_task(ai_engine.analyze("prospect", current_text))
+                            self._speculative_ai[websocket] = (task, current_text)
+
             if speech_final:
                 td.on_speech_final()
         else:
@@ -149,6 +184,11 @@ class ConnectionManager:
             return
 
         final_text = text.strip()
+
+        # ── Latency: mark turn flushed ──
+        lt = self.latency_trackers.get(websocket)
+        if lt:
+            lt.on_turn_flushed()
 
         print(f"📝 Transcript [prospect]: {final_text}")
 
@@ -171,17 +211,40 @@ class ConnectionManager:
         ai_engine = self.ai_engines.get(websocket)
         if ai_engine:
             try:
-                analysis = await ai_engine.analyze("prospect", final_text)
+                analysis = None
+                # Check for speculative execution match
+                spec_task, spec_text = self._speculative_ai.pop(websocket, (None, ""))
+                
+                if spec_task and spec_text == final_text:
+                    print(f"✨ Using speculative AI result (overlaps silence wait)")
+                    try:
+                        analysis = await spec_task
+                    except asyncio.CancelledError:
+                        analysis = await ai_engine.analyze("prospect", final_text)
+                else:
+                    if spec_task and not spec_task.done():
+                        spec_task.cancel()
+                    analysis = await ai_engine.analyze("prospect", final_text)
+
+                # ── Latency: mark AI complete and log breakdown ──
+                latency_breakdown = None
+                if lt:
+                    lt.on_ai_complete()
+                    latency_breakdown = lt.finalize()
+
                 if analysis:
                     if websocket in self.session_data:
                         self.session_data[websocket]["insights"].append({
                             "payload": analysis,
                             "timestamp": datetime.utcnow().isoformat()
                         })
-                    await self.send_personal_message(json.dumps({
+                    msg = {
                         "type": "aiAnalysis",
-                        "payload": analysis
-                    }), websocket)
+                        "payload": analysis,
+                    }
+                    if latency_breakdown:
+                        msg["latency"] = latency_breakdown
+                    await self.send_personal_message(json.dumps(msg), websocket)
             except Exception as e:
                 print(f"❌ [SalesAI] Unhandled pipeline error: {e}")
                 # Don't drop websocket, just log and continue listening
@@ -248,6 +311,10 @@ class ConnectionManager:
 
         self.gemini_sessions[websocket] = gemini_stream
 
+        # ── Initialize latency tracker for this connection ──
+        lt = LatencyTracker()
+        self.latency_trackers[websocket] = lt
+
         # Get VAD + TurnDetector for this connection (may be None if unavailable)
         vad = self.vad_engines.get(websocket)
         td = self.turn_detectors.get(websocket)
@@ -274,6 +341,9 @@ class ConnectionManager:
 
                     # ── Send to Gemini for transcription ──
                     await gemini_stream.send_audio(data)
+
+                    # ── Latency: mark audio sent to STT ──
+                    lt.on_audio_sent()
 
                     # ── Feed to Silero VAD for voice activity detection ──
                     if vad and td:

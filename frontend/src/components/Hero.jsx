@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Play, ArrowDown, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Play, ArrowDown, X } from 'lucide-react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Hero.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // SVG Logos for trusted partners
 const Logos = {
@@ -50,21 +53,17 @@ const Hero = ({ onGetStarted }) => {
             });
 
             // Clean, award-winning Swiss entrance timeline
-            tl.fromTo('.hero__eyebrow', 
-                { opacity: 0, y: 15 },
-                { opacity: 1, y: 0, duration: 0.9 }, 0.2
-            )
-            .fromTo('.hero__headline-char',
+            tl.fromTo('.hero__headline-char',
                 { opacity: 0, y: 40, rotateX: -15 },
-                { opacity: 1, y: 0, rotateX: 0, stagger: 0.04, duration: 1.1, ease: 'power4.out' }, 0.3
+                { opacity: 1, y: 0, rotateX: 0, stagger: 0.04, duration: 1.1, ease: 'power4.out' }, 0.2
             )
             .fromTo(subRef.current,
                 { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.9 }, 0.7
+                { opacity: 1, y: 0, duration: 0.9 }, 0.6
             )
-            .fromTo(ctaRef.current,
+            .fromTo('.hero__actions, .hero__tagline',
                 { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.9 }, 0.85
+                { opacity: 1, y: 0, duration: 0.9 }, 0.8
             )
             .fromTo(cardRef.current,
                 { opacity: 0, x: 45, scale: 0.95 },
@@ -86,6 +85,25 @@ const Hero = ({ onGetStarted }) => {
                 { opacity: 0, y: 30 },
                 { opacity: 0.92, y: 0, duration: 1.4, ease: 'power3.out' }, 0.7
             );
+
+            // Desktop scroll-driven disappearance for both hero background images
+            ScrollTrigger.matchMedia({
+                "(min-width: 769px)": () => {
+                    gsap.to(['.hero__wave-wrap', '.hero__mountains-wrap'], {
+                        opacity: 0,
+                        y: 90,
+                        scale: 0.96,
+                        ease: 'power1.out',
+                        scrollTrigger: {
+                            trigger: heroRef.current,
+                            start: 'top top',
+                            end: 'bottom 50%',
+                            scrub: 1.2,
+                            invalidateOnRefresh: true,
+                        }
+                    });
+                }
+            });
         }, heroRef);
 
         return () => ctx.revert();
@@ -106,29 +124,35 @@ const Hero = ({ onGetStarted }) => {
                     
                     {/* LEFT COLUMN: Main message & CTAs */}
                     <div className="hero__col hero__col--left">
-                        {/* Eyebrow */}
-                        <div className="hero__eyebrow">
-                            <span className="hero__eyebrow-line" />
-                            <span className="hero__eyebrow-text">AI FOR REAL CONVERSATIONS</span>
-                        </div>
-
                         {/* Swiss Headline */}
                         <h1 className="hero__headline" ref={headlineRef}>
                             <div className="hero__headline-row">
-                                <span className="hero__headline-char">R</span>
-                                <span className="hero__headline-char">E</span>
+                                <span className="hero__headline-char">M</span>
                                 <span className="hero__headline-char">A</span>
-                                <span className="hero__headline-char">D</span>
+                                <span className="hero__headline-char">H</span>
+                                <span className="hero__headline-char">A</span>
+                                <span className="hero__headline-char">U</span>
+                                <span className="hero__headline-char">L</span>
+                                <span className="hero__headline-space"> </span>
+                                <span className="hero__headline-char">S</span>
+                                <span className="hero__headline-char">A</span>
+                                <span className="hero__headline-char">M</span>
+                                <span className="hero__headline-char">J</span>
+                                <span className="hero__headline-char">H</span>
+                                <span className="hero__headline-char">O</span>
                             </div>
                             <div className="hero__headline-row">
-                                <span className="hero__headline-char">T</span>
-                                <span className="hero__headline-char">H</span>
-                                <span className="hero__headline-char">E</span>
+                                <span className="hero__headline-char">S</span>
+                                <span className="hero__headline-char">A</span>
+                                <span className="hero__headline-char">U</span>
+                                <span className="hero__headline-char">D</span>
+                                <span className="hero__headline-char">A</span>
                                 <span className="hero__headline-space"> </span>
-                                <span className="hero__headline-char">R</span>
-                                <span className="hero__headline-char">O</span>
-                                <span className="hero__headline-char">O</span>
-                                <span className="hero__headline-char">M</span>
+                                <span className="hero__headline-char">P</span>
+                                <span className="hero__headline-char">A</span>
+                                <span className="hero__headline-char">K</span>
+                                <span className="hero__headline-char">K</span>
+                                <span className="hero__headline-char">A</span>
                                 <span className="hero__headline-char hero__headline-period">.</span>
                             </div>
                         </h1>
@@ -139,8 +163,8 @@ const Hero = ({ onGetStarted }) => {
                             and helps your team close with clarity.
                         </p>
 
-                        {/* Actions Row */}
-                        <div className="hero__actions" ref={ctaRef}>
+                        {/* Actions Row - Desktop */}
+                        <div className="hero__actions hero__actions--desktop" ref={ctaRef}>
                             {/* Primary CTA */}
                             <button 
                                 className="hero__btn-primary" 
@@ -165,6 +189,11 @@ const Hero = ({ onGetStarted }) => {
                                     <span className="hero__play-duration">2 MIN</span>
                                 </div>
                             </button>
+                        </div>
+
+                        {/* Tagline below actions - Desktop */}
+                        <div className="hero__tagline hero__tagline--desktop">
+                            <span className="hero__tagline-text">AI FOR REAL CONVERSATIONS</span>
                         </div>
                     </div>
 
@@ -202,53 +231,142 @@ const Hero = ({ onGetStarted }) => {
                         <div className="hero__orb-grounding-shadow" />
                     </div>
 
+                    {/* Actions Row - Mobile (Positioned at 70-80vh below the 3D Orb) */}
+                    <div className="hero__actions hero__actions--mobile">
+                        {/* Primary CTA */}
+                        <button 
+                            className="hero__btn-primary" 
+                            onClick={onGetStarted}
+                            aria-label="Enter Workspace"
+                        >
+                            <span>Enter Workspace</span>
+                            <ArrowRight size={16} className="hero__btn-arrow" />
+                        </button>
+
+                        {/* Secondary CTA: Play Button */}
+                        <button 
+                            className="hero__btn-secondary" 
+                            onClick={handleVideoClick}
+                            aria-label="See it in action"
+                        >
+                            <div className="hero__play-circle">
+                                <Play size={13} fill="#0a0a0a" stroke="#0a0a0a" className="hero__play-icon" />
+                            </div>
+                            <div className="hero__play-meta">
+                                <span className="hero__play-title">See it in action</span>
+                                <span className="hero__play-duration">2 MIN</span>
+                            </div>
+                        </button>
+
+                        {/* Tagline below actions - Mobile */}
+                        <div className="hero__tagline hero__tagline--mobile">
+                            <span className="hero__tagline-text">AI FOR REAL CONVERSATIONS</span>
+                        </div>
+                    </div>
+
                     {/* RIGHT COLUMN: Product Intelligence Analytics Card */}
                     <div className="hero__col hero__col--right">
                         <div className="hero__card" ref={cardRef}>
-                            {/* Card Top: Metric & Rising Line Graph */}
-                            <div className="hero__card-top">
-                                <div className="hero__card-metric-block">
-                                    {/* Minimalist 3-bar icon */}
-                                    <div className="hero__bar-icon">
-                                        <span className="hero__bar hero__bar--1" />
-                                        <span className="hero__bar hero__bar--2" />
-                                        <span className="hero__bar hero__bar--3" />
-                                    </div>
-                                    <div className="hero__card-metric-val">+42%</div>
-                                    <div className="hero__card-metric-label">Meetings Booked</div>
+                            {/* Card Top: Live Telemetry Status & Speed Metric */}
+                            <div className="hero__card-header">
+                                <div className="hero__card-status-badge">
+                                    <span className="hero__card-pulse-dot" />
+                                    <span className="hero__card-status-text">LIVE SIGNAL MATRIX</span>
                                 </div>
+                                <div className="hero__card-latency-tag">
+                                    <span className="hero__card-latency-num">32ms</span>
+                                    <span className="hero__card-latency-unit">LATENCY</span>
+                                </div>
+                            </div>
 
-                                {/* Rising Curved Line Graph */}
-                                <div className="hero__card-graph-wrap">
-                                    <svg className="hero__card-svg" viewBox="0 0 150 70" fill="none">
-                                        <defs>
-                                            <linearGradient id="curveGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                                                <stop offset="0%" stopColor="#818cf8" stopOpacity="0.4" />
-                                                <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.9" />
-                                                <stop offset="100%" stopColor="#2563eb" stopOpacity="1" />
-                                            </linearGradient>
-                                        </defs>
-                                        {/* Smooth Rising Bezier Curve */}
-                                        <path 
-                                            d="M 5 62 C 45 62, 75 48, 105 24 C 120 12, 132 10, 142 10" 
-                                            stroke="url(#curveGradient)" 
-                                            strokeWidth="2.5" 
-                                            strokeLinecap="round" 
-                                        />
-                                        {/* Glowing peak beacon */}
-                                        <circle cx="142" cy="10" r="10" fill="#3b82f6" fillOpacity="0.2" className="hero__graph-glow" />
-                                        <circle cx="142" cy="10" r="4" fill="#2563eb" />
-                                    </svg>
+                            {/* Main Stat & Velocity Tag */}
+                            <div className="hero__card-stat-row">
+                                <div className="hero__card-metric-block">
+                                    <div className="hero__card-metric-val">+43%</div>
+                                    <div className="hero__card-metric-label">Meetings Booked & Kept</div>
                                 </div>
+                                <div className="hero__card-delta-badge">
+                                    <ArrowUpRight size={13} strokeWidth={2.5} />
+                                    <span>3.2x SPEED</span>
+                                </div>
+                            </div>
+
+                            {/* Unique Conversion Horizon Graph with Dotted Reference Line & Area Fill */}
+                            <div className="hero__card-graph-wrap">
+                                <svg className="hero__card-svg" viewBox="0 0 280 90" fill="none" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="curveGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
+                                            <stop offset="65%" stopColor="#6366f1" stopOpacity="0.05" />
+                                            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                                        </linearGradient>
+                                        <linearGradient id="neonPath" x1="0%" y1="100%" x2="100%" y2="0%">
+                                            <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.6" />
+                                            <stop offset="40%" stopColor="#6366f1" stopOpacity="0.9" />
+                                            <stop offset="100%" stopColor="#2563eb" stopOpacity="1" />
+                                        </linearGradient>
+                                    </defs>
+
+                                    {/* Architectural Grid Guides */}
+                                    <line x1="0" y1="26" x2="280" y2="26" stroke="rgba(15, 23, 42, 0.05)" strokeDasharray="3 4" />
+                                    <line x1="0" y1="56" x2="280" y2="56" stroke="rgba(15, 23, 42, 0.05)" strokeDasharray="3 4" />
+                                    <line x1="0" y1="84" x2="280" y2="84" stroke="rgba(15, 23, 42, 0.07)" />
+
+                                    {/* Soft Area Horizon */}
+                                    <path 
+                                        d="M 5 78 C 55 76, 95 64, 135 42 C 175 18, 220 16, 275 8 L 275 84 L 5 84 Z" 
+                                        fill="url(#curveGlow)" 
+                                    />
+
+                                    {/* Industry Baseline Comparison Dotted Line */}
+                                    <path 
+                                        d="M 5 80 C 70 78, 140 73, 210 68 C 240 66, 260 63, 275 62" 
+                                        stroke="rgba(148, 163, 184, 0.45)" 
+                                        strokeWidth="1.5" 
+                                        strokeDasharray="4 4" 
+                                    />
+
+                                    {/* Primary Trajectory Neon Curve */}
+                                    <path 
+                                        d="M 5 78 C 55 76, 95 64, 135 42 C 175 18, 220 16, 275 8" 
+                                        stroke="url(#neonPath)" 
+                                        strokeWidth="2.5" 
+                                        strokeLinecap="round" 
+                                    />
+
+                                    {/* Glowing Peak Beacon */}
+                                    <circle cx="275" cy="8" r="11" fill="#3b82f6" fillOpacity="0.18" className="hero__graph-glow" />
+                                    <circle cx="275" cy="8" r="5" fill="#2563eb" />
+                                    <circle cx="275" cy="8" r="2" fill="#ffffff" />
+                                </svg>
+
+                                {/* Floating Conversion Lock Tooltip */}
+                                <div className="hero__card-badge-pill">
+                                    <span className="hero__card-pill-dot" />
+                                    <span>CONVERSION LOCK</span>
+                                </div>
+                            </div>
+
+                            {/* Live Behavioral Audio Stream Indicator */}
+                            <div className="hero__card-stream">
+                                <div className="hero__card-wave-bars" aria-hidden="true">
+                                    <span className="hero__wave-bar hero__wave-bar--1" />
+                                    <span className="hero__wave-bar hero__wave-bar--2" />
+                                    <span className="hero__wave-bar hero__wave-bar--3" />
+                                    <span className="hero__wave-bar hero__wave-bar--4" />
+                                    <span className="hero__wave-bar hero__wave-bar--5" />
+                                </div>
+                                <span className="hero__card-stream-text">
+                                    Live Intent: <strong>Price objection converted</strong>
+                                </span>
                             </div>
 
                             {/* Card Divider */}
                             <div className="hero__card-divider" />
 
-                            {/* Card Bottom: Avatars, Social Proof & Arrow Action */}
+                            {/* Card Bottom: Avatars, Proof & Action */}
                             <div className="hero__card-bottom">
                                 <div className="hero__card-social">
-                                    {/* Avatar cluster */}
                                     <div className="hero__avatar-group">
                                         <img 
                                             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&auto=format&fit=crop&q=80" 
@@ -269,21 +387,18 @@ const Hero = ({ onGetStarted }) => {
                                             loading="lazy"
                                         />
                                     </div>
-
-                                    {/* Proof Label */}
                                     <div className="hero__proof-text">
-                                        <span className="hero__proof-count">2,000+</span>
-                                        <span className="hero__proof-label">SALES TEAMS<br />TRUST CLOZFLOW</span>
+                                        <span className="hero__proof-count">2,400+ AEs</span>
+                                        <span className="hero__proof-label">CLOSING WITH CLARITY</span>
                                     </div>
                                 </div>
 
-                                {/* Refined circular action affordance */}
                                 <button 
                                     className="hero__card-action-btn"
                                     onClick={onGetStarted}
                                     aria-label="View analytics details"
                                 >
-                                    <ArrowRight size={15} />
+                                    <ArrowRight size={14} />
                                 </button>
                             </div>
                         </div>

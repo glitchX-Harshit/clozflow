@@ -1,7 +1,7 @@
-/* ══════════════════════════════════════════════════════════════════
-   HERO — Awwwards Swiss International Typographic Redesign
-   Minimal · Restrained · Balanced 3-Part Hero · Editorial Grotesk
-   ══════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   HERO â€” Awwwards Swiss International Typographic Redesign
+   Minimal Â· Restrained Â· Balanced 3-Part Hero Â· Editorial Grotesk
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .hero {
   position: relative;
@@ -18,7 +18,7 @@
   z-index: 1;
 }
 
-/* ── Delicate Film-Grain Overlay ── */
+/* â”€â”€ Delicate Film-Grain Overlay â”€â”€ */
 .hero__grain {
   position: absolute;
   inset: 0;
@@ -31,7 +31,7 @@
 
 
 
-/* ── Main Container ── */
+/* â”€â”€ Main Container â”€â”€ */
 .hero__container {
   width: 100%;
   max-width: 1540px;
@@ -44,7 +44,7 @@
   align-items: center;
 }
 
-/* ── Balanced 3-Part Desktop Grid ── */
+/* â”€â”€ Balanced 3-Part Desktop Grid â”€â”€ */
 .hero__grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr 0.95fr;
@@ -54,9 +54,15 @@
   position: relative;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LEFT COLUMN: Eyebrow, Headline, Subtitle, CTAs
-   ══════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.hero__text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .hero__col--left {
   display: flex;
   flex-direction: column;
@@ -88,13 +94,30 @@
   color: var(--text-dim, #64748b);
 }
 
+/* Tagline below Action Buttons (No dash) */
+.hero__tagline {
+  display: flex;
+  align-items: center;
+  margin-top: 1.25rem;
+}
+
+.hero__tagline-text {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim, #64748b);
+  opacity: 0.85;
+}
+
 /* Swiss International Headline */
 .hero__headline {
   font-family: var(--font-display, 'Outfit', -apple-system, sans-serif);
-  font-size: clamp(3.25rem, 5.8vw, 6.2rem);
+  font-size: clamp(2.75rem, 4.3vw, 5.1rem);
   font-weight: 850;
   letter-spacing: -0.04em;
-  line-height: 0.93;
+  line-height: 0.94;
   color: var(--text, #0a0a0a);
   text-transform: uppercase;
   margin: 0 0 1.75rem 0;
@@ -249,9 +272,9 @@
   text-transform: uppercase;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CENTER COLUMN: 3D Orb Framing & Orbital Elements
-   ══════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hero__col--center {
   position: relative;
   height: 440px;
@@ -322,8 +345,17 @@
   pointer-events: none;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RIGHT COLUMN: Product Intelligence Analytics Card
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+.hero__col--right {
+  display: flex;
+  justify-content: flex-end;
+  z-index: 3;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RIGHT COLUMN: ClozFlow Behavioral AI Telemetry Card (Redesigned)
    ══════════════════════════════════════════════════════════════════ */
 .hero__col--right {
   display: flex;
@@ -333,84 +365,158 @@
 
 .hero__card {
   width: 100%;
-  max-width: 375px;
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  outline: 1px solid rgba(0, 0, 0, 0.04);
-  border-radius: 28px;
-  padding: 1.85rem 2rem;
+  max-width: 390px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 1.75rem 1.85rem;
   box-shadow: 
-    0 24px 48px -18px rgba(15, 23, 42, 0.08),
-    0 4px 16px -4px rgba(15, 23, 42, 0.03),
-    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    0 30px 60px -15px rgba(15, 23, 42, 0.09),
+    0 8px 24px -6px rgba(15, 23, 42, 0.04),
+    0 0 0 1px rgba(15, 23, 42, 0.04),
+    inset 0 1.5px 1px rgba(255, 255, 255, 1);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.4) 40%, rgba(59, 130, 246, 0.8) 70%, transparent 100%);
+  pointer-events: none;
 }
 
 .hero__card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   box-shadow: 
-    0 32px 64px -20px rgba(15, 23, 42, 0.12),
-    0 8px 24px -6px rgba(15, 23, 42, 0.05),
-    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    0 36px 72px -18px rgba(15, 23, 42, 0.14),
+    0 12px 30px -8px rgba(15, 23, 42, 0.06),
+    0 0 0 1px rgba(15, 23, 42, 0.06),
+    inset 0 1.5px 1px rgba(255, 255, 255, 1);
 }
 
-/* Card Top: Metric & Graph */
-.hero__card-top {
+/* Card Header: Live Telemetry Status */
+.hero__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.hero__card-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.65rem;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 9999px;
+}
+
+.hero__card-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  animation: liveDotPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes liveDotPulse {
+  0% { opacity: 0.4; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.hero__card-status-text {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.hero__card-latency-tag {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: var(--font-body);
+}
+
+.hero__card-latency-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.hero__card-latency-unit {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+/* Stat Row: +43% & 3.2x Velocity Badge */
+.hero__card-stat-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1.25rem;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
 }
 
 .hero__card-metric-block {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 }
-
-/* 3-Bar Chart Icon */
-.hero__bar-icon {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 22px;
-  margin-bottom: 0.75rem;
-}
-
-.hero__bar {
-  width: 4px;
-  background-color: var(--text, #0a0a0a);
-  border-radius: 2px;
-}
-
-.hero__bar--1 { height: 10px; }
-.hero__bar--2 { height: 16px; }
-.hero__bar--3 { height: 22px; }
 
 .hero__card-metric-val {
   font-family: var(--font-display);
-  font-size: 2.25rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-size: 2.75rem;
+  font-weight: 850;
+  letter-spacing: -0.04em;
   color: var(--text, #0a0a0a);
-  line-height: 1;
+  line-height: 0.95;
 }
 
 .hero__card-metric-label {
   font-family: var(--font-body);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 500;
-  color: #64748b;
-  margin-top: 0.35rem;
+  color: #475569;
+  margin-top: 0.4rem;
 }
 
-/* Graph */
+.hero__card-delta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #047857;
+  padding: 0.3rem 0.6rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+/* Graph Wrap & Custom Horizon Line */
 .hero__card-graph-wrap {
-  width: 140px;
-  height: 65px;
-  flex-shrink: 0;
+  position: relative;
+  width: 100%;
+  height: 90px;
+  margin: 0.5rem 0 1.1rem;
 }
 
 .hero__card-svg {
@@ -424,16 +530,96 @@
 }
 
 @keyframes beaconPulse {
-  0% { r: 8; fill-opacity: 0.15; }
-  100% { r: 13; fill-opacity: 0.35; }
+  0% { r: 9; fill-opacity: 0.12; }
+  100% { r: 15; fill-opacity: 0.32; }
 }
 
-/* Card Divider */
+/* Floating Tooltip Pill */
+.hero__card-badge-pill {
+  position: absolute;
+  top: -8px;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(15, 23, 42, 0.9);
+  color: #ffffff;
+  padding: 0.22rem 0.55rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.hero__card-pill-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #60a5fa;
+}
+
+/* Audio Behavioral Stream Equalizer */
+.hero__card-stream {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(241, 245, 249, 0.65);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.hero__card-wave-bars {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.hero__wave-bar {
+  width: 2.5px;
+  background: #3b82f6;
+  border-radius: 2px;
+  display: inline-block;
+  animation: eqPulse 1.4s ease-in-out infinite alternate;
+}
+
+.hero__wave-bar--1 { height: 6px; animation-delay: 0.1s; }
+.hero__wave-bar--2 { height: 12px; animation-delay: 0.3s; }
+.hero__wave-bar--3 { height: 8px; animation-delay: 0.15s; }
+.hero__wave-bar--4 { height: 14px; animation-delay: 0.4s; }
+.hero__wave-bar--5 { height: 7px; animation-delay: 0.2s; }
+
+@keyframes eqPulse {
+  0% { transform: scaleY(0.4); opacity: 0.6; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+.hero__card-stream-text {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: #475569;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero__card-stream-text strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Divider */
 .hero__card-divider {
   width: 100%;
   height: 1px;
-  background: rgba(0, 0, 0, 0.05);
-  margin: 1.6rem 0 1.4rem 0;
+  background: rgba(15, 23, 42, 0.06);
+  margin: 0 0 1.25rem 0;
 }
 
 /* Card Bottom: Social & Action */
@@ -450,7 +636,6 @@
   gap: 0.85rem;
 }
 
-/* Overlapping Avatars */
 .hero__avatar-group {
   display: flex;
   align-items: center;
@@ -463,7 +648,7 @@
   border: 2px solid #ffffff;
   margin-left: -8px;
   object-fit: cover;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
 .hero__avatar:first-child {
@@ -478,47 +663,46 @@
 
 .hero__proof-count {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 800;
   color: var(--text, #0a0a0a);
 }
 
 .hero__proof-label {
   font-family: var(--font-body);
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #64748b;
   text-transform: uppercase;
 }
 
-/* Action Circle Button */
 .hero__card-action-btn {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #0f172a;
+  border: 1px solid #0f172a;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--text, #0a0a0a);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
 .hero__card-action-btn:hover {
-  transform: scale(1.08);
-  border-color: var(--text, #0a0a0a);
-  background-color: var(--text, #0a0a0a);
-  color: #ffffff;
+  transform: scale(1.08) translateX(2px);
+  background: #1e293b;
+  border-color: #1e293b;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22);
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    BOTTOM STRIP: Trusted Logos & Scroll Prompt
-   ══════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hero__bottom {
   position: relative;
   width: 100%;
@@ -647,7 +831,7 @@
   filter: blur(20px);
 }
 
-/* ── Iridescent Dome Wave (Right Bottom, lower opacity, blurry) ── */
+/* â”€â”€ Iridescent Dome Wave (Right Bottom, lower opacity, blurry) â”€â”€ */
 .hero__wave-wrap {
   position: absolute;
   right: 1;
@@ -676,7 +860,7 @@
   pointer-events: none;
 }
 
-/* ── Misty Mountain Ridge Landscape (Reference Exact) ── */
+/* â”€â”€ Misty Mountain Ridge Landscape (Reference Exact) â”€â”€ */
 .hero__mountains-wrap {
   position: absolute;
   right: 0;
@@ -705,9 +889,9 @@
   pointer-events: none;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    INTERACTIVE VIDEO / COPILOT MODAL
-   ══════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hero__modal-backdrop {
   position: fixed;
   inset: 0;
@@ -861,9 +1045,9 @@
   justify-content: flex-end;
 }
 
-/* ══════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RESPONSIVE DESIGN (Desktop -> Tablet -> Mobile)
-   ══════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* 1320px Desktop refinement */
 @media (max-width: 1320px) {
@@ -896,7 +1080,13 @@
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
-  .hero__col--left {
+  .hero__text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero__col--left {
     order: 1;
   }
   .hero__col--center {
@@ -918,89 +1108,263 @@
   }
 }
 
-/* 768px Mobile & Tablet Portrait */
+/* ══════════════════════════════════════════════════════════════════
+   ACTIONS VISIBILITY SWITCHER (Desktop vs Mobile)
+   ══════════════════════════════════════════════════════════════════ */
+.hero__actions--desktop {
+  display: flex;
+}
+
+.hero__actions--mobile {
+  display: none;
+}
+
+.hero__chatgpt-showcase {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto 4rem;
+  padding: 0 4vw;
+  z-index: 10;
+}
+
+.hero__chatgpt-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.hero__chatgpt-img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   768px Mobile & Tablet Portrait
+   Calibrated so the 3D Orb has full visibility in the center,
+   and action buttons sit below the orb at 70-80vh on phone view
+   ══════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   .hero {
-    padding-top: 90px;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: 85px;
+    overflow-x: hidden;
   }
+
   .hero__container {
-    padding: 1.5rem 6vw;
+    padding: 1rem 6vw 1.25rem;
+    min-height: calc(100dvh - 85px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
+
   .hero__grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0;
+    position: relative;
   }
+
+  /* 1. Top Section: Eyebrow, Headline, Subtext */
   .hero__col--left {
+    order: 1;
+    width: 100%;
     align-items: flex-start;
+    text-align: left;
+    margin-top: clamp(1.25rem, 3vh, 2.25rem);
   }
+
+  .hero__headline {
+    font-size: clamp(2.1rem, 7.6vw, 3.0rem);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .hero__subtext {
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: #475569;
+    max-width: 340px;
+    margin: 0;
+  }
+
   .hero__sub-br {
     display: inline;
   }
-  .hero__actions {
+
+  /* Hide Desktop Actions on Mobile */
+  .hero__actions--desktop {
+    display: none !important;
+  }
+
+  /* 2. Center Section: The 3D Orb Framing & Orbital elements (Around 35vh - 65vh) */
+  .hero__col--center {
+    order: 2;
+    width: 100%;
+    height: clamp(200px, 30vh, 260px);
+    margin: clamp(0.5rem, 1.5vh, 1rem) 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero__orbit-svg {
+    width: clamp(240px, 68vw, 300px);
+    height: clamp(240px, 68vw, 300px);
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .hero__orb-grounding-shadow {
+    bottom: 4%;
+    width: 170px;
+    height: 20px;
+    filter: blur(8px);
+    opacity: 0.75;
+  }
+
+  /* Remove "CONVERSATIONS INTO OPPORTUNITIES" on phone view */
+  .hero__orbit-tag {
+    display: none !important;
+  }
+
+  .hero__tagline--desktop {
+    display: none !important;
+  }
+
+  .hero__tagline--mobile {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.75rem;
+  }
+
+  .hero__tagline--mobile .hero__tagline-text {
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+  }
+
+  /* 3. Mobile Actions: Positioned below the Orb at 70-80vh */
+  .hero__actions--mobile {
+    order: 3;
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    gap: 1rem;
+    max-width: 340px;
+    margin: clamp(0.75rem, 2.5vh, 1.5rem) auto 0;
+    gap: 0.75rem;
+    z-index: 20;
   }
-  .hero__btn-primary {
+
+  .hero__actions--mobile .hero__btn-primary {
     justify-content: center;
     width: 100%;
+    padding: 0.82rem 1.6rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    box-shadow: 0 6px 20px -4px rgba(10, 10, 10, 0.28);
   }
-  .hero__btn-secondary {
+
+  .hero__actions--mobile .hero__btn-secondary {
     justify-content: center;
     width: 100%;
+    padding: 0.75rem 1.4rem;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 9999px;
+    box-shadow: 0 4px 14px -3px rgba(15, 23, 42, 0.05);
   }
+
+  /* 4. Right Section: Product Analytics Card (Below the fold) */
+  .hero__col--right {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+    margin-top: clamp(3.5rem, 8vh, 5rem);
+    z-index: 3;
+  }
+
   .hero__card {
-    max-width: 100%;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 24px;
   }
+
+  /* Bottom Strip */
+  .hero__bottom {
+    margin-top: 2.5rem;
+    padding: 1.5rem 6vw 2.5rem;
+  }
+
   .hero__bottom-inner {
     flex-direction: column;
     align-items: flex-start;
     gap: 1.75rem;
   }
+
   .hero__logos-row {
-    gap: 1.75rem;
+    gap: 1.5rem 2rem;
+    justify-content: flex-start;
   }
+
   .hero__scroll-cue {
     align-self: flex-start;
   }
-  .hero__wave-wrap {
-    width: 75vw;
-    max-width: 360px;
-    opacity: 0.35;
+
+  /* Hide ChatGPT background images on phone view only */
+  .hero__wave-wrap,
+  .hero__mountains-wrap,
+  .hero__chatgpt-showcase {
+    display: none !important;
   }
-  .hero__mountains-wrap {
-    width: 75vw;
-    max-width: 380px;
-    opacity: 0.55;
+
+  .hero__chatgpt-inner {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
-/* 480px Small Mobile */
+/* ══════════════════════════════════════════════════════════════════
+   480px Compact Mobile Refinements
+   ══════════════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
   .hero__headline {
-    font-size: 3.2rem;
+    font-size: clamp(2.0rem, 7.4vw, 2.75rem);
   }
+
   .hero__card {
-    padding: 1.25rem 1.25rem;
+    padding: 1.25rem;
   }
+
   .hero__card-metric-val {
     font-size: 1.85rem;
   }
+
   .hero__logos-row {
-    gap: 1.25rem;
+    gap: 1.25rem 1.5rem;
   }
+
   .hero__logo-svg {
     height: 17px;
-  }
-  .hero__wave-wrap {
-    width: 80vw;
-    max-width: 300px;
-    opacity: 0.3;
-  }
-  .hero__mountains-wrap {
-    width: 80vw;
-    max-width: 320px;
-    opacity: 0.45;
   }
 }

@@ -33,6 +33,15 @@ export const useAudioStream = (wsUrl) => {
                         onTranscriptRef.current(data);
                     } else if (data.type === 'aiAnalysis' && onAiAnalysisRef.current) {
                         onAiAnalysisRef.current(data.payload);
+                        // Log latency breakdown if available
+                        if (data.latency) {
+                            const l = data.latency;
+                            console.log(
+                                `📊 Pipeline Latency [Turn #${l.turn_number}]: ` +
+                                `STT=${l.stt_ms}ms | TurnDetect=${l.turn_detect_ms}ms | ` +
+                                `AI=${l.ai_ms}ms | Total=${l.total_ms}ms (+256ms audio buffer)`
+                            );
+                        }
                     }
                 } catch (err) {
                     console.error('WebSocket Error:', err);
@@ -99,9 +108,8 @@ export const useAudioStream = (wsUrl) => {
 
             const source = audioContextRef.current.createMediaStreamSource(stream);
 
-            // Note: ScriptProcessor is deprecated but easiest for vanilla cross-browser 16kHz raw PCM without custom Worklet files
-            // Using 4096 buffer size (~256ms of 16kHz audio per chunk)
-            scriptProcessorRef.current = audioContextRef.current.createScriptProcessor(4096, 1, 1);
+            // Using 1024 buffer size (~64ms of 16kHz audio per chunk) — optimized for low-latency live transcription
+            scriptProcessorRef.current = audioContextRef.current.createScriptProcessor(1024, 1, 1);
 
             scriptProcessorRef.current.onaudioprocess = (e) => {
                 if (!isRecordingRef.current) return;

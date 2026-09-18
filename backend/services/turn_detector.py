@@ -12,10 +12,10 @@ State Machine:
   SILENCE_DETECTED ─── (speech resumes) ──→ LISTENING  (cancel timer)
   SILENCE_DETECTED ─── (conditions met) ──→ flush → IDLE
 
-Flush Conditions (cascading thresholds):
-  300ms silence + is_final + endpoint punctuation  → fast flush
-  400ms silence + is_final                         → normal flush
-  1500ms silence (no is_final)                     → safety net force flush
+Flush Conditions (cascading thresholds — optimized for sub-1s latency):
+  150ms silence + is_final + endpoint punctuation  → fast flush
+  250ms silence + is_final                         → normal flush
+  800ms silence (no is_final)                      → safety net force flush
 """
 
 import asyncio
@@ -62,10 +62,10 @@ class TurnDetector:
     def __init__(
         self,
         on_turn_complete: Callable[[str], Awaitable[None]],
-        fast_threshold_ms: int = 300,    # Silence needed with endpoint detected
-        normal_threshold_ms: int = 400,  # Silence needed with is_final
-        safety_threshold_ms: int = 1500, # Force flush regardless of signals
-        check_interval_ms: int = 50,     # Polling interval for silence monitor
+        fast_threshold_ms: int = 150,    # Silence needed with endpoint detected (was 300)
+        normal_threshold_ms: int = 250,  # Silence needed with is_final (was 400)
+        safety_threshold_ms: int = 800,  # Force flush regardless of signals (was 1500)
+        check_interval_ms: int = 25,     # Polling interval for silence monitor (was 50)
     ):
         self.on_turn_complete = on_turn_complete
 

@@ -131,42 +131,93 @@
   transform: translateX(3px);
 }
 
-/* ── Mobile Hamburger ── */
+/* ── Mobile Hamburger (Modern Kinetic 2-Line Design) ── */
 .nb__hamburger {
   display: none;
   background: rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 50%;
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
   padding: 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1002;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .nb__hamburger:hover {
   background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.16);
+  transform: scale(1.05);
+}
+
+.nb__hamburger:active {
+  transform: scale(0.95);
 }
 
 .nb__hamburger-line {
   display: block;
-  height: 1.5px;
-  width: 16px;
+  height: 2px;
   background-color: #0a0a0a;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.25s ease;
+  transform-origin: center;
+}
+
+.nb__hamburger-line--1 {
+  width: 18px;
+}
+
+.nb__hamburger-line--2 {
+  width: 18px;
+}
+
+/* Hover: subtle kinetic breathing offset */
+.nb__hamburger:hover .nb__hamburger-line--1 {
+  transform: translateX(-2px);
+}
+
+.nb__hamburger:hover .nb__hamburger-line--2 {
+  transform: translateX(2px);
+}
+
+/* Active State: Morphs into high-contrast dark circular badge with white crisp ✕ */
+.nb__hamburger--active {
+  background: #0a0a0a;
+  border-color: #0a0a0a;
+  box-shadow: 0 4px 16px rgba(10, 10, 10, 0.28);
+}
+
+.nb__hamburger--active .nb__hamburger-line {
+  background-color: #ffffff;
 }
 
 .nb__hamburger--active .nb__hamburger-line--1 {
-  transform: translateY(3.25px) rotate(45deg);
+  width: 16px;
+  transform: translateY(3.5px) rotate(45deg);
 }
 
 .nb__hamburger--active .nb__hamburger-line--2 {
-  transform: translateY(-3.25px) rotate(-45deg);
+  width: 16px;
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+.nb__hamburger--active:hover .nb__hamburger-line--1 {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.nb__hamburger--active:hover .nb__hamburger-line--2 {
+  transform: translateY(-3.5px) rotate(-45deg);
 }
 
 /* ── Mobile Drawer ── */
@@ -303,3 +354,108 @@
     padding: 0 5vw;
   }
 }
+
+/* ── Product Popover (Compact Floating Dropdown) ── */
+.nb__link-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nb__popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px) scale(0.98);
+  width: 320px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 0.75rem;
+  box-shadow: 
+    0 20px 40px -15px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.25s;
+  z-index: 1000;
+}
+
+.nb__popover--open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.nb__popover-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nb__popover-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: inherit;
+}
+
+.nb__popover-item:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.nb__popover-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a0a0a;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.nb__popover-item:hover .nb__popover-icon {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.nb__popover-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.nb__popover-title {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0a0a0a;
+  line-height: 1.2;
+}
+
+.nb__popover-desc {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+@media (max-width: 960px) {
+  .nb__popover {
+    display: none !important;
+  }
+}

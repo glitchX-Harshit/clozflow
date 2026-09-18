@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { ArrowRight, Telescope, Origami, Fingerprint } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import ClozFlowLogo from './ClozFlowLogo';
 import './Navbar.css';
 
@@ -14,6 +16,18 @@ const Navbar = ({ onSignup, onLogin }) => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('');
+    const [hoveredProduct, setHoveredProduct] = useState(false);
+    const popoverRef = useRef(null);
+
+    useGSAP(() => {
+        if (hoveredProduct && popoverRef.current) {
+            gsap.fromTo(
+                gsap.utils.toArray(popoverRef.current.querySelectorAll('.nb__popover-item')),
+                { y: 15, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power3.out', clearProps: 'all' }
+            );
+        }
+    }, [hoveredProduct]);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
@@ -69,7 +83,10 @@ const Navbar = ({ onSignup, onLogin }) => {
 
     return (
         <>
-            <header className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''}`}>
+            <header 
+                className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''} ${hoveredProduct ? 'nb--mega-open' : ''}`}
+                onMouseLeave={() => setHoveredProduct(false)}
+            >
                 <div className="nb__inner">
                     {/* Logo & Tagline */}
                     <a href="/" className="nb__logo" aria-label="Clozflow homepage">
@@ -79,13 +96,61 @@ const Navbar = ({ onSignup, onLogin }) => {
                     {/* Center Navigation Links - Swiss Typography */}
                     <nav className="nb__links" aria-label="Main Navigation">
                         {LINKS.map(l => (
-                            <a
-                                key={l.href}
-                                href={l.href}
-                                className={`nb__link ${activeSection === l.href.substring(1) ? 'nb__link--active' : ''}`}
+                            <div 
+                                key={l.href} 
+                                className="nb__link-wrapper"
+                                onMouseEnter={() => {
+                                    if (l.label === 'Product') setHoveredProduct(true);
+                                    else setHoveredProduct(false);
+                                }}
+                                onMouseLeave={() => {
+                                    if (l.label === 'Product') setHoveredProduct(false);
+                                }}
                             >
-                                {l.label}
-                            </a>
+                                <a
+                                    href={l.href}
+                                    className={`nb__link ${activeSection === l.href.substring(1) ? 'nb__link--active' : ''}`}
+                                >
+                                    {l.label}
+                                </a>
+                                
+                                {/* Product Popover Menu */}
+                                {l.label === 'Product' && (
+                                    <div ref={popoverRef} className={`nb__popover ${hoveredProduct ? 'nb__popover--open' : ''}`}>
+                                        <div className="nb__popover-inner">
+                                            <a href="https://cf-benchmark.onrender.com" target="_blank" rel="noopener noreferrer" className="nb__popover-item">
+                                                <div className="nb__popover-icon">
+                                                    <Telescope size={18} strokeWidth={1.5} />
+                                                </div>
+                                                <div className="nb__popover-text">
+                                                    <span className="nb__popover-title">CF Benchmark</span>
+                                                    <span className="nb__popover-desc">Evaluate and compare AI models</span>
+                                                </div>
+                                            </a>
+                                            
+                                            <a href="#features" className="nb__popover-item" onClick={() => setHoveredProduct(false)}>
+                                                <div className="nb__popover-icon">
+                                                    <Origami size={18} strokeWidth={1.5} />
+                                                </div>
+                                                <div className="nb__popover-text">
+                                                    <span className="nb__popover-title">Core Features</span>
+                                                    <span className="nb__popover-desc">Discover platform tools</span>
+                                                </div>
+                                            </a>
+
+                                            <a href="#integrations" className="nb__popover-item" onClick={() => setHoveredProduct(false)}>
+                                                <div className="nb__popover-icon">
+                                                    <Fingerprint size={18} strokeWidth={1.5} />
+                                                </div>
+                                                <div className="nb__popover-text">
+                                                    <span className="nb__popover-title">AI Copilot</span>
+                                                    <span className="nb__popover-desc">Real-time intelligent assistance</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         ))}
                     </nav>
 

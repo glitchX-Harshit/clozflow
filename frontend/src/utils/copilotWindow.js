@@ -118,7 +118,7 @@ function injectStyles(externalWin) {
     overrides.textContent = `
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
-            background: rgba(12, 12, 16, 0.92);
+            background: #000000; /* Solid black is required on Windows PiP to avoid the white fallback */
             overflow: hidden;
             width: 100%;
             height: 100%;
@@ -138,7 +138,7 @@ function injectStyles(externalWin) {
             height: 100% !important;
             border: none !important;
             box-shadow: none !important;
-            background: rgba(12, 12, 16, 0.95) !important;
+            /* Allow the CSS background & backdrop-filter to work */
         }
         .copilot-popup__header {
             cursor: default !important;
