@@ -5,7 +5,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-const Features = React.lazy(() => import('./components/Features'));
 const HowItWorks = React.lazy(() => import('./components/HowItWorks'));
 const Integrations = React.lazy(() => import('./components/Integrations'));
 const ObjectionHandling = React.lazy(() => import('./components/ObjectionHandling'));
@@ -42,7 +41,6 @@ function LandingPage() {
                 <Hero onGetStarted={() => navigate('/dashboard')} />
                 <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
                     <HowItWorks />
-                    <Features />
                     <Integrations />
                     <ObjectionHandling />
                     <ResponseSuggestion />

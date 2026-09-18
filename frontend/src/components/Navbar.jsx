@@ -6,7 +6,7 @@ import ClozFlowLogo from './ClozFlowLogo';
 import './Navbar.css';
 
 const LINKS = [
-    { label: 'Product', href: '#features' },
+    { label: 'Product', href: '#objections' },
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Integrations', href: '#integrations' },
     { label: 'Pricing', href: '#pricing' },
@@ -128,13 +128,13 @@ const Navbar = ({ onSignup, onLogin }) => {
                                                 </div>
                                             </a>
                                             
-                                            <a href="#features" className="nb__popover-item" onClick={() => setHoveredProduct(false)}>
+                                            <a href="#objections" className="nb__popover-item" onClick={() => setHoveredProduct(false)}>
                                                 <div className="nb__popover-icon">
                                                     <Origami size={18} strokeWidth={1.5} />
                                                 </div>
                                                 <div className="nb__popover-text">
-                                                    <span className="nb__popover-title">Core Features</span>
-                                                    <span className="nb__popover-desc">Discover platform tools</span>
+                                                    <span className="nb__popover-title">Objection Engine</span>
+                                                    <span className="nb__popover-desc">Real-time persuasion frameworks</span>
                                                 </div>
                                             </a>
 
