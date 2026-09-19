@@ -24,6 +24,7 @@ const CallBriefing = React.lazy(() => import('./pages/CallBriefing'));
 const LiveCall = React.lazy(() => import('./pages/LiveCall'));
 const PostCallSummary = React.lazy(() => import('./pages/PostCallSummary'));
 const OutreachStudioPage = React.lazy(() => import('./pages/OutreachStudioPage'));
+const RelayPublic = React.lazy(() => import('./pages/RelayPublic'));
 
 function LandingPage() {
     const navigate = useNavigate();
@@ -83,6 +84,8 @@ function App() {
                         <Route path="/outreach-studio" element={
                             <ProtectedRoute><Suspense fallback={null}><OutreachStudioPage /></Suspense></ProtectedRoute>
                         } />
+                        {/* Public Relay page — NO auth required (buyer-facing) */}
+                        <Route path="/relay/:slug" element={<Suspense fallback={null}><RelayPublic /></Suspense>} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>

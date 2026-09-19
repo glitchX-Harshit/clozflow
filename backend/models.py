@@ -173,3 +173,7 @@ class PearlReport(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     user = relationship("User")
+
+
+# ── Import Relay models so Base.metadata.create_all() picks them up ──────────
+from models_relay import Relay, RelayAvailabilitySlot, RelayBooking, RelayQuestion

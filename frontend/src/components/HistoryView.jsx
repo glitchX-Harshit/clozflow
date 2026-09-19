@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, Clock, MessageCircle, Zap, FileText, ChevronRight, Loader2, ArrowLeft, Target, Activity, Lightbulb, Gavel, AlertTriangle, Trash2 } from 'lucide-react';
+import { Download, Clock, MessageCircle, Zap, FileText, ChevronRight, Loader2, ArrowLeft, Target, Activity, Lightbulb, Gavel, AlertTriangle, Trash2, Send } from 'lucide-react';
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
@@ -9,7 +9,7 @@ const MiniBar = ({ pct, color }) => (
     </div>
 );
 
-const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
+const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay }) => {
     const d = call.details || {
         verdict: { probability: 'Unknown', pct: 0, color: '#f59e0b', blocker: 'None', nextMove: 'Keep going.' },
         objectionScore: 0,
@@ -45,14 +45,31 @@ const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
                         <span style={{ display:'flex', alignItems:'center', gap:'0.4rem' }}><Zap size={13} />{call.insight_count} insights</span>
                     </div>
                 </div>
-                <button
-                    onClick={() => onDownload(call.id)}
-                    disabled={downloading === call.id}
-                    className="hv-export-btn"
-                    style={{ display:'flex', alignItems:'center', gap:'0.5rem', borderRadius:12, padding:'0.875rem 1.5rem', fontSize:'0.875rem', fontWeight:700, cursor:'pointer', flexShrink:0 }}
-                >
-                    {downloading === call.id ? <><Loader2 size={15} className="animate-spin" /> Generating...</> : <><Download size={15} /> Export Report</>}
-                </button>
+                <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0, flexWrap: 'wrap' }}>
+                    {onCreateRelay && (
+                        <button
+                            onClick={() => onCreateRelay(call.id)}
+                            style={{
+                                display:'flex', alignItems:'center', gap:'0.5rem', borderRadius:12,
+                                padding:'0.875rem 1.5rem', fontSize:'0.875rem', fontWeight:700, cursor:'pointer',
+                                background:'var(--accent)', color:'#fff', border:'none',
+                                transition:'all 0.2s', boxShadow:'0 2px 10px rgba(30,64,175,0.2)',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(30,64,175,0.3)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 10px rgba(30,64,175,0.2)'; }}
+                        >
+                            <Send size={15} /> Create Relay
+                        </button>
+                    )}
+                    <button
+                        onClick={() => onDownload(call.id)}
+                        disabled={downloading === call.id}
+                        className="hv-export-btn"
+                        style={{ display:'flex', alignItems:'center', gap:'0.5rem', borderRadius:12, padding:'0.875rem 1.5rem', fontSize:'0.875rem', fontWeight:700, cursor:'pointer', flexShrink:0 }}
+                    >
+                        {downloading === call.id ? <><Loader2 size={15} className="animate-spin" /> Generating...</> : <><Download size={15} /> Export Report</>}
+                    </button>
+                </div>
             </div>
 
             {/* Header + Stats Split Container */}
@@ -343,7 +360,7 @@ const SessionDetail = ({ call, onBack, onDownload, downloading }) => {
 
 // ── Main History View ─────────────────────────────────────────────────────────
 
-const HistoryView = () => {
+const HistoryView = ({ onCreateRelay }) => {
     const [calls, setCalls] = useState([]);
     const [loading, setLoading] = useState(true);
     const [downloading, setDownloading] = useState(null);
@@ -454,7 +471,7 @@ const HistoryView = () => {
             );
         }
         if (selectedDetails) {
-            return <SessionDetail call={selectedDetails} onBack={() => setSelected(null)} onDownload={handleDownload} downloading={downloading} />;
+            return <SessionDetail call={selectedDetails} onBack={() => setSelected(null)} onDownload={handleDownload} downloading={downloading} onCreateRelay={onCreateRelay} />;
         }
     }
 

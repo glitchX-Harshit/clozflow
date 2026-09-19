@@ -19,6 +19,7 @@ import {
     Loader2,
     FileText,
     Sparkle,
+    Send,
     Menu,
     X
 } from 'lucide-react';
@@ -33,6 +34,8 @@ import OutreachStudioPage from './OutreachStudioPage';
 import { gsap } from 'gsap';
 import ClozFlowLogo from '../components/ClozFlowLogo';
 import Pearl from './Pearl';
+import RelayDashboard from './RelayDashboard';
+import RelayBuilder from './RelayBuilder';
 import './DashboardOverview.css';
 
 
@@ -348,10 +351,13 @@ const Dashboard = () => {
         }
     }, [activeTab]);
 
+    const [relayCallId, setRelayCallId] = useState(null);
+
     const navItems = [
         { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
         { id: 'leads',      label: 'Lead Finder',   icon: Search },
         { id: 'history',    label: 'Session History', icon: History },
+        { id: 'relay',      label: 'Relay',          icon: Send },
         { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
         { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
         { id: 'playbooks',  label: 'Playbooks',      icon: Target },
@@ -433,7 +439,14 @@ const Dashboard = () => {
                         }} />
                     )
                 )}
-                {activeTab === 'history'   && <HistoryView />}
+                {activeTab === 'history'   && <HistoryView onCreateRelay={(callId) => { setRelayCallId(callId); setActiveTab('relay'); }} />}
+                {activeTab === 'relay'     && (
+                    relayCallId ? (
+                        <RelayBuilder callId={relayCallId} onBack={() => setRelayCallId(null)} />
+                    ) : (
+                        <RelayDashboard onOpenBuilder={(callId) => setRelayCallId(callId)} />
+                    )
+                )}
                 {activeTab === 'pearl'     && <Pearl />}
                 {activeTab === 'analytics' && <AnalyticsPage />}
                 {activeTab === 'playbooks' && <PlaybooksPage />}
@@ -493,6 +506,7 @@ const Dashboard = () => {
                             { id: 'overview', label: 'Overview', desc: 'Performance overview & analytics stats', icon: LayoutGrid },
                             { id: 'leads', label: 'Lead Finder', desc: 'Multi-level geographic lead discovery', icon: Search },
                             { id: 'history', label: 'Session History', desc: 'Call transcripts & diagnostic ratings', icon: History },
+                            { id: 'relay', label: 'Relay', desc: 'Follow-up pages & meeting booking', icon: Send },
                             { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
                             { id: 'analytics', label: 'Intelligence', desc: 'Comparative gap matrix & objection lists', icon: BarChart3 },
                             { id: 'playbooks', label: 'Playbooks', desc: 'Persuasion techniques & strategies', icon: Target },
