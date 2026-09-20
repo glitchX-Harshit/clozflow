@@ -131,6 +131,116 @@
   transform: translateX(3px);
 }
 
+/* ── Early Access Moving Neon Pill Button ── */
+.nb__neon-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.52rem 1.25rem;
+  border-radius: 9999px;
+  color: #ffffff !important;
+  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: 0.86rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  white-space: nowrap;
+  
+  /* Vibrant fluid neon gradient matching user reference (ruby red/magenta -> purple -> electric blue) */
+  background: linear-gradient(
+    120deg, 
+    #e11d48 0%, 
+    #ec4899 22%, 
+    #9333ea 46%, 
+    #6366f1 72%, 
+    #3b82f6 88%,
+    #e11d48 100%
+  );
+  background-size: 280% 280%;
+  animation: neonFluidMove 4s ease infinite;
+  
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 4px 18px -2px rgba(225, 29, 72, 0.45), 
+    0 2px 12px -2px rgba(99, 102, 241, 0.38),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes neonFluidMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Subtle moving light sheen across the neon pill */
+.nb__neon-pill-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.28) 50%, 
+    transparent 100%
+  );
+  transform: translateX(-120%);
+  animation: neonShimmer 3.6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes neonShimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  45%, 100% {
+    transform: translateX(120%);
+  }
+}
+
+.nb__neon-pill-btn:hover {
+  transform: translateY(-1.5px) scale(1.03);
+  box-shadow: 
+    0 8px 28px -2px rgba(225, 29, 72, 0.65), 
+    0 4px 18px -2px rgba(99, 102, 241, 0.55),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.nb__neon-pill-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.nb__neon-pill-arrow {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.nb__neon-pill-btn:hover .nb__neon-pill-arrow {
+  transform: translateX(3px);
+}
+
+/* Mobile drawer adaptation */
+.nb__neon-pill-btn--drawer {
+  width: fit-content;
+  padding: 0.75rem 1.65rem;
+  font-size: 1.05rem;
+  margin-top: 0.5rem;
+  box-shadow: 0 6px 24px -2px rgba(225, 29, 72, 0.55), 0 3px 14px -2px rgba(99, 102, 241, 0.45);
+}
+
 /* ── Mobile Hamburger (Modern Kinetic 2-Line Design) ── */
 .nb__hamburger {
   display: none;
