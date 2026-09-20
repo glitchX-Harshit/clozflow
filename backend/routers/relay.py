@@ -151,6 +151,7 @@ async def create_relay(
     db.refresh(relay)
 
     return {
+        "id": relay.id,
         "relay_id": relay.id,
         "slug": relay.slug,
         "status": relay.status,
@@ -194,6 +195,7 @@ def list_relays(
             "booking_count": booking_count,
             "question_count": question_count,
             "unanswered_questions": unanswered,
+            "call_id": r.call_id,
         })
 
     return results

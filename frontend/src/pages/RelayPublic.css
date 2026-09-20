@@ -1,23 +1,21 @@
 /* RelayPublic.css */
 .relay-public-wrapper {
   min-height: 100vh;
-  background-color: var(--bg, #fafafa);
-  color: var(--text, #111827);
-  font-family: var(--font-display, 'Outfit', system-ui, sans-serif);
+  background-color: #ffffff;
+  color: #000000;
+  font-family: var(--font-display, 'Inter', system-ui, sans-serif);
   display: flex;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 80px 24px 120px 24px;
 }
 
 .relay-public-container {
   width: 100%;
-  max-width: 680px;
-  background: var(--surface, #ffffff);
-  border-radius: var(--r-xl, 24px);
-  box-shadow: var(--shadow-card, 0 20px 40px rgba(0,0,0,0.04));
-  padding: 48px;
+  max-width: 580px;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
   position: relative;
-  overflow: hidden;
 }
 
 .relay-public-loading,
@@ -27,7 +25,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg, #fafafa);
+  background-color: #ffffff;
   text-align: center;
   padding: 20px;
 }
@@ -38,16 +36,16 @@
 }
 
 .relay-public-error p {
-  color: var(--text-dim, #6b7280);
+  color: #6b7280;
 }
 
 .error-icon {
-  color: var(--accent-mid, #ef4444);
+  color: #000000;
 }
 
 .spinner {
   animation: spin 1s linear infinite;
-  color: var(--accent, #1e40af);
+  color: #000000;
 }
 
 @keyframes spin {
@@ -56,22 +54,22 @@
 }
 
 .relay-public-toast {
-  position: absolute;
+  position: fixed;
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--text, #111827);
-  color: var(--surface, #ffffff);
+  background: #000000;
+  color: #ffffff;
   padding: 12px 24px;
-  border-radius: var(--r-md, 10px);
+  border-radius: 99px;
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 500;
   font-size: 14px;
-  box-shadow: var(--shadow-md, 0 10px 25px rgba(0,0,0,0.1));
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   z-index: 100;
-  animation: slideDown 0.3s ease;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideDown {
@@ -81,55 +79,57 @@
 
 /* Header */
 .relay-header {
-  margin-bottom: 48px;
+  margin-bottom: 72px;
 }
 
-.relay-badge {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
+.relay-brand {
+  font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent-mid, #3b82f6);
-  background: var(--surface-2, #eff6ff);
-  padding: 6px 12px;
-  border-radius: var(--r-sm, 6px);
-  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  color: #000000;
+  margin-bottom: 32px;
+  display: block;
 }
 
-.relay-title {
-  font-size: 36px;
+.relay-hero {
+  font-size: 40px;
   font-weight: 700;
   line-height: 1.1;
   margin: 0 0 16px 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  color: #000000;
 }
 
-.relay-greeting {
+.relay-subhero {
   font-size: 18px;
-  color: var(--text-dim, #4b5563);
-  line-height: 1.5;
+  font-weight: 500;
+  color: #6b7280;
   margin: 0;
 }
 
 /* Sections */
-.relay-section {
-  margin-bottom: 48px;
+.relay-section, .relay-actions-section {
+  margin-bottom: 64px;
 }
 
-.relay-section h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 16px 0;
-  border-bottom: 1px solid var(--border, #e5e7eb);
-  padding-bottom: 12px;
+.relay-section h2, .relay-actions-section h2 {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 24px 0;
+  color: #000000;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #000000;
 }
 
 .relay-text-content {
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--text-dim, #4b5563);
+  font-size: 18px;
+  line-height: 1.6;
+  color: #4b5563;
   white-space: pre-wrap;
+  font-weight: 400;
 }
 
 .relay-benefits-list {
@@ -142,25 +142,24 @@
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  margin-bottom: 16px;
-  font-size: 16px;
+  margin-bottom: 24px;
+  font-size: 18px;
   line-height: 1.5;
-  color: var(--text-dim, #4b5563);
-  background: var(--surface-2, #f9fafb);
-  padding: 16px;
-  border-radius: var(--r-md, 10px);
+  color: #4b5563;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
 }
 
 .benefit-icon {
-  color: var(--accent-mid, #3b82f6);
+  color: #000000;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 /* Actions */
 .relay-actions-container {
-  margin-top: 56px;
-  padding-top: 32px;
-  border-top: 1px solid var(--border, #e5e7eb);
+  margin-top: 32px;
 }
 
 .action-buttons {
@@ -170,25 +169,25 @@
 }
 
 .btn-primary {
-  background: var(--text, #111827);
-  color: var(--surface, #ffffff);
+  background: #000000;
+  color: #ffffff;
   border: none;
-  padding: 16px 32px;
-  border-radius: var(--r-lg, 16px);
+  padding: 18px 32px;
+  border-radius: 0;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  justify-content: space-between;
   transition: all 0.2s ease;
   font-family: inherit;
+  width: 100%;
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background: #1f2937;
+  padding-right: 24px;
 }
 
 .btn-primary:disabled {
@@ -196,38 +195,32 @@
   cursor: not-allowed;
 }
 
-.btn-primary.full-width {
-  width: 100%;
-}
-
 .secondary-actions {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .btn-secondary {
-  flex: 1;
-  min-width: 140px;
-  background: var(--surface-2, #f3f4f6);
-  color: var(--text-dim, #4b5563);
-  border: none;
-  padding: 12px 16px;
-  border-radius: var(--r-md, 10px);
-  font-size: 14px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  padding: 16px 24px;
+  border-radius: 0;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background 0.2s;
+  gap: 12px;
+  transition: all 0.2s ease;
   font-family: inherit;
 }
 
 .btn-secondary:hover {
-  background: var(--border, #e5e7eb);
-  color: var(--text, #111827);
+  background: #f9fafb;
+  color: #000000;
+  border-color: #000000;
 }
 
 .btn-icon {
@@ -250,10 +243,9 @@
 
 /* Action Panels */
 .action-panel {
-  background: var(--surface, #ffffff);
-  border: 1px solid var(--border, #e5e7eb);
-  border-radius: var(--r-lg, 16px);
-  padding: 24px;
+  background: transparent;
+  border-top: 1px solid #e5e7eb;
+  padding: 32px 0 0 0;
   animation: fadeIn 0.3s ease;
 }
 
@@ -266,54 +258,55 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .panel-header h3 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
 }
 
 .question-input {
   width: 100%;
-  padding: 16px;
-  border: 1px solid var(--border, #e5e7eb);
-  border-radius: var(--r-md, 10px);
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 0;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 18px;
   resize: vertical;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   outline: none;
-  transition: border-color 0.2s;
+  background: #f9fafb;
+  transition: all 0.2s ease;
 }
 
 .question-input:focus {
-  border-color: var(--accent-mid, #3b82f6);
+  border-color: #000000;
+  background: #ffffff;
 }
 
 /* Booking Flow */
 .no-slots {
-  color: var(--text-muted, #6b7280);
-  text-align: center;
+  color: #6b7280;
   padding: 24px 0;
 }
 
 .slots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
 }
 
 .slot-card {
-  display: block;
+  display: flex;
   cursor: pointer;
-  border: 1px solid var(--border, #e5e7eb);
-  border-radius: var(--r-md, 10px);
-  padding: 16px;
-  transition: all 0.2s;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 0;
+  transition: all 0.2s ease;
   position: relative;
+  align-items: center;
 }
 
 .slot-card input {
@@ -322,84 +315,81 @@
 }
 
 .slot-card:hover:not(.booked) {
-  border-color: var(--accent-mid, #3b82f6);
-  background: var(--surface-2, #f9fafb);
+  padding-left: 16px;
+  background: transparent;
 }
 
 .slot-card.selected {
-  border-color: var(--accent-mid, #3b82f6);
-  background: var(--surface-2, #eff6ff);
-  box-shadow: 0 0 0 1px var(--accent-mid, #3b82f6);
+  padding-left: 16px;
+  background: #f9fafb;
 }
 
 .slot-card.booked {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
-  background: var(--surface-2, #f3f4f6);
 }
 
 .slot-details {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .slot-date {
-  font-weight: 600;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 15px;
+  gap: 8px;
+  font-size: 16px;
+  color: #000000;
 }
 
 .slot-time {
-  color: var(--text-dim, #4b5563);
+  color: #6b7280;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 15px;
 }
 
 .slot-type {
-  font-size: 12px;
-  color: var(--text-muted, #6b7280);
-  margin-top: 4px;
+  display: none;
 }
 
 .booking-details {
-  border-top: 1px solid var(--border, #e5e7eb);
-  padding-top: 24px;
+  padding-top: 16px;
 }
 
 .booking-details h4 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000000;
 }
 
 .input-group {
   display: flex;
   align-items: center;
-  gap: 12px;
-  border: 1px solid var(--border, #e5e7eb);
-  border-radius: var(--r-md, 10px);
-  padding: 0 16px;
-  margin-bottom: 12px;
-  background: var(--surface, #ffffff);
-  transition: border-color 0.2s;
+  gap: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 0 24px;
+  margin-bottom: 16px;
+  background: #f9fafb;
+  transition: all 0.2s ease;
 }
 
 .input-group:focus-within {
-  border-color: var(--accent-mid, #3b82f6);
-}
-
-.input-group color {
-  color: var(--text-muted, #9ca3af);
+  border-color: #000000;
+  background: #ffffff;
 }
 
 .input-group input {
   flex: 1;
   border: none;
-  padding: 16px 0;
+  padding: 24px 0;
   font-family: inherit;
   font-size: 16px;
   outline: none;
@@ -407,50 +397,35 @@
 }
 
 .booked-state {
-  text-align: center;
-  padding: 48px 24px;
-  background: var(--surface-2, #f0fdf4);
-  border-radius: var(--r-lg, 16px);
-  border: 1px solid #bbf7d0;
+  padding: 48px 0;
+  border-top: 1px solid #e5e7eb;
 }
 
 .success-icon {
-  color: #16a34a;
-  margin-bottom: 16px;
+  color: #000000;
+  margin-bottom: 24px;
 }
 
 .booked-state h3 {
-  margin: 0 0 8px 0;
+  margin: 0 0 16px 0;
   font-size: 24px;
-  color: #166534;
+  font-weight: 500;
+  color: #000000;
 }
 
 .booked-state p {
-  color: #15803d;
+  color: #4b5563;
   margin: 0;
+  font-size: 18px;
 }
 
 /* Mobile Responsive */
 @media (max-width: 640px) {
   .relay-public-wrapper {
-    padding: 0;
+    padding: 40px 20px 80px 20px;
   }
   
-  .relay-public-container {
-    border-radius: 0;
-    padding: 32px 24px;
-    box-shadow: none;
-  }
-  
-  .relay-title {
-    font-size: 28px;
-  }
-  
-  .secondary-actions {
-    flex-direction: column;
-  }
-  
-  .btn-secondary {
-    width: 100%;
+  .relay-hero {
+    font-size: 32px;
   }
 }

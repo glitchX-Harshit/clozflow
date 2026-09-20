@@ -52,15 +52,15 @@ const RelayDashboard = ({ onOpenBuilder }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'draft': return { bg: '#f1f5f9', color: '#64748b' };
-      case 'published': return { bg: '#eff6ff', color: '#3b82f6' };
-      case 'opened': return { bg: '#fef3c7', color: '#d97706' };
-      case 'booked': return { bg: '#dcfce7', color: '#16a34a' };
-      case 'question_received': return { bg: '#f3e8ff', color: '#9333ea' };
+      case 'draft': return '#94a3b8';
+      case 'published': return '#3b82f6';
+      case 'opened': return '#f59e0b';
+      case 'booked': return '#10b981';
+      case 'question_received': return '#8b5cf6';
       case 'not_interested': 
-      case 'cancelled': return { bg: '#fee2e2', color: '#ef4444' };
-      case 'completed': return { bg: '#dcfce7', color: '#16a34a' };
-      default: return { bg: '#f1f5f9', color: '#64748b' };
+      case 'cancelled': return '#ef4444';
+      case 'completed': return '#10b981';
+      default: return '#94a3b8';
     }
   };
 
@@ -103,74 +103,194 @@ const RelayDashboard = ({ onOpenBuilder }) => {
           </p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div className="relay-ledger-container">
+          <div className="relay-ledger-header">
+            <span>Date</span>
+            <span style={{ flex: 2 }}>Prospect Details</span>
+            <span>Status</span>
+            <span style={{ textAlign: 'right' }}>Actions</span>
+          </div>
+
           {relays.map(relay => {
-            const statusStyle = getStatusColor(relay.status);
+            const statusColor = getStatusColor(relay.status);
+            const dateObj = new Date(relay.created_at);
+            const day = dateObj.getDate();
+            const month = dateObj.toLocaleString('default', { month: 'short' });
+
             return (
               <div 
                 key={relay.id} 
-                style={{
-                  display: 'flex', alignItems: 'center', background: 'var(--bg)', border: '1px solid var(--border)',
-                  borderRadius: 18, transition: 'all 0.2s', width: '100%', position: 'relative',
-                  padding: '1.25rem 1.75rem', cursor: 'pointer', gap: '1.5rem', flexWrap: 'wrap'
-                }}
+                className="relay-ledger-row"
                 onClick={() => onOpenBuilder(relay.call_id)}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(99,102,241,0.06)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
               >
-                {/* Left: Icon and Title/Subtitle */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flex: 2, minWidth: '250px' }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 14, background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--accent)' }}>
-                    <Send size={20} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.0625rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 4px 0' }}>
-                      {relay.prospect_name || 'Unknown Prospect'}
-                    </h3>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-dim)', margin: 0 }}>
-                      {relay.prospect_business || 'No business specified'}
-                    </p>
+                {/* Date Column */}
+                <div className="rl-col rl-date">
+                  <span className="rl-day">{day}</span>
+                  <span className="rl-month">{month}</span>
+                </div>
+
+                {/* Prospect Details */}
+                <div className="rl-col rl-prospect" style={{ flex: 2 }}>
+                  <h3 className="rl-name">{relay.prospect_name || 'Unknown Prospect'}</h3>
+                  <p className="rl-business">{relay.prospect_business || 'No business specified'}</p>
+                </div>
+
+                {/* Status */}
+                <div className="rl-col rl-status">
+                  <div className="rl-status-indicator">
+                    <span className="rl-dot" style={{ backgroundColor: statusColor }}></span>
+                    <span style={{ color: statusColor }}>{formatStatus(relay.status)}</span>
                   </div>
                 </div>
 
-                {/* Middle: Badge & Date */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'flex-start', flex: 1, minWidth: '150px' }}>
-                  <div style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, letterSpacing: '0.02em', background: statusStyle.bg, color: statusStyle.color, display: 'inline-flex', alignItems: 'center' }}>
-                    {formatStatus(relay.status)}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-muted)' }}>
-                    <Clock size={12} />
-                    {new Date(relay.created_at).toLocaleDateString()}
-                  </div>
-                </div>
-
-                {/* Right: Stats and Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', justifyContent: 'flex-end', flex: 1, minWidth: '200px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)', background: 'var(--surface)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                {/* Actions */}
+                <div className="rl-col rl-actions" style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
+                  <div className="rl-stats">
                     <MessageSquare size={14} />
                     <span>{relay.question_count || 0}</span>
                   </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <button 
-                      onClick={(e) => handleDelete(e, relay.id)} 
-                      style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '10px', transition: 'all 0.2s', outline: 'none' }}
-                      title="Delete Relay"
-                      onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent'; }}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                    <div style={{ padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                      <ArrowRight size={16} />
-                    </div>
-                  </div>
+                  <button 
+                    className="rl-delete-btn"
+                    onClick={(e) => handleDelete(e, relay.id)} 
+                    title="Delete Relay"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                  <ArrowRight size={18} className="rl-arrow" />
                 </div>
               </div>
             );
           })}
         </div>
       )}
+
+      <style>{`
+        .relay-ledger-container {
+          display: flex;
+          flex-direction: column;
+          margin-top: 10px;
+        }
+        .relay-ledger-header {
+          display: flex;
+          padding: 0 1rem 1rem 1rem;
+          border-bottom: 1px solid var(--border);
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--text-dim);
+          font-weight: 600;
+        }
+        .relay-ledger-header > span {
+          flex: 1;
+        }
+        .relay-ledger-row {
+          display: flex;
+          align-items: center;
+          padding: 2rem 1rem;
+          border-bottom: 1px solid var(--border);
+          cursor: pointer;
+          background: transparent;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .relay-ledger-row:hover {
+          padding-left: 1.75rem;
+          padding-right: 1.75rem;
+          background: var(--surface);
+          border-bottom-color: var(--accent);
+        }
+        .rl-col {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .rl-date {
+          align-items: flex-start;
+        }
+        .rl-day {
+          font-size: 1.5rem;
+          font-weight: 300;
+          line-height: 1;
+          color: var(--text);
+          letter-spacing: -0.03em;
+        }
+        .rl-month {
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          color: var(--text-dim);
+          font-weight: 600;
+          letter-spacing: 0.05em;
+          margin-top: 4px;
+        }
+        .rl-name {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 0 0 6px 0;
+          color: var(--text);
+          letter-spacing: -0.02em;
+        }
+        .rl-business {
+          font-size: 0.875rem;
+          color: var(--text-muted);
+          margin: 0;
+        }
+        .rl-status-indicator {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13px;
+          font-weight: 600;
+          background: var(--surface-2);
+          padding: 6px 12px;
+          border-radius: 99px;
+        }
+        .rl-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+        }
+        .rl-actions {
+          flex-direction: row !important;
+          align-items: center;
+          gap: 16px;
+        }
+        .rl-stats {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          color: var(--text-muted);
+        }
+        .rl-delete-btn {
+          background: transparent;
+          border: none;
+          color: var(--text-muted);
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        .relay-ledger-row:hover .rl-delete-btn {
+          opacity: 1;
+          transform: scale(1);
+        }
+        .rl-delete-btn:hover {
+          background: #fee2e2;
+          color: #ef4444;
+        }
+        .rl-arrow {
+          color: var(--text-muted);
+          transition: transform 0.3s ease;
+        }
+        .relay-ledger-row:hover .rl-arrow {
+          transform: translateX(4px);
+          color: var(--accent);
+        }
+      `}</style>
     </div>
   );
 };
@@ -198,69 +318,6 @@ const styles = {
     fontSize: '16px',
     color: 'var(--text-dim)',
     margin: 0,
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '24px',
-  },
-  card: {
-    background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    borderRadius: 'var(--r-lg)',
-    padding: '24px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    boxShadow: 'var(--shadow-sm)',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '16px',
-  },
-  badge: {
-    padding: '4px 10px',
-    borderRadius: '20px',
-    fontSize: '12px',
-    fontWeight: 600,
-    letterSpacing: '0.02em',
-  },
-  date: {
-    fontSize: '13px',
-    color: 'var(--text-muted)',
-  },
-  cardTitle: {
-    fontSize: '18px',
-    fontWeight: 600,
-    margin: '0 0 4px 0',
-    color: 'var(--text)',
-  },
-  cardSubtitle: {
-    fontSize: '14px',
-    color: 'var(--text-dim)',
-    margin: '0 0 24px 0',
-  },
-  cardFooter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 'auto',
-    paddingTop: '16px',
-    borderTop: '1px solid var(--border-hover)',
-  },
-  stats: {
-    display: 'flex',
-    gap: '12px',
-  },
-  statItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '13px',
-    color: 'var(--text-muted)',
   },
   emptyState: {
     display: 'flex',

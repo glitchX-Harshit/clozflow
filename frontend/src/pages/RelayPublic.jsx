@@ -160,17 +160,17 @@ const RelayPublic = () => {
         )}
 
         <header className="relay-header">
-          <div className="relay-badge">Clozflow Relay</div>
-          <h1 className="relay-title">Follow-up Summary</h1>
+          <div className="relay-brand">Clozflow. Relay</div>
+          <h1 className="relay-hero">Here's where we left off.</h1>
           {relay.prospect_name && (
-            <p className="relay-greeting">
-              Hi {relay.prospect_name}, here is a summary of our recent discussion and next steps.
+            <p className="relay-subhero">
+              {relay.prospect_name} × {relay.seller_company || 'Clozflow'}
             </p>
           )}
         </header>
 
         <section className="relay-section">
-          <h2>What we discussed</h2>
+          <h2>What you told us</h2>
           <div className="relay-text-content">
             {relay.summary || 'No summary provided.'}
           </div>
@@ -178,7 +178,7 @@ const RelayPublic = () => {
 
         {relay.benefits && relay.benefits.length > 0 && (
           <section className="relay-section">
-            <h2>How this could help</h2>
+            <h2>What we explored</h2>
             <ul className="relay-benefits-list">
               {relay.benefits.map((benefit, idx) => (
                 <li key={idx}>
@@ -191,13 +191,15 @@ const RelayPublic = () => {
         )}
 
         <section className="relay-section">
-          <h2>What happens next</h2>
+          <h2>What we still need to see</h2>
           <div className="relay-text-content">
             {relay.next_step || 'No next steps provided.'}
           </div>
         </section>
 
-        <div className="relay-actions-container">
+        <section className="relay-actions-section">
+          <h2>Continue the conversation</h2>
+          <div className="relay-actions-container">
           {isBooked ? (
             <div className="booked-state">
               <CheckCircle2 size={32} className="success-icon" />
@@ -335,6 +337,7 @@ const RelayPublic = () => {
             </>
           )}
         </div>
+        </section>
       </div>
     </div>
   );

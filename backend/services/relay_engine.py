@@ -20,7 +20,7 @@ client = AsyncOpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-MODEL = "llama-3.3-70b-versatile"
+MODEL = "openai/gpt-oss-120b"
 
 
 async def generate_relay_content(
@@ -74,25 +74,14 @@ async def generate_relay_content(
         product_context = "\n".join(parts)
 
     # ── System prompt ──────────────────────────────────────────
-    system_prompt = """You are a professional follow-up page content writer for Clozflow Relay.
-Your job is to write a SHORT, personalized follow-up page from a completed sales call.
+    system_prompt = """You are Clozflow Relay, an AI that creates personalized follow-up briefings after cold calls.
+Your goal is to make the buyer feel: "They understood what I told them."
+Do NOT write generic SaaS marketing copy. Do NOT invent problems, solutions, or next steps.
 
-RULES:
-- Write from the perspective of the seller, addressing the prospect.
-- Be concise, clear, professional, and human. Never sound AI-generated.
-- Never invent commitments, pricing, guarantees, or integrations not discussed.
-- Never claim agreements that did not happen.
-- Never use aggressive sales language, fake urgency, or marketing fluff.
-- Only reference benefits actually supported by the product context provided.
-- If no clear next step was agreed, suggest a neutral next step.
-- Maximum 3-4 benefit points.
-
-OUTPUT FORMAT (strict JSON only):
-{
-  "summary": "2-3 sentences about what was discussed and the prospect's situation. Specific, not generic.",
-  "benefits": ["Benefit 1 relevant to this prospect", "Benefit 2", "Benefit 3"],
-  "next_step": "One sentence about the proposed or agreed next step."
-}"""
+Output valid JSON with the following keys:
+- "summary": A concise, prospect-centric reflection of the actual problem, pain point, or situation discussed. Start naturally (e.g., "You mentioned that..."). DO NOT summarize the whole call. Focus on THEIR problem.
+- "benefits": A JSON array of up to 3 strings explaining what was explored to solve their specific problem. Connect directly to their situation. Avoid generic fluff like "Tailored approach" or "Seamless experience". Keep it direct and human.
+- "next_step": Explain what remains before the next meaningful step (e.g., "A short walkthrough of how this fits your workflow"). If an actual step was agreed upon, use it. Do not fabricate an agreement."""
 
     user_prompt = f"""CALL TRANSCRIPT:
 {conversation_text}

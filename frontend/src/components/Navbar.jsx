@@ -10,6 +10,7 @@ const LINKS = [
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Integrations', href: '#integrations' },
     { label: 'Pricing', href: '#pricing' },
+    { label: 'Early Access', href: 'https://clozflow-waitlist.vercel.app' },
 ];
 
 const Navbar = ({ onSignup, onLogin }) => {
@@ -61,7 +62,10 @@ const Navbar = ({ onSignup, onLogin }) => {
 
     // Active Section Intersection Observer
     useEffect(() => {
-        const sections = LINKS.map(link => document.querySelector(link.href)).filter(Boolean);
+        const sections = LINKS
+            .filter(link => link.href.startsWith('#'))
+            .map(link => document.querySelector(link.href))
+            .filter(Boolean);
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -109,7 +113,8 @@ const Navbar = ({ onSignup, onLogin }) => {
                             >
                                 <a
                                     href={l.href}
-                                    className={`nb__link ${activeSection === l.href.substring(1) ? 'nb__link--active' : ''}`}
+                                    className={`nb__link ${l.href.startsWith('#') && activeSection === l.href.substring(1) ? 'nb__link--active' : ''}`}
+                                    {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                 >
                                     {l.label}
                                 </a>
@@ -195,8 +200,9 @@ const Navbar = ({ onSignup, onLogin }) => {
                                 <span className="nb__drawer-link-num">0{idx + 1}</span>
                                 <a 
                                     href={l.href} 
-                                    className={`nb__drawer-link ${activeSection === l.href.substring(1) ? 'nb__drawer-link--active' : ''}`} 
+                                    className={`nb__drawer-link ${l.href.startsWith('#') && activeSection === l.href.substring(1) ? 'nb__drawer-link--active' : ''}`} 
                                     onClick={close}
+                                    {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                 >
                                     {l.label}
                                 </a>
@@ -219,10 +225,6 @@ const Navbar = ({ onSignup, onLogin }) => {
                                 <span>Enter Workspace</span>
                                 <ArrowRight size={15} />
                             </button>
-                        </div>
-                        <div className="nb__drawer-meta">
-                            <span>© 2026 CLOZFLOW. ALL RIGHTS RESERVED.</span>
-                        </div>
                     </div>
                 </div>
             </div>

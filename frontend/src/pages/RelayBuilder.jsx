@@ -38,7 +38,15 @@ const RelayBuilder = ({ callId, onBack }) => {
         });
         
         if (!res.ok) throw new Error('Failed to initialize Relay');
-        const data = await res.json();
+        let data = await res.json();
+        
+        if (data.existing) {
+          const fetchRes = await fetch(`${window.APP_API_BASE || ''}/api/relay/${data.relay_id}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          });
+          if (!fetchRes.ok) throw new Error('Failed to load existing Relay');
+          data = await fetchRes.json();
+        }
         
         // Format benefits to ensure it's an array of strings
         if (typeof data.benefits === 'string') {
@@ -186,20 +194,46 @@ const RelayBuilder = ({ callId, onBack }) => {
 
   return (
     <div style={styles.container}>
+      <style>{`
+        .relay-builder-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          flex: 1;
+          overflow: hidden;
+        }
+        @media (max-width: 768px) {
+          .relay-builder-grid {
+            grid-template-columns: 1fr;
+            overflow: auto;
+          }
+          .relay-builder-editor, .relay-builder-preview {
+            overflow: visible !important;
+            border-right: none !important;
+          }
+        }
+      `}</style>
       <header style={styles.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button onClick={onBack} style={styles.iconButton}>
             <ArrowLeft size={20} />
           </button>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>Edit Relay.</h1>
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>Prepare Relay.</h1>
         </div>
         
-        <div style={{ display: 'flex', gap: '12px' }}>
-          {relay.status === 'published' ? (
-            <button onClick={copyLink} style={styles.primaryButton}>
-              {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
-              {copied ? 'Copied!' : 'Copy Link'}
-            </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          {relay.status !== 'draft' ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--surface-2)', padding: '4px 4px 4px 12px', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
+              <span style={{ fontSize: '13px', color: 'var(--text-muted)', userSelect: 'all', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {window.location.origin}/relay/{relay.slug}
+              </span>
+              <button onClick={copyLink} style={{ ...styles.primaryButton, padding: '6px 12px' }}>
+                {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+              <a href={`/relay/${relay.slug}`} target="_blank" rel="noopener noreferrer" style={{ ...styles.iconButton, padding: '6px', color: 'var(--text-muted)' }} title="Open Relay">
+                <ExternalLink size={16} />
+              </a>
+            </div>
           ) : (
             <>
               <button onClick={() => handleSave(false)} style={styles.outlineButton}>
@@ -214,11 +248,11 @@ const RelayBuilder = ({ callId, onBack }) => {
         </div>
       </header>
 
-      <div style={styles.grid}>
+      <div className="relay-builder-grid">
         {/* Editor Side */}
-        <div style={styles.editorPanel}>
+        <div className="relay-builder-editor" style={styles.editorPanel}>
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Prospect Info</h3>
+            <h3 style={styles.sectionTitle}>Prospect</h3>
             <div style={styles.inputGroup}>
               <input 
                 type="text" 
@@ -245,17 +279,17 @@ const RelayBuilder = ({ callId, onBack }) => {
           </div>
 
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Conversation Summary</h3>
+            <h3 style={styles.sectionTitle}>What did they care about?</h3>
             <textarea 
               value={relay.summary || ''} 
               onChange={e => setRelay({...relay, summary: e.target.value})}
               style={{...styles.input, minHeight: '100px'}}
-              placeholder="What was discussed..."
+              placeholder="Their main concern, pain point, or objective..."
             />
           </div>
 
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Benefits & Solutions</h3>
+            <h3 style={styles.sectionTitle}>What did you discuss?</h3>
             {(relay.benefits || []).map((benefit, idx) => (
               <div key={idx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <input 
@@ -267,6 +301,7 @@ const RelayBuilder = ({ callId, onBack }) => {
                     setRelay({...relay, benefits: newBenefits});
                   }}
                   style={styles.input}
+                  placeholder="Relevant capability explored..."
                 />
                 <button 
                   onClick={() => setRelay({
@@ -283,22 +318,22 @@ const RelayBuilder = ({ callId, onBack }) => {
               onClick={() => setRelay({...relay, benefits: [...(relay.benefits || []), '']})}
               style={styles.textButton}
             >
-              <Plus size={16} /> Add Benefit
+              <Plus size={16} /> Add Point
             </button>
           </div>
 
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Next Steps</h3>
+            <h3 style={styles.sectionTitle}>What's the next step?</h3>
             <textarea 
               value={relay.next_step || ''} 
               onChange={e => setRelay({...relay, next_step: e.target.value})}
               style={{...styles.input, minHeight: '80px'}}
-              placeholder="What happens next..."
+              placeholder="What needs to happen next..."
             />
           </div>
 
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Availability Slots</h3>
+            <h3 style={styles.sectionTitle}>When can they meet?</h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px', background: 'var(--surface-2)', padding: '16px', borderRadius: 'var(--r-md)' }}>
               <div style={{ display: 'flex', gap: '12px' }}>
@@ -313,9 +348,10 @@ const RelayBuilder = ({ callId, onBack }) => {
                   onChange={e => setNewSlot({...newSlot, meeting_type: e.target.value})}
                   style={{...styles.input, flex: 1}}
                 >
-                  <option value="video">Video Call</option>
-                  <option value="phone">Phone Call</option>
-                  <option value="in_person">In Person</option>
+                  <option value="video">Follow-up Call</option>
+                  <option value="walkthrough">Product Walkthrough</option>
+                  <option value="demo">Demo</option>
+                  <option value="consultation">Consultation</option>
                 </select>
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -359,41 +395,46 @@ const RelayBuilder = ({ callId, onBack }) => {
         </div>
 
         {/* Preview Side */}
-        <div style={styles.previewPanel}>
+        <div className="relay-builder-preview" style={styles.previewPanel}>
           <div style={styles.previewHeader}>
             <Eye size={16} />
             <span>Buyer Preview</span>
           </div>
           <div style={styles.previewContent}>
             <div style={styles.previewMock}>
-              <h1 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '8px' }}>
-                Conversation with Seller
+              <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '8px', letterSpacing: '-0.02em', color: '#111827' }}>
+                Here's where we left off.
               </h1>
               {relay.prospect_name && (
-                <p style={{ fontSize: '16px', color: 'var(--text-dim)', marginBottom: '32px' }}>
-                  Hi {relay.prospect_name}, here is a summary of our discussion.
+                <p style={{ fontSize: '16px', color: '#6B7280', marginBottom: '32px', fontWeight: 500 }}>
+                  {relay.prospect_name} × {relay.seller_company || 'Clozflow'}
                 </p>
               )}
               
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px' }}>What we discussed</h3>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--text-dim)', marginBottom: '32px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#111827' }}>What you told us</h3>
+              <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#4B5563', marginBottom: '32px' }}>
                 {relay.summary || 'Summary will appear here...'}
               </p>
 
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px' }}>How this could help</h3>
+              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#111827' }}>What we explored</h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
                 {(relay.benefits || []).map((b, i) => (
-                  <li key={i} style={{ display: 'flex', gap: '12px', marginBottom: '12px', fontSize: '15px', color: 'var(--text-dim)' }}>
+                  <li key={i} style={{ display: 'flex', gap: '12px', marginBottom: '12px', fontSize: '16px', color: '#4B5563' }}>
                     <CheckCircle2 size={20} color="var(--accent-mid)" style={{ flexShrink: 0 }} />
                     <span>{b}</span>
                   </li>
                 ))}
               </ul>
 
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px' }}>What happens next</h3>
-              <p style={{ fontSize: '15px', lineHeight: 1.6, color: 'var(--text-dim)' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#111827' }}>What we still need to see</h3>
+              <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#4B5563', marginBottom: '40px' }}>
                 {relay.next_step || 'Next steps will appear here...'}
               </p>
+
+              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: '#111827' }}>Continue the conversation</h3>
+              <button style={{ width: '100%', padding: '14px', background: 'var(--accent)', color: 'white', borderRadius: 'var(--r-md)', border: 'none', fontWeight: 500, fontSize: '15px' }}>
+                Book a follow-up
+              </button>
             </div>
           </div>
         </div>
