@@ -225,6 +225,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                                 <span>Enter Workspace</span>
                                 <ArrowRight size={15} />
                             </button>
+                        </div>
                     </div>
                 </div>
             </div>
