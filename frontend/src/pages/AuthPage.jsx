@@ -11,6 +11,7 @@ const AuthPage = () => {
     const [view, setView] = useState(location.state?.view || 'login');
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         if (location.state?.view) setView(location.state.view);
     }, [location.state]);
 

@@ -85,7 +85,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
     };
 
     return (
-        <div className="su-overlay">
+        <div className="su-overlay" data-lenis-prevent>
             <div className="su-blob su-blob-1" />
             <div className="su-blob su-blob-2" />
             <div className="su-grid" />

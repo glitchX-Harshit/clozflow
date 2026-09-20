@@ -93,7 +93,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
     };
 
     return (
-        <div className="su-overlay">
+        <div className="su-overlay" data-lenis-prevent>
             <button className="su-back interactive" onClick={onBack}>
                 <ArrowLeft size={16} />
                 <span>Back</span>

@@ -5,10 +5,15 @@
     position: fixed;
     inset: 0;
     z-index: 2000;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     background: var(--bg);
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding: 3rem 1rem;
 }
 
@@ -65,6 +70,7 @@
     border-radius: var(--r-2xl);
     padding: 2.75rem;
     box-shadow: var(--shadow-xl) !important;
+    margin: auto 0;
 }
 
 /* Logo mark */
