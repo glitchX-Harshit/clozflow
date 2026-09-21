@@ -82,7 +82,7 @@ const RelayDashboard = ({ onOpenBuilder }) => {
       <header style={styles.header}>
         <div>
           <h1 style={styles.title}>Relay.</h1>
-          <p style={styles.subtitle}>Manage your post-call prospect experiences.</p>
+          <p style={styles.subtitle}>Your deals, moving forward — even when you're not in the room.</p>
         </div>
       </header>
 
@@ -99,7 +99,7 @@ const RelayDashboard = ({ onOpenBuilder }) => {
           </div>
           <h3 style={styles.emptyTitle}>No Relays Yet</h3>
           <p style={styles.emptyText}>
-            Relays are created automatically after your calls. When you have a recorded call, you can create a Relay to send to your prospect.
+            Every cold call is a deal waiting to happen. After your next call, create a Relay to arm your champion with exactly what they need to sell it internally.
           </p>
         </div>
       ) : (

@@ -74,14 +74,26 @@ async def generate_relay_content(
         product_context = "\n".join(parts)
 
     # ── System prompt ──────────────────────────────────────────
-    system_prompt = """You are Clozflow Relay, an AI that creates personalized follow-up briefings after cold calls.
-Your goal is to make the buyer feel: "They understood what I told them."
-Do NOT write generic SaaS marketing copy. Do NOT invent problems, solutions, or next steps.
+    system_prompt = """You are Clozflow Relay — an AI that transforms sales conversations into living, buyer-verified decision contexts.
+YOUR PURPOSE: Create a premium, highly specific, private briefing that a buyer can read, verify, and forward to other decision-makers.
 
-Output valid JSON with the following keys:
-- "summary": A concise, prospect-centric reflection of the actual problem, pain point, or situation discussed. Start naturally (e.g., "You mentioned that..."). DO NOT summarize the whole call. Focus on THEIR problem.
-- "benefits": A JSON array of up to 3 strings explaining what was explored to solve their specific problem. Connect directly to their situation. Avoid generic fluff like "Tailored approach" or "Seamless experience". Keep it direct and human.
-- "next_step": Explain what remains before the next meaningful step (e.g., "A short walkthrough of how this fits your workflow"). If an actual step was agreed upon, use it. Do not fabricate an agreement."""
+RULES:
+1. SPECIFICITY: AI-generated copy must be grounded in the actual conversation. Generic sales language is FORBIDDEN.
+2. NO MAGIC AI: Transform conversation evidence into useful structure, do NOT invent a fictional sales narrative or ROI.
+3. EDITORIAL TONE: Quiet, confident, human, minimal. Not a generic SaaS dashboard.
+4. FORBIDDEN PHRASES: "tailored approach", "seamless experience", "powerful solution", "transform your business", "take your business to the next level", "dedicated support", "cutting-edge", "best-in-class", "unlock your potential".
+
+Output valid JSON with exactly the following keys:
+- "primary_need": The strongest business problem explicitly expressed by the prospect.
+- "interest": Evidence showing what the prospect responded positively to.
+- "concern": The biggest unresolved concern, objection, or uncertainty.
+- "buyer_context": A short, specific description of the situation discussed on the call (the prospect's current situation). Reads as if a thoughtful human wrote it.
+- "problem_statement": A large typographic statement summarizing the core problem. E.g. "Most new enquiries are coming through WhatsApp, but follow-up depends on someone remembering to respond." Use actual prospect language.
+- "conversation_points": An array of exactly 3-5 strings. Each string must concisely capture: [Specific issue] — [Why it matters] — [What was discussed]. No generic feature lists.
+- "impact": A JSON object representing the cost of doing nothing. If the transcript contains real numbers, output {"type": "quantitative", "metric": "e.g. 8 hrs", "label": "e.g. manual follow-up / week", "source": "e.g. mentioned during the call"}. If NO quantitative evidence exists, DO NOT invent one! Instead output {"type": "qualitative", "title": "THE FRICTION", "statement": "Explain the observable impact of the current problem based on the call."}
+- "solution_approach": Explain how the discussed solution addresses the specific problem. ONLY what was discussed or approved. No unsupported promises.
+- "next_step": Choose or write a concrete next step (e.g. "Product walkthrough", "Pricing discussion", "Decision call").
+"""
 
     user_prompt = f"""CALL TRANSCRIPT:
 {conversation_text}
@@ -95,7 +107,7 @@ PRODUCT CONTEXT:
 PROSPECT: {prospect_name or 'Unknown'} ({prospect_business or 'Unknown business'})
 SELLER: {seller_name or 'Unknown'} ({seller_company or 'Unknown company'})
 
-Generate the Relay follow-up page content. Return ONLY valid JSON."""
+Generate the Relay follow-up context. Return ONLY valid JSON."""
 
     try:
         response = await client.chat.completions.create(
@@ -104,29 +116,39 @@ Generate the Relay follow-up page content. Return ONLY valid JSON."""
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.5,
-            max_tokens=600,
+            temperature=0.3,
+            max_tokens=1500,
             response_format={"type": "json_object"}
         )
 
         content = response.choices[0].message.content
         result = json.loads(content)
-
+        
         return {
-            "summary": result.get("summary", "We recently had a conversation about how we might be able to help your business."),
-            "benefits": result.get("benefits", ["Personalized solution for your needs"]),
-            "next_step": result.get("next_step", "Let's schedule a follow-up to discuss the next steps.")
+            "primary_need": result.get("primary_need", ""),
+            "interest": result.get("interest", ""),
+            "concern": result.get("concern", ""),
+            "buyer_context": result.get("buyer_context", "We discussed your current setup and identified key areas for improvement."),
+            "problem_statement": result.get("problem_statement", "A critical operational bottleneck needs addressing."),
+            "conversation_points": json.dumps(result.get("conversation_points", [])),
+            "impact": json.dumps(result.get("impact", {"type": "qualitative", "title": "THE FRICTION", "statement": "Current processes are creating unnecessary delays."})),
+            "solution_approach": result.get("solution_approach", "We explored a structured approach to resolve the identified bottleneck."),
+            "next_step": result.get("next_step", "Product walkthrough")
         }
 
     except Exception as e:
         print(f"Relay AI generation error: {e}")
-        # Graceful fallback — never block relay creation
         return {
-            "summary": "We recently discussed how our solution could help your business. Here's a summary of what we covered and the next steps.",
-            "benefits": [
-                "Tailored approach for your specific needs",
-                "Dedicated support throughout the process",
-                "Clear timeline and next steps"
-            ],
-            "next_step": "Let's schedule a follow-up call to discuss the details and answer any questions."
+            "primary_need": "Unclear from transcript.",
+            "interest": "Pending further discussion.",
+            "concern": "None explicitly stated.",
+            "buyer_context": "We discussed your current workflow and identified a few key operational challenges.",
+            "problem_statement": "There is friction in your current process that requires manual intervention.",
+            "conversation_points": json.dumps([
+                "Current Workflow — Manual steps are slowing down the team — We explored how to automate the handoff.",
+                "Visibility — It's hard to see where things stand — We looked at centralizing the data."
+            ]),
+            "impact": json.dumps({"type": "qualitative", "title": "THE FRICTION", "statement": "Without a change, the team will continue to spend hours on manual coordination rather than core work."}),
+            "solution_approach": "A phased rollout to replace the manual steps without disrupting existing work.",
+            "next_step": "Product walkthrough"
         }

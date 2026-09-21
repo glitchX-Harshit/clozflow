@@ -25,9 +25,21 @@ class Relay(Base):
     prospect_business = Column(String, nullable=True)
 
     # AI-generated content (editable by seller)
-    summary         = Column(Text, nullable=True)
-    benefits        = Column(Text, nullable=True)   # JSON array string
+    summary         = Column(Text, nullable=True) # Legacy, keeping for backwards compat
+    benefits        = Column(Text, nullable=True) # Legacy, keeping for backwards compat
+    
+    # New spec fields
+    primary_need    = Column(Text, nullable=True)
+    interest        = Column(Text, nullable=True)
+    concern         = Column(Text, nullable=True)
+    buyer_context   = Column(Text, nullable=True)
+    problem_statement = Column(Text, nullable=True)
+    conversation_points = Column(Text, nullable=True) # JSON array string
+    impact          = Column(Text, nullable=True) # JSON string
+    solution_approach = Column(Text, nullable=True)
     next_step       = Column(Text, nullable=True)
+    buyer_confirmed = Column(Boolean, default=False)
+    buyer_corrections = Column(Text, nullable=True)
 
     # Seller branding
     seller_name     = Column(String, nullable=True)

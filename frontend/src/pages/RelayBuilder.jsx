@@ -3,6 +3,7 @@ import {
   ArrowLeft, Plus, Trash2, Send, Loader2, Copy, CheckCircle2, 
   Eye, Edit3, Calendar, Clock, MapPin, User, Mail, ExternalLink 
 } from 'lucide-react';
+import RelayPublic from './RelayPublic';
 
 const RelayBuilder = ({ callId, onBack }) => {
   const [loading, setLoading] = useState(true);
@@ -89,8 +90,14 @@ const RelayBuilder = ({ callId, onBack }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          summary: relay.summary,
-          benefits: relay.benefits,
+          primary_need: relay.primary_need,
+          interest: relay.interest,
+          concern: relay.concern,
+          buyer_context: relay.buyer_context,
+          problem_statement: relay.problem_statement,
+          conversation_points: relay.conversation_points,
+          impact: relay.impact,
+          solution_approach: relay.solution_approach,
           next_step: relay.next_step,
           prospect_name: relay.prospect_name,
           prospect_email: relay.prospect_email,
@@ -217,7 +224,7 @@ const RelayBuilder = ({ callId, onBack }) => {
           <button onClick={onBack} style={styles.iconButton}>
             <ArrowLeft size={20} />
           </button>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>Prepare Relay.</h1>
+          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>Arm Your Champion.</h1>
         </div>
         
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -251,6 +258,97 @@ const RelayBuilder = ({ callId, onBack }) => {
       <div className="relay-builder-grid">
         {/* Editor Side */}
         <div className="relay-builder-editor" style={styles.editorPanel}>
+
+          {/* Inbox: Questions & Bookings */}
+          {((relay.questions && relay.questions.length > 0) || (relay.bookings && relay.bookings.length > 0)) && (
+            <div style={{ ...styles.section, background: 'var(--surface-2)', padding: '24px', borderRadius: 'var(--r-lg)', border: '1px solid var(--border)' }}>
+              <h3 style={{ ...styles.sectionTitle, color: 'var(--accent)' }}>Prospect Inbox</h3>
+              
+              {/* Confirmed Bookings */}
+              {relay.bookings && relay.bookings.length > 0 && (
+                <div style={{ marginBottom: relay.questions?.length ? '24px' : '0' }}>
+                  <h4 style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '12px' }}>Confirmed Meeting</h4>
+                  {relay.bookings.map(b => (
+                    <div key={b.id} style={{ background: 'var(--surface)', padding: '16px', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <CheckCircle2 size={16} color="var(--accent)" />
+                        <strong style={{ fontSize: '15px' }}>{b.buyer_name}</strong>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                        <span>{b.buyer_email} {b.buyer_phone ? `• ${b.buyer_phone}` : ''}</span>
+                        {b.slot && <span>{b.slot.date} • {b.slot.start_time} - {b.slot.end_time}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Questions */}
+              {relay.questions && relay.questions.length > 0 && (
+                <div>
+                  <h4 style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '12px' }}>Messages</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {relay.questions.map(q => (
+                      <div key={q.id} style={{ background: 'var(--surface)', padding: '16px', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
+                        <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '12px', color: 'var(--text)' }}>
+                          "{q.question_text}"
+                        </div>
+                        
+                        {q.answer_text ? (
+                          <div style={{ background: 'var(--bg)', padding: '12px', borderRadius: 'var(--r-sm)', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                            <strong>Your Reply:</strong> {q.answer_text}
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <input 
+                              type="text" 
+                              placeholder="Type your reply..."
+                              style={{ ...styles.input, flex: 1, padding: '8px 12px' }}
+                              id={`reply-${q.id}`}
+                            />
+                            <button 
+                              style={{ ...styles.primaryButton, padding: '8px 16px' }}
+                              onClick={async () => {
+                                const input = document.getElementById(`reply-${q.id}`);
+                                if (!input.value.trim()) return;
+                                try {
+                                  const res = await fetch(`${window.APP_API_BASE || ''}/api/relay/${relay.id}/questions/${q.id}/reply`, {
+                                    method: 'POST',
+                                    headers: {
+                                      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ answer_text: input.value })
+                                  });
+                                  if (!res.ok) throw new Error('Failed to send reply');
+                                  
+                                  const updatedRelay = await fetch(`${window.APP_API_BASE || ''}/api/relay/${relay.id}`, {
+                                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                                  }).then(r => r.json());
+                                  
+                                  // Re-format benefits just in case
+                                  if (typeof updatedRelay.benefits === 'string') {
+                                    try { updatedRelay.benefits = JSON.parse(updatedRelay.benefits); } 
+                                    catch (e) { updatedRelay.benefits = updatedRelay.benefits.split('\n'); }
+                                  }
+                                  
+                                  setRelay(updatedRelay);
+                                } catch (err) {
+                                  alert(err.message);
+                                }
+                              }}
+                            >
+                              Send
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Prospect</h3>
             <div style={styles.inputGroup}>
@@ -278,57 +376,91 @@ const RelayBuilder = ({ callId, onBack }) => {
             </div>
           </div>
 
+          {/* The Signal */}
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>What did they care about?</h3>
+            <h3 style={styles.sectionTitle}>The Signal</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <label style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Primary Need</label>
+                <textarea 
+                  value={relay.primary_need || ''} 
+                  onChange={e => setRelay({...relay, primary_need: e.target.value})}
+                  style={{...styles.input, minHeight: '60px'}}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Interest</label>
+                <textarea 
+                  value={relay.interest || ''} 
+                  onChange={e => setRelay({...relay, interest: e.target.value})}
+                  style={{...styles.input, minHeight: '60px'}}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Concern</label>
+                <textarea 
+                  value={relay.concern || ''} 
+                  onChange={e => setRelay({...relay, concern: e.target.value})}
+                  style={{...styles.input, minHeight: '60px'}}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style={styles.section}>
+            <h3 style={styles.sectionTitle}>The Context</h3>
             <textarea 
-              value={relay.summary || ''} 
-              onChange={e => setRelay({...relay, summary: e.target.value})}
-              style={{...styles.input, minHeight: '100px'}}
-              placeholder="Their main concern, pain point, or objective..."
+              value={relay.buyer_context || ''} 
+              onChange={e => setRelay({...relay, buyer_context: e.target.value})}
+              style={{...styles.input, minHeight: '80px'}}
             />
           </div>
 
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>What did you discuss?</h3>
-            {(relay.benefits || []).map((benefit, idx) => (
-              <div key={idx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                <input 
-                  type="text" 
-                  value={benefit} 
-                  onChange={e => {
-                    const newBenefits = [...relay.benefits];
-                    newBenefits[idx] = e.target.value;
-                    setRelay({...relay, benefits: newBenefits});
-                  }}
-                  style={styles.input}
-                  placeholder="Relevant capability explored..."
-                />
-                <button 
-                  onClick={() => setRelay({
-                    ...relay, 
-                    benefits: relay.benefits.filter((_, i) => i !== idx)
-                  })}
-                  style={{...styles.iconButton, color: 'var(--text-muted)'}}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
-            <button 
-              onClick={() => setRelay({...relay, benefits: [...(relay.benefits || []), '']})}
-              style={styles.textButton}
-            >
-              <Plus size={16} /> Add Point
-            </button>
+            <h3 style={styles.sectionTitle}>The Problem</h3>
+            <textarea 
+              value={relay.problem_statement || ''} 
+              onChange={e => setRelay({...relay, problem_statement: e.target.value})}
+              style={{...styles.input, minHeight: '60px'}}
+            />
           </div>
 
           <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>What's the next step?</h3>
+            <h3 style={styles.sectionTitle}>The Conversation</h3>
             <textarea 
+              value={relay.conversation_points || ''} 
+              onChange={e => setRelay({...relay, conversation_points: e.target.value})}
+              style={{...styles.input, minHeight: '100px'}}
+              placeholder='JSON array of points...'
+            />
+          </div>
+
+          <div style={styles.section}>
+            <h3 style={styles.sectionTitle}>The Impact</h3>
+            <textarea 
+              value={relay.impact || ''} 
+              onChange={e => setRelay({...relay, impact: e.target.value})}
+              style={{...styles.input, minHeight: '100px'}}
+              placeholder='JSON impact data...'
+            />
+          </div>
+
+          <div style={styles.section}>
+            <h3 style={styles.sectionTitle}>The Approach</h3>
+            <textarea 
+              value={relay.solution_approach || ''} 
+              onChange={e => setRelay({...relay, solution_approach: e.target.value})}
+              style={{...styles.input, minHeight: '100px'}}
+            />
+          </div>
+
+          <div style={styles.section}>
+            <h3 style={styles.sectionTitle}>The Next Move</h3>
+            <input 
+              type="text"
               value={relay.next_step || ''} 
               onChange={e => setRelay({...relay, next_step: e.target.value})}
-              style={{...styles.input, minHeight: '80px'}}
-              placeholder="What needs to happen next..."
+              style={styles.input}
             />
           </div>
 
@@ -398,43 +530,13 @@ const RelayBuilder = ({ callId, onBack }) => {
         <div className="relay-builder-preview" style={styles.previewPanel}>
           <div style={styles.previewHeader}>
             <Eye size={16} />
-            <span>Buyer Preview</span>
+            <span>Live Buyer Preview</span>
           </div>
-          <div style={styles.previewContent}>
-            <div style={styles.previewMock}>
-              <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '8px', letterSpacing: '-0.02em', color: '#111827' }}>
-                Here's where we left off.
-              </h1>
-              {relay.prospect_name && (
-                <p style={{ fontSize: '16px', color: '#6B7280', marginBottom: '32px', fontWeight: 500 }}>
-                  {relay.prospect_name} × {relay.seller_company || 'Clozflow'}
-                </p>
-              )}
-              
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#111827' }}>What you told us</h3>
-              <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#4B5563', marginBottom: '32px' }}>
-                {relay.summary || 'Summary will appear here...'}
-              </p>
-
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#111827' }}>What we explored</h3>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0' }}>
-                {(relay.benefits || []).map((b, i) => (
-                  <li key={i} style={{ display: 'flex', gap: '12px', marginBottom: '12px', fontSize: '16px', color: '#4B5563' }}>
-                    <CheckCircle2 size={20} color="var(--accent-mid)" style={{ flexShrink: 0 }} />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '12px', color: '#111827' }}>What we still need to see</h3>
-              <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#4B5563', marginBottom: '40px' }}>
-                {relay.next_step || 'Next steps will appear here...'}
-              </p>
-
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: '#111827' }}>Continue the conversation</h3>
-              <button style={{ width: '100%', padding: '14px', background: 'var(--accent)', color: 'white', borderRadius: 'var(--r-md)', border: 'none', fontWeight: 500, fontSize: '15px' }}>
-                Book a follow-up
-              </button>
+          <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, overflowY: 'auto' }}>
+              <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center', minHeight: '117%' }}>
+                <RelayPublic previewData={{ relay, slots }} />
+              </div>
             </div>
           </div>
         </div>

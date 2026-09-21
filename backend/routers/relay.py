@@ -30,12 +30,22 @@ class RelayCreateRequest(BaseModel):
     capsule_id: Optional[int] = None  # optional capsule for product context
 
 class RelayUpdateRequest(BaseModel):
-    summary: Optional[str] = None
-    benefits: Optional[List[str]] = None
+    summary: Optional[str] = None # Legacy
+    benefits: Optional[List[str]] = None # Legacy
+    primary_need: Optional[str] = None
+    interest: Optional[str] = None
+    concern: Optional[str] = None
+    buyer_context: Optional[str] = None
+    problem_statement: Optional[str] = None
+    conversation_points: Optional[str] = None # Expecting JSON string
+    impact: Optional[str] = None # Expecting JSON string
+    solution_approach: Optional[str] = None
     next_step: Optional[str] = None
     prospect_name: Optional[str] = None
     prospect_email: Optional[str] = None
     prospect_business: Optional[str] = None
+    buyer_confirmed: Optional[bool] = None
+    buyer_corrections: Optional[str] = None
 
 class SlotCreateRequest(BaseModel):
     date: str          # YYYY-MM-DD
@@ -140,9 +150,22 @@ async def create_relay(
         prospect_name=data.prospect_name,
         prospect_email=data.prospect_email,
         prospect_business=data.prospect_business,
-        summary=content["summary"],
-        benefits=json.dumps(content["benefits"]),
-        next_step=content["next_step"],
+        
+        # Legacy
+        summary=content.get("summary", ""),
+        benefits=json.dumps(content.get("benefits", [])),
+        
+        # New spec
+        primary_need=content.get("primary_need"),
+        interest=content.get("interest"),
+        concern=content.get("concern"),
+        buyer_context=content.get("buyer_context"),
+        problem_statement=content.get("problem_statement"),
+        conversation_points=content.get("conversation_points"),
+        impact=content.get("impact"),
+        solution_approach=content.get("solution_approach"),
+        
+        next_step=content.get("next_step"),
         seller_name=current_user.full_name or current_user.username or current_user.email.split("@")[0],
         seller_company=current_user.company_name or "",
     )
@@ -155,15 +178,20 @@ async def create_relay(
         "relay_id": relay.id,
         "slug": relay.slug,
         "status": relay.status,
-        "summary": relay.summary,
-        "benefits": content["benefits"],
+        "primary_need": relay.primary_need,
+        "interest": relay.interest,
+        "concern": relay.concern,
+        "buyer_context": relay.buyer_context,
+        "problem_statement": relay.problem_statement,
+        "conversation_points": relay.conversation_points,
+        "impact": relay.impact,
+        "solution_approach": relay.solution_approach,
         "next_step": relay.next_step,
         "prospect_name": relay.prospect_name,
         "seller_name": relay.seller_name,
         "seller_company": relay.seller_company,
         "message": "Relay draft created"
     }
-
 
 @router.get("/")
 def list_relays(
@@ -262,6 +290,16 @@ def get_relay(
         "prospect_business": relay.prospect_business,
         "summary": relay.summary,
         "benefits": benefits,
+        "primary_need": relay.primary_need,
+        "interest": relay.interest,
+        "concern": relay.concern,
+        "buyer_context": relay.buyer_context,
+        "problem_statement": relay.problem_statement,
+        "conversation_points": relay.conversation_points,
+        "impact": relay.impact,
+        "solution_approach": relay.solution_approach,
+        "buyer_confirmed": relay.buyer_confirmed,
+        "buyer_corrections": relay.buyer_corrections,
         "next_step": relay.next_step,
         "seller_name": relay.seller_name,
         "seller_company": relay.seller_company,
@@ -310,6 +348,14 @@ def update_relay(
         relay.summary = data.summary
     if data.benefits is not None:
         relay.benefits = json.dumps(data.benefits)
+    if data.primary_need is not None: relay.primary_need = data.primary_need
+    if data.interest is not None: relay.interest = data.interest
+    if data.concern is not None: relay.concern = data.concern
+    if data.buyer_context is not None: relay.buyer_context = data.buyer_context
+    if data.problem_statement is not None: relay.problem_statement = data.problem_statement
+    if data.conversation_points is not None: relay.conversation_points = data.conversation_points
+    if data.impact is not None: relay.impact = data.impact
+    if data.solution_approach is not None: relay.solution_approach = data.solution_approach
     if data.next_step is not None:
         relay.next_step = data.next_step
     if data.prospect_name is not None:
@@ -318,6 +364,11 @@ def update_relay(
         relay.prospect_email = data.prospect_email
     if data.prospect_business is not None:
         relay.prospect_business = data.prospect_business
+    if data.buyer_confirmed is not None:
+        relay.buyer_confirmed = data.buyer_confirmed
+    if data.buyer_corrections is not None:
+        relay.buyer_corrections = data.buyer_corrections
+
 
     relay.updated_at = datetime.utcnow()
     db.commit()
@@ -341,8 +392,8 @@ def publish_relay(
         raise HTTPException(status_code=404, detail="Relay not found")
 
     # Validate relay has required content
-    if not relay.summary:
-        raise HTTPException(status_code=400, detail="Relay must have a summary before publishing")
+    if not relay.problem_statement and not relay.buyer_context:
+        raise HTTPException(status_code=400, detail="Relay must have a problem statement or context before publishing")
 
     relay.status = "published"
     relay.published_at = datetime.utcnow()
@@ -449,6 +500,10 @@ def delete_slot(
     return {"message": "Slot deleted"}
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# INBOX ENDPOINTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
 @router.get("/{relay_id}/bookings")
 def get_relay_bookings(
     relay_id: int,
@@ -488,18 +543,13 @@ def reply_to_question(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Seller replies to a buyer question."""
-    relay = db.query(Relay).filter(
-        Relay.id == relay_id,
+    """Seller replies to a buyer's question from the builder inbox."""
+    question = db.query(RelayQuestion).join(Relay).filter(
+        RelayQuestion.id == question_id,
+        RelayQuestion.relay_id == relay_id,
         Relay.user_id == current_user.id
     ).first()
-    if not relay:
-        raise HTTPException(status_code=404, detail="Relay not found")
 
-    question = db.query(RelayQuestion).filter(
-        RelayQuestion.id == question_id,
-        RelayQuestion.relay_id == relay.id
-    ).first()
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
 
@@ -565,24 +615,36 @@ def get_public_relay(
     ).first()
 
     return {
-        "slug": relay.slug,
-        "status": relay.status,
-        "prospect_name": relay.prospect_name,
-        "summary": relay.summary,
-        "benefits": benefits,
-        "next_step": relay.next_step,
-        "seller_name": relay.seller_name,
-        "seller_company": relay.seller_company,
-        "available_slots": available_slots,
-        "questions": questions,
-        "has_booking": has_booking is not None,
-        "booking": {
-            "buyer_name": has_booking.buyer_name,
-            "date": has_booking.slot.date if has_booking.slot else None,
-            "start_time": has_booking.slot.start_time if has_booking.slot else None,
-            "end_time": has_booking.slot.end_time if has_booking.slot else None,
-            "meeting_type": has_booking.slot.meeting_type if has_booking.slot else None,
-        } if has_booking else None,
+        "relay": {
+            "slug": relay.slug,
+            "status": relay.status,
+            "prospect_name": relay.prospect_name,
+            "summary": relay.summary,
+            "benefits": benefits,
+            "primary_need": relay.primary_need,
+            "interest": relay.interest,
+            "concern": relay.concern,
+            "buyer_context": relay.buyer_context,
+            "problem_statement": relay.problem_statement,
+            "conversation_points": relay.conversation_points,
+            "impact": relay.impact,
+            "solution_approach": relay.solution_approach,
+            "buyer_confirmed": relay.buyer_confirmed,
+            "buyer_corrections": relay.buyer_corrections,
+            "next_step": relay.next_step,
+            "seller_name": relay.seller_name,
+            "seller_company": relay.seller_company,
+            "has_booking": has_booking is not None,
+            "booking": {
+                "buyer_name": has_booking.buyer_name,
+                "date": has_booking.slot.date if has_booking.slot else None,
+                "start_time": has_booking.slot.start_time if has_booking.slot else None,
+                "end_time": has_booking.slot.end_time if has_booking.slot else None,
+                "meeting_type": has_booking.slot.meeting_type if has_booking.slot else None,
+            } if has_booking else None,
+            "questions": questions,
+        },
+        "slots": available_slots,
     }
 
 
