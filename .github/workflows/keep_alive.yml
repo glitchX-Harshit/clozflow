@@ -17,19 +17,31 @@ jobs:
           # or directly replace the fallback URL below.
           APP_URL: ${{ vars.RENDER_APP_URL || secrets.RENDER_APP_URL || 'https://clozflow.onrender.com' }}
         run: |
-          TARGET_URL="${APP_URL%/}/health"
+          TARGET_URL="${APP_URL%/}/"
           echo "Pinging: $TARGET_URL"
           
-          HTTP_STATUS=$(curl -s -o /tmp/response.txt -w "%{http_code}" --max-time 30 "$TARGET_URL" || echo "FAILED")
+          MAX_RETRIES=4
+          DELAY=15
+          SUCCESS=false
           
-          echo "HTTP Status: $HTTP_STATUS"
-          echo "Response Body:"
-          cat /tmp/response.txt || true
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i of $MAX_RETRIES..."
+            HTTP_STATUS=$(curl -s -o /tmp/response.txt -w "%{http_code}" --max-time 20 "$TARGET_URL" || echo "FAILED")
+            echo "HTTP Status: $HTTP_STATUS"
+            
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+              echo "✅ Keep-alive ping successful (Status: $HTTP_STATUS)!"
+              SUCCESS=true
+              break
+            else
+              echo "⏳ Render is still waking up / allocating resources (Status: $HTTP_STATUS). Retrying in ${DELAY}s..."
+              sleep $DELAY
+            fi
+          done
           
-          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
-            echo "✅ Keep-alive ping successful!"
+          if [ "$SUCCESS" = true ]; then
             exit 0
           else
-            echo "⚠️ Service responded with non-2xx status ($HTTP_STATUS) or connection timed out."
-            exit 0 # Non-zero exit is avoided to prevent unnecessary failure alerts if Render takes a moment
+            echo "⚠️ Service did not return 2xx within retry limit, but wake-up request was delivered."
+            exit 0
           fi
