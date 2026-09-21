@@ -1,0 +1,35 @@
+name: Keep Render Service Alive
+
+on:
+  schedule:
+    # Runs every 10 minutes (UTC) to prevent Render free tier from sleeping (15 min limit)
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  keep-alive:
+    name: Ping Health Endpoint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Keep-Alive Request
+        env:
+          # You can either set RENDER_APP_URL in GitHub Repo Settings -> Secrets/Variables -> Actions
+          # or directly replace the fallback URL below.
+          APP_URL: ${{ vars.RENDER_APP_URL || secrets.RENDER_APP_URL || 'https://clozflow.onrender.com' }}
+        run: |
+          TARGET_URL="${APP_URL%/}/health"
+          echo "Pinging: $TARGET_URL"
+          
+          HTTP_STATUS=$(curl -s -o /tmp/response.txt -w "%{http_code}" --max-time 30 "$TARGET_URL" || echo "FAILED")
+          
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response Body:"
+          cat /tmp/response.txt || true
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "✅ Keep-alive ping successful!"
+            exit 0
+          else
+            echo "⚠️ Service responded with non-2xx status ($HTTP_STATUS) or connection timed out."
+            exit 0 # Non-zero exit is avoided to prevent unnecessary failure alerts if Render takes a moment
+          fi
