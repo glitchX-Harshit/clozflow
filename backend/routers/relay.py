@@ -356,6 +356,31 @@ def publish_relay(
     }
 
 
+@router.get("/{relay_id}/slots")
+def get_slots(
+    relay_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get availability slots for a Relay (Seller endpoint)."""
+    relay = db.query(Relay).filter(
+        Relay.id == relay_id,
+        Relay.user_id == current_user.id
+    ).first()
+    if not relay:
+        raise HTTPException(status_code=404, detail="Relay not found")
+
+    return [{
+        "id": s.id,
+        "date": s.date,
+        "start_time": s.start_time,
+        "end_time": s.end_time,
+        "duration_minutes": s.duration_minutes,
+        "meeting_type": s.meeting_type,
+        "is_booked": s.is_booked,
+    } for s in relay.slots]
+
+
 @router.post("/{relay_id}/slots")
 def add_slot(
     relay_id: int,

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  clozflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-}
+        - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-}
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    env_file:
+      - backend/.env
