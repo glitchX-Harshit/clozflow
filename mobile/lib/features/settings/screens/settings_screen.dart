@@ -90,91 +90,100 @@ class SettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.screenPadding),
         children: [
           // User info header
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 32,
-                backgroundColor: AppColors.lightBlue,
-                child: Text(
-                  initials,
-                  style: AppTextStyles.h2.copyWith(color: AppColors.navy),
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black, width: 4),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black,
+                  offset: Offset(6, 6),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(displayName, style: AppTextStyles.subtitle1),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      email,
-                      style: AppTextStyles.body2.copyWith(
-                        color: AppColors.textSecondary,
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  color: Colors.black,
+                  alignment: Alignment.center,
+                  child: Text(
+                    initials,
+                    style: AppTextStyles.h2.copyWith(color: Colors.white, fontWeight: FontWeight.w900),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(displayName.toUpperCase(), style: AppTextStyles.subtitle1.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.5)),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        email.toUpperCase(),
+                        style: AppTextStyles.body2.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.xxxl),
-          const Divider(),
-          ListTile(
-            leading: const Icon(
-              Icons.person_outline_rounded,
-              color: AppColors.navy,
-            ),
-            title: Text('Profile', style: AppTextStyles.body1),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () {
-              // Phase 2: navigate to profile editing
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(
-              Icons.inventory_2_outlined,
-              color: AppColors.navy,
-            ),
-            title: Text('Capsules', style: AppTextStyles.body1),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () {
-              // Phase 2: navigate to capsules management
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(
-              Icons.info_outline_rounded,
-              color: AppColors.navy,
-            ),
-            title: Text('About', style: AppTextStyles.body1),
-            trailing: const Icon(Icons.chevron_right_rounded),
-            onTap: () {
-              showAboutDialog(
-                context: context,
-                applicationName: 'Clozflow',
-                applicationVersion: '1.0.0',
-                applicationLegalese: '© 2026 Clozflow. All rights reserved.',
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(
-              Icons.logout_rounded,
-              color: AppColors.error,
-            ),
-            title: Text(
-              'Sign Out',
-              style: AppTextStyles.body1.copyWith(color: AppColors.error),
-            ),
-            onTap: () => _showSignOutDialog(context, ref),
-          ),
-          const Divider(),
+          Container(height: 4, color: Colors.black),
+          _buildSettingsItem('PROFILE', Icons.person_outline_rounded, () {}),
+          Container(height: 4, color: Colors.black),
+          _buildSettingsItem('CAPSULES', Icons.inventory_2_outlined, () {}),
+          Container(height: 4, color: Colors.black),
+          _buildSettingsItem('ABOUT', Icons.info_outline_rounded, () {
+            showAboutDialog(
+              context: context,
+              applicationName: 'CLOZFLOW',
+              applicationVersion: '1.0.0',
+              applicationLegalese: '© 2026 CLOZFLOW.',
+            );
+          }),
+          Container(height: 4, color: Colors.black),
+          _buildSettingsItem('SIGN OUT', Icons.logout_rounded, () => _showSignOutDialog(context, ref), isDestructive: true),
+          Container(height: 4, color: Colors.black),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsItem(String title, IconData icon, VoidCallback onTap, {bool isDestructive = false}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg, horizontal: AppSpacing.md),
+        color: Colors.white,
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isDestructive ? Colors.red : Colors.black,
+              size: 28,
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTextStyles.subtitle1.copyWith(
+                  color: isDestructive ? Colors.red : Colors.black,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded, color: isDestructive ? Colors.red : Colors.black),
+          ],
+        ),
       ),
     );
   }

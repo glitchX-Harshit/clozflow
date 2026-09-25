@@ -448,68 +448,65 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
    FINDING LEADS PROGRESS / ANIMATION
    ══════════════════════════════════════════════════════════════════ */
 const FindingLeadsProgress = ({ query }) => {
-    const STATUSES = [
-        "Connecting to search endpoints...",
-        "Scanning database registries...",
-        "Crawling digital footprint...",
-        "Analyzing SEO health & speed...",
-        "Detecting opportunity signals...",
-        "Calculating AI scores...",
-        "Drafting outreach angles...",
-        "Structuring enriched profiles..."
+    const QUOTES = [
+        "“Every sale has five basic obstacles: no need, no money, no hurry, no desire, no trust.” – Zig Ziglar",
+        "“Timid salesmen have skinny kids.” – Judge Ziglar",
+        "“Quality performance starts with a positive attitude.” – Jeffrey Gitomer",
+        "“Don’t watch the clock; do what it does. Keep going.” – Sam Levenson",
+        "“Success is walking from failure to failure with no loss of enthusiasm.” – Winston Churchill",
+        "“The harder the conflict, the more glorious the triumph.” – Thomas Paine",
+        "“Innovation distinguishes between a leader and a follower.” – Steve Jobs",
+        "“Opportunities don't happen. You create them.” – Chris Grosser"
     ];
 
-    const [statusIndex, setStatusIndex] = useState(0);
+    const [quoteIndex, setQuoteIndex] = useState(0);
     const [progress, setProgress] = useState(5);
 
     useEffect(() => {
-        const statusInterval = setInterval(() => {
-            setStatusIndex((prev) => {
-                if (prev < STATUSES.length - 1) {
-                    return prev + 1;
-                }
-                return prev;
-            });
-        }, 2800); // Slowed down from 1100ms to 2800ms to map accurately to actual backend time
+        const quoteInterval = setInterval(() => {
+            setQuoteIndex((prev) => (prev + 1) % QUOTES.length);
+        }, 3000);
 
         const progressInterval = setInterval(() => {
             setProgress((prev) => {
-                const target = Math.min(99, ((statusIndex + 1) / STATUSES.length) * 100);
-                if (prev < target) {
-                    return Math.min(99, prev + Math.random() * 3 + 1);
+                if (prev < 85) {
+                    return prev + Math.random() * 4 + 1;
                 } else if (prev < 99) {
-                    return Math.min(99, prev + Math.random() * 0.2);
+                    return prev + Math.random() * 0.5;
                 }
                 return prev;
             });
         }, 500);
 
         return () => {
-            clearInterval(statusInterval);
+            clearInterval(quoteInterval);
             clearInterval(progressInterval);
         };
-    }, [statusIndex]);
+    }, []);
 
     const displayName = query ? query.trim() : "target businesses";
 
     return (
-        <div className="lf__premium-flat-loader animate-fade-in">
-            <div className="lf__flat-loader-header">
-                <span className="lf__flat-loader-status">{STATUSES[statusIndex]}</span>
-                <span className="lf__flat-loader-pct">{Math.round(progress)}%</span>
+        <div className="lf__premium-flat-loader animate-fade-in" style={{ padding: '1rem 0' }}>
+            <div className="lf__flat-loader-header" style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.75rem' }}>
+                <span className="lf__flat-loader-pct" style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text)' }}>
+                    {Math.round(progress)}%
+                </span>
+                <span className="lf__flat-loader-status" style={{ fontStyle: 'italic', opacity: 0.8, minHeight: '3rem', maxWidth: '80%', lineHeight: '1.4' }}>
+                    {QUOTES[quoteIndex]}
+                </span>
             </div>
 
             {/* Flat progress line */}
             <div className="lf__flat-bar-wrapper">
                 <div 
                     className="lf__flat-bar" 
-                    style={{ width: `${progress}%` }}
+                    style={{ width: `${progress}%`, transition: 'width 0.5s ease-out' }}
                 />
             </div>
 
-            <div className="lf__flat-loader-footer">
-                <span className="lf__flat-loader-query">Scanning: <strong>{displayName}</strong></span>
-                <span className="lf__flat-loader-time">EST: {Math.max(1, Math.round((STATUSES.length - statusIndex) * 2.8))}s</span>
+            <div className="lf__flat-loader-footer" style={{ justifyContent: 'center' }}>
+                <span className="lf__flat-loader-query">Scanning: <strong>{displayName}</strong>...</span>
             </div>
         </div>
     );

@@ -122,14 +122,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Brand
-                    Text(
-                      'Clozflow',
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.h1.copyWith(
-                        color: AppColors.navy,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w800,
+                    Text.rich(
+                      TextSpan(
+                        text: 'Clozflow',
+                        style: AppTextStyles.h1.copyWith(
+                          color: Colors.black,
+                          fontSize: 36,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '.',
+                            style: TextStyle(
+                              color: AppColors.magenta,
+                            ),
+                          ),
+                        ],
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.huge),
 

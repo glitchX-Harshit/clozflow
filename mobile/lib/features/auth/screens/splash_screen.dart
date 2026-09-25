@@ -54,12 +54,22 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Clozflow',
-                style: AppTextStyles.h1.copyWith(
-                  color: AppColors.navy,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w800,
+              Text.rich(
+                TextSpan(
+                  text: 'Clozflow',
+                  style: AppTextStyles.h1.copyWith(
+                    color: Colors.black,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w800,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: '.',
+                      style: TextStyle(
+                        color: AppColors.magenta,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),

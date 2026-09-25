@@ -9,7 +9,10 @@ import 'package:clozflow/features/auth/screens/signup_screen.dart';
 import 'package:clozflow/features/shell/screens/shell_screen.dart';
 import 'package:clozflow/features/dashboard/screens/dashboard_screen.dart';
 import 'package:clozflow/features/prospects/screens/prospects_screen.dart';
+import 'package:clozflow/features/prospects/screens/lead_details_screen.dart';
 import 'package:clozflow/features/calls/screens/calls_screen.dart';
+import 'package:clozflow/features/calls/screens/live_call_screen.dart';
+import 'package:clozflow/features/calls/screens/call_history_details_screen.dart';
 import 'package:clozflow/features/insights/screens/insights_screen.dart';
 import 'package:clozflow/features/settings/screens/settings_screen.dart';
 
@@ -116,6 +119,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/lead-details',
+        builder: (context, state) {
+          final lead = state.extra as Map<String, dynamic>? ?? {};
+          return LeadDetailsScreen(lead: lead);
+        },
+      ),
+      GoRoute(
+        path: '/live-call',
+        builder: (context, state) {
+          final lead = state.extra as Map<String, dynamic>? ?? {};
+          return LiveCallScreen(lead: lead);
+        },
+      ),
+      GoRoute(
+        path: '/call-details',
+        builder: (context, state) {
+          final callId = state.extra as int? ?? 0;
+          return CallHistoryDetailsScreen(callId: callId);
+        },
       ),
     ],
   );
