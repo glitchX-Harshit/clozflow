@@ -1,0 +1,117 @@
+.pearl-workspace {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--bg, #f4f6f8);
+  font-family: inherit;
+  overflow: hidden;
+}
+
+.pearl-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: var(--surface, #ffffff);
+  border-right: 1px solid var(--border, #e0e0e0);
+  display: flex;
+  flex-direction: column;
+}
+
+.pearl-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border, #e0e0e0);
+}
+
+.pearl-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--surface-2, #eaf0f6);
+  border-radius: 8px;
+}
+
+.pearl-brand-text h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #333);
+}
+
+.pearl-brand-text span {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #666);
+}
+
+.pearl-nav {
+  padding: 16px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pearl-nav-section {
+  margin-bottom: 24px;
+}
+
+.pearl-nav-label {
+  display: block;
+  padding: 0 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #999);
+  margin-bottom: 8px;
+}
+
+.pearl-nav-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.pearl-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #555);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.pearl-nav-item:hover {
+  background-color: var(--surface-2, #f9fafb);
+  color: var(--text-primary, #333);
+}
+
+.pearl-nav-item.active {
+  background-color: var(--surface-2, #f0f4f8);
+  color: var(--accent, #1e40af);
+  border-left-color: var(--accent, #1e40af);
+  font-weight: 500;
+}
+
+.pearl-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pearl-placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary, #666);
+}

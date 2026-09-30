@@ -47,14 +47,22 @@ class SileroVADEngine:
 
     def __init__(
         self,
-        threshold: float = 0.5,
+        threshold: Optional[float] = None,
         sample_rate: int = 16000,
-        min_speech_frames: int = 2,   # ~64ms of speech to trigger SPEECH_START
+        min_speech_frames: Optional[int] = None,   # ~64ms of speech to trigger SPEECH_START
         min_silence_frames: int = 3,  # ~96ms of silence to trigger SPEECH_END
     ):
-        self.threshold = threshold
+        import os
+        
+        # Read from environment or use defaults
+        env_threshold = float(os.getenv("PEARL_VAD_THRESHOLD", "0.5"))
+        self.threshold = threshold if threshold is not None else env_threshold
+        
+        env_min_speech_ms = int(os.getenv("PEARL_MIN_SPEECH_MS", "64"))
+        env_min_speech_frames = max(1, env_min_speech_ms // 32) # 32ms per frame
+        self.min_speech_frames = min_speech_frames if min_speech_frames is not None else env_min_speech_frames
+
         self.sample_rate = sample_rate
-        self.min_speech_frames = min_speech_frames
         self.min_silence_frames = min_silence_frames
 
         self._model = None

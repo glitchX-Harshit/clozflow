@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Camera, Check, Loader2 } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
 
 const API = window.APP_API_BASE;
 
@@ -69,23 +70,16 @@ const TextArea = ({ value, onChange, placeholder, rows = 3 }) => (
 );
 
 const Select = ({ value, onChange, options }) => (
-    <div style={{ position: 'relative', width: '100%' }}>
-        <select
+    <div style={{ position: 'relative', width: '100%', maxWidth: '360px' }}>
+        <CustomDropdown
             value={value || ''}
-            onChange={onChange}
-            style={{
-                width: '100%', boxSizing: 'border-box',
-                background: 'transparent', border: 'none', borderBottom: '1px solid var(--border)',
-                borderRadius: 0, padding: '0.75rem 0',
-                fontSize: '0.95rem', color: 'var(--text)', outline: 'none',
-                fontFamily: 'inherit', cursor: 'pointer', appearance: 'none'
+            onChange={(val) => {
+                if (typeof onChange === 'function') {
+                    onChange({ target: { value: val } });
+                }
             }}
-        >
-            {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-        <div style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            ▼
-        </div>
+            options={options || []}
+        />
     </div>
 );
 

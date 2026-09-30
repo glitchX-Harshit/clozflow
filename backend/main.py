@@ -17,9 +17,9 @@ from routers import user as user_router
 from routers import leads as leads_router
 from routers import outreach as outreach_router
 from routers import copilot as copilot_router
-from routers import pearl as pearl_router
 from routers import capsules as capsules_router
 from routers import relay as relay_router
+from routers import pearl as pearl_router
 from routers.auth import get_current_user
 from models import User
 from fastapi import Depends
@@ -31,6 +31,12 @@ Base.metadata.create_all(bind=engine)
 # Load environment variables
 load_dotenv()
 
+# Check required provider keys for Pearl
+required_keys = ["ELEVEN_LABS_API_KEY", "EXOTEL_API_KEY", "EXOTEL_ACCOUNT_SID"]
+for key in required_keys:
+    if not os.getenv(key) and not os.getenv(key.replace("_", "")):
+        print(f"WARNING: Pearl dependency {key} is missing from environment.")
+
 # [DEBUG LOG] Check if Gemini key was found in .env
 print("Gemini API key loaded:", bool(os.getenv("GEMINI_API_KEY")))
 
@@ -41,25 +47,7 @@ async def lifespan(app):
     from services.vad_engine import SileroVADEngine
     await SileroVADEngine.warmup()
     
-    # Start nightly report scheduler
-    async def _nightly_report_loop():
-        from services.pearl_report_service import run_nightly_reports
-        while True:
-            now = datetime.now()
-            # Calculate seconds until 11 PM tonight
-            target = now.replace(hour=23, minute=0, second=0, microsecond=0)
-            if now >= target:
-                target += timedelta(days=1)
-            wait_seconds = (target - now).total_seconds()
-            await asyncio.sleep(wait_seconds)
-            try:
-                await run_nightly_reports()
-            except Exception as e:
-                print(f"Nightly report error: {e}")
-    
-    report_task = asyncio.create_task(_nightly_report_loop())
     yield
-    report_task.cancel()
 
 app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
 

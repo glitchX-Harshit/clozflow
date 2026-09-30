@@ -112,68 +112,9 @@ class CopilotSession(Base):
     user = relationship("User")
     lead = relationship("Lead")
 
-class Mission(Base):
-    __tablename__ = "missions"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    status = Column(String, default="pending")  # pending, planning, running, paused, completed, failed
-    mission_input = Column(Text)  # Raw user prompt
-    industry = Column(String, nullable=True)
-    location = Column(String, nullable=True)
-    quantity = Column(Integer, nullable=True)
-    filters = Column(String, nullable=True)
-    outreach_channel = Column(String, default="WhatsApp + Email")
-    daily_limit = Column(Integer, default=50)
-    working_hours = Column(String, default="9:00 AM - 6:00 PM")
-    approval_mode = Column(String, default="Auto-approve qualified leads")
-    safety_rules = Column(String, default="No follow-up after rejection")
-    # Progress tracking
-    current_stage = Column(String, default="planning")
-    current_stage_index = Column(Integer, default=0)
-    stage_progress = Column(Integer, default=0)  # 0-100 within current stage
-    # Metrics
-    leads_found = Column(Integer, default=0)
-    leads_qualified = Column(Integer, default=0)
-    messages_sent = Column(Integer, default=0)
-    replies_received = Column(Integer, default=0)
-    meetings_booked = Column(Integer, default=0)
-    # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    started_at = Column(DateTime, nullable=True)
-    completed_at = Column(DateTime, nullable=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    user = relationship("User")
-
-
-class MissionActivity(Base):
-    __tablename__ = "mission_activities"
-    id = Column(Integer, primary_key=True, index=True)
-    mission_id = Column(Integer, ForeignKey("missions.id"))
-    text = Column(Text)
-    activity_type = Column(String, default="default")  # default, success, warning, accent
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    mission = relationship("Mission")
-
-
-class PearlReport(Base):
-    __tablename__ = "pearl_reports"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    report_date = Column(DateTime)
-    missions_active = Column(Integer, default=0)
-    leads_found = Column(Integer, default=0)
-    leads_contacted = Column(Integer, default=0)
-    replies_received = Column(Integer, default=0)
-    follow_ups_sent = Column(Integer, default=0)
-    meetings_booked = Column(Integer, default=0)
-    report_html = Column(Text, nullable=True)
-    email_sent = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    user = relationship("User")
-
 
 # ── Import Relay models so Base.metadata.create_all() picks them up ──────────
 from models_relay import Relay, RelayAvailabilitySlot, RelayBooking, RelayQuestion
+
+# ── Import Pearl models so Base.metadata.create_all() picks them up ──────────
+from models_pearl import PearlAgent, PearlCall, PearlEvent
