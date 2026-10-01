@@ -1084,34 +1084,24 @@ const Pearl = () => {
             {/* Voice Actor Selector */}
             <div className="pearl-field">
               <label>Vocal Persona</label>
-              <div className="pearl-speaker-cards">
-                <div 
-                  className={`speaker-card ${voiceSpeaker === 'ritu' ? 'active' : ''}`}
-                  onClick={() => setVoiceSpeaker('ritu')}
+              <div className="pearl-input-wrap">
+                <Mic size={16} className="input-icon" />
+                <select 
+                  className="pearl-select"
+                  value={voiceSpeaker} 
+                  onChange={e => setVoiceSpeaker(e.target.value)}
                 >
-                  <div className="speaker-avatar">
-                    <Mic size={15} />
-                  </div>
-                  <div className="speaker-info">
-                    <strong>Ritu</strong>
-                    <span>Energetic Enterprise Sales Specialist</span>
-                  </div>
-                  <CheckCircle2 size={16} className="speaker-check" />
-                </div>
-
-                <div 
-                  className={`speaker-card ${voiceSpeaker === 'arjun' ? 'active' : ''}`}
-                  onClick={() => setVoiceSpeaker('arjun')}
-                >
-                  <div className="speaker-avatar">
-                    <Mic size={15} />
-                  </div>
-                  <div className="speaker-info">
-                    <strong>Arjun</strong>
-                    <span>Authoritative Account Executive</span>
-                  </div>
-                  <CheckCircle2 size={16} className="speaker-check" />
-                </div>
+                  {[
+                    'aditya', 'ritu', 'ashutosh', 'priya', 'neha', 'rahul', 'pooja', 
+                    'rohan', 'simran', 'kavya', 'amit', 'dev', 'ishita', 'shreya', 
+                    'ratan', 'varun', 'manan', 'sumit', 'roopa', 'kabir', 'aayan', 
+                    'shubh', 'advait', 'anand', 'tanya', 'tarun', 'sunny', 'mani', 
+                    'gokul', 'vijay', 'shruti', 'suhani', 'mohit', 'kavitha', 'rehan', 
+                    'soham', 'rupali'
+                  ].map(voice => (
+                    <option key={voice} value={voice}>{voice.charAt(0).toUpperCase() + voice.slice(1)}</option>
+                  ))}
+                </select>
               </div>
             </div>
 

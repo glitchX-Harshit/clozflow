@@ -113,7 +113,7 @@ class SarvamTTSProvider(TTSProvider):
             self.ws = None
             raise
 
-    async def configure(self, language_code: str = "hi-IN", speaker: str = "priya", pace: float = 1.0, temperature: float = 0.6):
+    async def configure(self, language_code: str = "hi-IN", speaker = "shubh", pace: float = 1.0, temperature: float = 0.6):
         if not self.ws:
             return
             
