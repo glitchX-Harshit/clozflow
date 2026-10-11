@@ -3,7 +3,8 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 import os
-SQLALCHEMY_DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./hexagon.db")
+_default_db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "hexagon.db"))
+SQLALCHEMY_DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{_default_db_path}")
 
 # Render/Supabase may provide postgres:// but SQLAlchemy 1.4+ requires postgresql://
 if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):

@@ -94,7 +94,11 @@ const Navbar = ({ onSignup, onLogin }) => {
                 <div className="nb__inner">
                     {/* Logo & Tagline */}
                     <a href="/" className="nb__logo" aria-label="Clozflow homepage">
-                        <ClozFlowLogo size={30} />
+                        <img 
+                            src="/clozflow_gradient_logo.png" 
+                            alt="Clozflow" 
+                            className="nb__logo-img" 
+                        />
                     </a>
 
                     {/* Center Navigation Links - Swiss Typography */}

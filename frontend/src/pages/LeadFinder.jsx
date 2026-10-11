@@ -33,6 +33,8 @@ import {
     Clock,
 } from 'lucide-react';
 import { useLeadFinderStore } from '../store/useLeadFinderStore';
+import { useLeadIntelligenceStore } from '../store/useLeadIntelligenceStore';
+import LeadIntelligencePanel from '../components/LeadIntelligencePanel';
 import MagButton from '../components/MagButton';
 import CopilotStatus from '../components/CopilotStatus';
 import { gsap } from 'gsap';
@@ -542,6 +544,22 @@ const LeadFinder = ({ onOutreach }) => {
     const deepLeadsRef = useRef([]);
     const [deepSearchEnabled, setDeepSearchEnabled] = useState(false);
     const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
+
+    // ── Intelligence Panel: listen for search commands from the AI panel ──────
+    const { setPanelState: setIntelPanelState } = useLeadIntelligenceStore();
+
+    useEffect(() => {
+        const handleLISearch = (e) => {
+            const { query: newQuery } = e.detail || {};
+            if (newQuery) {
+                setQuery(newQuery);
+                // Small delay so store updates propagate first
+                setTimeout(() => handleSearch(newQuery), 50);
+            }
+        };
+        window.addEventListener('li:execute-search', handleLISearch);
+        return () => window.removeEventListener('li:execute-search', handleLISearch);
+    }, []);
 
     // Sync selected lead when viewMode, leads, or savedLeads change
     useEffect(() => {
@@ -1561,13 +1579,19 @@ const LeadFinder = ({ onOutreach }) => {
                 </div>
             )}
 
-            {/* ── Toast ── */}
             {toast && (
                 <div className="lf__toast">
                     {toast.icon === '✓' ? <CheckCircle2 size={14} color="#22c55e" /> : <span style={{fontSize: '0.8rem'}}>{toast.icon}</span>}
                     <span>{toast.msg}</span>
                 </div>
             )}
+
+            {/* ── Lead Intelligence Panel — AI intelligence layer ── */}
+            <LeadIntelligencePanel
+                selectedLead={selectedLead}
+                onStartCall={handleStartCall}
+                onOutreach={handleOutreach}
+            />
         </div>
     );
 };

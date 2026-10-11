@@ -1146,3 +1146,48 @@ async def exotel_webhook(request: Request, db: Session = Depends(get_db)):
     return {"ok": True}
 
 
+
+
+class VoicePreviewRequest(BaseModel):
+    speaker: str
+    text: str = "Hello, I am ready to help you discover and qualify prospects."
+
+@router.post("/preview_voice")
+async def preview_voice(req: VoicePreviewRequest, current_user = Depends(get_current_user)):
+    """Generate a quick TTS preview for the frontend UI using Sarvam."""
+    import os
+    import requests
+    from fastapi.responses import JSONResponse
+
+    api_key = os.getenv("SARVAM_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="SARVAM_API_KEY missing")
+
+    url = "https://api.sarvam.ai/text-to-speech"
+    headers = {
+        "api-subscription-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "inputs": [req.text],
+        "target_language_code": "hi-IN",
+        "speaker": req.speaker,
+        "pitch": 0,
+        "pace": 1.0,
+        "loudness": 1.5,
+        "speech_sample_rate": 8000,
+        "enable_preprocessing": True,
+        "model": "bulbul:v1"
+    }
+    
+    try:
+        resp = requests.post(url, json=payload, headers=headers)
+        resp.raise_for_status()
+        data = resp.json()
+        if "audios" in data and len(data["audios"]) > 0:
+            return {"audio_base64": data["audios"][0]}
+        raise HTTPException(status_code=500, detail="No audio returned from Sarvam")
+    except Exception as e:
+        print(f"Sarvam preview error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+

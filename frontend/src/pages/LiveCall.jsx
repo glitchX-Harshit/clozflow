@@ -233,7 +233,11 @@ const LiveCall = () => {
             {/* ── SIDEBAR */}
             <aside className="db-sidebar">
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <ClozFlowLogo size={28} />
+                    <img 
+                        src="/clozflow_gradient_logo.png" 
+                        alt="Clozflow" 
+                        style={{ height: '30px', width: 'auto', objectFit: 'contain', display: 'block' }} 
+                    />
                 </div>
 
                 <nav className="db-nav">

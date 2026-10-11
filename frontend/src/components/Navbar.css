@@ -34,13 +34,20 @@
   justify-content: space-between;
 }
 
-/* ── Logo ── */
 .nb__logo {
   display: flex;
   align-items: center;
   text-decoration: none;
   cursor: pointer;
   transition: opacity 0.25s ease;
+}
+
+.nb__logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  user-select: none;
 }
 
 .nb__logo:hover {

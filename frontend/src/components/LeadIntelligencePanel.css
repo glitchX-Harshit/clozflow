@@ -1,0 +1,928 @@
+/* ══════════════════════════════════════════════════════════════════
+   LEAD INTELLIGENCE PANEL — Premium Side Panel Styles
+   ClozFlow.ai — Restrained, Calm, Intelligence-grade Design
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Toggle Button (floats right of main content) ────────────────── */
+.li-toggle-btn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+    padding: 0.85rem 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.06);
+}
+
+.li-toggle-btn:hover {
+    background: var(--surface-2);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.08);
+}
+
+.li-toggle-btn.panel-open {
+    right: 360px;
+}
+
+.li-toggle-icon {
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.li-toggle-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+    transform: rotate(180deg);
+    white-space: nowrap;
+}
+
+.li-toggle-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+    flex-shrink: 0;
+}
+
+/* ── Panel Overlay / Backdrop ─────────────────────────────────────── */
+.li-panel-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: transparent;
+    pointer-events: none;
+}
+
+.li-panel-backdrop.is-open {
+    pointer-events: auto;
+}
+
+/* ── Main Panel Container ─────────────────────────────────────────── */
+.li-panel {
+    position: fixed;
+    right: -380px;
+    top: 0;
+    bottom: 0;
+    width: 360px;
+    z-index: 850;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: -8px 0 40px rgba(0, 0, 0, 0.06);
+    transition: right 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.li-panel.is-open {
+    right: 0;
+}
+
+/* ── Panel Header ─────────────────────────────────────────────────── */
+.li-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem 0.875rem;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--surface);
+}
+
+.li-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.li-header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+}
+
+.li-header-glyph {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.li-header-sub {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.li-header-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+}
+
+.li-header-close:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--text-dim);
+}
+
+/* ── Panel Body ───────────────────────────────────────────────────── */
+.li-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.li-body::-webkit-scrollbar {
+    width: 4px;
+}
+.li-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.li-body::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+/* ── Empty State (State A) ────────────────────────────────────────── */
+.li-empty {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+    animation: li-fade-in 0.3s ease forwards;
+}
+
+.li-empty-question {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+}
+
+.li-empty-headline {
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    margin: 0;
+}
+
+.li-empty-support {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ── Offer Input Area ─────────────────────────────────────────────── */
+.li-offer-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.li-offer-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    font-family: var(--font-body, inherit);
+    line-height: 1.55;
+    resize: none;
+    outline: none;
+    transition: border-color 0.18s ease;
+    box-sizing: border-box;
+}
+
+.li-offer-textarea::placeholder {
+    color: var(--text-dim);
+    opacity: 0.7;
+}
+
+.li-offer-textarea:focus {
+    border-color: var(--text-dim);
+    background: var(--surface);
+}
+
+.li-discover-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--text);
+    color: var(--text-inv);
+    border: none;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.li-discover-btn:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.li-discover-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ── Suggested Prompts ────────────────────────────────────────────── */
+.li-suggestions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.li-suggestions-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+}
+
+.li-suggestion-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.775rem;
+    color: var(--text-dim);
+    font-family: var(--font-body, inherit);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    line-height: 1.4;
+}
+
+.li-suggestion-chip:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    border-color: var(--text-dim);
+}
+
+.li-suggestion-chip-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0.4;
+    transition: opacity 0.18s, transform 0.18s;
+}
+
+.li-suggestion-chip:hover .li-suggestion-chip-arrow {
+    opacity: 0.8;
+    transform: translateX(2px);
+}
+
+/* ── Loading State (State B) ──────────────────────────────────────── */
+.li-loading {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0.5rem 0;
+    animation: li-fade-in 0.3s ease forwards;
+}
+
+.li-loading-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.825rem;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.li-loading-dots {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.li-loading-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    animation: li-dot-pulse 1.2s ease-in-out infinite;
+}
+
+.li-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.li-loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes li-dot-pulse {
+    0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+    40% { opacity: 1; transform: scale(1); }
+}
+
+.li-loading-bar-wrap {
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.li-loading-bar {
+    height: 100%;
+    background: var(--text);
+    border-radius: 2px;
+    animation: li-loading-sweep 1.8s ease-in-out infinite;
+}
+
+@keyframes li-loading-sweep {
+    0% { width: 0%; margin-left: 0; }
+    50% { width: 60%; margin-left: 20%; }
+    100% { width: 0%; margin-left: 100%; }
+}
+
+/* ── ICP Card (State C) ───────────────────────────────────────────── */
+.li-icp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    animation: li-fade-in 0.35s ease forwards;
+}
+
+.li-icp-product-label {
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+}
+
+.li-icp-product-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 0.2rem;
+}
+
+.li-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0;
+}
+
+.li-icp-section-label {
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+    margin-bottom: 0.5rem;
+}
+
+.li-icp-primary {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.li-icp-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+}
+
+.li-icp-chip {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.25rem 0.6rem;
+    font-family: var(--font-body, inherit);
+}
+
+.li-icp-signals {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.4rem;
+}
+
+.li-icp-signal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.775rem;
+    color: var(--text-dim);
+    line-height: 1.4;
+}
+
+.li-icp-signal-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    flex-shrink: 0;
+    margin-top: 0.45rem;
+}
+
+/* ── ICP Confirm Actions ──────────────────────────────────────────── */
+.li-confirm-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+
+.li-confirm-question {
+    font-size: 0.775rem;
+    color: var(--text-dim);
+    margin-bottom: 0.6rem;
+}
+
+.li-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: none;
+    white-space: nowrap;
+}
+
+.li-btn--primary {
+    background: var(--text);
+    color: var(--text-inv);
+}
+
+.li-btn--primary:hover {
+    opacity: 0.85;
+}
+
+.li-btn--secondary {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+}
+
+.li-btn--secondary:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.li-btn--ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: none;
+    padding: 0.45rem 0.5rem;
+}
+
+.li-btn--ghost:hover {
+    color: var(--text);
+}
+
+/* ── Chat Input Area (Shared across states) ───────────────────────── */
+.li-chat-input-area {
+    border-top: 1px solid var(--border);
+    padding: 0.875rem 1.25rem;
+    background: var(--surface);
+    flex-shrink: 0;
+}
+
+.li-chat-input-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.65rem 0.75rem;
+    transition: border-color 0.18s ease;
+}
+
+.li-chat-input-wrap:focus-within {
+    border-color: var(--text-dim);
+}
+
+.li-chat-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.8rem;
+    color: var(--text);
+    font-family: var(--font-body, inherit);
+    resize: none;
+    max-height: 90px;
+    line-height: 1.45;
+    scrollbar-width: none;
+}
+
+.li-chat-input::placeholder {
+    color: var(--text-dim);
+    opacity: 0.6;
+}
+
+.li-chat-input::-webkit-scrollbar {
+    display: none;
+}
+
+.li-chat-send-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: var(--text);
+    color: var(--text-inv);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.18s ease;
+    flex-shrink: 0;
+}
+
+.li-chat-send-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.li-chat-send-btn:hover:not(:disabled) {
+    opacity: 0.8;
+}
+
+/* ── Chat Message Thread ──────────────────────────────────────────── */
+.li-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.li-message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    animation: li-fade-in 0.25s ease forwards;
+}
+
+.li-message-role {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+    padding: 0 0.1rem;
+}
+
+.li-message-content {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+.li-message--user .li-message-content {
+    background: var(--text);
+    color: var(--text-inv);
+    border-radius: 10px 10px 3px 10px;
+}
+
+.li-message--ai .li-message-content {
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 3px 10px 10px 10px;
+}
+
+/* ── Search Executed Confirmation ─────────────────────────────────── */
+.li-search-confirmation {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.725rem;
+    color: var(--text-dim);
+    padding: 0.5rem 0.75rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 0.25rem;
+}
+
+.li-search-confirmation-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+}
+
+/* ── State F — Active Search Context ─────────────────────────────── */
+.li-context-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    animation: li-fade-in 0.3s ease forwards;
+}
+
+.li-context-label {
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+}
+
+.li-context-query {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.li-context-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+/* ── State G — Lead Analysis ──────────────────────────────────────── */
+.li-lead-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: li-fade-in 0.3s ease forwards;
+}
+
+.li-lead-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+
+.li-why-headline {
+    font-size: 0.825rem;
+    color: var(--text);
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.li-why-signals {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.li-why-signal {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.775rem;
+    color: var(--text-dim);
+    line-height: 1.4;
+}
+
+.li-why-signal-plus {
+    color: #10b981;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    margin-top: 0.05rem;
+}
+
+.li-approach-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.775rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+}
+
+.li-approach-label {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+    margin-bottom: 0.35rem;
+}
+
+.li-data-note {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-style: italic;
+    opacity: 0.7;
+    line-height: 1.45;
+}
+
+/* ── Lead Quick Actions ───────────────────────────────────────────── */
+.li-lead-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.li-lead-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.875rem;
+    font-size: 0.775rem;
+    color: var(--text-dim);
+    font-family: var(--font-body, inherit);
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.li-lead-action-btn:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+/* ── Results Summary (State E) ────────────────────────────────────── */
+.li-results-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    animation: li-fade-in 0.3s ease forwards;
+}
+
+.li-results-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.li-results-stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    font-family: var(--font-display);
+    line-height: 1;
+}
+
+.li-results-stat-label {
+    font-size: 0.725rem;
+    color: var(--text-dim);
+    font-weight: 500;
+}
+
+.li-results-meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.li-results-meta-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.625rem 0.75rem;
+}
+
+.li-results-meta-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+}
+
+.li-results-meta-label {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    margin-top: 0.1rem;
+}
+
+/* ── ICP Reset Prompt ─────────────────────────────────────────────── */
+.li-icp-reset-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.li-icp-reset-btn {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: var(--font-body, inherit);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: all 0.18s ease;
+}
+
+.li-icp-reset-btn:hover {
+    color: var(--text);
+    text-decoration-color: currentColor;
+}
+
+/* ── General Utilities ────────────────────────────────────────────── */
+@keyframes li-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .li-panel {
+        width: 100vw;
+        right: -100vw;
+    }
+
+    .li-panel.is-open {
+        right: 0;
+    }
+
+    .li-toggle-btn.panel-open {
+        right: auto;
+        display: none;
+    }
+}
+
+@media (max-width: 1200px) {
+    .li-panel {
+        width: 320px;
+    }
+
+    .li-toggle-btn.panel-open {
+        right: 320px;
+    }
+}

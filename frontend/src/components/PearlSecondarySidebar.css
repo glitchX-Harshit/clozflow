@@ -1,0 +1,225 @@
+/* ══════════════════════════════════════════════════
+   PEARL SECONDARY SIDEBAR — EDITORIAL MINIMAL CRAFT
+   Matches the reference screenshot with pure precision
+   ══════════════════════════════════════════════════ */
+
+.pearl-sec-sidebar {
+  position: fixed;
+  top: 0;
+  left: 72px; /* Flush next to collapsed 72px primary sidebar */
+  bottom: 0;
+  width: 236px;
+  height: 100vh;
+  background: var(--surface, #ffffff);
+  border-right: 1px solid var(--border, #f0f0f2);
+  display: flex;
+  flex-direction: column;
+  z-index: 90;
+  padding: 1.25rem 0.75rem 1rem 0.75rem;
+  box-sizing: border-box;
+  user-select: none;
+  overflow: hidden;
+  font-family: var(--font-body, 'Outfit', 'Inter', -apple-system, sans-serif);
+}
+
+/* ── Top Header Row ── */
+.pearl-sec-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.65rem 1rem 0.65rem;
+  margin-bottom: 0.2rem;
+  user-select: none;
+}
+
+.pearl-sec-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #09090b;
+  letter-spacing: -0.01em;
+}
+
+.pearl-sec-dock-btn {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.pearl-sec-dock-btn:hover {
+  color: #09090b;
+  background: #f4f4f5;
+}
+
+/* ── Navigation List ── */
+.pearl-sec-nav {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-right: 0.15rem;
+}
+
+.pearl-sec-nav::-webkit-scrollbar {
+  width: 3px;
+}
+
+.pearl-sec-nav::-webkit-scrollbar-thumb {
+  background: #e4e4e7;
+  border-radius: 4px;
+}
+
+.pearl-sec-single-wrap {
+  padding-bottom: 0.4rem;
+}
+
+/* Home button */
+.pearl-sec-home-btn {
+  background: transparent;
+  color: var(--text, #18181b);
+}
+
+.pearl-sec-home-btn.active {
+  background: var(--surface-2, #f4f4f5) !important;
+  color: var(--text, #09090b) !important;
+}
+
+/* Section Group */
+.pearl-sec-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pearl-sec-group-title {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-dim, #71717a);
+  padding: 0.75rem 0.75rem 0.25rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.pearl-sec-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pearl-sec-divider {
+  margin: 1.25rem 0.5rem 0.5rem;
+  border-top: 1px solid var(--border, #f4f4f5);
+}
+
+/* ── Nav Button ── */
+.pearl-sec-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.48rem 0.75rem;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text, #27272a);
+  font-size: 0.84rem;
+  font-weight: 450;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s ease, color 0.15s ease;
+  position: relative;
+  font-family: inherit;
+}
+
+.pearl-sec-btn:hover {
+  background: var(--surface-2, #f4f4f5);
+  color: var(--text, #09090b);
+}
+
+.pearl-sec-btn.active {
+  background: var(--surface-2, #f4f4f5);
+  color: var(--text, #09090b);
+  font-weight: 550;
+}
+
+.pearl-sec-btn-icon {
+  flex-shrink: 0;
+  color: var(--text, #27272a);
+  transition: color 0.15s ease;
+}
+
+.pearl-sec-btn:hover .pearl-sec-btn-icon,
+.pearl-sec-btn.active .pearl-sec-btn-icon {
+  color: var(--text, #09090b);
+}
+
+.pearl-sec-btn-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pearl-sec-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Mobile Responsive Adaptation ── */
+@media (max-width: 640px) {
+  .pearl-sec-sidebar {
+    position: relative;
+    top: auto;
+    left: 0;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border, #e4e4e7);
+    padding: 0.65rem 0.5rem;
+    z-index: 10;
+  }
+  .pearl-sec-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 0.4rem;
+    padding-bottom: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pearl-sec-group-title {
+    display: none;
+  }
+  .pearl-sec-divider {
+    display: none;
+  }
+  .pearl-sec-single-wrap {
+    padding-bottom: 0;
+  }
+  .pearl-sec-group {
+    flex-direction: row;
+    gap: 0.4rem;
+  }
+  .pearl-sec-group-items {
+    flex-direction: row;
+    gap: 0.4rem;
+  }
+  .pearl-sec-btn {
+    white-space: nowrap;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
+    width: auto;
+    flex-shrink: 0;
+  }
+}

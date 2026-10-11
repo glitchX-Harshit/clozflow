@@ -27,6 +27,22 @@ const OutreachStudioPage = React.lazy(() => import('./pages/OutreachStudioPage')
 const RelayPublic = React.lazy(() => import('./pages/RelayPublic'));
 const HowItWorksPage = React.lazy(() => import('./pages/HowItWorksPage'));
 
+// ── Admin Intelligence Module ──
+const AdminProtectedRoute = React.lazy(() => import('./admin/components/AdminProtectedRoute'));
+const AdminLayout = React.lazy(() => import('./admin/components/AdminLayout'));
+const AdminOverview = React.lazy(() => import('./admin/pages/AdminOverview'));
+const AdminUsers = React.lazy(() => import('./admin/pages/AdminUsers'));
+const AdminUserDetail = React.lazy(() => import('./admin/pages/AdminUserDetail'));
+const AdminSubscriptions = React.lazy(() => import('./admin/pages/AdminSubscriptions'));
+const AdminOrders = React.lazy(() => import('./admin/pages/AdminOrders'));
+const AdminPayments = React.lazy(() => import('./admin/pages/AdminPayments'));
+const AdminRevenue = React.lazy(() => import('./admin/pages/AdminRevenue'));
+const AdminUsage = React.lazy(() => import('./admin/pages/AdminUsage'));
+const AdminPearl = React.lazy(() => import('./admin/pages/AdminPearl'));
+const AdminRetention = React.lazy(() => import('./admin/pages/AdminRetention'));
+const AdminAuditLogs = React.lazy(() => import('./admin/pages/AdminAuditLogs'));
+const AdminSettings = React.lazy(() => import('./admin/pages/AdminSettings'));
+
 function LandingPage() {
     const navigate = useNavigate();
     return (
@@ -88,6 +104,29 @@ function App() {
                         {/* Public Relay page — NO auth required (buyer-facing) */}
                         <Route path="/relay/:slug" element={<Suspense fallback={null}><RelayPublic /></Suspense>} />
                         <Route path="/how-it-works" element={<Suspense fallback={null}><HowItWorksPage /></Suspense>} />
+
+                        {/* Admin Intelligence Protected Portal */}
+                        <Route path="/admin" element={
+                            <Suspense fallback={null}>
+                                <AdminProtectedRoute>
+                                    <AdminLayout />
+                                </AdminProtectedRoute>
+                            </Suspense>
+                        }>
+                            <Route index element={<Suspense fallback={null}><AdminOverview /></Suspense>} />
+                            <Route path="users" element={<Suspense fallback={null}><AdminUsers /></Suspense>} />
+                            <Route path="users/:id" element={<Suspense fallback={null}><AdminUserDetail /></Suspense>} />
+                            <Route path="subscriptions" element={<Suspense fallback={null}><AdminSubscriptions /></Suspense>} />
+                            <Route path="orders" element={<Suspense fallback={null}><AdminOrders /></Suspense>} />
+                            <Route path="payments" element={<Suspense fallback={null}><AdminPayments /></Suspense>} />
+                            <Route path="revenue" element={<Suspense fallback={null}><AdminRevenue /></Suspense>} />
+                            <Route path="usage" element={<Suspense fallback={null}><AdminUsage /></Suspense>} />
+                            <Route path="pearl" element={<Suspense fallback={null}><AdminPearl /></Suspense>} />
+                            <Route path="retention" element={<Suspense fallback={null}><AdminRetention /></Suspense>} />
+                            <Route path="audit-logs" element={<Suspense fallback={null}><AdminAuditLogs /></Suspense>} />
+                            <Route path="settings" element={<Suspense fallback={null}><AdminSettings /></Suspense>} />
+                        </Route>
+
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>

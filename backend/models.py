@@ -36,6 +36,12 @@ class User(Base):
     notif_deal_risk         = Column(Boolean, default=True)
     notif_coaching          = Column(Boolean, default=True)
 
+    # ── Admin & Status ──────────────────────────────
+    is_admin        = Column(Boolean, default=False, index=True)
+    admin_role      = Column(String, default="user", index=True)      # user | admin | super_admin | analyst
+    account_status  = Column(String, default="active", index=True)    # active | suspended | deactivated
+    credit_balance  = Column(Integer, default=0)                      # PAYG credits
+
     call_logs = relationship("CallLog", back_populates="user")
     capsules  = relationship("Capsule", back_populates="user")
 
@@ -118,3 +124,14 @@ from models_relay import Relay, RelayAvailabilitySlot, RelayBooking, RelayQuesti
 
 # ── Import Pearl models so Base.metadata.create_all() picks them up ──────────
 from models_pearl import PearlAgent, PearlCall, PearlEvent
+
+# ── Import Admin models so Base.metadata.create_all() picks them up ──────────
+from admin.models import (
+    AdminAuditLog,
+    ActivityEvent,
+    Subscription,
+    Order,
+    Payment,
+    PaymentWebhookEvent,
+    CreditTransaction,
+)

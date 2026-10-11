@@ -34,9 +34,12 @@ import OutreachStudioPage from './OutreachStudioPage';
 import { gsap } from 'gsap';
 import ClozFlowLogo from '../components/ClozFlowLogo';
 import Pearl from './Pearl';
+import PearlSecondarySidebar from '../components/PearlSecondarySidebar';
+import PearlSubSectionView from './pearl/PearlSubSectionView';
 import RelayDashboard from './RelayDashboard';
 import RelayBuilder from './RelayBuilder';
 import './DashboardOverview.css';
+import pearlLogo from '../assets/pearl-logo.png';
 
 
 const getModuleIcon = (id) => {
@@ -193,6 +196,63 @@ const Dashboard = () => {
     };
 
     const indicatorRef = useRef(null);
+    const sidebarRef = useRef(null);
+    const [sidebarHovered, setSidebarHovered] = useState(false);
+    const [pearlSubTab, setPearlSubTab] = useState('agents');
+
+    // GSAP hover expand/collapse for primary menu bar
+    const handleSidebarMouseEnter = () => {
+        setSidebarHovered(true);
+        if (sidebarRef.current) {
+            gsap.killTweensOf(sidebarRef.current);
+            gsap.to(sidebarRef.current, {
+                width: 240,
+                duration: 0.28,
+                ease: 'power3.out',
+                boxShadow: '10px 0 35px -5px rgba(0, 0, 0, 0.08)'
+            });
+            gsap.to('.db-sidebar .db-nav-label, .db-sidebar .db-user-details, .db-sidebar .db-logout-label, .db-sidebar .db-sidebar-logo-text', {
+                opacity: 1,
+                x: 0,
+                duration: 0.22,
+                stagger: 0.015,
+                ease: 'power2.out',
+                overwrite: 'auto'
+            });
+            gsap.to('.db-sidebar .db-sidebar-mark', {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.15,
+                ease: 'power2.out'
+            });
+        }
+    };
+
+    const handleSidebarMouseLeave = () => {
+        setSidebarHovered(false);
+        if (sidebarRef.current) {
+            gsap.killTweensOf(sidebarRef.current);
+            gsap.to(sidebarRef.current, {
+                width: 72,
+                duration: 0.25,
+                ease: 'power3.out',
+                boxShadow: 'none'
+            });
+            gsap.to('.db-sidebar .db-nav-label, .db-sidebar .db-user-details, .db-sidebar .db-logout-label, .db-sidebar .db-sidebar-logo-text', {
+                opacity: 0,
+                x: -8,
+                duration: 0.16,
+                ease: 'power2.in',
+                overwrite: 'auto'
+            });
+            gsap.to('.db-sidebar .db-sidebar-mark', {
+                opacity: 1,
+                scale: 1,
+                duration: 0.2,
+                ease: 'power2.out'
+            });
+        }
+    };
 
     // Awwwards elastic/rotational entrance animation
     useEffect(() => {
@@ -236,8 +296,8 @@ const Dashboard = () => {
             gsap.to(indicatorRef.current, {
                 top: relativeTop,
                 height: rect.height,
-                duration: 0.45,
-                ease: 'back.out(1.1)' // Elastic snap
+                duration: 0.35,
+                ease: 'power2.out'
             });
 
             // Dynamically manage pearl class on indicator
@@ -247,7 +307,7 @@ const Dashboard = () => {
                 indicatorRef.current.classList.remove('pearl-active');
             }
         }
-    }, [activeTab]);
+    }, [activeTab, sidebarHovered]);
 
 
 
@@ -299,10 +359,24 @@ const Dashboard = () => {
 
     return (
         <div className="db-layout">
-            {/* Sidebar — desktop only */}
-            <aside className="db-sidebar">
+            {/* Sidebar — desktop only with GSAP hover expansion */}
+            <aside 
+                className={`db-sidebar ${sidebarHovered ? 'expanded' : ''}`}
+                ref={sidebarRef}
+                onMouseEnter={handleSidebarMouseEnter}
+                onMouseLeave={handleSidebarMouseLeave}
+            >
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <ClozFlowLogo size={32} />
+                    <div className="db-sidebar-mark">
+                        <span>C<span className="dot">.</span></span>
+                    </div>
+                    <div className="db-sidebar-logo-text">
+                        <img 
+                            src="/clozflow_gradient_logo.png" 
+                            alt="Clozflow" 
+                            style={{ height: '30px', width: 'auto', objectFit: 'contain', display: 'block' }} 
+                        />
+                    </div>
                 </div>
 
                 <nav className="db-nav" style={{ position: 'relative' }}>
@@ -317,10 +391,15 @@ const Dashboard = () => {
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
                                 className={`db-nav-item ${isActive ? 'active' : ''} ${item.id === 'pearl' ? 'db-nav-item-pearl' : ''}`}
+                                title={!sidebarHovered ? item.label : undefined}
                             >
-                                <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                                {item.id === 'pearl' ? (
+                                    <img src={pearlLogo} alt="Pearl" className="db-nav-icon pearl-logo-img" style={{ width: 18, height: 18, objectFit: 'contain' }} />
+                                ) : (
+                                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="db-nav-icon" />
+                                )}
                                 <span className="db-nav-label">{item.label}</span>
-                                {isActive && <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />}
+                                {isActive && sidebarHovered && <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />}
                             </button>
                         );
                     })}
@@ -339,14 +418,22 @@ const Dashboard = () => {
                             <span className="db-user-role">{user?.role || 'Closer Intelligence'}</span>
                         </div>
                     </div>
-                    <button onClick={handleLogout} className="db-logout-btn interactive">
-                        <LogOut size={14} /> <span className="db-logout-label">Log out</span>
+                    <button onClick={handleLogout} className="db-logout-btn interactive" title="Log out">
+                        <LogOut size={16} /> <span className="db-logout-label">Log out</span>
                     </button>
                 </div>
             </aside>
 
+            {/* Pearl Secondary Sidebar — Sits flush without margin right next to primary bar */}
+            {activeTab === 'pearl' && (
+                <PearlSecondarySidebar 
+                    activeSection={pearlSubTab} 
+                    onSelectSection={setPearlSubTab} 
+                />
+            )}
+
             {/* Main content */}
-            <main className="db-main">
+            <main className={`db-main ${activeTab === 'pearl' ? 'has-pearl-sec' : ''}`}>
                 {activeTab === 'overview'  && (
                     <OverviewTab 
                         user={user} 
@@ -380,7 +467,13 @@ const Dashboard = () => {
                         <RelayDashboard onOpenBuilder={(callId) => setRelayCallId(callId)} />
                     )
                 )}
-                {activeTab === 'pearl'     && <Pearl />}
+                {activeTab === 'pearl'     && (
+                    <PearlSubSectionView 
+                        section={pearlSubTab} 
+                        onNavigateSection={setPearlSubTab} 
+                        user={user}
+                    />
+                )}
                 {activeTab === 'analytics' && <AnalyticsPage />}
                 {activeTab === 'playbooks' && <PlaybooksPage />}
                 {activeTab === 'settings'  && <SettingsShell />}
@@ -401,7 +494,7 @@ const Dashboard = () => {
                     onClick={() => { setActiveTab('pearl'); setMenuOpen(false); }}
                     className={`db-bottom-tab ${activeTab === 'pearl' ? 'active' : ''} db-bottom-tab-pearl`}
                 >
-                    <Sparkle size={20} strokeWidth={activeTab === 'pearl' ? 2.5 : 1.75} />
+                    <img src={pearlLogo} alt="Pearl" style={{ width: 20, height: 20, objectFit: 'contain' }} />
                     <span>Pearl</span>
                 </button>
 
@@ -543,10 +636,9 @@ const Dashboard = () => {
                     background: var(--bg);
                 }
 
-                /* ── Premium Floating Sidebar ── */
+                /* ── Premium Collapsed/Expanded Sidebar ── */
                 .db-sidebar {
-                    width: 280px;
-                    min-width: 280px;
+                    width: 72px;
                     background: var(--surface);
                     border: none;
                     border-right: 1px solid var(--border);
@@ -557,22 +649,51 @@ const Dashboard = () => {
                     left: 0;
                     bottom: 0;
                     height: 100vh;
-                    z-index: 100;
-                    padding: 2.5rem 1.75rem;
+                    z-index: 120;
+                    padding: 1.5rem 0.65rem 1.25rem;
                     box-shadow: none;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                    will-change: width, box-shadow;
                 }
                 .db-sidebar-logo {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    padding: 0 0.5rem;
-                    margin-bottom: 2.5rem;
+                    padding: 0.2rem 0.35rem;
+                    margin-bottom: 2rem;
                     cursor: pointer;
+                    height: 40px;
+                    overflow: hidden;
+                    flex-shrink: 0;
                 }
-                .db-logo-text {
-                    font-size: 1.25rem;
+                .db-sidebar-mark {
+                    width: 38px;
+                    height: 38px;
+                    background: transparent;
+                    border: none;
+                    border-radius: 0;
+                    box-shadow: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: "Playfair Display", "DM Serif Display", serif;
+                    font-size: 1.35rem;
                     font-weight: 800;
-                    letter-spacing: -0.05em;
+                    color: var(--text, #0a0a0a);
+                    flex-shrink: 0;
+                    letter-spacing: -0.02em;
+                }
+                .db-sidebar-mark .dot {
+                    color: #E23E6E;
+                }
+                .db-sidebar-logo-text {
+                    opacity: 0;
+                    transform: translateX(-8px);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    pointer-events: none;
+                    flex-shrink: 0;
                 }
                 .db-nav {
                     display: flex;
@@ -584,17 +705,32 @@ const Dashboard = () => {
                     display: flex;
                     align-items: center;
                     gap: 0.85rem;
-                    padding: 0.8rem 1rem;
-                    border-radius: 12px;
+                    padding: 0.7rem 0.85rem;
+                    border-radius: 10px;
                     color: var(--text-dim);
                     border: 1px solid transparent;
                     background: transparent;
                     cursor: pointer;
-                    transition: color 0.25s, transform 0.25s;
                     text-align: left;
                     width: 100%;
                     position: relative;
                     z-index: 1;
+                    box-sizing: border-box;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                .db-nav-item .db-nav-icon {
+                    flex-shrink: 0;
+                    min-width: 18px;
+                }
+                .db-nav-label {
+                    font-size: 0.88rem;
+                    font-weight: 500;
+                    opacity: 0;
+                    transform: translateX(-8px);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    pointer-events: none;
                 }
                 .db-nav-item:hover { 
                     color: var(--text); 
@@ -619,7 +755,6 @@ const Dashboard = () => {
                     border: 1px solid rgba(226, 62, 110, 0.35) !important;
                     box-shadow: 0 0 20px rgba(226, 62, 110, 0.2), inset 0 0 8px rgba(142, 116, 226, 0.15) !important;
                 }
-                .db-nav-label { font-size: 0.9rem; font-weight: 500; }
                 .db-nav-item.active .db-nav-label { font-weight: 700; }
 
                 /* ── Pearl Custom Styles ── */
@@ -687,7 +822,7 @@ const Dashboard = () => {
                     inset: 1.5px;
                     background: var(--surface-2);
                 }
-                .db-nav-item-pearl svg {
+                .db-nav-item-pearl svg, .db-nav-item-pearl img {
                     color: #E23E6E !important;
                     filter: drop-shadow(0 0 3px rgba(226, 62, 110, 0.5));
                     animation: pearl-icon-float 3s ease-in-out infinite alternate;
@@ -695,6 +830,9 @@ const Dashboard = () => {
                 }
                 .db-nav-item-pearl:hover svg {
                     transform: rotate(180deg) scale(1.1);
+                }
+                .db-nav-item-pearl:hover img {
+                    transform: scale(1.15);
                 }
 
                 .db-bottom-tab-pearl {
@@ -722,7 +860,7 @@ const Dashboard = () => {
                     border-radius: 7px;
                     z-index: -1;
                 }
-                .db-bottom-tab-pearl svg {
+                .db-bottom-tab-pearl svg, .db-bottom-tab-pearl img {
                     color: #E23E6E !important;
                 }
                 .db-bottom-tab-pearl.active {
@@ -746,15 +884,18 @@ const Dashboard = () => {
 
                 .db-user-section {
                     margin-top: auto;
-                    padding-top: 1.5rem;
+                    padding-top: 1rem;
                     border-top: 1px solid var(--border);
+                    overflow: hidden;
+                    box-sizing: border-box;
                 }
                 .db-user-info {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
-                    margin-bottom: 1rem;
-                    padding: 0 0.25rem;
+                    margin-bottom: 0.75rem;
+                    padding: 0 0.2rem;
+                    overflow: hidden;
                 }
                 .db-user-avatar {
                     width: 36px; height: 36px;
@@ -762,12 +903,28 @@ const Dashboard = () => {
                     display: flex; align-items: center; justify-content: center;
                     font-weight: 800; font-size: 0.875rem; flex-shrink: 0;
                 }
-                .db-user-details { display: flex; flex-direction: column; min-width: 0; }
+                .db-user-details { 
+                    display: flex; 
+                    flex-direction: column; 
+                    min-width: 0;
+                    opacity: 0;
+                    transform: translateX(-8px);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    pointer-events: none;
+                }
                 .db-user-name {
                     font-size: 0.875rem; font-weight: 700;
                     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
                 }
                 .db-user-role { font-size: 0.72rem; color: var(--text-dim); }
+                .db-logout-label {
+                    opacity: 0;
+                    transform: translateX(-8px);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    pointer-events: none;
+                }
                 .db-logout-btn {
                     display: flex;
                     align-items: center;
@@ -777,7 +934,7 @@ const Dashboard = () => {
                     background: transparent;
                     border: 1px solid var(--border);
                     color: var(--text-dim);
-                    padding: 0.65rem;
+                    padding: 0.65rem 0.5rem;
                     border-radius: 10px;
                     font-size: 0.78rem;
                     font-weight: 700;
@@ -787,6 +944,7 @@ const Dashboard = () => {
                     position: relative;
                     overflow: hidden;
                     isolation: isolate;
+                    white-space: nowrap;
                     transition: 
                         color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                         border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -835,8 +993,13 @@ const Dashboard = () => {
                     padding: 3rem 4.5rem;
                     min-width: 0;
                     background: transparent;
-                    margin-left: 280px; /* Sits flush next to sidebar */
+                    margin-left: 72px; /* Sits flush next to 72px collapsed primary bar */
                     min-height: 100vh;
+                    transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                .db-main.has-pearl-sec {
+                    margin-left: 308px; /* 72px (primary bar) + 236px (secondary sidebar) = 308px flush */
+                    padding: 0;
                 }
 
                 /* ── Bottom nav — hidden on desktop ── */
@@ -1176,9 +1339,9 @@ const Dashboard = () => {
                 /* ── 1024px — icon-only sidebar ── */
                 @media (max-width: 1024px) {
                     .db-sidebar {
-                        width: 76px;
-                        min-width: 76px;
-                        padding: 2rem 0.5rem;
+                        width: 72px;
+                        min-width: 72px;
+                        padding: 1.5rem 0.5rem;
                         left: 0;
                         top: 0;
                         bottom: 0;
@@ -1196,7 +1359,8 @@ const Dashboard = () => {
                     .db-nav-item,
                     .db-user-info { justify-content: center; padding: 0.8rem; }
                     .db-nav-item:hover { transform: none; }
-                    .db-main { padding: 2rem 2.5rem; margin-left: 76px; }
+                    .db-main { padding: 2rem 2.5rem; margin-left: 72px; }
+                    .db-main.has-pearl-sec { margin-left: 308px; padding: 0; }
                     .db-header-grid { grid-template-columns: 1fr; gap: 2rem; }
                     .ov-stats-grid { grid-template-columns: repeat(2, 1fr); }
                     .ov-modules-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1214,6 +1378,10 @@ const Dashboard = () => {
                         margin-left: 0;
                         min-height: calc(100vh - 70px);
                         padding-bottom: 90px;
+                    }
+                    .db-main.has-pearl-sec {
+                        margin-left: 0;
+                        padding: 1.5rem 1rem 90px 1rem;
                     }
                     .db-bottom-nav {
                         display: flex;

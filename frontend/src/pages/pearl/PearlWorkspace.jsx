@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import './PearlWorkspace.css';
 import AgentEditor from './AgentEditor';
+import pearlLogo from '../../assets/pearl-logo.png';
 
 const NAV_SECTIONS = [
   {
@@ -53,7 +54,7 @@ const PearlWorkspace = () => {
       <aside className="pearl-sidebar">
         <div className="pearl-sidebar-header">
           <div className="pearl-brand-icon">
-            <Bot size={24} color="var(--accent)" />
+            <img src={pearlLogo} alt="Pearl Logo" style={{ width: 24, height: 24, objectFit: 'contain' }} />
           </div>
           <div className="pearl-brand-text">
             <h2>Pearl</h2>

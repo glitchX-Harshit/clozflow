@@ -20,6 +20,8 @@ from routers import copilot as copilot_router
 from routers import capsules as capsules_router
 from routers import relay as relay_router
 from routers import pearl as pearl_router
+from routers import intelligence as intelligence_router
+from admin.routes import router as admin_router
 from routers.auth import get_current_user
 from models import User
 from fastapi import Depends
@@ -63,6 +65,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(auth.router, prefix="/api")
 app.include_router(calls.router)
 app.include_router(user_router.router)
 app.include_router(leads_router.router)
@@ -71,6 +74,8 @@ app.include_router(copilot_router.router, prefix="/api/copilot", tags=["copilot"
 app.include_router(pearl_router.router)
 app.include_router(capsules_router.router)
 app.include_router(relay_router.router)
+app.include_router(intelligence_router.router)
+app.include_router(admin_router)
 
 # Serve uploaded avatars
 os.makedirs("static/avatars", exist_ok=True)
