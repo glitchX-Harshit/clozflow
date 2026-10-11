@@ -75,8 +75,8 @@ function LandingPage() {
 function App() {
     return (
         <AuthProvider>
-            <SmoothScroll />
             <BrowserRouter>
+                <SmoothScroll />
                 <div className="app-root">
                     <LiveCopilotPopup />
                     <Routes>

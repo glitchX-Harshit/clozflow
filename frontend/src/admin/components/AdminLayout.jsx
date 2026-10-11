@@ -14,9 +14,9 @@ import {
   Settings,
   ArrowUpRight,
   LogOut,
-  Calendar
+  Menu,
+  X
 } from 'lucide-react';
-import PeriodSelector from './PeriodSelector';
 import { adminApi } from '../services/adminApi';
 import '../styles/admin.css';
 
@@ -30,6 +30,7 @@ export const useAdminPeriod = () => useContext(AdminPeriodContext);
 export default function AdminLayout() {
   const [period, setPeriod] = useState('30d');
   const [adminUser, setAdminUser] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,6 +45,22 @@ export default function AdminLayout() {
     }
     loadAdminProfile();
   }, []);
+
+  // Auto-close mobile drawer when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Handle ESC key to close drawer
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -66,15 +83,63 @@ export default function AdminLayout() {
 
   return (
     <AdminPeriodContext.Provider value={{ period, setPeriod }}>
-      <div className="admin-root">
-        {/* Sidebar */}
-        <aside className="admin-sidebar">
+      <div className="admin-root" data-lenis-prevent="true">
+        {/* Mobile Header Bar (< 900px) */}
+        <header className="admin-mobile-topbar">
+          <button
+            type="button"
+            className="admin-mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(prev => !prev)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
+          <div className="admin-brand">
+            <span className="admin-logo-dot" />
+            <span className="admin-brand-title">Clozflow</span>
+            <span className="admin-brand-badge">Ops</span>
+          </div>
+
+          <div className="admin-mobile-actions">
+            {adminUser && (
+              <div className="admin-user-avatar" style={{ width: 28, height: 28, fontSize: 11 }}>
+                {adminUser.full_name ? adminUser.full_name.charAt(0).toUpperCase() : 'A'}
+              </div>
+            )}
+          </div>
+        </header>
+
+        {/* Backdrop Overlay for Mobile Drawer */}
+        {mobileMenuOpen && (
+          <div
+            className="admin-sidebar-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Sidebar (Permanent on Desktop, Drawer on Mobile) */}
+        <aside
+          className={`admin-sidebar ${mobileMenuOpen ? 'admin-sidebar--mobile-open' : ''}`}
+          data-lenis-prevent="true"
+        >
           <div className="admin-sidebar-header">
             <div className="admin-brand">
               <span className="admin-logo-dot" />
               <span className="admin-brand-title">Clozflow</span>
               <span className="admin-brand-badge">Ops</span>
             </div>
+
+            <button
+              type="button"
+              className="admin-sidebar-close-btn"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close sidebar"
+            >
+              <X size={18} />
+            </button>
           </div>
 
           <nav className="admin-nav">
@@ -86,6 +151,7 @@ export default function AdminLayout() {
                   key={item.to}
                   to={item.to}
                   end={item.end}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
                 >
                   <Icon size={16} />
@@ -110,14 +176,24 @@ export default function AdminLayout() {
                 <div className="admin-user-avatar">
                   {adminUser.full_name ? adminUser.full_name.charAt(0).toUpperCase() : 'A'}
                 </div>
-                <div className="admin-user-info" style={{ flex: 1 }}>
+                <div className="admin-user-info" style={{ flex: 1, minWidth: 0 }}>
                   <span className="admin-user-name">{adminUser.full_name}</span>
                   <span className="admin-user-role">{adminUser.admin_role || 'Admin'}</span>
                 </div>
                 <button
+                  type="button"
                   onClick={handleLogout}
                   title="Log out"
-                  style={{ background: 'transparent', border: 'none', color: 'var(--admin-text-muted)', cursor: 'pointer', padding: '4px' }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--admin-text-muted)',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
                 >
                   <LogOut size={14} />
                 </button>
@@ -127,7 +203,7 @@ export default function AdminLayout() {
         </aside>
 
         {/* Main View Area */}
-        <div className="admin-main">
+        <div className="admin-main" data-lenis-prevent="true">
           <Outlet />
         </div>
       </div>
