@@ -10,7 +10,7 @@ const Integrations = React.lazy(() => import('./components/Integrations'));
 const ObjectionHandling = React.lazy(() => import('./components/ObjectionHandling'));
 const ResponseSuggestion = React.lazy(() => import('./components/ResponseSuggestion'));
 const UseCases = React.lazy(() => import('./components/UseCases'));
-const Pricing = React.lazy(() => import('./components/Pricing'));
+const PricingPage = React.lazy(() => import('./pages/PricingPage'));
 const Footer = React.lazy(() => import('./components/Footer'));
 const CrowdSection = React.lazy(() => import('./components/CrowdSection'));
 import SmoothScroll from './components/SmoothScroll';
@@ -63,7 +63,6 @@ function LandingPage() {
                     <ObjectionHandling />
                     <ResponseSuggestion />
                     <UseCases />
-                    <Pricing />
                     <CrowdSection />
                     <CrowdCanvasSection />
                     <Footer />
@@ -104,6 +103,7 @@ function App() {
                         {/* Public Relay page — NO auth required (buyer-facing) */}
                         <Route path="/relay/:slug" element={<Suspense fallback={null}><RelayPublic /></Suspense>} />
                         <Route path="/how-it-works" element={<Suspense fallback={null}><HowItWorksPage /></Suspense>} />
+                        <Route path="/pricing" element={<Suspense fallback={null}><PricingPage /></Suspense>} />
 
                         {/* Admin Intelligence Protected Portal */}
                         <Route path="/admin" element={

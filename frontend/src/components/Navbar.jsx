@@ -9,7 +9,7 @@ const LINKS = [
     { label: 'Product', href: '#objections' },
     { label: 'How it works', href: '/how-it-works' },
     { label: 'Integrations', href: '#integrations' },
-    { label: 'Pricing', href: '#pricing' },
+    { label: 'Pricing', href: '/pricing' },
     { label: 'Early Access', href: 'https://clozflow-waitlist.vercel.app' },
 ];
 
@@ -117,7 +117,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                             >
                                 <a
                                     href={l.href.startsWith('#') && window.location.pathname !== '/' ? `/${l.href}` : l.href}
-                                    className={`nb__link ${l.href.startsWith('#') && activeSection === l.href.substring(1) ? 'nb__link--active' : ''}`}
+                                    className={`nb__link ${(l.href.startsWith('#') && activeSection === l.href.substring(1)) || window.location.pathname === l.href ? 'nb__link--active' : ''}`}
                                     {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                 >
                                     {l.label}
@@ -204,7 +204,7 @@ const Navbar = ({ onSignup, onLogin }) => {
                                 <span className="nb__drawer-link-num">0{idx + 1}</span>
                                 <a 
                                     href={l.href.startsWith('#') && window.location.pathname !== '/' ? `/${l.href}` : l.href} 
-                                    className={`nb__drawer-link ${l.href.startsWith('#') && activeSection === l.href.substring(1) ? 'nb__drawer-link--active' : ''}`} 
+                                    className={`nb__drawer-link ${(l.href.startsWith('#') && activeSection === l.href.substring(1)) || window.location.pathname === l.href ? 'nb__drawer-link--active' : ''}`} 
                                     onClick={close}
                                     {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                 >

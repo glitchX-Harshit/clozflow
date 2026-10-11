@@ -3,7 +3,9 @@
  * Interfaces with /api/admin endpoints using verified bearer authentication.
  */
 
-const API_BASE = window.APP_API_BASE || 'http://localhost:8000';
+const API_BASE = typeof window !== 'undefined' && typeof window.APP_API_BASE === 'string'
+  ? window.APP_API_BASE
+  : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');

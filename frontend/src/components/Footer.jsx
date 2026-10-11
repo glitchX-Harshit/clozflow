@@ -22,8 +22,8 @@ const Footer = () => (
                         <div className="ft__col-title">Product</div>
                         <ul className="ft__col-links">
                             <li><a href="#objections">Objections</a></li>
-                            <li><a href="#how-it-works">How it Works</a></li>
-                            <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="/how-it-works">How it Works</a></li>
+                            <li><a href="/pricing">Pricing</a></li>
                             <li><a href="#integrations">Integrations</a></li>
                         </ul>
                     </div>

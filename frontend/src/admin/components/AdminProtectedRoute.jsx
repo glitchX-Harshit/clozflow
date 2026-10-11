@@ -54,7 +54,9 @@ export default function AdminProtectedRoute({ children }) {
     e.preventDefault();
     setLoginForm(prev => ({ ...prev, submitting: true, error: null }));
     try {
-      const API_BASE = window.APP_API_BASE || 'http://localhost:8000';
+      const API_BASE = typeof window !== 'undefined' && typeof window.APP_API_BASE === 'string'
+        ? window.APP_API_BASE
+        : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
       const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

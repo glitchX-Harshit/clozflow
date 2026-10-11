@@ -1,0 +1,276 @@
+/* ══════════════════════════════════════════════════════
+   PRICING PAGE — Dedicated Standalone View
+   Obsidian surfaces · Luxury Sapphire accents · Swiss typography
+   ══════════════════════════════════════════════════════ */
+
+.pricing-page-root {
+    position: relative;
+    min-height: 100vh;
+    background-color: var(--bg, #09090b);
+    color: var(--text, #f4f4f5);
+    overflow-x: hidden;
+}
+
+.pricing-page-content {
+    position: relative;
+    z-index: 1;
+    padding-top: 6rem;
+}
+
+/* ── HERO BANNER ── */
+.pricing-hero {
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 1rem;
+}
+
+.pricing-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    background: rgba(225, 29, 72, 0.1);
+    border: 1px solid rgba(225, 29, 72, 0.25);
+    color: #fb7185;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.pricing-hero__title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    color: #ffffff;
+    margin: 0 0 1.25rem 0;
+}
+
+.pricing-hero__gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pricing-hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: #a1a1aa;
+    line-height: 1.6;
+    margin: 0 auto 2.5rem;
+    max-width: 680px;
+}
+
+.pricing-hero__trust-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.pricing-hero__trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #d4d4d8;
+}
+
+.pricing-hero__trust-item svg {
+    color: #10b981;
+}
+
+/* ── FAQ SECTION ── */
+.pricing-faq {
+    padding: 6rem 1.5rem;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.pricing-faq__header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.pricing-faq__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent, #e11d48);
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.pricing-faq__title {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin: 0;
+}
+
+.pricing-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pricing-faq__item {
+    background: #121217;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.pricing-faq__item:hover {
+    border-color: rgba(255, 255, 255, 0.16);
+    background: #16161d;
+}
+
+.pricing-faq__question-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: #f4f4f5;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    gap: 1rem;
+}
+
+.pricing-faq__icon {
+    flex-shrink: 0;
+    color: #a1a1aa;
+    transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.pricing-faq__item.open .pricing-faq__icon {
+    transform: rotate(180deg);
+    color: var(--accent, #e11d48);
+}
+
+.pricing-faq__answer {
+    padding: 0 1.5rem 1.25rem;
+    color: #a1a1aa;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+/* ── BOTTOM CTA BANNER ── */
+.pricing-cta-banner {
+    max-width: 1180px;
+    margin: 2rem auto 6rem;
+    padding: 0 1.5rem;
+}
+
+.pricing-cta-card {
+    background: linear-gradient(135deg, #181820 0%, #121217 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 4rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.pricing-cta-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(225, 29, 72, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.pricing-cta-card h3 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 1rem;
+    letter-spacing: -0.025em;
+}
+
+.pricing-cta-card p {
+    font-size: 1.05rem;
+    color: #a1a1aa;
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+}
+
+.pricing-cta-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pricing-cta-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    background: var(--accent, #e11d48);
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4);
+}
+
+.pricing-cta-btn-primary:hover {
+    background: #be123c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.6);
+}
+
+.pricing-cta-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f4f4f5;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pricing-cta-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .pricing-hero__trust-strip {
+        gap: 1rem;
+    }
+    .pricing-cta-card {
+        padding: 2.5rem 1.5rem;
+    }
+}
