@@ -1,274 +1,91 @@
 /* ══════════════════════════════════════════════════════
-   INTEGRATIONS — Corporate Partner Grid CSS
-   Minimal Grid Lines · Uniform Spacing · Clean Alignment
+   INTEGRATIONS / PEARL (SECTION 3) — EDITORIAL AWWWARDS
+   Scroll Scrub Reveal · Minimalist Typography · Glyph Portal (Pearl.)
+   Zero dividing lines · Pure architectural rhythm
    ══════════════════════════════════════════════════════ */
 
 .int__section {
-    background: transparent;
-    padding: 8rem 0;
     position: relative;
+    width: 100%;
+    background: transparent;
+    padding-top: 5rem;
+    overflow: visible;
 }
 
-.int__layout {
-    display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
-    gap: 6rem;
-    max-width: 1140px;
+/* ── Centered Problem & Pearl Narrative Block ── */
+.int__narrative-wrap {
+    max-width: 960px;
+    margin: 0 auto 5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.int__scrub-paragraph {
+    font-family: var(--font-display, 'Outfit', -apple-system, sans-serif);
+    font-size: clamp(1.2rem, 2.2vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.48;
+    letter-spacing: -0.025em;
+    color: #cbd5e1;
+    max-width: 920px;
     margin: 0 auto;
-    align-items: center;
-}
-
-.int__text {
-    width: 100%;
-}
-
-.int__eyebrow {
-    font-family: var(--font-body), sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 1rem;
-}
-
-.int__title {
-    font-family: var(--font-body), sans-serif;
-    font-size: clamp(2.25rem, 4.5vw, 3.25rem);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    font-weight: 800;
-    text-transform: none; /* Corporate look - mixed case */
-    color: var(--text);
-    margin: 0;
-}
-
-.int__desc {
-    font-size: 1.1rem;
-    color: var(--text-dim);
-    line-height: 1.65;
-    margin: 1.5rem 0 2.5rem;
-}
-
-.int__cta {
     display: flex;
-}
-
-/* ── INTEGRATION VIEWPORTS ── */
-.int__right-col {
-    width: 100%;
-}
-
-.int__desktop-only {
-    display: grid;
-}
-
-.int__mobile-only {
-    display: none;
-}
-
-/* ── DESKTOP GRID ── */
-.int__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--border-strong);
-    border-left: 1px solid var(--border-strong);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* Grid Cell */
-.int__grid-cell {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border-strong);
-    border-right: 1px solid var(--border-strong);
-    padding: 2.25rem 1.5rem;
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
     text-align: center;
-    position: relative;
-    z-index: 1;
-    cursor: pointer;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    will-change: transform, box-shadow, border-color;
+    user-select: text;
 }
 
-/* Cell hover popout */
-.int__grid-cell:hover {
-    background-color: var(--surface);
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-    border-color: var(--border-hover);
-    z-index: 5;
+.int__scrub-word {
+    display: inline-flex;
+    align-items: baseline;
+    color: #cbd5e1;
+    opacity: 0.25;
+    will-change: color, opacity;
+    transition: color 0.1s linear, opacity 0.1s linear;
 }
 
-/* Cursor-Tracking Spotlight Overlay */
-.int__cell-spotlight {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0;
-    z-index: 0;
-    background: radial-gradient(130px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(30, 64, 175, 0.07), transparent 75%);
-    transition: opacity 0.35s ease;
-    will-change: opacity;
+.int__word-meet {
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
-.int__grid-cell:hover .int__cell-spotlight {
-    opacity: 1;
+.int__word-dash {
+    color: #0a0a0a;
 }
 
-.int__cell-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    position: relative;
-    z-index: 1;
+/* Upgraded Cyan-to-Cobalt Gradient Full Stop Dot */
+.int__gradient-period {
+    display: inline-block;
+    width: 0.30em;
+    height: 0.30em;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #44d8f4, #1037ff);
+    margin-left: 0.08em;
+    margin-bottom: 0.06em;
+    vertical-align: baseline;
+    box-shadow: 0 0 6px rgba(68, 216, 244, 0.45);
 }
 
-/* Awwwards Double-Text Slider */
-.int__cell-title-wrap {
-    display: flex;
-    flex-direction: column;
-    height: 1.45rem;
-    overflow: hidden;
-    position: relative;
-}
-
-.int__cell-name {
-    display: block;
+/* ── GLYPH PORTAL: Pearl. ── */
+.int__portal {
+    width: 100%;
     font-family: var(--font-body), sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.45rem;
-    transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
-    will-change: transform;
+    position: relative;
 }
 
-.int__cell-name.hover {
-    color: var(--accent);
-}
-
-.int__grid-cell:hover .int__cell-name {
-    transform: translateY(-100%);
-}
-
-/* Category Badge */
-.int__cell-cat {
-    font-family: var(--font-body), monospace;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    text-transform: uppercase;
-}
-
-
-/* ── MOBILE INFINITE MARQUEE ── */
-@media (max-width: 768px) {
-    .int__layout {
-        grid-template-columns: 1fr;
-        gap: 4rem;
-    }
-
-    .int__desktop-only {
-        display: none !important;
-    }
-
-    .int__mobile-only {
-        display: flex;
-    }
-
-    /* Container wraps full mobile viewport and tilts slightly */
-    .int__marquee-mobile {
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-        width: 106vw;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -53vw;
-        margin-right: -53vw;
-        overflow: hidden;
-        transform: rotate(-7deg);
-        padding: 1.5rem 0;
-    }
-
-    .int__marquee-row {
-        width: 100%;
-        overflow: hidden;
-        display: flex;
-    }
-
-    /* Track translates smoothly */
-    .int__marquee-track {
-        display: flex;
-        gap: 1rem;
-        width: max-content;
-        animation: intMarquee 25s linear infinite;
-        will-change: transform;
-    }
-
-    .int__marquee-track--rev {
-        animation: intMarqueeRev 25s linear infinite;
-    }
-
-    /* Minimalist sliding pills */
-    .int__marquee-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.625rem;
-        padding: 0.75rem 1.25rem;
-        background: var(--surface);
-        border: 1px solid var(--border-strong);
-        border-radius: 99px;
-        box-shadow: var(--shadow-xs);
-        white-space: nowrap;
-    }
-
-    .int__badge-dot {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background: var(--accent);
-        flex-shrink: 0;
-    }
-
-    .int__badge-name {
-        font-family: var(--font-body), sans-serif;
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--text);
-    }
-
-    .int__badge-cat {
-        font-family: var(--font-body), monospace;
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        margin-left: 0.25rem;
-    }
-}
-
-/* Animations mapping 1/4 translation loops */
-@keyframes intMarquee {
-    0% { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(-50%, 0, 0); }
-}
-
-@keyframes intMarqueeRev {
-    0% { transform: translate3d(-50%, 0, 0); }
-    100% { transform: translate3d(0, 0, 0); }
-}
-
+/* ── Responsive Adaptations ── */
 @media (max-width: 640px) {
     .int__section {
-        padding: 6rem 0;
+        padding-top: 3.5rem;
+    }
+    .int__narrative-wrap {
+        margin-bottom: 3rem;
+    }
+    .int__scrub-paragraph {
+        font-size: clamp(1.15rem, 5vw, 1.45rem);
+        line-height: 1.4;
     }
 }

@@ -73,10 +73,9 @@
   color: var(--bg);
 }
 
-html { 
-  scroll-behavior: smooth;
+html {
   width: 100%;
-  overflow-x: hidden; 
+  overflow-x: clip;
 }
 
 body {
@@ -84,7 +83,7 @@ body {
   background-color: var(--bg);
   color: var(--text);
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;

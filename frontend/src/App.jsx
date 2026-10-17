@@ -47,7 +47,7 @@ const AdminSettings = React.lazy(() => import('./admin/pages/AdminSettings'));
 function LandingPage() {
     const navigate = useNavigate();
     return (
-        <main className="landing-main" style={{ position: 'relative', width: '100%', overflowX: 'hidden' }}>
+        <main className="landing-main" style={{ position: 'relative', width: '100%', overflowX: 'clip' }}>
             {/* ── Web Preloader (Reload / Entrance Curtain Animation) ── */}
             <WebPreload />
 
