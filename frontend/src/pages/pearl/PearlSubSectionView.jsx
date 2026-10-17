@@ -1,12 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Bot, Phone, Workflow, BookOpen, Megaphone, Code, 
-  BarChart3, Kanban, List, Sparkles, Plus, ArrowRight,
+  BarChart3, Kanban, List, Sparkles, Plus, ArrowRight, ArrowLeft,
   ShieldCheck, Activity, Copy, Check, ExternalLink, Play,
   Search, Settings, Layers, CircleDot, CreditCard, FileText,
   ChevronDown, ChevronLeft, ChevronRight, PhoneIncoming
 } from 'lucide-react';
 import Pearl from '../Pearl';
+import AgentWorkspace from './AgentWorkspace';
+import CampaignWorkspace from './CampaignWorkspace';
 import { ClozFlowTelephonyNode, BringYourOwnTrunkNode } from '../../components/PearlTelephony3DIcon';
 import './PearlSubSectionView.css';
 
@@ -113,16 +115,7 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
   const [phoneCard2Hovered, setPhoneCard2Hovered] = useState(false);
 
   if (section === 'agents') {
-    return (
-      <div className="pearl-home-root animate-fade-in">
-        <div className="pearl-top-breadcrumb-bar">
-          <span className="breadcrumb-title">Agents</span>
-        </div>
-        <div style={{ padding: '2rem 2.5rem 4rem 2.5rem', boxSizing: 'border-box' }}>
-          <Pearl />
-        </div>
-      </div>
-    );
+    return <AgentWorkspace onNavigateSection={onNavigateSection} />;
   }
 
   // Greeting helper for Home tab
@@ -547,7 +540,7 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
           <div className="pearl-phone-grid">
             {/* Card 1: Rent from ClozFlow */}
             <div 
-              className="pearl-phone-card"
+              className="pearl-phone-card theme-copper"
               onMouseEnter={() => setPhoneCard1Hovered(true)}
               onMouseLeave={() => setPhoneCard1Hovered(false)}
             >
@@ -605,7 +598,7 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
 
             {/* Card 2: Bring your own telephony */}
             <div 
-              className="pearl-phone-card"
+              className="pearl-phone-card theme-emerald"
               onMouseEnter={() => setPhoneCard2Hovered(true)}
               onMouseLeave={() => setPhoneCard2Hovered(false)}
             >
@@ -873,44 +866,8 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
     );
   }
 
-  // 6. Outbound Campaigns
   if (section === 'outbound') {
-    return (
-      <div className="pearl-home-root animate-fade-in">
-        <div className="pearl-top-breadcrumb-bar">
-          <span className="breadcrumb-title">Outbound campaigns</span>
-        </div>
-        <div className="pearl-subview-wrap">
-          <div className="pearl-subview-header">
-            <div>
-              <h1 className="pearl-subview-title">Outbound campaigns</h1>
-              <p className="pearl-subview-desc">
-                Schedule bulk autonomous outreach sequences with retry pacing and automated CRM logging.
-              </p>
-            </div>
-            <button type="button" className="pearl-subview-cta" onClick={() => onNavigateSection('agents')}>
-              <Bot size={15} />
-              <span>Launch Live Agent</span>
-            </button>
-          </div>
-
-          <div className="pearl-cards-list">
-            <div className="pearl-list-card">
-              <div className="card-top-row">
-                <span className="pearl-clean-badge active">Campaign Running</span>
-                <span className="card-spec">85 / 250 dialed</span>
-              </div>
-              <h3>Q4 B2B SaaS Demo Qualification</h3>
-              <p>Targeting 250 verified high-intent leads generated from Lead Finder.</p>
-              <div className="card-tags">
-                <span>32 Demos Booked</span>
-                <span>Pacing 1.0x</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <CampaignWorkspace onNavigateSection={onNavigateSection} />;
   }
 
   // 7. Deploy with Code

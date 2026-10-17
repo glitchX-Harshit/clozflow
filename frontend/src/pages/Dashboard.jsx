@@ -21,12 +21,13 @@ import {
     Sparkle,
     Send,
     Menu,
-    X
+    X,
+    Wand2
 } from 'lucide-react';
 import { useDashboardStore } from '../store/useDashboardStore';
 import HistoryView from '../components/HistoryView';
 import AnalyticsPage from './AnalyticsPage';
-import PlaybooksPage from './PlaybooksPage';
+import WizardPage from './WizardPage';
 import SettingsShell from './SettingsShell';
 import MagButton from '../components/MagButton';
 import LeadFinder from './LeadFinder';
@@ -59,15 +60,6 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, sta
                 <p className="ov-subtitle">
                     Welcome back{user?.username ? `, ${user.username}` : user?.email ? `, ${user.email.split('@')[0]}` : ''}. Here's your performance snapshot and recent activity.
                 </p>
-            </div>
-            <div className="ov-header-actions">
-                <MagButton
-                    label="New Session"
-                    variant="dark"
-                    icon={<Phone size={16} />}
-                    onClick={() => navigate('/call-brief')}
-                    magnetStrength={0.1}
-                />
             </div>
         </header>
 
@@ -353,18 +345,19 @@ const Dashboard = () => {
         { id: 'relay',      label: 'Relay',          icon: Send },
         { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
         { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
-        { id: 'playbooks',  label: 'Playbooks',      icon: Target },
+        { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
         { id: 'settings',   label: 'Settings',       icon: Settings },
     ];
 
     return (
-        <div className="db-layout">
+        <div className="db-layout" data-lenis-prevent="true">
             {/* Sidebar — desktop only with GSAP hover expansion */}
             <aside 
                 className={`db-sidebar ${sidebarHovered ? 'expanded' : ''}`}
                 ref={sidebarRef}
                 onMouseEnter={handleSidebarMouseEnter}
                 onMouseLeave={handleSidebarMouseLeave}
+                data-lenis-prevent="true"
             >
                 <div className="db-sidebar-logo" onClick={() => navigate('/')}>
                     <div className="db-sidebar-mark">
@@ -433,7 +426,7 @@ const Dashboard = () => {
             )}
 
             {/* Main content */}
-            <main className={`db-main ${activeTab === 'pearl' ? 'has-pearl-sec' : ''}`}>
+            <main className={`db-main ${activeTab === 'pearl' ? 'has-pearl-sec' : ''}`} data-lenis-prevent="true">
                 {activeTab === 'overview'  && (
                     <OverviewTab 
                         user={user} 
@@ -475,7 +468,7 @@ const Dashboard = () => {
                     />
                 )}
                 {activeTab === 'analytics' && <AnalyticsPage />}
-                {activeTab === 'playbooks' && <PlaybooksPage />}
+                {activeTab === 'wizard'    && <WizardPage />}
                 {activeTab === 'settings'  && <SettingsShell />}
             </main>
             {/* Floating pill dock — mobile only */}
@@ -519,7 +512,7 @@ const Dashboard = () => {
 
             {/* Fullscreen Mobile Navigation Drawer Overlay */}
             {menuOpen && (
-                <div className="db-mobile-overlay animate-fade-in">
+                <div className="db-mobile-overlay animate-fade-in" data-lenis-prevent="true">
                     <div className="db-mobile-overlay-header">
                         <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>Navigation</span>
                         <button onClick={() => setMenuOpen(false)} className="db-mobile-overlay-close">
@@ -535,7 +528,7 @@ const Dashboard = () => {
                             { id: 'relay', label: 'Relay', desc: 'Follow-up pages & meeting booking', icon: Send },
                             { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
                             { id: 'analytics', label: 'Intelligence', desc: 'Comparative gap matrix & objection lists', icon: BarChart3 },
-                            { id: 'playbooks', label: 'Playbooks', desc: 'Persuasion techniques & strategies', icon: Target },
+                            { id: 'wizard', label: 'Wizard', desc: 'Virtual meeting copilot for Meet & Zoom', icon: Wand2 },
                             { id: 'settings', label: 'Settings', desc: 'Workspace details & prompt overrides', icon: Settings },
                         ].map((item) => {
                             const Icon = item.icon;

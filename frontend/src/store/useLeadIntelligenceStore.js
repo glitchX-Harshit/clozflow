@@ -17,6 +17,9 @@ export const useLeadIntelligenceStore = create(
             openPanel: () => set({ isPanelOpen: true }),
             closePanel: () => set({ isPanelOpen: false }),
 
+            panelWidth: 380,
+            setPanelWidth: (panelWidth) => set({ panelWidth }),
+
             // ── Panel view state ───────────────────────────────────────────
             // 'empty' | 'understanding' | 'icp' | 'active' | 'results' | 'lead'
             panelState: 'empty',
@@ -79,6 +82,7 @@ export const useLeadIntelligenceStore = create(
                     ? (state.icp ? 'icp' : 'empty')
                     : state.panelState,
                 isPanelOpen: state.isPanelOpen,
+                panelWidth: state.panelWidth ?? 380,
                 messages: state.messages?.slice(-20) ?? [], // keep last 20 messages
             }),
         }

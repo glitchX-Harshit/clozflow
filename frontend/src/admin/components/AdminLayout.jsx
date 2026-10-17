@@ -162,14 +162,15 @@ export default function AdminLayout() {
           </nav>
 
           <div className="admin-sidebar-footer">
-            <a
-              href="/dashboard"
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard', { replace: true })}
               className="admin-btn"
-              style={{ justifyContent: 'space-between', fontSize: '12px' }}
+              style={{ width: '100%', justifyContent: 'space-between', fontSize: '12px', background: 'transparent', border: '1px solid var(--admin-border-subtle, rgba(255,255,255,0.08))', color: 'inherit', cursor: 'pointer' }}
             >
               <span>Customer App</span>
               <ArrowUpRight size={14} />
-            </a>
+            </button>
 
             {adminUser && (
               <div className="admin-user-pill">

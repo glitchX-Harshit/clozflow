@@ -16,7 +16,7 @@ from models import User
 # Reference rates from pearl_unit_economics.py
 EXOTEL_RATE_PER_MINUTE_INR = 0.60
 EXOTEL_RATE_PER_SECOND_INR = EXOTEL_RATE_PER_MINUTE_INR / 60.0
-SARVAM_TTS_PER_CHAR_INR = 0.003
+SARVAM_TTS_PER_CHAR_INR = 0.002  # Sarvam Bulbul v4-flash: ₹20 / 10,000 characters (1/3 cheaper than v3)
 GEMINI_STT_PER_SEC_INR = 0.005
 INFRASTRUCTURE_PER_CALL_INR = 0.50
 

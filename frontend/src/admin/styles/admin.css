@@ -1,35 +1,41 @@
 /* ══════════════════════════════════════════════════════════════════
    CLOZFLOW ADMIN INTELLIGENCE — DESIGN SYSTEM
-   Theme: High-Density Luxury Dark Interface · Restrained Magenta Accents
-   Precision Analytics · Production Grade · Fluid Mobile Responsive
+   Theme: Executive Obsidian & Electric Sapphire · Minimalist Precision
+   Linear / Stripe / Raycast Standard · Production Grade · Fluid Responsive
    ══════════════════════════════════════════════════════════════════ */
 
 :root {
-  --admin-bg: #09090b;
-  --admin-surface: #121217;
-  --admin-surface-2: #181820;
-  --admin-surface-hover: #1f1f2a;
-  --admin-border: rgba(255, 255, 255, 0.08);
-  --admin-border-subtle: rgba(255, 255, 255, 0.04);
-  --admin-border-strong: rgba(255, 255, 255, 0.15);
+  /* Surfaces: Deep obsidian graphite instead of crushed OLED pitch black */
+  --admin-bg: #0b0c10;
+  --admin-surface: #111318;
+  --admin-surface-2: #161922;
+  --admin-surface-hover: #1c202c;
   
-  --admin-text: #f4f4f5;
-  --admin-text-dim: #a1a1aa;
-  --admin-text-muted: #71717a;
+  /* Hairline precision borders with subtle rim lighting */
+  --admin-border: rgba(255, 255, 255, 0.065);
+  --admin-border-subtle: rgba(255, 255, 255, 0.035);
+  --admin-border-strong: rgba(255, 255, 255, 0.12);
   
-  --admin-accent: #e11d48;
-  --admin-accent-hover: #f43f5e;
-  --admin-accent-dim: rgba(225, 29, 72, 0.12);
-  --admin-accent-glow: rgba(225, 29, 72, 0.25);
+  /* Precision typography */
+  --admin-text: #f8fafc;
+  --admin-text-dim: #94a3b8;
+  --admin-text-muted: #64748b;
   
+  /* Clozflow Brand Electric Sapphire & Cobalt Accents */
+  --admin-accent: #3b82f6;
+  --admin-accent-hover: #60a5fa;
+  --admin-accent-dim: rgba(59, 130, 246, 0.08);
+  --admin-accent-glow: rgba(59, 130, 246, 0.2);
+  
+  /* Status Semantics */
   --admin-success: #10b981;
-  --admin-success-dim: rgba(16, 185, 129, 0.12);
+  --admin-success-dim: rgba(16, 185, 129, 0.1);
   --admin-warning: #f59e0b;
-  --admin-warning-dim: rgba(245, 158, 11, 0.12);
-  --admin-danger: #ef4444;
-  --admin-danger-dim: rgba(239, 68, 68, 0.12);
-  --admin-info: #3b82f6;
-  --admin-info-dim: rgba(59, 130, 246, 0.12);
+  --admin-warning-dim: rgba(245, 158, 11, 0.1);
+  --admin-danger: #f43f5e;
+  --admin-danger-dim: rgba(244, 63, 94, 0.1);
+  --admin-info: #0ea5e9;
+  --admin-info-dim: rgba(14, 165, 233, 0.1);
   
   --admin-font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --admin-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
@@ -189,15 +195,15 @@
 }
 
 .admin-logo-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background-color: var(--admin-accent);
-  box-shadow: 0 0 10px var(--admin-accent-glow);
+  background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.45);
 }
 
 .admin-brand-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--admin-text);
@@ -207,12 +213,12 @@
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
   border-radius: 4px;
-  background-color: var(--admin-accent-dim);
-  color: var(--admin-accent);
-  border: 1px solid rgba(225, 29, 72, 0.25);
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--admin-text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .admin-nav {
@@ -221,7 +227,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   overscroll-behavior: contain;
 }
 
@@ -238,29 +244,32 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 9px 12px;
+  padding: 8px 12px;
   border-radius: 8px;
   color: var(--admin-text-dim);
   text-decoration: none;
   font-size: 13.5px;
   font-weight: 500;
-  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .admin-nav-item:hover {
-  background-color: var(--admin-surface-2);
+  background-color: rgba(255, 255, 255, 0.035);
   color: var(--admin-text);
+  border-color: rgba(255, 255, 255, 0.04);
 }
 
 .admin-nav-item.active {
-  background-color: var(--admin-accent-dim);
+  background-color: rgba(255, 255, 255, 0.055);
   color: #ffffff;
-  border: 1px solid rgba(225, 29, 72, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .admin-nav-item.active svg {
-  color: var(--admin-accent);
+  color: var(--admin-accent-hover);
 }
 
 .admin-sidebar-footer {
@@ -285,8 +294,9 @@
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  background-color: var(--admin-accent-dim);
-  color: var(--admin-accent);
+  background-color: var(--admin-surface-hover);
+  color: var(--admin-accent-hover);
+  border: 1px solid var(--admin-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,7 +392,7 @@
 .admin-header {
   padding: 18px 36px;
   border-bottom: 1px solid var(--admin-border);
-  background-color: rgba(9, 9, 11, 0.85);
+  background-color: rgba(11, 12, 16, 0.85);
   backdrop-filter: blur(14px);
   position: sticky;
   top: 0;
@@ -525,15 +535,18 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 14px;
-  transition: border-color 0.15s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   text-decoration: none;
   color: inherit;
   min-width: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.035);
 }
 
 .admin-kpi-card:hover {
   border-color: var(--admin-border-strong);
+  background-color: var(--admin-surface-2);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 640px) {
@@ -630,6 +643,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.035);
 }
 
 .admin-card-header {
@@ -703,7 +717,8 @@
 }
 
 .admin-search-input:focus {
-  border-color: var(--admin-accent);
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .admin-btn {
@@ -718,7 +733,7 @@
   border: 1px solid var(--admin-border);
   background-color: var(--admin-surface-2);
   color: var(--admin-text);
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -726,17 +741,31 @@
 .admin-btn:hover {
   background-color: var(--admin-surface-hover);
   border-color: var(--admin-border-strong);
-}
-
-.admin-btn-primary {
-  background-color: var(--admin-accent);
-  border-color: var(--admin-accent);
   color: #ffffff;
 }
 
+.admin-btn:active {
+  transform: translateY(1px);
+}
+
+.admin-btn-primary {
+  background: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  color: #0b0c10;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
 .admin-btn-primary:hover {
-  background-color: var(--admin-accent-hover);
-  border-color: var(--admin-accent-hover);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.admin-btn-primary:active {
+  transform: translateY(0);
 }
 
 /* Horizontal Responsive Table Container */
@@ -833,15 +862,15 @@
 }
 
 .admin-badge-super_admin {
-  background-color: var(--admin-accent-dim);
-  color: var(--admin-accent);
-  border: 1px solid rgba(225, 29, 72, 0.3);
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.25);
 }
 
 .admin-badge-admin {
-  background-color: var(--admin-info-dim);
-  color: var(--admin-info);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
 /* Pagination */
@@ -929,7 +958,7 @@
 
 .admin-bar-fill {
   height: 100%;
-  background-color: var(--admin-accent);
+  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
   border-radius: 99px;
   transition: width 0.3s ease;
 }

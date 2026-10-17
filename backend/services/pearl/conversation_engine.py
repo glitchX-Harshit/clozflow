@@ -12,7 +12,7 @@ import os
 import json
 import time
 import httpx
-from typing import Dict, Any, List, AsyncGenerator
+from typing import Dict, Any, List, AsyncGenerator, Optional
 
 
 # Reusable client — created once per process, connection-pooled
@@ -34,22 +34,24 @@ class ConversationEngine:
     Provides the conversational intelligence for the agent.
     """
     
-    def __init__(self, objective: str, lead_context: Dict[str, Any]):
+    def __init__(self, objective: str, lead_context: Dict[str, Any], system_prompt_override: Optional[str] = None):
         self.objective = objective
         self.lead = lead_context
         self.history: List[Dict[str, str]] = []
-        self.system_prompt = self._build_system_prompt()
+        # Always build the canonical Pearl conversation engine prompt as the core brain,
+        # layering any custom behavioral directives on top without bypassing foundational intelligence.
+        self.system_prompt = self._build_system_prompt(custom_instructions=system_prompt_override)
         self.groq_api_key = os.getenv("GROQ_API_KEY")
-        self.model = os.getenv("PEARL_LLM_MODEL", "llama-3.1-8b-instant")
+        self.model = os.getenv("PEARL_LLM_MODEL", "qwen/qwen3.8-27b")
         
         # Pre-built messages prefix (immutable across turns)
         self._system_messages = [{"role": "system", "content": self.system_prompt}]
         
-    def _build_system_prompt(self) -> str:
-        name = self.lead.get('business_name', 'Unknown')
+    def _build_system_prompt(self, custom_instructions: Optional[str] = None) -> str:
+        name = self.lead.get('business_name') or self.lead.get('prospect_name') or 'Unknown'
         capsule = self.lead.get('capsule_context', 'No product context provided.')
         
-        return (
+        prompt = (
     f"You are Pearl, a highly natural female outbound sales executive calling {name}. "
     f"Derive your identity, company, product, and relevant facts entirely from the context below. "
     f"Your objective is: {self.objective}.\n\n"
@@ -87,7 +89,10 @@ class ConversationEngine:
     f"- Use punctuation to create natural TTS rhythm, pauses, emphasis, and sentence boundaries.\n"
     f"- No markdown, bullets, headings, emojis, stage directions, or meta-commentary.\n"
     f"- Never mention that you are following instructions, using a model, or generating a response."
-)
+        )
+        if custom_instructions and custom_instructions.strip():
+            return f"{prompt}\n\nSPECIFIC AGENT DIRECTIVES & GUIDELINES:\n{custom_instructions.strip()}"
+        return prompt
         
     def add_turn(self, speaker: str, text: str) -> None:
         """Add a turn to the conversation history."""

@@ -50,6 +50,12 @@ export default function AdminProtectedRoute({ children }) {
     verifyAdmin();
   }, []);
 
+  useEffect(() => {
+    if (!authState.loading && !authState.isAdmin && authState.user && !showLoginForm) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [authState.loading, authState.isAdmin, authState.user, showLoginForm, navigate]);
+
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     setLoginForm(prev => ({ ...prev, submitting: true, error: null }));
@@ -97,13 +103,13 @@ export default function AdminProtectedRoute({ children }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#09090b',
-        color: '#f4f4f5',
+        backgroundColor: '#0b0c10',
+        color: '#f8fafc',
         gap: '16px',
         fontFamily: "'Outfit', -apple-system, sans-serif"
       }}>
-        <Loader2 size={36} style={{ animation: 'spin 1s linear infinite', color: '#e11d48' }} />
-        <p style={{ fontSize: '14px', color: '#a1a1aa' }}>Verifying administrative credentials...</p>
+        <Loader2 size={36} style={{ animation: 'spin 1s linear infinite', color: '#3b82f6' }} />
+        <p style={{ fontSize: '14px', color: '#94a3b8' }}>Verifying administrative credentials...</p>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -123,20 +129,20 @@ export default function AdminProtectedRoute({ children }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#09090b',
-        backgroundImage: 'radial-gradient(circle at 50% 20%, rgba(225, 29, 72, 0.08) 0%, transparent 60%)',
-        color: '#f4f4f5',
+        backgroundColor: '#0b0c10',
+        backgroundImage: 'radial-gradient(circle at 50% 15%, rgba(59, 130, 246, 0.06) 0%, transparent 60%)',
+        color: '#f8fafc',
         padding: '24px',
         fontFamily: "'Outfit', -apple-system, sans-serif"
       }}>
         <div style={{
           width: '100%',
           maxWidth: '420px',
-          backgroundColor: '#121217',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: '#111318',
+          border: '1px solid rgba(255, 255, 255, 0.07)',
           borderRadius: '16px',
           padding: '36px 32px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)'
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04)'
         }}>
           {/* Header & Security Badge */}
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
@@ -146,9 +152,9 @@ export default function AdminProtectedRoute({ children }) {
               gap: '6px',
               padding: '4px 12px',
               borderRadius: '999px',
-              backgroundColor: 'rgba(225, 29, 72, 0.1)',
-              border: '1px solid rgba(225, 29, 72, 0.25)',
-              color: '#fb7185',
+              backgroundColor: 'rgba(59, 130, 246, 0.08)',
+              border: '1px solid rgba(59, 130, 246, 0.2)',
+              color: '#60a5fa',
               fontSize: '11px',
               fontWeight: 600,
               letterSpacing: '0.06em',
@@ -160,7 +166,7 @@ export default function AdminProtectedRoute({ children }) {
             <h1 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 6px 0', letterSpacing: '-0.02em', color: '#ffffff' }}>
               Clozflow Admin Intelligence
             </h1>
-            <p style={{ fontSize: '13px', color: '#a1a1aa', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
               Authenticate with verified founder or operations credentials.
             </p>
           </div>
@@ -204,26 +210,32 @@ export default function AdminProtectedRoute({ children }) {
                     width: '100%',
                     boxSizing: 'border-box',
                     padding: '10px 14px 10px 38px',
-                    backgroundColor: '#181820',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backgroundColor: '#161922',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '8px',
-                    color: '#f4f4f5',
+                    color: '#f8fafc',
                     fontSize: '13.5px',
                     outline: 'none',
-                    transition: 'border-color 0.15s ease'
+                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#e11d48'}
-                  onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = 'rgba(59, 130, 246, 0.6)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.12)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    e.target.style.boxShadow = 'none';
+                  }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', color: '#a1a1aa', textTransform: 'uppercase', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '6px' }}>
                 Master Password
               </label>
               <div style={{ position: 'relative' }}>
-                <KeyRound size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#71717a' }} />
+                <KeyRound size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
                 <input
                   type="password"
                   value={loginForm.password}
@@ -235,16 +247,22 @@ export default function AdminProtectedRoute({ children }) {
                     width: '100%',
                     boxSizing: 'border-box',
                     padding: '10px 14px 10px 38px',
-                    backgroundColor: '#181820',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backgroundColor: '#161922',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '8px',
-                    color: '#f4f4f5',
+                    color: '#f8fafc',
                     fontSize: '13.5px',
                     outline: 'none',
-                    transition: 'border-color 0.15s ease'
+                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease'
                   }}
-                  onFocus={(e) => e.target.style.borderColor = '#e11d48'}
-                  onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = 'rgba(59, 130, 246, 0.6)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.12)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    e.target.style.boxShadow = 'none';
+                  }}
                 />
               </div>
             </div>
@@ -256,9 +274,9 @@ export default function AdminProtectedRoute({ children }) {
                 marginTop: '8px',
                 padding: '11px 18px',
                 borderRadius: '8px',
-                backgroundColor: '#e11d48',
-                border: 'none',
-                color: '#ffffff',
+                backgroundColor: '#f8fafc',
+                border: '1px solid rgba(255, 255, 255, 0.9)',
+                color: '#0b0c10',
                 fontSize: '13.5px',
                 fontWeight: 600,
                 cursor: loginForm.submitting ? 'wait' : 'pointer',
@@ -266,8 +284,21 @@ export default function AdminProtectedRoute({ children }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                transition: 'opacity 0.15s ease',
+                transition: 'all 0.15s ease',
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
                 opacity: loginForm.submitting ? 0.7 : 1
+              }}
+              onMouseEnter={(e) => {
+                if (!loginForm.submitting) {
+                  e.currentTarget.style.backgroundColor = '#ffffff';
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#f8fafc';
+                e.currentTarget.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               {loginForm.submitting ? (
@@ -322,8 +353,8 @@ export default function AdminProtectedRoute({ children }) {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#09090b',
-      color: '#f4f4f5',
+      backgroundColor: '#0b0c10',
+      color: '#f8fafc',
       padding: '24px',
       textAlign: 'center',
       fontFamily: "'Outfit', -apple-system, sans-serif"
@@ -332,23 +363,23 @@ export default function AdminProtectedRoute({ children }) {
         width: '56px',
         height: '56px',
         borderRadius: '12px',
-        backgroundColor: 'rgba(225, 29, 72, 0.12)',
+        backgroundColor: 'rgba(59, 130, 246, 0.08)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#e11d48',
+        color: '#60a5fa',
         marginBottom: '20px',
-        border: '1px solid rgba(225, 29, 72, 0.25)'
+        border: '1px solid rgba(59, 130, 246, 0.2)'
       }}>
         <ShieldAlert size={28} />
       </div>
-      <h1 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 8px 0', letterSpacing: '-0.02em' }}>
+      <h1 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: '#ffffff' }}>
         Restricted Founder & Operations Console
       </h1>
-      <p style={{ fontSize: '14px', color: '#a1a1aa', maxWidth: '440px', lineHeight: 1.6, margin: '0 0 24px 0' }}>
+      <p style={{ fontSize: '14px', color: '#94a3b8', maxWidth: '440px', lineHeight: 1.6, margin: '0 0 24px 0' }}>
         Access to Clozflow Admin Intelligence requires explicitly verified administrative privileges. Your current account does not have access to this portal.
       </p>
-      <div style={{ display: 'flex', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
         <button
           onClick={() => {
             localStorage.removeItem('token');
@@ -360,30 +391,51 @@ export default function AdminProtectedRoute({ children }) {
             gap: '8px',
             padding: '9px 18px',
             borderRadius: '8px',
-            backgroundColor: '#e11d48',
-            border: 'none',
-            color: '#ffffff',
+            backgroundColor: '#f8fafc',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            color: '#0b0c10',
             fontSize: '13px',
             fontWeight: 600,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#ffffff';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.35)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#f8fafc';
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)';
           }}
         >
           <Lock size={15} /> Sign In With Administrator Account
         </button>
         <button
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/dashboard', { replace: true })}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
             padding: '9px 18px',
             borderRadius: '8px',
-            backgroundColor: '#181820',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            color: '#f4f4f5',
+            backgroundColor: '#161922',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            color: '#f8fafc',
             fontSize: '13px',
             fontWeight: 500,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#1c202c';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#161922';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
           }}
         >
           <ArrowLeft size={16} /> Return to Customer App

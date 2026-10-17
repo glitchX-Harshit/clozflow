@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Float, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
@@ -134,19 +134,38 @@ const ParticleSystem = () => {
 
 const ThreeBackground = () => {
     const containerRef = useRef(null);
+    const [isActive, setIsActive] = useState(true);
 
     useEffect(() => {
-        // Visibility Logic - original setup: stays visible across page and only hides at crowd section
         let ctx = gsap.context(() => {
-            const triggerElement = document.querySelector('.crowd__section');
-            if (triggerElement && containerRef.current) {
+            const heroEl = document.querySelector('.hero') || document.querySelector('.hero-viewport-wrap');
+            if (heroEl && containerRef.current) {
+                // Ensure initial state
+                gsap.set(containerRef.current, { opacity: 1, scale: 1, y: 0, visibility: 'visible' });
+
+                // Scroll animation: The orb scales down, fades out, and exits as the 1st section scrolls away
                 gsap.to(containerRef.current, {
                     opacity: 0,
+                    scale: 0.76,
+                    y: -70,
+                    ease: 'power1.out',
                     scrollTrigger: {
-                        trigger: triggerElement,
-                        start: 'top 80%',
-                        end: 'bottom 20%',
-                        toggleActions: 'play reverse play reverse'
+                        trigger: heroEl,
+                        start: 'top top',
+                        end: 'bottom 15%',
+                        scrub: 1,
+                        onLeave: () => {
+                            if (containerRef.current) {
+                                containerRef.current.style.visibility = 'hidden';
+                            }
+                            setIsActive(false);
+                        },
+                        onEnterBack: () => {
+                            if (containerRef.current) {
+                                containerRef.current.style.visibility = 'visible';
+                            }
+                            setIsActive(true);
+                        }
                     }
                 });
             }
@@ -169,11 +188,13 @@ const ThreeBackground = () => {
                 height: '100vh', 
                 zIndex: 0, 
                 pointerEvents: 'none',
-                opacity: 1
+                opacity: 1,
+                willChange: 'transform, opacity'
             }}
         >
             <Canvas 
                 camera={{ position: [0, 0, 8], fov: 45 }} 
+                frameloop={isActive ? 'always' : 'never'}
                 gl={{ 
                     antialias: true,
                     alpha: true,

@@ -3,7 +3,7 @@ Pearl API Router
 All Pearl endpoints live under /api/pearl.
 Reuses existing auth (get_current_user), database (get_db), and models.
 """
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -15,7 +15,14 @@ import json
 from database import get_db
 from routers.auth import get_current_user
 from models import User, Capsule, Lead
-from models_pearl import PearlAgent, PearlCall, PearlEvent, PearlConversation, PearlMessage
+from models_pearl import (
+    PearlAgent, PearlCall, PearlEvent, PearlConversation, PearlMessage,
+    PearlTestSession, PearlTestMessage, PearlCampaign, PearlCampaignRecipient
+)
+from services.pearl.lead_ingestion import (
+    process_lead_batch, parse_csv_file, parse_xlsx_sheets,
+    canonicalize_lead_row, validate_and_normalize_phone
+)
 
 from services.pearl.state_machine import AgentStateMachine, InvalidTransition
 from services.pearl.policy_engine import PolicyEngine, DEFAULT_AUTONOMY, DEFAULT_QUALIFICATION
@@ -38,6 +45,9 @@ class CreateAgentRequest(BaseModel):
     voice_config: Optional[dict] = None
     lead_source_config: Optional[dict] = None
     call_provider: str = "exotel"
+    system_prompt: Optional[str] = None
+    greeting: Optional[str] = None
+    test_variables: Optional[dict] = None
 
 
 class UpdateAgentRequest(BaseModel):
@@ -50,6 +60,9 @@ class UpdateAgentRequest(BaseModel):
     voice_config: Optional[dict] = None
     lead_source_config: Optional[dict] = None
     call_provider: Optional[str] = None
+    system_prompt: Optional[str] = None
+    greeting: Optional[str] = None
+    test_variables: Optional[dict] = None
 
 
 def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
@@ -70,6 +83,10 @@ def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
         "lead_source_config": agent.lead_source_config,
         "call_provider": agent.call_provider,
         "provider_agent_id": agent.provider_agent_id,
+        "system_prompt": agent.system_prompt,
+        "greeting": agent.greeting,
+        "test_variables": agent.test_variables,
+        "version": agent.version or 1,
         "current_state": agent.current_state,
         "current_lead_id": agent.current_lead_id,
         "metrics": {
@@ -152,6 +169,10 @@ def create_agent(
         voice_config=req.voice_config,
         lead_source_config=req.lead_source_config,
         call_provider=req.call_provider,
+        system_prompt=req.system_prompt,
+        greeting=req.greeting,
+        test_variables=req.test_variables,
+        version=1,
         status="draft",
         current_state="idle",
     )
@@ -250,6 +271,49 @@ def delete_agent(
     return {"ok": True, "message": f"Agent '{agent.name}' deleted"}
 
 
+@router.post("/agents/{agent_id}/duplicate")
+def duplicate_agent(
+    agent_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Duplicate an existing agent with a new ID and draft status."""
+    agent = db.query(PearlAgent).filter(
+        PearlAgent.id == agent_id,
+        PearlAgent.user_id == user.id
+    ).first()
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+
+    new_agent = PearlAgent(
+        user_id=user.id,
+        name=f"{agent.name} (Copy)",
+        role=agent.role,
+        capsule_id=agent.capsule_id,
+        mission=agent.mission,
+        target_market=agent.target_market,
+        qualification_rules=agent.qualification_rules,
+        autonomy_policy=agent.autonomy_policy,
+        voice_config=agent.voice_config,
+        lead_source_config=agent.lead_source_config,
+        call_provider=agent.call_provider,
+        system_prompt=agent.system_prompt,
+        greeting=agent.greeting,
+        test_variables=agent.test_variables,
+        version=1,
+        status="draft",
+        current_state="idle",
+    )
+    db.add(new_agent)
+    db.commit()
+    db.refresh(new_agent)
+
+    logger = EventLogger(db, new_agent.id)
+    logger.agent_created(new_agent.name)
+
+    return agent_to_dict(new_agent)
+
+
 # â”€â”€ Real Deployment V0.1 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class DeployPearlRequest(BaseModel):
@@ -297,9 +361,9 @@ async def deploy_pearl_call(
         agent.capsule_id = req.capsule_id
         
     agent.voice_config = {
-        "provider": req.voice_provider or "Sarvam Bulbul v3",
+        "provider": req.voice_provider or "Sarvam Bulbul v4-flash",
         "language": req.voice_language or "Auto",
-        "speaker": req.voice_speaker or "ritu",
+        "speaker": req.voice_speaker or "shubh_enhi_ads",
         "pace": req.voice_pace or 1.0
     }
     
@@ -653,6 +717,7 @@ from services.turn_detector import TurnDetector
 from services.latency_tracker import LatencyTracker
 
 from services.pearl.providers.tts import get_tts_provider
+from services.pearl.phrase_chunker import PhraseChunker
 
 # Sentence boundary regex for TTS chunking (primary: .!?।, secondary: ,—;)
 _SENTENCE_END_RE = re.compile(r'[.!?\u0964,—;]\s*$')
@@ -695,8 +760,9 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
         prospect_name = call.lead.business_name
 
     engine = ConversationEngine(
-        objective=call.conversation.objective if call.conversation else "Qualify and book a meeting",
-        lead_context={"business_name": prospect_name, "capsule_context": capsule_text}
+        objective=call.conversation.objective if (call.conversation and call.conversation.objective) else (agent.mission if agent and agent.mission else "Qualify and book a meeting"),
+        lead_context={"business_name": prospect_name, "capsule_context": capsule_text},
+        system_prompt_override=agent.system_prompt if agent and agent.system_prompt and agent.system_prompt.strip() else None
     )
     
     # Initialize stateful TTS Provider (Sarvam default, ElevenLabs fallback)
@@ -712,7 +778,7 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
         
         # Retrieve TTS settings from Agent config or fallback
         voice_cfg = agent.voice_config or {} if agent else {}
-        speaker = voice_cfg.get("speaker", "ritu")
+        speaker = voice_cfg.get("speaker", "shubh_enhi_ads")
         lang = voice_cfg.get("language", "Auto")
         pace = float(voice_cfg.get("pace", 1.0))
         temperature = 0.6
@@ -721,6 +787,7 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
         lang_code = "en-IN"
         if lang == "Hindi": lang_code = "hi-IN"
         elif lang == "English": lang_code = "en-IN"
+        elif "_hi_" in speaker: lang_code = "hi-IN"
         
         await tts.configure(language_code=lang_code, speaker=speaker, pace=pace, temperature=temperature)
         print(f"  [METRIC] TTS connection ready: {(time.monotonic() - connect_start)*1000:.0f}ms")
@@ -741,6 +808,7 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
     # Barge-in control
     _speaking = False
     _tts_cancel = asyncio.Event()
+    _generation_id = 0
     stream_sid = None
 
     # Continuous background task to receive TTS audio and send to Exotel
@@ -856,7 +924,11 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
 
         _bg_tasks.append(asyncio.create_task(_persist_prospect()))
 
-        # ── Critical path: LLM stream → sentence chunk → TTS ──
+        # ── Critical path: LLM stream → PhraseChunker → TTS ──
+        nonlocal _generation_id
+        _generation_id += 1
+        current_gen = _generation_id
+
         set_state("PROCESSING")
         _speaking = True
         _tts_cancel.clear()
@@ -867,19 +939,18 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
 
         llm_start = time.monotonic()
         llm_first_token = None
-        sentence_buffer = ""
         full_response = ""
+        chunker = PhraseChunker(first_chunk_words=3, subsequent_chunk_words=7)
         
         tracker.on_generation_started()
 
         try:
             async for token in engine.generate_response_stream():
-                if _tts_cancel.is_set():
+                if _tts_cancel.is_set() or _generation_id != current_gen:
                     await tts.cancel()
                     break  # Barge-in: prospect started speaking
 
                 full_response += token
-                sentence_buffer += token
 
                 if llm_first_token is None:
                     llm_first_token = time.monotonic()
@@ -888,19 +959,22 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
                     set_state("RESPONSE_GENERATED")
                     set_state("SPEAKING")
 
-                # Stream word-by-word for seamless real-time TTS synthesis
-                if sentence_buffer.endswith(" ") or _SENTENCE_END_RE.search(sentence_buffer):
+                for phrase in chunker.feed(token):
+                    if _tts_cancel.is_set() or _generation_id != current_gen:
+                        break
                     tracker.on_first_sentence()
-                    await tts.send_text(sentence_buffer)
-                    sentence_buffer = ""
+                    await tts.send_text(phrase)
 
-            # Flush remaining text
-            if sentence_buffer.strip() and not _tts_cancel.is_set():
-                tracker.on_first_sentence()
-                await tts.send_text(sentence_buffer.strip())
+            # Flush remaining phrases
+            if not _tts_cancel.is_set() and _generation_id == current_gen:
+                for phrase in chunker.flush():
+                    if _tts_cancel.is_set() or _generation_id != current_gen:
+                        break
+                    tracker.on_first_sentence()
+                    await tts.send_text(phrase)
             
             # Send flush signal indicating end of LLM response
-            if not _tts_cancel.is_set():
+            if not _tts_cancel.is_set() and _generation_id == current_gen:
                 await tts.flush()
 
         except Exception as e:
@@ -964,6 +1038,8 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
     # Generate dynamic initial pattern interrupt greeting via LLM
     print(f"[Pearl] Generating dynamic pattern interrupt opening for {prospect_name}")
     set_state("GENERATING_OPENING")
+    _generation_id += 1
+    opening_gen = _generation_id
     _speaking = True
     _tts_cancel.clear()
     tts._llm_finished = False
@@ -972,13 +1048,13 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
     if hasattr(tts, 'reset_buffer'):
         tts.reset_buffer()
         
-    sentence_buffer = ""
     full_response = ""
     llm_error = False
+    chunker = PhraseChunker(first_chunk_words=3, subsequent_chunk_words=7)
     
     try:
         async for token in engine.generate_response_stream():
-            if _tts_cancel.is_set():
+            if _tts_cancel.is_set() or _generation_id != opening_gen:
                 await tts.cancel()
                 break
 
@@ -987,16 +1063,18 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
                 set_state("SPEAKING")
 
             full_response += token
-            sentence_buffer += token
+            for phrase in chunker.feed(token):
+                if _tts_cancel.is_set() or _generation_id != opening_gen:
+                    break
+                await tts.send_text(phrase)
 
-            if sentence_buffer.endswith(" ") or _SENTENCE_END_RE.search(sentence_buffer):
-                await tts.send_text(sentence_buffer)
-                sentence_buffer = ""
-
-        if sentence_buffer.strip() and not _tts_cancel.is_set():
-            await tts.send_text(sentence_buffer.strip())
+        if not _tts_cancel.is_set() and _generation_id == opening_gen:
+            for phrase in chunker.flush():
+                if _tts_cancel.is_set() or _generation_id != opening_gen:
+                    break
+                await tts.send_text(phrase)
         
-        if not _tts_cancel.is_set():
+        if not _tts_cancel.is_set() and _generation_id == opening_gen:
             await tts.flush()
             
     except Exception as e:
@@ -1051,27 +1129,31 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
                 # Forward to STT (non-blocking) so Gemini connection doesn't time out (1008 error)
                 await stt.send_audio(audio_bytes)
 
-                if pearl_state not in ["LISTENING", "PROSPECT_SPEECH_STARTED", "PROSPECT_SPEECH_ENDED"]:
-                    # Ignore telephony/system audio or own speech echoing for turn detection
-                    continue
-
-                if not vad.is_speaking and _speaking:
-                    # Ignore if pearl is still speaking and VAD somehow picked it up
-                    continue
-
                 # VAD processing (< 1ms per chunk)
                 vad_events = vad.process_chunk(audio_bytes)
                 for ev in vad_events:
                     if ev == VADEvent.SPEECH_START:
-                        set_state("PROSPECT_SPEECH_STARTED")
-                        turn_detector.on_speech_start()
-                        # Barge-in: if Pearl is speaking, cancel TTS
+                        # Barge-in: if Pearl is speaking, cancel TTS immediately and clear telephony buffer
                         if _speaking:
-                            _tts_cancel.set()
                             print("  [BARGE-IN] Prospect speech detected - cancelling TTS")
+                            _tts_cancel.set()
+                            _generation_id += 1
+                            _speaking = False
+                            set_state("LISTENING")
+                            asyncio.create_task(tts.cancel())
+                            if stream_sid:
+                                try:
+                                    asyncio.create_task(websocket.send_json({"event": "clear", "stream_sid": stream_sid}))
+                                except Exception:
+                                    pass
+                            turn_detector.on_speech_start()
+                        else:
+                            set_state("PROSPECT_SPEECH_STARTED")
+                            turn_detector.on_speech_start()
                     elif ev == VADEvent.SPEECH_END:
-                        set_state("PROSPECT_SPEECH_ENDED")
-                        turn_detector.on_speech_end()
+                        if not _speaking:
+                            set_state("PROSPECT_SPEECH_ENDED")
+                            turn_detector.on_speech_end()
 
             elif event_type == "stop":
                 print(f"[Pearl WebSocket] Exotel sent 'stop' event. Ending stream.")
@@ -1168,16 +1250,19 @@ async def preview_voice(req: VoicePreviewRequest, current_user = Depends(get_cur
         "api-subscription-key": api_key,
         "Content-Type": "application/json"
     }
+    from services.pearl.providers.tts import normalize_sarvam_v4_speaker
+    normalized_speaker = normalize_sarvam_v4_speaker(req.speaker)
+    target_lang = "en-IN" if "_en_" in normalized_speaker else "hi-IN"
     payload = {
         "inputs": [req.text],
-        "target_language_code": "hi-IN",
-        "speaker": req.speaker,
+        "target_language_code": target_lang,
+        "speaker": normalized_speaker,
         "pitch": 0,
         "pace": 1.0,
         "loudness": 1.5,
         "speech_sample_rate": 8000,
         "enable_preprocessing": True,
-        "model": "bulbul:v1"
+        "model": "bulbul:v4-flash"
     }
     
     try:
@@ -1191,3 +1276,1460 @@ async def preview_voice(req: VoicePreviewRequest, current_user = Depends(get_cur
         print(f"Sarvam preview error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# BROWSER TEST SESSIONS & CHAT / VOICE TESTING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class CreateTestSessionRequest(BaseModel):
+    agent_id: str
+    mode: str = "chat"  # "chat" or "voice"
+
+
+class SendChatMessageRequest(BaseModel):
+    message: str
+
+
+def test_session_to_dict(session: PearlTestSession) -> dict:
+    return {
+        "id": session.id,
+        "agent_id": session.agent_id,
+        "mode": session.mode,
+        "status": session.status,
+        "agent_snapshot": session.agent_snapshot,
+        "summary": session.summary,
+        "created_at": session.created_at.isoformat() if session.created_at else None,
+        "updated_at": session.updated_at.isoformat() if session.updated_at else None,
+        "messages": [
+            {
+                "id": m.id,
+                "role": m.role,
+                "text": m.text,
+                "timestamp": m.timestamp.isoformat() if m.timestamp else None,
+                "meta": m.meta
+            }
+            for m in (session.messages or [])
+        ]
+    }
+
+
+@router.post("/test-sessions")
+async def create_test_session(
+    req: CreateTestSessionRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Create a new browser test session for an agent.
+    Takes an immutable snapshot of the agent's current configuration.
+    """
+    agent = db.query(PearlAgent).filter(
+        PearlAgent.id == req.agent_id,
+        PearlAgent.user_id == user.id
+    ).first()
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+
+    # Build comprehensive capsule context if linked
+    capsule_text = "No specific product context provided."
+    if agent.capsule:
+        c = agent.capsule
+        capsule_text = (
+            f"Product Name: {c.product_name}\n"
+            f"Price: {c.product_price or 'N/A'}\n"
+            f"Specs: {c.product_specification or 'N/A'}\n"
+            f"Target Audience: {c.target_audience or 'N/A'}\n"
+            f"Key Differentiators: {c.key_differentiators or 'N/A'}\n"
+            f"Pain Points Solved: {c.pain_points_solved or 'N/A'}\n"
+            f"Extra Context: {c.additional_context or ''}"
+        )
+
+    # greeting is ONLY set if explicitly configured by the user; no canned fallback!
+    custom_greeting = agent.greeting if (agent.greeting and agent.greeting.strip()) else None
+
+    snapshot = {
+        "agent_id": agent.id,
+        "name": agent.name,
+        "mission": agent.mission or "Qualify prospect and establish fit.",
+        "system_prompt": agent.system_prompt or "",
+        "greeting": custom_greeting,
+        "voice_config": agent.voice_config or {},
+        "capsule_id": agent.capsule_id,
+        "capsule_context": capsule_text,
+        "test_variables": agent.test_variables or {"prospect_name": "Prospect", "company": "Acme Corp"},
+        "version": agent.version or 1
+    }
+
+    session = PearlTestSession(
+        user_id=user.id,
+        agent_id=agent.id,
+        mode=req.mode,
+        status="active",
+        agent_snapshot=snapshot
+    )
+    db.add(session)
+    db.commit()
+    db.refresh(session)
+
+    # For chat mode: seed initial opening
+    if req.mode == "chat":
+        if custom_greeting:
+            tvars = snapshot.get("test_variables") or {}
+            rendered_greeting = custom_greeting
+            for k, v in tvars.items():
+                rendered_greeting = rendered_greeting.replace(f"{{{{{k}}}}}", str(v))
+            opening_text = rendered_greeting
+        else:
+            # Generate dynamic pattern interrupt opening via ConversationEngine
+            prospect_name = snapshot.get("test_variables", {}).get("prospect_name") or "there"
+            sys_override = snapshot.get("system_prompt")
+            engine = ConversationEngine(
+                objective=snapshot.get("mission") or "Qualify prospect and establish fit.",
+                lead_context={"business_name": prospect_name, "capsule_context": capsule_text},
+                system_prompt_override=sys_override if sys_override and sys_override.strip() else None
+            )
+            tokens = []
+            try:
+                async for tok in engine.generate_response_stream():
+                    tokens.append(tok)
+                opening_text = "".join(tokens).strip() or "Namaste, main Clozflow se bol rahi hoon."
+            except Exception as e:
+                print(f"[Create Test Session] Dynamic opening error: {e}")
+                opening_text = "Namaste, main Clozflow se bol rahi hoon."
+
+        initial_msg = PearlTestMessage(
+            session_id=session.id,
+            role="assistant",
+            text=opening_text,
+            meta={"is_opening": True}
+        )
+        db.add(initial_msg)
+        db.commit()
+        db.refresh(session)
+
+    return test_session_to_dict(session)
+
+
+@router.get("/test-sessions/{session_id}")
+def get_test_session(
+    session_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Retrieve test session status, snapshot, and conversation history."""
+    session = db.query(PearlTestSession).filter(
+        PearlTestSession.id == session_id,
+        PearlTestSession.user_id == user.id
+    ).first()
+    if not session:
+        raise HTTPException(404, "Test session not found")
+    return test_session_to_dict(session)
+
+
+@router.post("/test-sessions/{session_id}/chat")
+async def send_test_chat_message(
+    session_id: str,
+    req: SendChatMessageRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Execute a turn in Chat testing mode.
+    Uses the real ConversationEngine with the agent's snapshot and product capsule.
+    """
+    session = db.query(PearlTestSession).filter(
+        PearlTestSession.id == session_id,
+        PearlTestSession.user_id == user.id
+    ).first()
+    if not session:
+        raise HTTPException(404, "Test session not found")
+
+    user_text = req.message.strip()
+    if not user_text:
+        raise HTTPException(400, "Message cannot be empty")
+
+    # Persist user message
+    user_msg = PearlTestMessage(session_id=session.id, role="user", text=user_text)
+    db.add(user_msg)
+    db.commit()
+
+    # Load agent snapshot
+    snapshot = session.agent_snapshot or {}
+    objective = snapshot.get("mission", "Qualify prospect and answer questions.")
+    lead_ctx = {
+        "business_name": snapshot.get("test_variables", {}).get("prospect_name") or snapshot.get("test_variables", {}).get("company") or "Prospect",
+        "capsule_context": snapshot.get("capsule_context", "No product context provided.")
+    }
+    system_prompt = snapshot.get("system_prompt")
+
+    engine = ConversationEngine(
+        objective=objective,
+        lead_context=lead_ctx,
+        system_prompt_override=system_prompt if system_prompt and system_prompt.strip() else None
+    )
+
+    # Replay session history into engine
+    prior_messages = db.query(PearlTestMessage).filter(
+        PearlTestMessage.session_id == session.id
+    ).order_by(PearlTestMessage.timestamp.asc()).all()
+
+    for m in prior_messages:
+        engine.add_turn("prospect" if m.role == "user" else "agent", m.text)
+
+    # Stream or generate real LLM response
+    import time
+    t0 = time.monotonic()
+    response_tokens = []
+    try:
+        async for token in engine.generate_response_stream():
+            response_tokens.append(token)
+    except Exception as e:
+        print(f"[Browser Test Chat] LLM error: {e}")
+        response_tokens = ["I apologize, my language processor encountered a momentary delay. Could you please repeat that?"]
+
+    response_text = "".join(response_tokens).strip() or "I understand. How else can I assist with your inquiry?"
+    latency_ms = int((time.monotonic() - t0) * 1000)
+
+    asst_msg = PearlTestMessage(
+        session_id=session.id,
+        role="assistant",
+        text=response_text,
+        meta={"latency_ms": latency_ms}
+    )
+    db.add(asst_msg)
+    session.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(asst_msg)
+
+    return {
+        "ok": True,
+        "message": {
+            "id": asst_msg.id,
+            "role": asst_msg.role,
+            "text": asst_msg.text,
+            "timestamp": asst_msg.timestamp.isoformat(),
+            "meta": asst_msg.meta
+        }
+    }
+
+
+@router.post("/test-sessions/{session_id}/clear")
+async def clear_test_session(
+    session_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Clear conversation history and restart session."""
+    session = db.query(PearlTestSession).filter(
+        PearlTestSession.id == session_id,
+        PearlTestSession.user_id == user.id
+    ).first()
+    if not session:
+        raise HTTPException(404, "Test session not found")
+
+    db.query(PearlTestMessage).filter(PearlTestMessage.session_id == session.id).delete()
+
+    snapshot = session.agent_snapshot or {}
+    custom_greeting = snapshot.get("greeting")
+
+    # For chat mode: restart with opening message
+    if session.mode == "chat":
+        if custom_greeting and custom_greeting.strip():
+            tvars = snapshot.get("test_variables") or {}
+            rendered_greeting = custom_greeting
+            for k, v in tvars.items():
+                rendered_greeting = rendered_greeting.replace(f"{{{{{k}}}}}", str(v))
+            opening_text = rendered_greeting
+        else:
+            prospect_name = snapshot.get("test_variables", {}).get("prospect_name") or "there"
+            capsule_text = snapshot.get("capsule_context") or "No product context provided."
+            sys_override = snapshot.get("system_prompt")
+            engine = ConversationEngine(
+                objective=snapshot.get("mission") or "Qualify prospect and establish fit.",
+                lead_context={"business_name": prospect_name, "capsule_context": capsule_text},
+                system_prompt_override=sys_override if sys_override and sys_override.strip() else None
+            )
+            tokens = []
+            try:
+                async for tok in engine.generate_response_stream():
+                    tokens.append(tok)
+                opening_text = "".join(tokens).strip() or "Namaste, main Clozflow se bol rahi hoon."
+            except Exception:
+                opening_text = "Namaste, main Clozflow se bol rahi hoon."
+
+        initial_msg = PearlTestMessage(
+            session_id=session.id,
+            role="assistant",
+            text=opening_text,
+            meta={"is_opening": True}
+        )
+        db.add(initial_msg)
+
+    session.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(session)
+    return test_session_to_dict(session)
+
+
+@router.post("/test-sessions/{session_id}/end")
+def end_test_session(
+    session_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """End a test session."""
+    session = db.query(PearlTestSession).filter(
+        PearlTestSession.id == session_id,
+        PearlTestSession.user_id == user.id
+    ).first()
+    if not session:
+        raise HTTPException(404, "Test session not found")
+
+    session.status = "completed"
+    session.updated_at = datetime.utcnow()
+    db.commit()
+    return {"ok": True, "status": session.status}
+
+
+# ── Browser Voice Testing WebSocket ──────────────────────────────────────────
+
+@router.websocket("/test-sessions/{session_id}/voice")
+async def browser_voice_test_websocket(
+    websocket: WebSocket,
+    session_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Dedicated Browser Voice Test WebSocket.
+    Streams 16kHz linear PCM between the browser and Pearl's real AI pipeline:
+      - Browser Mic PCM16 -> GeminiStream (STT) + Silero VAD
+      - Recognized speech -> ConversationEngine (Groq LLM)
+      - Agent response -> get_tts_provider() (Sarvam Bulbul / ElevenLabs) -> Browser Audio Playback
+      - Supports interruption (barge-in) and clean disconnect
+      - Absolutely zero PSTN / telephony interaction
+    """
+    print(f"[Browser Voice Test] Connecting session {session_id}")
+    await websocket.accept()
+
+    session = db.query(PearlTestSession).filter(PearlTestSession.id == session_id).first()
+    if not session:
+        print(f"[Browser Voice Test] Session {session_id} not found in DB")
+        await websocket.close(code=1008)
+        return
+
+    snapshot = session.agent_snapshot or {}
+    objective = snapshot.get("mission", "Qualify prospect and discuss needs.")
+    capsule_text = snapshot.get("capsule_context", "No product context provided.")
+    system_prompt = snapshot.get("system_prompt")
+    voice_cfg = snapshot.get("voice_config") or {}
+    speaker = voice_cfg.get("speaker", "shubh_enhi_ads")
+    language = voice_cfg.get("language", "Auto")
+    pace = float(voice_cfg.get("pace", 1.0))
+
+    lead_ctx = {
+        "business_name": snapshot.get("test_variables", {}).get("prospect_name") or snapshot.get("test_variables", {}).get("company") or "Prospect",
+        "capsule_context": capsule_text
+    }
+
+    engine = ConversationEngine(
+        objective=objective,
+        lead_context=lead_ctx,
+        system_prompt_override=system_prompt if system_prompt and system_prompt.strip() else None
+    )
+
+    # Initialize TTS provider
+    tts = get_tts_provider()
+    tts_connected = False
+    try:
+        await tts.connect()
+        lang_code = "hi-IN" if language == "Hindi" or "_hi_" in speaker else "en-IN"
+        await tts.configure(language_code=lang_code, speaker=speaker, pace=pace, temperature=0.6)
+        tts_connected = True
+    except Exception as e:
+        print(f"[Browser Voice Test] TTS setup warning: {e}")
+
+    # Interruption & Turn control
+    _is_speaking = False
+    _first_audio_sent_at = 0.0
+    _turn_completed_at = 0.0
+    _tts_cancel = asyncio.Event()
+    _generation_id = 0
+
+    async def _send_audio_to_browser(audio_bytes: bytes):
+        nonlocal _is_speaking, _first_audio_sent_at
+        if audio_bytes and len(audio_bytes) > 0 and not _tts_cancel.is_set():
+            try:
+                if not _is_speaking:
+                    _is_speaking = True
+                    _first_audio_sent_at = time.time()
+                b64 = base64.b64encode(audio_bytes).decode('ascii')
+                await websocket.send_json({"type": "audio", "data": b64})
+            except Exception:
+                pass
+
+    # TTS consumer loop
+    async def _tts_consumer_loop():
+        nonlocal _is_speaking, _first_audio_sent_at
+        try:
+            async for chunk in tts.receive_audio():
+                if _tts_cancel.is_set():
+                    continue
+                if chunk == b"__FLUSH_COMPLETE__":
+                    _is_speaking = False
+                    _first_audio_sent_at = 0.0
+                    await websocket.send_json({"type": "tts_finished"})
+                elif chunk:
+                    await _send_audio_to_browser(chunk)
+        except Exception as e:
+            print(f"[Browser Voice Test] TTS consumer error: {e}")
+
+    tts_task = asyncio.create_task(_tts_consumer_loop())
+
+    async def on_turn_complete(user_transcript: str):
+        nonlocal _is_speaking, _turn_completed_at, _generation_id
+        if not user_transcript.strip():
+            return
+
+        # If Pearl was speaking when turn finalized, cancel active speech
+        if _is_speaking:
+            _tts_cancel.set()
+            _generation_id += 1
+            _is_speaking = False
+            _first_audio_sent_at = 0.0
+            await tts.cancel()
+            await websocket.send_json({"type": "interrupted"})
+
+        _turn_completed_at = time.time()
+        print(f"[Browser Voice Test] User turn: {user_transcript}")
+        # Notify browser of recognized user transcript
+        await websocket.send_json({"type": "transcript", "speaker": "user", "text": user_transcript})
+
+        # Save user message asynchronously off the critical path
+        def _save_test_msg_bg(s_id, r, t):
+            try:
+                from database import SessionLocal
+                db = SessionLocal()
+                db.add(PearlTestMessage(session_id=s_id, role=r, text=t))
+                db.commit()
+                db.close()
+            except Exception as e:
+                print(f"[DB save error] {e}")
+
+        asyncio.create_task(asyncio.to_thread(_save_test_msg_bg, session.id, "user", user_transcript))
+
+        # Add to engine history
+        engine.add_turn("prospect", user_transcript)
+
+        # Generate response - NOTE: Pearl is THINKING, NOT speaking yet
+        _generation_id += 1
+        current_gen = _generation_id
+        _tts_cancel.clear()
+        await websocket.send_json({"type": "agent_thinking"})
+
+        chunker = PhraseChunker(first_chunk_words=3, subsequent_chunk_words=7)
+        full_response = ""
+
+        try:
+            async for token in engine.generate_response_stream():
+                if _tts_cancel.is_set() or _generation_id != current_gen:
+                    await tts.cancel()
+                    break
+                full_response += token
+                for phrase in chunker.feed(token):
+                    if _tts_cancel.is_set() or _generation_id != current_gen:
+                        break
+                    await tts.send_text(phrase)
+
+            if not _tts_cancel.is_set() and _generation_id == current_gen:
+                for phrase in chunker.flush():
+                    if _tts_cancel.is_set() or _generation_id != current_gen:
+                        break
+                    await tts.send_text(phrase)
+
+            if not _tts_cancel.is_set() and _generation_id == current_gen:
+                await tts.flush()
+
+        except Exception as e:
+            print(f"[Browser Voice Test] LLM error: {e}")
+            full_response = "I apologize, could you say that again?"
+            await tts.send_text(full_response)
+            await tts.flush()
+
+        engine.add_turn("agent", full_response)
+        await websocket.send_json({"type": "transcript", "speaker": "agent", "text": full_response})
+
+        # Save assistant message asynchronously off critical path
+        asyncio.create_task(asyncio.to_thread(_save_test_msg_bg, session.id, "assistant", full_response))
+
+    # VAD & Turn Detector
+    vad = SileroVADEngine()
+    await vad.initialize()
+    turn_detector = TurnDetector(on_turn_complete=on_turn_complete)
+
+    async def transcript_callback(speaker, text, is_final=True, speech_final=False):
+        if text:
+            turn_detector.on_transcript(text, is_final=is_final)
+            if not is_final:
+                await websocket.send_json({"type": "partial_transcript", "text": text})
+        if speech_final:
+            turn_detector.on_speech_final()
+
+    stt = GeminiStream(transcript_callback=transcript_callback)
+    stt_connected = await stt.connect()
+    if not stt_connected:
+        print("[Browser Voice Test] Gemini STT stream connection failed")
+        await websocket.send_json({"type": "error", "message": "Failed to connect to transcription service"})
+
+    # Send initial status
+    await websocket.send_json({
+        "type": "ready",
+        "agent_name": snapshot.get("name"),
+        "speaker": speaker
+    })
+
+    # ── Initial Opening Hook (Dynamic Pattern Interrupt via ConversationEngine) ──
+    print(f"[Browser Voice Test] Generating dynamic pattern interrupt opening for {lead_ctx.get('business_name', 'Prospect')}")
+    _generation_id += 1
+    opening_gen = _generation_id
+    _is_speaking = True
+    _tts_cancel.clear()
+    
+    if hasattr(tts, 'reset_buffer'):
+        tts.reset_buffer()
+
+    full_opening = ""
+    chunker = PhraseChunker(first_chunk_words=3, subsequent_chunk_words=7)
+
+    custom_greeting = snapshot.get("greeting")
+    # If user explicitly configured a custom scripted greeting override (and not generic boilerplate)
+    if custom_greeting and custom_greeting.strip() and not ("How are you doing today" in custom_greeting and "calling from" in custom_greeting):
+        tvars = snapshot.get("test_variables") or {}
+        rendered_greeting = custom_greeting
+        for k, v in tvars.items():
+            rendered_greeting = rendered_greeting.replace(f"{{{{{k}}}}}", str(v))
+        full_opening = rendered_greeting
+        _first_audio_sent_at = time.time()
+        await websocket.send_json({"type": "transcript", "speaker": "agent", "text": full_opening})
+        await tts.send_text(full_opening)
+        await tts.flush()
+        engine.add_turn("agent", full_opening)
+    else:
+        # True dynamic pattern interrupt opening generated by LLM from ConversationEngine system prompt
+        await websocket.send_json({"type": "agent_thinking"})
+        try:
+            async for token in engine.generate_response_stream():
+                if _tts_cancel.is_set() or _generation_id != opening_gen:
+                    await tts.cancel()
+                    break
+
+                if not full_opening:
+                    _first_audio_sent_at = time.time()
+
+                full_opening += token
+                for phrase in chunker.feed(token):
+                    if _tts_cancel.is_set() or _generation_id != opening_gen:
+                        break
+                    await tts.send_text(phrase)
+
+            if not _tts_cancel.is_set() and _generation_id == opening_gen:
+                for phrase in chunker.flush():
+                    if _tts_cancel.is_set() or _generation_id != opening_gen:
+                        break
+                    await tts.send_text(phrase)
+
+                if not _tts_cancel.is_set() and _generation_id == opening_gen:
+                    await tts.flush()
+
+        except Exception as e:
+            print(f"[Browser Voice Test] Dynamic opening LLM error: {e}")
+            full_opening = "Haan namaste, main Clozflow se bol rahi hoon. Kya aapke paas 2 minute honge?"
+            await tts.send_text(full_opening)
+            await tts.flush()
+
+        if full_opening.strip():
+            engine.add_turn("agent", full_opening.strip())
+            await websocket.send_json({"type": "transcript", "speaker": "agent", "text": full_opening.strip()})
+            def _save_initial_msg(s_id, text):
+                try:
+                    from database import SessionLocal
+                    db_s = SessionLocal()
+                    db_s.add(PearlTestMessage(session_id=s_id, role="assistant", text=text, meta={"is_opening": True}))
+                    db_s.commit()
+                    db_s.close()
+                except Exception:
+                    pass
+            asyncio.create_task(asyncio.to_thread(_save_initial_msg, session.id, full_opening.strip()))
+
+    # ── Audio Ingestion Loop ──
+    try:
+        while True:
+            msg = await websocket.receive()
+            if msg.get("type") == "websocket.disconnect":
+                break
+
+            if "bytes" in msg:
+                pcm_data = msg["bytes"]
+                if not pcm_data:
+                    continue
+
+                # Feed to STT
+                await stt.send_audio(pcm_data)
+
+                # Feed to VAD for speech activity and interruption
+                events = vad.process_chunk(pcm_data)
+                now = time.time()
+                for ev in events:
+                    if ev == VADEvent.SPEECH_START:
+                        # Barge-in: only allowed if Pearl has been actively emitting speech for > 0.25s
+                        if _is_speaking and _first_audio_sent_at > 0 and (now - _first_audio_sent_at > 0.25):
+                            print("[Browser Voice Test] Interruption detected -> cancelling TTS")
+                            _tts_cancel.set()
+                            _generation_id += 1
+                            _is_speaking = False
+                            _first_audio_sent_at = 0.0
+                            await tts.cancel()
+                            await websocket.send_json({"type": "interrupted"})
+                            turn_detector.on_speech_start()
+                        elif not _is_speaking:
+                            turn_detector.on_speech_start()
+                    elif ev == VADEvent.SPEECH_END:
+                        if not _is_speaking:
+                            turn_detector.on_speech_end()
+
+            elif "text" in msg:
+                data = json.loads(msg["text"])
+                if data.get("type") == "stop":
+                    break
+
+    except WebSocketDisconnect:
+        print("[Browser Voice Test] Client disconnected")
+    except Exception as e:
+        print(f"[Browser Voice Test] WebSocket error: {e}")
+    finally:
+        # Graceful cleanup
+        tts_task.cancel()
+        try:
+            await stt.close()
+            await tts.close()
+        except Exception:
+            pass
+        print(f"[Browser Voice Test] Session {session_id} cleaned up safely")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OUTBOUND CAMPAIGNS & RECIPIENTS MANAGEMENT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class CreateCampaignRequest(BaseModel):
+    name: str
+    agent_id: Optional[str] = None
+    objective: Optional[str] = None
+    description: Optional[str] = None
+    source_type: str = "lead_finder"
+    call_settings: Optional[dict] = None
+    schedule_time: Optional[datetime] = None
+
+
+class UpdateCampaignRequest(BaseModel):
+    name: Optional[str] = None
+    agent_id: Optional[str] = None
+    objective: Optional[str] = None
+    description: Optional[str] = None
+    call_settings: Optional[dict] = None
+    schedule_time: Optional[datetime] = None
+    status: Optional[str] = None
+
+
+class ImportFromFinderRequest(BaseModel):
+    leads: List[dict]
+
+
+class ManualRecipientRequest(BaseModel):
+    name: Optional[str] = None
+    business_name: Optional[str] = None
+    phone_number: str
+    company: Optional[str] = None
+    email: Optional[str] = None
+    website: Optional[str] = None
+
+
+def campaign_to_dict(c: PearlCampaign, include_recipients: bool = False) -> dict:
+    result = {
+        "id": c.id,
+        "user_id": c.user_id,
+        "agent_id": c.agent_id,
+        "agent_name": c.agent.name if c.agent else None,
+        "name": c.name,
+        "objective": c.objective,
+        "description": c.description,
+        "status": c.status,
+        "source_type": c.source_type,
+        "call_settings": c.call_settings or {
+            "calling_hours": "09:00 - 18:00",
+            "timezone": "Asia/Kolkata (IST)",
+            "max_attempts": 2,
+            "retry_interval": 30,
+            "concurrency_limit": 1
+        },
+        "schedule_time": c.schedule_time.isoformat() if c.schedule_time else None,
+        "metrics": {
+            "total_recipients": c.total_recipients,
+            "eligible_recipients": c.eligible_recipients,
+            "completed_calls": c.completed_calls,
+            "failed_calls": c.failed_calls,
+            "qualified_calls": c.qualified_calls,
+        },
+        "created_at": c.created_at.isoformat() if c.created_at else None,
+        "updated_at": c.updated_at.isoformat() if c.updated_at else None,
+        "started_at": c.started_at.isoformat() if c.started_at else None,
+        "completed_at": c.completed_at.isoformat() if c.completed_at else None,
+    }
+    if include_recipients:
+        result["recipients"] = [recipient_to_dict(r) for r in (c.recipients or [])]
+    return result
+
+
+def recipient_to_dict(r: PearlCampaignRecipient) -> dict:
+    return {
+        "id": r.id,
+        "campaign_id": r.campaign_id,
+        "lead_id": r.lead_id,
+        "name": r.name,
+        "business_name": r.business_name,
+        "phone_number": r.phone_number,
+        "normalized_phone": r.normalized_phone,
+        "email": r.email,
+        "website": r.website,
+        "company": r.company,
+        "source": r.source,
+        "status": r.status,
+        "validation_error": r.validation_error,
+        "call_id": r.call_id,
+        "attempts": r.attempts,
+        "duration_seconds": r.duration_seconds,
+        "outcome": r.outcome,
+        "error_reason": r.error_reason,
+        "transcript": r.transcript,
+        "summary": r.summary,
+        "created_at": r.created_at.isoformat() if r.created_at else None,
+    }
+
+
+@router.post("/campaigns")
+def create_campaign(
+    req: CreateCampaignRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Create a new campaign draft."""
+    if req.agent_id:
+        agent = db.query(PearlAgent).filter(
+            PearlAgent.id == req.agent_id,
+            PearlAgent.user_id == user.id
+        ).first()
+        if not agent:
+            raise HTTPException(404, "Agent not found")
+
+    campaign = PearlCampaign(
+        user_id=user.id,
+        agent_id=req.agent_id,
+        name=req.name,
+        objective=req.objective,
+        description=req.description,
+        source_type=req.source_type,
+        status="draft",
+        call_settings=req.call_settings or {
+            "calling_hours": "09:00 - 18:00",
+            "timezone": "Asia/Kolkata (IST)",
+            "max_attempts": 2,
+            "retry_interval": 30,
+            "concurrency_limit": 1
+        },
+        schedule_time=req.schedule_time
+    )
+    db.add(campaign)
+    db.commit()
+    db.refresh(campaign)
+    return campaign_to_dict(campaign)
+
+
+@router.get("/campaigns")
+def list_campaigns(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """List all campaigns for current user."""
+    campaigns = db.query(PearlCampaign).filter(
+        PearlCampaign.user_id == user.id
+    ).order_by(PearlCampaign.created_at.desc()).all()
+    return [campaign_to_dict(c) for c in campaigns]
+
+
+@router.get("/campaigns/{campaign_id}")
+def get_campaign(
+    campaign_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Get single campaign details and recipients."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+    return campaign_to_dict(campaign, include_recipients=True)
+
+
+@router.patch("/campaigns/{campaign_id}")
+def update_campaign(
+    campaign_id: str,
+    req: UpdateCampaignRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Update campaign draft settings."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    if campaign.status == "running" and req.status not in ("paused", None):
+        raise HTTPException(400, "Cannot edit configuration of an actively running campaign")
+
+    update_fields = req.model_dump(exclude_unset=True)
+    for field, value in update_fields.items():
+        setattr(campaign, field, value)
+
+    campaign.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(campaign)
+    return campaign_to_dict(campaign)
+
+
+@router.delete("/campaigns/{campaign_id}")
+def delete_campaign(
+    campaign_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Delete a draft or completed campaign."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    if campaign.status == "running":
+        raise HTTPException(400, "Cannot delete an actively running campaign")
+
+    db.delete(campaign)
+    db.commit()
+    return {"ok": True, "message": f"Campaign '{campaign.name}' deleted"}
+
+
+# ── Recipient Ingestion Endpoints ─────────────────────────────────────────────
+
+@router.post("/campaigns/{campaign_id}/import-leads")
+async def import_campaign_leads_file(
+    campaign_id: str,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Import and validate leads from a CSV or Excel (.xlsx) file.
+    Applies shared lead ingestion: E.164 normalization, deduplication, and column mapping.
+    """
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    content = await file.read()
+    if not content:
+        raise HTTPException(400, "Uploaded file is empty")
+
+    filename = file.filename.lower()
+    raw_rows: List[dict] = []
+
+    if filename.endswith(".csv"):
+        try:
+            text = content.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            text = content.decode("latin-1", errors="replace")
+        raw_rows = parse_csv_file(text)
+    elif filename.endswith(".xlsx"):
+        try:
+            raw_rows = parse_xlsx_sheets(content)
+        except Exception as e:
+            raise HTTPException(400, f"Failed to parse Excel workbook: {str(e)}")
+    else:
+        raise HTTPException(400, "Unsupported file format. Please upload a .csv or .xlsx file")
+
+    if not raw_rows:
+        raise HTTPException(400, "No valid data rows found in uploaded file")
+
+    # Fetch existing phone numbers in this campaign to detect duplicates
+    existing_recipients = db.query(PearlCampaignRecipient.normalized_phone).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id
+    ).all()
+    existing_phones = {r[0] for r in existing_recipients if r[0]}
+
+    processed, stats = process_lead_batch(raw_rows, source="csv_upload", existing_phone_set=existing_phones)
+
+    # Persist recipients to DB
+    new_recipients = []
+    for item in processed:
+        rec = PearlCampaignRecipient(
+            campaign_id=campaign.id,
+            name=item.get("name"),
+            business_name=item.get("business_name"),
+            company=item.get("company"),
+            phone_number=item.get("phone_number") or "",
+            normalized_phone=item.get("normalized_phone") or "",
+            email=item.get("email"),
+            website=item.get("website"),
+            source="csv_upload",
+            status=item.get("status", "valid"),
+            validation_error=item.get("validation_error")
+        )
+        db.add(rec)
+        new_recipients.append(rec)
+
+    db.commit()
+
+    # Recalculate campaign totals
+    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
+    eligible = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "valid"
+    ).count()
+
+    campaign.total_recipients = total
+    campaign.eligible_recipients = eligible
+    campaign.source_type = "csv_upload"
+    db.commit()
+
+    return {
+        "ok": True,
+        "stats": stats,
+        "imported_count": len(new_recipients),
+        "total_campaign_recipients": total,
+        "eligible_count": eligible,
+        "recipients": [recipient_to_dict(r) for r in new_recipients[:100]]
+    }
+
+
+@router.post("/campaigns/{campaign_id}/import-from-finder")
+def import_campaign_leads_from_finder(
+    campaign_id: str,
+    req: ImportFromFinderRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Import leads directly selected from Clozflow Lead Finder into a campaign.
+    Normalizes phone numbers and deduplicates seamlessly.
+    """
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    if not req.leads:
+        raise HTTPException(400, "No leads provided in selection")
+
+    existing_recipients = db.query(PearlCampaignRecipient.normalized_phone).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id
+    ).all()
+    existing_phones = {r[0] for r in existing_recipients if r[0]}
+
+    processed, stats = process_lead_batch(req.leads, source="lead_finder", existing_phone_set=existing_phones)
+
+    new_recipients = []
+    for item in processed:
+        rec = PearlCampaignRecipient(
+            campaign_id=campaign.id,
+            name=item.get("name"),
+            business_name=item.get("business_name"),
+            company=item.get("company"),
+            phone_number=item.get("phone_number") or "",
+            normalized_phone=item.get("normalized_phone") or "",
+            email=item.get("email"),
+            website=item.get("website"),
+            source="lead_finder",
+            status=item.get("status", "valid"),
+            validation_error=item.get("validation_error")
+        )
+        db.add(rec)
+        new_recipients.append(rec)
+
+    db.commit()
+
+    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
+    eligible = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "valid"
+    ).count()
+
+    campaign.total_recipients = total
+    campaign.eligible_recipients = eligible
+    campaign.source_type = "lead_finder"
+    db.commit()
+
+    return {
+        "ok": True,
+        "stats": stats,
+        "imported_count": len(new_recipients),
+        "total_campaign_recipients": total,
+        "eligible_count": eligible,
+        "recipients": [recipient_to_dict(r) for r in new_recipients]
+    }
+
+
+@router.post("/campaigns/{campaign_id}/add-manual-recipient")
+def add_manual_recipient(
+    campaign_id: str,
+    req: ManualRecipientRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Add a single manual recipient to the campaign."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    is_valid, norm_phone, err = validate_and_normalize_phone(req.phone_number)
+
+    display_name = req.name or req.business_name or "Direct Contact"
+    display_biz = req.business_name or req.company or req.name or "Direct Business"
+
+    rec = PearlCampaignRecipient(
+        campaign_id=campaign.id,
+        name=display_name,
+        business_name=display_biz,
+        company=display_biz,
+        phone_number=req.phone_number,
+        normalized_phone=norm_phone if is_valid else "",
+        email=req.email,
+        website=req.website,
+        source="manual",
+        status="valid" if is_valid else "invalid",
+        validation_error=err
+    )
+    db.add(rec)
+    db.commit()
+    db.refresh(rec)
+
+    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
+    eligible = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "valid"
+    ).count()
+
+    campaign.total_recipients = total
+    campaign.eligible_recipients = eligible
+    db.commit()
+
+    return {
+        "ok": True,
+        "recipient": recipient_to_dict(rec),
+        "total_campaign_recipients": total,
+        "eligible_count": eligible
+    }
+
+
+@router.get("/campaigns/{campaign_id}/recipients")
+def get_campaign_recipients(
+    campaign_id: str,
+    limit: int = 200,
+    offset: int = 0,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """List recipients for review with pagination."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    recipients = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id
+    ).order_by(PearlCampaignRecipient.created_at.asc()).offset(offset).limit(limit).all()
+
+    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
+
+    return {
+        "recipients": [recipient_to_dict(r) for r in recipients],
+        "total": total,
+        "limit": limit,
+        "offset": offset
+    }
+
+
+@router.patch("/campaigns/{campaign_id}/recipients/{recipient_id}")
+def toggle_campaign_recipient(
+    campaign_id: str,
+    recipient_id: str,
+    status: str,  # "valid" | "excluded"
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Toggle a recipient between valid and excluded in review table."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    recipient = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.id == recipient_id,
+        PearlCampaignRecipient.campaign_id == campaign_id
+    ).first()
+    if not recipient:
+        raise HTTPException(404, "Recipient not found")
+
+    if status not in ("valid", "excluded"):
+        raise HTTPException(400, "Status must be 'valid' or 'excluded'")
+
+    # Don't allow marking invalid number as valid if it fails E.164
+    if status == "valid" and not recipient.normalized_phone:
+        raise HTTPException(400, "Cannot enable a recipient with an invalid phone number")
+
+    recipient.status = status
+    db.commit()
+
+    eligible = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "valid"
+    ).count()
+
+    campaign.eligible_recipients = eligible
+    db.commit()
+
+    return {
+        "ok": True,
+        "recipient": recipient_to_dict(recipient),
+        "eligible_count": eligible
+    }
+
+
+@router.delete("/campaigns/{campaign_id}/recipients/{recipient_id}")
+def delete_campaign_recipient(
+    campaign_id: str,
+    recipient_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Remove a recipient from the campaign review list."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    recipient = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.id == recipient_id,
+        PearlCampaignRecipient.campaign_id == campaign_id
+    ).first()
+    if not recipient:
+        raise HTTPException(404, "Recipient not found")
+
+    db.delete(recipient)
+    db.commit()
+
+    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
+    eligible = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "valid"
+    ).count()
+
+    campaign.total_recipients = total
+    campaign.eligible_recipients = eligible
+    db.commit()
+
+    return {"ok": True, "total_recipients": total, "eligible_count": eligible}
+
+
+# ── Campaign Launch & Telephony Dispatch ──────────────────────────────────────
+
+async def _dispatch_campaign_worker(campaign_id: str):
+    """
+    Background worker that executes outbound calls for eligible recipients in a campaign.
+    Reuses the existing ExotelTelephonyProvider and PearlCall models.
+    """
+    from database import SessionLocal
+    from services.pearl.providers.exotel_provider import ExotelTelephonyProvider
+    import os
+
+    provider = ExotelTelephonyProvider()
+    caller_id = os.getenv("EXOTEL_CALLER_ID", "0000000000")
+
+    s = SessionLocal()
+    try:
+        campaign = s.query(PearlCampaign).filter(PearlCampaign.id == campaign_id).first()
+        if not campaign or campaign.status != "running":
+            return
+
+        recipients = s.query(PearlCampaignRecipient).filter(
+            PearlCampaignRecipient.campaign_id == campaign_id,
+            PearlCampaignRecipient.status == "valid"
+        ).order_by(PearlCampaignRecipient.created_at.asc()).all()
+
+        for rec in recipients:
+            # Check if campaign was paused or cancelled mid-execution
+            s.refresh(campaign)
+            if campaign.status in ("paused", "completed", "failed"):
+                break
+
+            rec.status = "calling"
+            rec.attempts += 1
+            s.commit()
+
+            # Create PearlCall record
+            call = PearlCall(
+                agent_id=campaign.agent_id,
+                lead_id=rec.lead_id,
+                provider="exotel",
+                status="queued"
+            )
+            s.add(call)
+            s.commit()
+            s.refresh(call)
+
+            rec.call_id = call.id
+
+            # Create PearlConversation record
+            conv = PearlConversation(
+                call_id=call.id,
+                lead_id=rec.lead_id,
+                objective=campaign.objective or "Qualify and schedule next steps",
+                status="active"
+            )
+            s.add(conv)
+            s.commit()
+
+            # Execute real outbound call via Exotel
+            try:
+                res = await provider.create_outbound_call(
+                    to_number=rec.normalized_phone,
+                    from_number=caller_id,
+                    custom_field=call.id
+                )
+                if res.get("success"):
+                    call.provider_call_id = res.get("provider_call_id")
+                    call.status = "dialing"
+                    rec.status = "calling"
+                    campaign.completed_calls += 1
+                else:
+                    call.status = "failed"
+                    call.error_code = res.get("error", "Exotel Call Request Failed")
+                    rec.status = "failed"
+                    rec.error_reason = call.error_code
+                    campaign.failed_calls += 1
+
+            except Exception as e:
+                print(f"[Campaign Dispatch Worker] Error calling {rec.normalized_phone}: {e}")
+                call.status = "failed"
+                call.error_code = str(e)
+                rec.status = "failed"
+                rec.error_reason = str(e)
+                campaign.failed_calls += 1
+
+            s.commit()
+
+            # Pacing interval between dispatches (respecting concurrency limits)
+            pacing = float(campaign.call_settings.get("retry_interval", 2.0)) if campaign.call_settings else 2.0
+            await asyncio.sleep(min(pacing, 5.0))
+
+        # Check if all completed
+        remaining = s.query(PearlCampaignRecipient).filter(
+            PearlCampaignRecipient.campaign_id == campaign_id,
+            PearlCampaignRecipient.status == "valid"
+        ).count()
+
+        if remaining == 0:
+            campaign.status = "completed"
+            campaign.completed_at = datetime.utcnow()
+            s.commit()
+
+    except Exception as e:
+        print(f"[Campaign Dispatch Error] {e}")
+        try:
+            campaign.status = "failed"
+            s.commit()
+        except Exception:
+            pass
+    finally:
+        s.close()
+
+
+@router.post("/campaigns/{campaign_id}/launch")
+async def launch_campaign(
+    campaign_id: str,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """
+    Explicitly launch an outbound campaign.
+    Validates agent, eligible recipients (>0), and provider readiness.
+    Prevents double submissions and executes calls through existing Exotel integration.
+    """
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    if campaign.status in ("running", "completed"):
+        raise HTTPException(400, f"Campaign is already in '{campaign.status}' state")
+
+    if not campaign.agent_id:
+        raise HTTPException(400, "Please select an Agent for this campaign before launching")
+
+    agent = db.query(PearlAgent).filter(PearlAgent.id == campaign.agent_id).first()
+    if not agent:
+        raise HTTPException(400, "Selected Agent does not exist")
+
+    # Count eligible recipients
+    eligible_count = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "valid"
+    ).count()
+
+    if eligible_count == 0:
+        raise HTTPException(400, "Cannot launch campaign: no eligible recipients found. Please import or enable at least one valid recipient.")
+
+    # Validate Exotel telephony readiness
+    import os
+    exotel_sid = os.getenv("EXOTEL_ACCOUNT_SID")
+    exotel_key = os.getenv("EXOTEL_API_KEY")
+    exotel_token = os.getenv("EXOTEL_API_TOKEN")
+
+    if not all([exotel_sid, exotel_key, exotel_token]):
+        raise HTTPException(
+            400,
+            "Telephony gateway unready: Exotel API credentials (EXOTEL_ACCOUNT_SID, EXOTEL_API_KEY, EXOTEL_API_TOKEN) are missing from server configuration."
+        )
+
+    # Transition campaign to running
+    campaign.status = "running"
+    campaign.started_at = datetime.utcnow()
+    campaign.eligible_recipients = eligible_count
+    db.commit()
+    db.refresh(campaign)
+
+    # Dispatch via background task worker
+    background_tasks.add_task(_dispatch_campaign_worker, campaign.id)
+
+    return {
+        "ok": True,
+        "message": f"Campaign '{campaign.name}' launched successfully with {eligible_count} recipients.",
+        "campaign": campaign_to_dict(campaign)
+    }
+
+
+@router.post("/campaigns/{campaign_id}/pause")
+def pause_campaign(
+    campaign_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Pause an actively running campaign."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    if campaign.status != "running":
+        raise HTTPException(400, "Only running campaigns can be paused")
+
+    campaign.status = "paused"
+    db.commit()
+    return {"ok": True, "status": "paused"}
+
+
+@router.post("/campaigns/{campaign_id}/resume")
+async def resume_campaign(
+    campaign_id: str,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Resume a paused campaign."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    if campaign.status != "paused":
+        raise HTTPException(400, "Only paused campaigns can be resumed")
+
+    campaign.status = "running"
+    db.commit()
+
+    background_tasks.add_task(_dispatch_campaign_worker, campaign.id)
+    return {"ok": True, "status": "running"}
+
+
+@router.get("/campaigns/{campaign_id}/status")
+def get_campaign_status(
+    campaign_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    """Retrieve real-time campaign status and live metrics."""
+    campaign = db.query(PearlCampaign).filter(
+        PearlCampaign.id == campaign_id,
+        PearlCampaign.user_id == user.id
+    ).first()
+    if not campaign:
+        raise HTTPException(404, "Campaign not found")
+
+    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
+    completed = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "completed"
+    ).count()
+    calling = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "calling"
+    ).count()
+    failed = db.query(PearlCampaignRecipient).filter(
+        PearlCampaignRecipient.campaign_id == campaign_id,
+        PearlCampaignRecipient.status == "failed"
+    ).count()
+
+    return {
+        "status": campaign.status,
+        "total_recipients": total,
+        "eligible_recipients": campaign.eligible_recipients,
+        "completed": completed,
+        "calling": calling,
+        "failed": failed,
+        "started_at": campaign.started_at.isoformat() if campaign.started_at else None,
+        "completed_at": campaign.completed_at.isoformat() if campaign.completed_at else None
+    }

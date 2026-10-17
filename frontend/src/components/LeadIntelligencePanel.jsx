@@ -348,6 +348,8 @@ const LeadIntelligencePanel = ({ selectedLead, onStartCall, onOutreach }) => {
         isPanelOpen,
         togglePanel,
         closePanel,
+        panelWidth = 380,
+        setPanelWidth,
         panelState,
         setPanelState,
         offerInput,
@@ -367,6 +369,71 @@ const LeadIntelligencePanel = ({ selectedLead, onStartCall, onOutreach }) => {
         resultsSummary,
         setResultsSummary,
     } = useLeadIntelligenceStore();
+
+    const MIN_PANEL_WIDTH = 320;
+    const DEFAULT_PANEL_WIDTH = 380;
+    const getMaxPanelWidth = () => Math.min(960, Math.max(MIN_PANEL_WIDTH, window.innerWidth - 80));
+
+    const [isResizing, setIsResizing] = useState(false);
+
+    const handleResizeMouseDown = (e) => {
+        e.preventDefault();
+        setIsResizing(true);
+    };
+
+    const handleResizeTouchStart = () => {
+        setIsResizing(true);
+    };
+
+    const handleResetWidth = () => {
+        setPanelWidth(DEFAULT_PANEL_WIDTH);
+    };
+
+    // ── Horizontal Drag Resizing Logic ─────────────────────────────────────────
+    useEffect(() => {
+        if (!isResizing) return;
+
+        const handlePointerMove = (e) => {
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const newWidth = window.innerWidth - clientX;
+            const maxWidth = getMaxPanelWidth();
+            const clamped = Math.min(maxWidth, Math.max(MIN_PANEL_WIDTH, newWidth));
+            setPanelWidth(clamped);
+        };
+
+        const handlePointerUp = () => {
+            setIsResizing(false);
+        };
+
+        document.body.style.userSelect = 'none';
+        document.body.style.cursor = 'col-resize';
+
+        window.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('mouseup', handlePointerUp);
+        window.addEventListener('touchmove', handlePointerMove, { passive: false });
+        window.addEventListener('touchend', handlePointerUp);
+
+        return () => {
+            document.body.style.userSelect = '';
+            document.body.style.cursor = '';
+            window.removeEventListener('mousemove', handlePointerMove);
+            window.removeEventListener('mouseup', handlePointerUp);
+            window.removeEventListener('touchmove', handlePointerMove);
+            window.removeEventListener('touchend', handlePointerUp);
+        };
+    }, [isResizing, setPanelWidth]);
+
+    // ── Keep width within window bounds on viewport resize ────────────────────
+    useEffect(() => {
+        const handleWindowResize = () => {
+            const maxWidth = getMaxPanelWidth();
+            if (panelWidth > maxWidth) {
+                setPanelWidth(maxWidth);
+            }
+        };
+        window.addEventListener('resize', handleWindowResize);
+        return () => window.removeEventListener('resize', handleWindowResize);
+    }, [panelWidth, setPanelWidth]);
 
     const {
         query,
@@ -669,9 +736,13 @@ const LeadIntelligencePanel = ({ selectedLead, onStartCall, onOutreach }) => {
         <>
             {/* ── Toggle Button (right edge) ── */}
             <button
-                className={`li-toggle-btn ${isPanelOpen ? 'panel-open' : ''}`}
+                className={`li-toggle-btn ${isPanelOpen ? 'panel-open' : ''} ${isResizing ? 'is-resizing' : ''}`}
                 onClick={togglePanel}
                 title="Lead Intelligence"
+                style={{
+                    '--panel-width': `${panelWidth}px`,
+                    ...(isPanelOpen ? { right: `${panelWidth}px` } : {})
+                }}
             >
                 <div className="li-toggle-icon">
                     <Sparkles size={14} />
@@ -681,7 +752,27 @@ const LeadIntelligencePanel = ({ selectedLead, onStartCall, onOutreach }) => {
             </button>
 
             {/* ── Panel ── */}
-            <div className={`li-panel ${isPanelOpen ? 'is-open' : ''}`}>
+            <div
+                className={`li-panel ${isPanelOpen ? 'is-open' : ''} ${isResizing ? 'is-resizing' : ''}`}
+                style={{
+                    '--panel-width': `${panelWidth}px`,
+                    width: `${panelWidth}px`,
+                    right: isPanelOpen ? 0 : `-${panelWidth + 40}px`
+                }}
+            >
+                {/* ── Horizontal Resize Drag Handle ── */}
+                <div
+                    className={`li-resize-handle ${isResizing ? 'is-dragging' : ''}`}
+                    onMouseDown={handleResizeMouseDown}
+                    onTouchStart={handleResizeTouchStart}
+                    onDoubleClick={handleResetWidth}
+                    title="Drag horizontally to resize · Double-click to reset"
+                    role="separator"
+                    aria-orientation="vertical"
+                    aria-label="Resize Intelligence sidebar"
+                >
+                    <div className="li-resize-handle-knob" />
+                </div>
 
                 {/* Header */}
                 <div className="li-header">

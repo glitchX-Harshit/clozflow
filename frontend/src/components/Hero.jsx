@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Play, ArrowDown, X } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import HeroTelemetryCard from './HeroTelemetryCard';
 import './Hero.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -264,144 +265,9 @@ const Hero = ({ onGetStarted }) => {
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Product Intelligence Analytics Card */}
+                    {/* RIGHT COLUMN: ClozFlow Minimalist Precision Telemetry Card */}
                     <div className="hero__col hero__col--right">
-                        <div className="hero__card" ref={cardRef}>
-                            {/* Card Top: Live Telemetry Status & Speed Metric */}
-                            <div className="hero__card-header">
-                                <div className="hero__card-status-badge">
-                                    <span className="hero__card-pulse-dot" />
-                                    <span className="hero__card-status-text">LIVE SIGNAL MATRIX</span>
-                                </div>
-                                <div className="hero__card-latency-tag">
-                                    <span className="hero__card-latency-num">32ms</span>
-                                    <span className="hero__card-latency-unit">LATENCY</span>
-                                </div>
-                            </div>
-
-                            {/* Main Stat & Velocity Tag */}
-                            <div className="hero__card-stat-row">
-                                <div className="hero__card-metric-block">
-                                    <div className="hero__card-metric-val">+43%</div>
-                                    <div className="hero__card-metric-label">Meetings Booked & Kept</div>
-                                </div>
-                                <div className="hero__card-delta-badge">
-                                    <ArrowUpRight size={13} strokeWidth={2.5} />
-                                    <span>3.2x SPEED</span>
-                                </div>
-                            </div>
-
-                            {/* Unique Conversion Horizon Graph with Dotted Reference Line & Area Fill */}
-                            <div className="hero__card-graph-wrap">
-                                <svg className="hero__card-svg" viewBox="0 0 280 90" fill="none" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="curveGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
-                                            <stop offset="65%" stopColor="#6366f1" stopOpacity="0.05" />
-                                            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-                                        </linearGradient>
-                                        <linearGradient id="neonPath" x1="0%" y1="100%" x2="100%" y2="0%">
-                                            <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.6" />
-                                            <stop offset="40%" stopColor="#6366f1" stopOpacity="0.9" />
-                                            <stop offset="100%" stopColor="#2563eb" stopOpacity="1" />
-                                        </linearGradient>
-                                    </defs>
-
-                                    {/* Architectural Grid Guides */}
-                                    <line x1="0" y1="26" x2="280" y2="26" stroke="rgba(15, 23, 42, 0.05)" strokeDasharray="3 4" />
-                                    <line x1="0" y1="56" x2="280" y2="56" stroke="rgba(15, 23, 42, 0.05)" strokeDasharray="3 4" />
-                                    <line x1="0" y1="84" x2="280" y2="84" stroke="rgba(15, 23, 42, 0.07)" />
-
-                                    {/* Soft Area Horizon */}
-                                    <path 
-                                        d="M 5 78 C 55 76, 95 64, 135 42 C 175 18, 220 16, 275 8 L 275 84 L 5 84 Z" 
-                                        fill="url(#curveGlow)" 
-                                    />
-
-                                    {/* Industry Baseline Comparison Dotted Line */}
-                                    <path 
-                                        d="M 5 80 C 70 78, 140 73, 210 68 C 240 66, 260 63, 275 62" 
-                                        stroke="rgba(148, 163, 184, 0.45)" 
-                                        strokeWidth="1.5" 
-                                        strokeDasharray="4 4" 
-                                    />
-
-                                    {/* Primary Trajectory Neon Curve */}
-                                    <path 
-                                        d="M 5 78 C 55 76, 95 64, 135 42 C 175 18, 220 16, 275 8" 
-                                        stroke="url(#neonPath)" 
-                                        strokeWidth="2.5" 
-                                        strokeLinecap="round" 
-                                    />
-
-                                    {/* Glowing Peak Beacon */}
-                                    <circle cx="275" cy="8" r="11" fill="#3b82f6" fillOpacity="0.18" className="hero__graph-glow" />
-                                    <circle cx="275" cy="8" r="5" fill="#2563eb" />
-                                    <circle cx="275" cy="8" r="2" fill="#ffffff" />
-                                </svg>
-
-                                {/* Floating Conversion Lock Tooltip */}
-                                <div className="hero__card-badge-pill">
-                                    <span className="hero__card-pill-dot" />
-                                    <span>CONVERSION LOCK</span>
-                                </div>
-                            </div>
-
-                            {/* Live Behavioral Audio Stream Indicator */}
-                            <div className="hero__card-stream">
-                                <div className="hero__card-wave-bars" aria-hidden="true">
-                                    <span className="hero__wave-bar hero__wave-bar--1" />
-                                    <span className="hero__wave-bar hero__wave-bar--2" />
-                                    <span className="hero__wave-bar hero__wave-bar--3" />
-                                    <span className="hero__wave-bar hero__wave-bar--4" />
-                                    <span className="hero__wave-bar hero__wave-bar--5" />
-                                </div>
-                                <span className="hero__card-stream-text">
-                                    Live Intent: <strong>Price objection converted</strong>
-                                </span>
-                            </div>
-
-                            {/* Card Divider */}
-                            <div className="hero__card-divider" />
-
-                            {/* Card Bottom: Avatars, Proof & Action */}
-                            <div className="hero__card-bottom">
-                                <div className="hero__card-social">
-                                    <div className="hero__avatar-group">
-                                        <img 
-                                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&auto=format&fit=crop&q=80" 
-                                            alt="Sales Director" 
-                                            className="hero__avatar"
-                                            loading="lazy"
-                                        />
-                                        <img 
-                                            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&auto=format&fit=crop&q=80" 
-                                            alt="Account Executive" 
-                                            className="hero__avatar"
-                                            loading="lazy"
-                                        />
-                                        <img 
-                                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&auto=format&fit=crop&q=80" 
-                                            alt="VP Sales" 
-                                            className="hero__avatar"
-                                            loading="lazy"
-                                        />
-                                    </div>
-                                    <div className="hero__proof-text">
-                                        <span className="hero__proof-count">2,400+ AEs</span>
-                                        <span className="hero__proof-label">CLOSING WITH CLARITY</span>
-                                    </div>
-                                </div>
-
-                                <button 
-                                    className="hero__card-action-btn"
-                                    onClick={onGetStarted}
-                                    aria-label="View analytics details"
-                                >
-                                    <ArrowRight size={14} />
-                                </button>
-                            </div>
-                        </div>
+                        <HeroTelemetryCard ref={cardRef} onGetStarted={onGetStarted} />
                     </div>
                 </div>
             </div>

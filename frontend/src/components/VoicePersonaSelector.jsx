@@ -4,43 +4,30 @@ import gsap from 'gsap';
 import './VoicePersonaSelector.css';
 
 export const CLOZFLOW_VOICE_LIST = [
-  { id: 'ritu', name: 'Ritu', gender: 'Female', style: 'Closer · High Energy' },
-  { id: 'aditya', name: 'Aditya', gender: 'Male', style: 'Executive · Deep Gravitas' },
-  { id: 'priya', name: 'Priya', gender: 'Female', style: 'Consultative · Warm' },
-  { id: 'rahul', name: 'Rahul', gender: 'Male', style: 'Pragmatic · Technical' },
-  { id: 'shreya', name: 'Shreya', gender: 'Female', style: 'Dynamic · Fast-Paced' },
-  { id: 'varun', name: 'Varun', gender: 'Male', style: 'Strategic · Composed' },
-  { id: 'ashutosh', name: 'Ashutosh', gender: 'Male', style: 'Corporate · Formal' },
-  { id: 'neha', name: 'Neha', gender: 'Female', style: 'Retention · Empathetic' },
-  { id: 'pooja', name: 'Pooja', gender: 'Female', style: 'Gentle · Persuasive' },
-  { id: 'rohan', name: 'Rohan', gender: 'Male', style: 'Upbeat · Direct' },
-  { id: 'simran', name: 'Simran', gender: 'Female', style: 'Refined · Articulate' },
-  { id: 'kavya', name: 'Kavya', gender: 'Female', style: 'Lucid · Solution-focused' },
-  { id: 'amit', name: 'Amit', gender: 'Male', style: 'Clear · Relatable' },
-  { id: 'dev', name: 'Dev', gender: 'Male', style: 'Punchy · Direct' },
-  { id: 'ishita', name: 'Ishita', gender: 'Female', style: 'Poised · Executive' },
-  { id: 'ratan', name: 'Ratan', gender: 'Male', style: 'Commanding · Seasoned' },
-  { id: 'manan', name: 'Manan', gender: 'Male', style: 'Analytical · Sharp' },
-  { id: 'sumit', name: 'Sumit', gender: 'Male', style: 'Calm · Professional' },
-  { id: 'roopa', name: 'Roopa', gender: 'Female', style: 'Patient · Empathetic' },
-  { id: 'kabir', name: 'Kabir', gender: 'Male', style: 'Bold · Provocative' },
-  { id: 'aayan', name: 'Aayan', gender: 'Male', style: 'Natural · Confident' },
-  { id: 'shubh', name: 'Shubh', gender: 'Male', style: 'Tenacious · Upbeat' },
-  { id: 'advait', name: 'Advait', gender: 'Male', style: 'Meticulous · High-Touch' },
-  { id: 'anand', name: 'Anand', gender: 'Male', style: 'Seasoned · Operational' },
-  { id: 'tanya', name: 'Tanya', gender: 'Female', style: 'Quick-Witted · Direct' },
-  { id: 'tarun', name: 'Tarun', gender: 'Male', style: 'Polished · Focused' },
-  { id: 'sunny', name: 'Sunny', gender: 'Male', style: 'Warm · Charismatic' },
-  { id: 'mani', name: 'Mani', gender: 'Male', style: 'Technical · Insightful' },
-  { id: 'gokul', name: 'Gokul', gender: 'Male', style: 'Grounded · Direct' },
-  { id: 'vijay', name: 'Vijay', gender: 'Male', style: 'Resonant · Authority' },
-  { id: 'shruti', name: 'Shruti', gender: 'Female', style: 'Bright · Explanatory' },
-  { id: 'suhani', name: 'Suhani', gender: 'Female', style: 'Engaging · Conversational' },
-  { id: 'mohit', name: 'Mohit', gender: 'Male', style: 'Resilient · Paced' },
-  { id: 'kavitha', name: 'Kavitha', gender: 'Female', style: 'Steady · Advisory' },
-  { id: 'rehan', name: 'Rehan', gender: 'Male', style: 'Smooth · Strategic' },
-  { id: 'soham', name: 'Soham', gender: 'Male', style: 'Analytical · Calm' },
-  { id: 'rupali', name: 'Rupali', gender: 'Female', style: 'Suave · Trustworthy' }
+  { id: 'shubh_enhi_ads', name: 'Shubh', gender: 'Male', language: 'Hinglish', category: 'Sales & Ads', style: 'Hinglish · Outbound Pitch & High-Energy Ads' },
+  { id: 'ritu_hi_customer', name: 'Ritu', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Customer Support & Advisory' },
+  { id: 'simran_en_customer', name: 'Simran', gender: 'Female', language: 'Indian English', category: 'Support & Care', style: 'English · Customer Care & Qualification' },
+  { id: 'priya_hi_recovery', name: 'Priya', gender: 'Female', language: 'Hindi', category: 'Debt & Recovery', style: 'Hindi · Debt Recovery & Direct Follow-up' },
+  { id: 'rohan_en_recovery', name: 'Rohan', gender: 'Male', language: 'Indian English', category: 'Debt & Recovery', style: 'English · Enterprise Recovery & Sales' },
+  { id: 'kavya_en_conversational', name: 'Kavya', gender: 'Female', language: 'Indian English', category: 'Conversational', style: 'English · Warm Conversational & Discovery' },
+  { id: 'rahul_en_conversational', name: 'Rahul', gender: 'Male', language: 'Hinglish/English', category: 'B2B Sales', style: 'Hinglish/English · B2B Sales & Demo Booking' },
+  { id: 'aditya_en_conversational', name: 'Aditya', gender: 'Male', language: 'Indian English', category: 'Executive', style: 'English · Executive Gravitas & Strategy' },
+  { id: 'ishita_en_customer', name: 'Ishita', gender: 'Female', language: 'Indian English', category: 'Support & Care', style: 'English · Empathetic Support & Care' },
+  { id: 'dev_en_recovery', name: 'Dev', gender: 'Male', language: 'Indian English', category: 'Closing & Recovery', style: 'English · Assertive Challenge & Closing' },
+  { id: 'anand_hi_news', name: 'Anand', gender: 'Male', language: 'Hindi', category: 'Executive', style: 'Hindi · Formal & Operational Presentation' },
+  { id: 'neha_hi_customer', name: 'Neha', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Warm Retention & Relationship' },
+  { id: 'pooja_hi_conversational', name: 'Pooja', gender: 'Female', language: 'Hindi', category: 'Conversational', style: 'Hindi · Gentle & Persuasive Conversation' },
+  { id: 'tarun_en_conversational', name: 'Tarun', gender: 'Male', language: 'Indian English', category: 'Conversational', style: 'English · Polished & Focused Discovery' },
+  { id: 'sumit_enhi_ads', name: 'Sumit', gender: 'Male', language: 'Hinglish', category: 'Sales & Ads', style: 'Hinglish · Calm Professional Pitch' },
+  { id: 'kabir_enhi_ads', name: 'Kabir', gender: 'Male', language: 'Hinglish', category: 'Sales & Ads', style: 'Hinglish · Bold & Dynamic Campaign' },
+  { id: 'aayan_en_conversational', name: 'Aayan', gender: 'Male', language: 'Indian English', category: 'Conversational', style: 'English · Natural & Confident Dialogue' },
+  { id: 'shreya_en_conversational', name: 'Shreya', gender: 'Female', language: 'Indian English', category: 'Conversational', style: 'English · Dynamic & Fast-Paced Closer' },
+  { id: 'varun_en_conversational', name: 'Varun', gender: 'Male', language: 'Indian English', category: 'Consulting', style: 'English · Strategic & Composed Consultation' },
+  { id: 'shruti_hi_customer', name: 'Shruti', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Bright & Explanatory Support' },
+  { id: 'mohit_hi_recovery', name: 'Mohit', gender: 'Male', language: 'Hindi', category: 'Debt & Recovery', style: 'Hindi · Resilient & Paced Reminders' },
+  { id: 'suhani_hi_conversational', name: 'Suhani', gender: 'Female', language: 'Hindi', category: 'Conversational', style: 'Hindi · Engaging & Conversational Partner' },
+  { id: 'rehan_en_conversational', name: 'Rehan', gender: 'Male', language: 'Indian English', category: 'B2B Sales', style: 'English · Smooth & Strategic Closer' },
+  { id: 'rupali_hi_customer', name: 'Rupali', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Trustworthy & Reassuring Support' }
 ];
 
 export const SARVAM_VOICE_LIST = CLOZFLOW_VOICE_LIST;
@@ -58,7 +45,15 @@ const VoicePersonaSelector = ({ value, onChange }) => {
 
   // Active voice
   const activeVoice = useMemo(() => {
-    return CLOZFLOW_VOICE_LIST.find(v => v.id.toLowerCase() === (value || 'ritu').toLowerCase()) || CLOZFLOW_VOICE_LIST[0];
+    if (!value) return CLOZFLOW_VOICE_LIST[0];
+    const valLower = value.toLowerCase().trim();
+    const exact = CLOZFLOW_VOICE_LIST.find(v => v.id.toLowerCase() === valLower);
+    if (exact) return exact;
+    const prefixMatch = CLOZFLOW_VOICE_LIST.find(v => v.id.toLowerCase().startsWith(valLower + '_'));
+    if (prefixMatch) return prefixMatch;
+    const nameMatch = CLOZFLOW_VOICE_LIST.find(v => v.name.toLowerCase() === valLower);
+    if (nameMatch) return nameMatch;
+    return CLOZFLOW_VOICE_LIST[0];
   }, [value]);
 
   // Filtered voice list
@@ -71,7 +66,9 @@ const VoicePersonaSelector = ({ value, onChange }) => {
         return (
           v.name.toLowerCase().includes(q) ||
           v.style.toLowerCase().includes(q) ||
-          v.gender.toLowerCase().includes(q)
+          v.gender.toLowerCase().includes(q) ||
+          (v.language && v.language.toLowerCase().includes(q)) ||
+          (v.category && v.category.toLowerCase().includes(q))
         );
       }
       return true;
@@ -142,6 +139,10 @@ const VoicePersonaSelector = ({ value, onChange }) => {
           <span className="aw-voice-name">{activeVoice.name}</span>
           <span className="aw-voice-sep">·</span>
           <span className="aw-voice-meta">{activeVoice.gender}</span>
+          <span className="aw-voice-sep">·</span>
+          <span style={{ fontSize: '0.78rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '240px' }}>
+            {activeVoice.style}
+          </span>
         </div>
 
         <div className="aw-trigger-right">
@@ -225,8 +226,18 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                     onClick={() => handleSelect(voice.id)}
                   >
                     <div className="aw-option-left">
-                      <span className="aw-option-name">{voice.name}</span>
-                      <span className="aw-option-gender">{voice.gender}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', textAlign: 'left' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span className="aw-option-name">{voice.name}</span>
+                          <span className="aw-option-gender">{voice.gender}</span>
+                          <span style={{ fontSize: '0.68rem', padding: '1px 5px', borderRadius: '4px', background: '#f1f5f9', color: '#475569', fontWeight: 600 }}>
+                            {voice.language}
+                          </span>
+                        </div>
+                        <span style={{ fontSize: '0.73rem', color: '#64748b', fontWeight: 400 }}>
+                          {voice.style}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="aw-option-right">

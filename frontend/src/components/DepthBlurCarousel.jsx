@@ -1,0 +1,367 @@
+import React, { useRef, useMemo, useState, useEffect } from 'react';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import './DepthBlurCarousel.css';
+
+// ── Curated Full-Bleed Visual Imagery (Ultra-High Resolution, Editorial Tech & Architecture) ──
+const CAROUSEL_SLIDES = [
+    {
+        id: 'voice-closer',
+        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=85',
+        title: 'Pearl Autonomous Voice',
+        tag: 'SUB-200MS TELEMETRY',
+        metric: '4.2X Pipeline'
+    },
+    {
+        id: 'whisper-radar',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85',
+        title: 'Micro-Flinch Radar HUD',
+        tag: 'ACOUSTIC RECOGNITION',
+        metric: '320ms Warning'
+    },
+    {
+        id: 'executive-rebuttal',
+        image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=85',
+        title: 'Executive Objection Decoder',
+        tag: 'BEHAVIORAL PERSUASION',
+        metric: '+43.8% Close Rate'
+    },
+    {
+        id: 'vector-rag',
+        image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=85',
+        title: 'FAISS Rebuttal Knowledge Base',
+        tag: '4M+ VECTOR CORPUS',
+        metric: '99.4% Accuracy'
+    },
+    {
+        id: 'neural-sync',
+        image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=85',
+        title: 'Zero-Touch CRM Hygiene',
+        tag: 'SALESFORCE & HUBSPOT',
+        metric: '14h / Wk Saved'
+    },
+    {
+        id: 'deal-recovery',
+        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=85',
+        title: 'Deal Revival Architecture',
+        tag: 'REVENUE ENGINE',
+        metric: '+$480K Revived'
+    }
+];
+
+export default function DepthBlurCarousel({
+    slides = CAROUSEL_SLIDES,
+    itemWidth = 430,
+    itemHeight = 270,
+    sideItemWidth = 285,
+    sideItemHeight = 245,
+    gap = 46,
+    maxRotation = 75,
+    perspective = 450,
+    borderRadius = 16,
+    scrollDamping = 100,
+    blurSpread = 25,
+    blurStrength = 24
+}) {
+    // Responsive card dimensions (scaled down)
+    const [dims, setDims] = useState({
+        itemWidth,
+        itemHeight,
+        sideItemWidth,
+        sideItemHeight,
+        gap
+    });
+
+    useEffect(() => {
+        const updateDims = () => {
+            if (window.innerWidth < 640) {
+                setDims({
+                    itemWidth: Math.min(window.innerWidth * 0.82, 270),
+                    itemHeight: 170,
+                    sideItemWidth: Math.min(window.innerWidth * 0.58, 180),
+                    sideItemHeight: 150,
+                    gap: 18
+                });
+            } else if (window.innerWidth < 1024) {
+                setDims({
+                    itemWidth: 350,
+                    itemHeight: 220,
+                    sideItemWidth: 230,
+                    sideItemHeight: 200,
+                    gap: 32
+                });
+            } else {
+                setDims({
+                    itemWidth: 430,
+                    itemHeight: 270,
+                    sideItemWidth: 285,
+                    sideItemHeight: 245,
+                    gap: 46
+                });
+            }
+        };
+        updateDims();
+        window.addEventListener('resize', updateDims);
+        return () => window.removeEventListener('resize', updateDims);
+    }, [itemWidth, itemHeight, sideItemWidth, sideItemHeight, gap]);
+
+    // Build infinite repeating array matching Framer logic
+    const renderItems = useMemo(() => {
+        const pool = slides && slides.length > 0 ? slides : CAROUSEL_SLIDES;
+        const items = [];
+        while (items.length < 18) {
+            items.push(...pool);
+        }
+        return items;
+    }, [slides]);
+
+    const totalItems = renderItems.length;
+    const scrollTarget = useRef(0);
+    const rawScroll = useMotionValue(0);
+    const snapTimeout = useRef(null);
+    const mountRef = useRef(null);
+
+    const smoothScroll = useSpring(rawScroll, {
+        stiffness: 180,
+        damping: scrollDamping,
+        mass: 1,
+        restDelta: 0.001
+    });
+
+    // Track active index for pagination
+    const [activeIndex, setActiveIndex] = useState(0);
+    useEffect(() => {
+        const unsubscribe = smoothScroll.on('change', (v) => {
+            const normalized = ((Math.round(v) % slides.length) + slides.length) % slides.length;
+            setActiveIndex(normalized);
+        });
+        return () => unsubscribe();
+    }, [smoothScroll, slides.length]);
+
+    // Horizontal wheel navigation
+    const handleWheel = (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            scrollTarget.current += e.deltaX * 0.003;
+            rawScroll.set(scrollTarget.current);
+            clearTimeout(snapTimeout.current);
+            snapTimeout.current = setTimeout(() => {
+                scrollTarget.current = Math.round(scrollTarget.current);
+                rawScroll.set(scrollTarget.current);
+            }, 140);
+        }
+    };
+
+    // Pan / Drag navigation
+    const handlePan = (e, info) => {
+        const delta = -info.delta.x * 0.005;
+        scrollTarget.current += delta;
+        rawScroll.set(scrollTarget.current);
+        clearTimeout(snapTimeout.current);
+    };
+
+    const handlePanEnd = (e, info) => {
+        scrollTarget.current += -info.velocity.x * 0.0015;
+        scrollTarget.current = Math.round(scrollTarget.current);
+        rawScroll.set(scrollTarget.current);
+    };
+
+    const prevCard = () => {
+        scrollTarget.current = Math.round(scrollTarget.current) - 1;
+        rawScroll.set(scrollTarget.current);
+    };
+
+    const nextCard = () => {
+        scrollTarget.current = Math.round(scrollTarget.current) + 1;
+        rawScroll.set(scrollTarget.current);
+    };
+
+    const scrollToSlide = (idx) => {
+        const currentNorm = ((Math.round(scrollTarget.current) % slides.length) + slides.length) % slides.length;
+        let diff = idx - currentNorm;
+        if (diff > slides.length / 2) diff -= slides.length;
+        if (diff < -slides.length / 2) diff += slides.length;
+        scrollTarget.current = Math.round(scrollTarget.current) + diff;
+        rawScroll.set(scrollTarget.current);
+    };
+
+    return (
+        <div
+            className="dbc-stage"
+            ref={mountRef}
+            style={{
+                perspective: Math.max(perspective, 1)
+            }}
+        >
+            {/* Gesture Interaction Layer */}
+            <motion.div
+                className="dbc-gesture-layer"
+                onWheel={handleWheel}
+                onPan={handlePan}
+                onPanEnd={handlePanEnd}
+            />
+
+            {/* 3D Origin Container */}
+            <div className="dbc-3d-origin">
+                {renderItems.map((item, i) => (
+                    <ImageDepthCard
+                        key={`card-${i}`}
+                        item={item}
+                        index={i}
+                        total={totalItems}
+                        smoothScroll={smoothScroll}
+                        itemWidth={dims.itemWidth}
+                        itemHeight={dims.itemHeight}
+                        sideItemWidth={dims.sideItemWidth}
+                        sideItemHeight={dims.sideItemHeight}
+                        gap={dims.gap}
+                        maxRotation={maxRotation}
+                        borderRadius={borderRadius}
+                        onClick={() => {
+                            scrollTarget.current = i;
+                            rawScroll.set(scrollTarget.current);
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* ── Progressive Smear Edge Blur: Left ── */}
+            <div
+                className="dbc-edge-blur dbc-edge-blur--left"
+                style={{
+                    width: `${blurSpread}%`,
+                    backdropFilter: `blur(${blurStrength}px)`,
+                    WebkitBackdropFilter: `blur(${blurStrength}px)`,
+                    maskImage: 'linear-gradient(to right, black 0%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 100%)'
+                }}
+            />
+
+            {/* ── Progressive Smear Edge Blur: Right ── */}
+            <div
+                className="dbc-edge-blur dbc-edge-blur--right"
+                style={{
+                    width: `${blurSpread}%`,
+                    backdropFilter: `blur(${blurStrength}px)`,
+                    WebkitBackdropFilter: `blur(${blurStrength}px)`,
+                    maskImage: 'linear-gradient(to left, black 0%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to left, black 0%, transparent 100%)'
+                }}
+            />
+
+            {/* ── Bottom Controls: Minimal Dots + Arrows ── */}
+            <div className="dbc-controls">
+                <button
+                    type="button"
+                    className="dbc-nav-btn dbc-nav-btn--prev"
+                    onClick={prevCard}
+                    aria-label="Previous card"
+                >
+                    <ArrowLeft size={16} />
+                </button>
+
+                <div className="dbc-dots">
+                    {slides.map((_, sIdx) => (
+                        <button
+                            key={sIdx}
+                            type="button"
+                            className={`dbc-dot ${activeIndex === sIdx ? 'dbc-dot--active' : ''}`}
+                            onClick={() => scrollToSlide(sIdx)}
+                            aria-label={`Jump to slide ${sIdx + 1}`}
+                        />
+                    ))}
+                </div>
+
+                <button
+                    type="button"
+                    className="dbc-nav-btn dbc-nav-btn--next"
+                    onClick={nextCard}
+                    aria-label="Next card"
+                >
+                    <ArrowRight size={16} />
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function ImageDepthCard({
+    item,
+    index,
+    total,
+    smoothScroll,
+    itemWidth,
+    itemHeight,
+    sideItemWidth,
+    sideItemHeight,
+    gap,
+    maxRotation,
+    borderRadius,
+    onClick
+}) {
+    const localOffset = useTransform(smoothScroll, (v) => {
+        let linearBase = index - v;
+        let mapped = ((linearBase % total) + total) % total;
+        if (mapped > total / 2) mapped -= total;
+        return mapped;
+    });
+
+    const absOffset = useTransform(localOffset, Math.abs);
+    const cardWidth = useTransform(absOffset, [0, 1], [itemWidth, sideItemWidth], { clamp: true });
+    const cardHeight = useTransform(absOffset, [0, 1], [itemHeight, sideItemHeight], { clamp: true });
+    const marginLeft = useTransform(cardWidth, (w) => -w / 2);
+    const marginTop = useTransform(cardHeight, (h) => -h / 2);
+
+    const x = useTransform(localOffset, (o) => {
+        const a = Math.abs(o);
+        const s = Math.sign(o);
+        const centerToNext = itemWidth / 2 + gap + sideItemWidth / 2;
+        const sideToSide = sideItemWidth + gap;
+        if (a === 0) return 0;
+        if (a <= 1) {
+            return s * centerToNext * a;
+        } else {
+            return s * (centerToNext + (a - 1) * sideToSide * 0.85);
+        }
+    });
+
+    const z = useTransform(absOffset, (a) => -a * 200);
+    const rotateY = useTransform(localOffset, (o) => {
+        return Math.sign(o) * Math.min(Math.abs(o) * 35, maxRotation);
+    });
+    const zIndex = useTransform(absOffset, (a) => 1000 - Math.round(a * 10));
+    const visibilityOpacity = useTransform(absOffset, [0, 5, 7], [1, 1, 0]);
+
+    return (
+        <motion.div
+            className="dbc-card-anchor"
+            onClick={onClick}
+            style={{
+                marginLeft,
+                marginTop,
+                width: cardWidth,
+                height: cardHeight,
+                rotateY,
+                x,
+                z,
+                zIndex
+            }}
+        >
+            <motion.div
+                className="dbc-card-surface"
+                style={{
+                    borderRadius,
+                    opacity: visibilityOpacity
+                }}
+            >
+                {/* Pure Full-Bleed Image (Zero bottom overlay / shadow) */}
+                <img
+                    src={item.image}
+                    alt={item.title || 'ClozFlow Visual'}
+                    className="dbc-card-img"
+                    loading="lazy"
+                />
+            </motion.div>
+        </motion.div>
+    );
+}

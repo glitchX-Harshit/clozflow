@@ -123,7 +123,10 @@ class CopilotSession(Base):
 from models_relay import Relay, RelayAvailabilitySlot, RelayBooking, RelayQuestion
 
 # ── Import Pearl models so Base.metadata.create_all() picks them up ──────────
-from models_pearl import PearlAgent, PearlCall, PearlEvent
+from models_pearl import (
+    PearlAgent, PearlCall, PearlEvent, PearlConversation, PearlMessage,
+    PearlTestSession, PearlTestMessage, PearlCampaign, PearlCampaignRecipient
+)
 
 # ── Import Admin models so Base.metadata.create_all() picks them up ──────────
 from admin.models import (

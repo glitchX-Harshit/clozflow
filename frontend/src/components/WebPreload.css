@@ -1,0 +1,148 @@
+/* ══════════════════════════════════════════════════════════════════
+   WEB PRELOADER — AWWWARDS-CALIBER RELOAD / BOOTSTRAP ANIMATION
+   Minimalist Typography Spring & Blur Reveal
+   Montserrat Black (900) · Zero Underline
+   Upgraded Electric Blue → Cyan Gradient Dot
+   Opposite Corner-to-Corner Sweeping Geometries with Maintained Speed
+   High-Tension Curtain Wipe Exit
+   ══════════════════════════════════════════════════════════════════ */
+
+.wp-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 999999;
+  background-color: #ffffff;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: all;
+  will-change: transform;
+}
+
+.wp-bg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+/* ── Dynamic Atmospheric Circular Geometries ── */
+.wp-radial {
+  position: absolute;
+  width: clamp(360px, 32vw, 480px);
+  height: clamp(360px, 32vw, 480px);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(48px);
+  -webkit-filter: blur(48px);
+  will-change: transform, opacity;
+}
+
+/* Top-Left Circular Geometry: Tucked visibly into top-left corner */
+.wp-radial--top {
+  top: -90px;
+  left: -90px;
+  background: radial-gradient(
+    circle at center,
+    rgba(68, 216, 244, 0.72) 0%,
+    rgba(16, 55, 255, 0.48) 40%,
+    rgba(0, 32, 208, 0.20) 62%,
+    transparent 74%
+  );
+}
+
+/* Bottom-Right Circular Geometry: Tucked visibly into bottom-right corner */
+.wp-radial--bottom {
+  bottom: -90px;
+  right: -90px;
+  background: radial-gradient(
+    circle at center,
+    rgba(16, 55, 255, 0.68) 0%,
+    rgba(68, 216, 244, 0.44) 40%,
+    rgba(10, 25, 120, 0.20) 62%,
+    transparent 74%
+  );
+}
+
+/* ── Center Content Container (Parallax Lift on Exit) ── */
+.wp-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  text-align: center;
+}
+
+/* ── clozflow. Character Blur & Spring Reveal ── */
+.wp-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.wp-logo-baseline {
+  display: inline-flex;
+  align-items: baseline;
+  position: relative;
+}
+
+.wp-logo-chars-track {
+  display: inline-flex;
+  align-items: baseline;
+  position: relative;
+  perspective: 1000px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.wp-char {
+  display: inline-block;
+  will-change: transform, filter, opacity;
+  transform-origin: 50% 100%;
+}
+
+.wp-dot-spring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: baseline;
+  will-change: transform, filter, opacity;
+  transform-origin: 50% 50%;
+}
+
+.wp-dot-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 2px 10px rgba(16, 55, 255, 0.4));
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .wp-radial {
+    width: 280px;
+    height: 280px;
+    filter: blur(36px);
+    -webkit-filter: blur(36px);
+  }
+  .wp-radial--top {
+    top: -60px;
+    left: -60px;
+  }
+  .wp-radial--bottom {
+    bottom: -60px;
+    right: -60px;
+  }
+}

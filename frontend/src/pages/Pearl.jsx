@@ -117,7 +117,7 @@ const Pearl = () => {
   // Voice Settings State
   const [voiceProvider, setVoiceProvider] = useState('ClozFlow Neural Voice');
   const [voiceLanguage, setVoiceLanguage] = useState('Auto');
-  const [voiceSpeaker, setVoiceSpeaker] = useState('ritu');
+  const [voiceSpeaker, setVoiceSpeaker] = useState('shubh_enhi_ads');
   const [voicePace, setVoicePace] = useState(1.0);
   
   // Knowledge Capsule State
@@ -437,7 +437,7 @@ const Pearl = () => {
               </div>
             </div>
 
-            <h3 className="participant-name">Pearl ({voiceSpeaker ? voiceSpeaker.charAt(0).toUpperCase() + voiceSpeaker.slice(1) : 'Ritu'})</h3>
+            <h3 className="participant-name">Pearl ({voiceSpeaker ? voiceSpeaker.split('_')[0].charAt(0).toUpperCase() + voiceSpeaker.split('_')[0].slice(1) : 'Shubh'})</h3>
             <p className="participant-spec">{voiceProvider} · Hinglish</p>
 
             <div className="voice-state-text">

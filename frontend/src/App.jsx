@@ -15,6 +15,7 @@ const Footer = React.lazy(() => import('./components/Footer'));
 const CrowdSection = React.lazy(() => import('./components/CrowdSection'));
 import SmoothScroll from './components/SmoothScroll';
 import LiveCopilotPopup from './components/LiveCopilotPopup';
+import WebPreload from './components/WebPreload';
 
 const CrowdCanvasSection = React.lazy(() => import('./components/CrowdCanvasSection'));
 const ThreeBackground = React.lazy(() => import('./components/ThreeBackground'));
@@ -46,17 +47,33 @@ const AdminSettings = React.lazy(() => import('./admin/pages/AdminSettings'));
 function LandingPage() {
     const navigate = useNavigate();
     return (
-        <main style={{ position: 'relative' }}>
-            <Suspense fallback={null}>
-                <ThreeBackground />
-            </Suspense>
-            <div style={{ position: 'relative', zIndex: 1 }}>
+        <main className="landing-main" style={{ position: 'relative', width: '100%', overflowX: 'hidden' }}>
+            {/* ── Web Preloader (Reload / Entrance Curtain Animation) ── */}
+            <WebPreload />
+
+            {/* ── 1ST SECTION: Hero & 3D Orb Viewport ── */}
+            <div className="hero-viewport-wrap" style={{ position: 'relative', zIndex: 1, minHeight: '100vh' }}>
+                <Suspense fallback={null}>
+                    <ThreeBackground />
+                </Suspense>
                 <Navbar
                     onGetStarted={() => navigate('/dashboard')}
                     onSignup={() => navigate('/auth', { state: { view: 'signup' } })}
                     onLogin={() => navigate('/auth', { state: { view: 'login' } })}
                 />
                 <Hero onGetStarted={() => navigate('/dashboard')} />
+            </div>
+
+            {/* ── SUBSEQUENT SECTIONS: Slides cleanly ABOVE the 1st section & orb ── */}
+            <div 
+                className="subsequent-sections-wrap" 
+                style={{ 
+                    position: 'relative', 
+                    zIndex: 10, 
+                    backgroundColor: 'var(--bg, #f4f6f8)',
+                    boxShadow: '0 -24px 60px rgba(15, 23, 42, 0.04)'
+                }}
+            >
                 <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
                     <HowItWorks />
                     <Integrations />

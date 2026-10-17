@@ -7,63 +7,104 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 /**
  * SmoothScroll Component
  * Standardized Lenis implementation for React 19.
- * Syncs Lenis with GSAP ScrollTrigger for landing pages,
- * and automatically pauses on admin/dashboard routes to prevent scroll trapping.
+ * Syncs Lenis with GSAP ScrollTrigger on public marketing routes (e.g. /, /pricing, /how-it-works).
+ * Completely destroys Lenis on internal app/dashboard/admin routes to prevent scroll hijacking,
+ * wheel trapping (preventDefault), and class-based clipping.
  */
+const MARKETING_ROUTES = ['/', '/how-it-works', '/pricing'];
+
+const isMarketingRoute = (pathname) => {
+    if (MARKETING_ROUTES.includes(pathname)) return true;
+    if (pathname.startsWith('/relay/')) return true;
+    return false;
+};
+
 const SmoothScroll = () => {
     const location = useLocation();
     const lenisRef = useRef(null);
+    const updateHandlerRef = useRef(null);
 
     useEffect(() => {
-        // Initialize Lenis
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2,
-            infinite: false,
-        });
+        const needsSmoothScroll = isMarketingRoute(location.pathname);
 
-        lenisRef.current = lenis;
-
-        // Sync ScrollTrigger with Lenis
-        lenis.on('scroll', ScrollTrigger.update);
-
-        // Named handler to cleanly unregister from GSAP ticker on unmount
-        const updateLenis = (time) => {
-            lenis.raf(time * 1000);
+        const cleanupClasses = () => {
+            const classes = ['lenis', 'lenis-stopped', 'lenis-scrolling', 'lenis-smooth', 'lenis-locked'];
+            classes.forEach((cls) => {
+                document.documentElement.classList.remove(cls);
+                document.body.classList.remove(cls);
+            });
         };
 
-        gsap.ticker.add(updateLenis);
-        gsap.ticker.lagSmoothing(0);
+        if (needsSmoothScroll) {
+            // Already running? Make sure it's active
+            if (lenisRef.current) {
+                lenisRef.current.start();
+                cleanupClasses();
+                return;
+            }
 
-        // Global accessibility and cleanup
-        window.lenis = lenis;
+            // Initialize Lenis strictly for marketing/landing pages
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                orientation: 'vertical',
+                gestureOrientation: 'vertical',
+                smoothWheel: true,
+                wheelMultiplier: 1,
+                touchMultiplier: 2,
+                infinite: false,
+            });
 
-        return () => {
-            gsap.ticker.remove(updateLenis);
-            lenis.destroy();
-            window.lenis = null;
-            lenisRef.current = null;
-        };
-    }, []);
+            lenisRef.current = lenis;
 
-    // Pause Lenis on internal management portals to avoid scroll hijacking
-    useEffect(() => {
-        if (!lenisRef.current) return;
-        const isAdminOrApp = location.pathname.startsWith('/admin') || 
-                             location.pathname.startsWith('/dashboard') ||
-                             location.pathname.startsWith('/call-brief') ||
-                             location.pathname.startsWith('/live-call');
-        if (isAdminOrApp) {
-            lenisRef.current.stop();
+            // Sync ScrollTrigger with Lenis
+            lenis.on('scroll', ScrollTrigger.update);
+
+            const updateLenis = (time) => {
+                lenis.raf(time * 1000);
+            };
+            updateHandlerRef.current = updateLenis;
+
+            gsap.ticker.add(updateLenis);
+            gsap.ticker.lagSmoothing(0);
+
+            window.lenis = lenis;
+            cleanupClasses();
         } else {
-            lenisRef.current.start();
+            // App / Dashboard / Admin route: completely destroy Lenis
+            // to eliminate any wheel event.preventDefault() hijacking
+            if (lenisRef.current) {
+                if (updateHandlerRef.current) {
+                    gsap.ticker.remove(updateHandlerRef.current);
+                    updateHandlerRef.current = null;
+                }
+                lenisRef.current.destroy();
+                lenisRef.current = null;
+                window.lenis = null;
+            }
+            cleanupClasses();
         }
     }, [location.pathname]);
+
+    // Global cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (updateHandlerRef.current) {
+                gsap.ticker.remove(updateHandlerRef.current);
+                updateHandlerRef.current = null;
+            }
+            if (lenisRef.current) {
+                lenisRef.current.destroy();
+                lenisRef.current = null;
+                window.lenis = null;
+            }
+            const classes = ['lenis', 'lenis-stopped', 'lenis-scrolling', 'lenis-smooth', 'lenis-locked'];
+            classes.forEach((cls) => {
+                document.documentElement.classList.remove(cls);
+                document.body.classList.remove(cls);
+            });
+        };
+    }, []);
 
     return null;
 };

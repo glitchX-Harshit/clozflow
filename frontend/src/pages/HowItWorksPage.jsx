@@ -28,6 +28,7 @@ import {
     ExternalLink
 } from 'lucide-react';
 import { gsap } from 'gsap';
+import { useDashboardStore } from '../store/useDashboardStore';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -1090,7 +1091,7 @@ const HowItWorksPage = () => {
                             <div className="hiw-guide-step">
                                 <div className="hiw-guide-step__num">1</div>
                                 <div className="hiw-guide-step__text">
-                                    Open <strong>Playbooks</strong> from the web app navigation menu.
+                                    Open <strong>Wizard</strong> from the web app navigation menu.
                                 </div>
                             </div>
                             <div className="hiw-guide-step">
@@ -1166,8 +1167,11 @@ const HowItWorksPage = () => {
                             </div>
 
                             <div className="hiw-visual__cta">
-                                <button className="hiw-visual__link-btn" onClick={() => navigate('/playbooks')}>
-                                    <span>Manage Playbooks in Web App</span>
+                                <button className="hiw-visual__link-btn" onClick={() => {
+                                    useDashboardStore.getState().setActiveTab('wizard');
+                                    navigate('/dashboard');
+                                }}>
+                                    <span>Launch Meeting Wizard in Web App</span>
                                     <ArrowRight size={14} />
                                 </button>
                             </div>

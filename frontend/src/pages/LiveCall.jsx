@@ -20,8 +20,10 @@ import {
     ChevronDown,
     ChevronUp,
     ExternalLink,
+    Wand2
 } from 'lucide-react';
 import useCopilotStore from '../store/copilotStore';
+import { useDashboardStore } from '../store/useDashboardStore';
 import { openCopilotWindow } from '../utils/copilotWindow';
 import ClozFlowLogo from '../components/ClozFlowLogo';
 import './LiveCall.css';
@@ -244,7 +246,7 @@ const LiveCall = () => {
                     <button className="db-nav-item active"><Activity size={18} strokeWidth={2.5} /> Live Call</button>
                     <button className="db-nav-item"><History size={18} /> History</button>
                     <button className="db-nav-item"><BarChart3 size={18} /> Analytics</button>
-                    <button className="db-nav-item"><Target size={18} /> Playbooks</button>
+                    <button className="db-nav-item" onClick={() => { useDashboardStore.getState().setActiveTab('wizard'); navigate('/dashboard'); }}><Wand2 size={18} /> Wizard</button>
                 </nav>
 
                 <div className="db-user-section">

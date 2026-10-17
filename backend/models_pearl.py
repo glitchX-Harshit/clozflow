@@ -58,10 +58,16 @@ class PearlAgent(Base):
     autonomy_policy     = Column(JSON, nullable=True)  # { research, outreach, calls, objections, qualify, book, crm, relay, closing }
 
     # Voice & provider
-    voice_config        = Column(JSON, nullable=True)   # { personality, language, tone }
+    voice_config        = Column(JSON, nullable=True)   # { personality, language, tone, pace, speaker }
     lead_source_config  = Column(JSON, nullable=True)   # { source_type, filters, csv_data }
     call_provider       = Column(String, default="mock") # mock | elevenlabs | exotel
     provider_agent_id   = Column(String, nullable=True)
+
+    # Detailed agent instructions & runtime config
+    system_prompt       = Column(Text, nullable=True)   # Explicit directives & sales behavior
+    greeting            = Column(Text, nullable=True)   # Opening greeting message
+    test_variables      = Column(JSON, nullable=True)   # Dynamic test variables e.g. { prospect_name: ... }
+    version             = Column(Integer, default=1)
 
     # Runtime state
     current_state       = Column(String, default="idle")
@@ -205,3 +211,130 @@ class PearlMessage(Base):
     msg_metadata = Column(JSON, nullable=True)
 
     conversation = relationship("PearlConversation", back_populates="messages")
+
+
+# ── Browser Test Sessions & Messages ─────────────────────────────────────────
+
+class PearlTestSession(Base):
+    """
+    Browser-based agent test session (Chat or Voice).
+    Completely isolated from real campaigns and telephony dispatch.
+    """
+    __tablename__ = "pearl_test_sessions"
+
+    id              = Column(String, primary_key=True, default=generate_uuid, index=True)
+    user_id         = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    agent_id        = Column(String, ForeignKey("pearl_agents.id"), nullable=False, index=True)
+    mode            = Column(String, default="chat")  # "chat" | "voice"
+    status          = Column(String, default="active") # "active" | "completed" | "error"
+    agent_snapshot  = Column(JSON, nullable=True)     # Immutable snapshot of agent config for this session
+    summary         = Column(Text, nullable=True)     # Post-session summary
+    created_at      = Column(DateTime, default=datetime.utcnow)
+    updated_at      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    agent           = relationship("PearlAgent")
+    user            = relationship("User")
+    messages        = relationship("PearlTestMessage", back_populates="session", cascade="all, delete-orphan",
+                                   order_by="PearlTestMessage.timestamp.asc()")
+
+
+class PearlTestMessage(Base):
+    """
+    Individual turn within a browser test session.
+    """
+    __tablename__ = "pearl_test_messages"
+
+    id              = Column(String, primary_key=True, default=generate_uuid, index=True)
+    session_id      = Column(String, ForeignKey("pearl_test_sessions.id"), nullable=False, index=True)
+    role            = Column(String, nullable=False)   # "user" | "assistant"
+    text            = Column(Text, nullable=False)
+    timestamp       = Column(DateTime, default=datetime.utcnow, index=True)
+    meta            = Column(JSON, nullable=True)      # latency_ms, tokens, etc.
+
+    session         = relationship("PearlTestSession", back_populates="messages")
+
+
+# ── Outbound Campaigns & Recipients ──────────────────────────────────────────
+
+class PearlCampaign(Base):
+    """
+    Outbound sales campaign executing calls using a selected PearlAgent.
+    """
+    __tablename__ = "pearl_campaigns"
+
+    id                  = Column(String, primary_key=True, default=generate_uuid, index=True)
+    user_id             = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    agent_id            = Column(String, ForeignKey("pearl_agents.id"), nullable=True, index=True)
+    name                = Column(String, nullable=False)
+    objective           = Column(Text, nullable=True)
+    description         = Column(Text, nullable=True)
+    status              = Column(String, default="draft") # draft | scheduled | queued | running | paused | completed | failed
+    source_type         = Column(String, default="lead_finder") # lead_finder | csv_upload | manual
+    
+    # Calling & retry configurations
+    call_settings       = Column(JSON, nullable=True) # { caller_id, calling_hours, timezone, max_attempts, retry_interval, concurrency_limit }
+    schedule_time       = Column(DateTime, nullable=True)
+
+    # Progress & metrics
+    total_recipients    = Column(Integer, default=0)
+    eligible_recipients = Column(Integer, default=0)
+    completed_calls     = Column(Integer, default=0)
+    failed_calls        = Column(Integer, default=0)
+    qualified_calls     = Column(Integer, default=0)
+
+    # Timestamps
+    created_at          = Column(DateTime, default=datetime.utcnow)
+    updated_at          = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    started_at          = Column(DateTime, nullable=True)
+    completed_at        = Column(DateTime, nullable=True)
+
+    # Relationships
+    user                = relationship("User")
+    agent               = relationship("PearlAgent")
+    recipients          = relationship("PearlCampaignRecipient", back_populates="campaign", cascade="all, delete-orphan",
+                                       order_by="PearlCampaignRecipient.created_at.asc()")
+
+
+class PearlCampaignRecipient(Base):
+    """
+    A single lead recipient targeted in a campaign.
+    """
+    __tablename__ = "pearl_campaign_recipients"
+
+    id                  = Column(String, primary_key=True, default=generate_uuid, index=True)
+    campaign_id         = Column(String, ForeignKey("pearl_campaigns.id"), nullable=False, index=True)
+    lead_id             = Column(Integer, ForeignKey("leads.id"), nullable=True)
+
+    # Canonical lead attributes
+    name                = Column(String, nullable=True)
+    business_name       = Column(String, nullable=True)
+    phone_number        = Column(String, nullable=False)
+    normalized_phone    = Column(String, nullable=True, index=True)
+    email               = Column(String, nullable=True)
+    website             = Column(String, nullable=True)
+    company             = Column(String, nullable=True)
+    source              = Column(String, default="lead_finder") # lead_finder | csv_upload | manual
+    
+    # Recipient validation and selection state
+    status              = Column(String, default="valid") # valid | invalid | excluded | queued | calling | completed | failed
+    validation_error    = Column(String, nullable=True)
+
+    # Execution telemetry
+    call_id             = Column(String, ForeignKey("pearl_calls.id"), nullable=True)
+    attempts            = Column(Integer, default=0)
+    duration_seconds    = Column(Integer, default=0)
+    outcome             = Column(String, nullable=True) # qualified | not_interested | callback | no_answer | error
+    error_reason        = Column(String, nullable=True)
+    transcript          = Column(Text, nullable=True)
+    summary             = Column(Text, nullable=True)
+
+    # Timestamps
+    created_at          = Column(DateTime, default=datetime.utcnow)
+    updated_at          = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    campaign            = relationship("PearlCampaign", back_populates="recipients")
+    lead                = relationship("Lead")
+    call                = relationship("PearlCall")
+
