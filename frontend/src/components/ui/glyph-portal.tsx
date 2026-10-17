@@ -24,6 +24,7 @@ export type GlyphPortalProps = {
   children?: ReactNode;
   /** Scroll travel in visible container heights. */
   scrollLength?: number;
+  verticalRatio?: number;
   fontFamily?: string;
   fontWeight?: number;
   annotations?: boolean;
@@ -96,6 +97,7 @@ export default function GlyphPortal({
   front,
   children,
   scrollLength = 3.6,
+  verticalRatio = 0.30,
   fontFamily = DEFAULT_FONT,
   fontWeight = 700,
   annotations = false,
@@ -113,6 +115,7 @@ export default function GlyphPortal({
   const length = Number.isFinite(scrollLength) ? clamp(scrollLength, 1.5, 8) : 3.6;
   const weight = Number.isFinite(fontWeight) ? clamp(fontWeight, 100, 900) : 700;
   const q = `:where(#${uid})`;
+  const yRatio = Number.isFinite(verticalRatio) ? verticalRatio : 0.30;
 
   useLayoutEffect(() => {
     const section = sectionRef.current!;
@@ -208,7 +211,7 @@ export default function GlyphPortal({
       const baseText = text.endsWith(".") ? text.slice(0, -1) : text;
       context.font = `${weight} 100px ${font.fontFamily || DEFAULT_FONT}`;
       const baseMetrics = context.measureText(baseText);
-      const dotX = (baseMetrics.actualBoundingBoxRight || baseMetrics.width) + 5.5;
+      const dotX = (baseMetrics.actualBoundingBoxRight || baseMetrics.width) + 16.5;
       const dotY = -8;
       const dotR = 8;
       if (dotCircle) {
@@ -247,7 +250,7 @@ export default function GlyphPortal({
 
       const radians = (roll * Math.PI) / 180;
       const dx = W / 2 / scale;
-      const dy = (H * 0.46 + H * 0.04 * eased) / scale;
+      const dy = (H * yRatio + H * 0.04 * eased) / scale;
 
       clip.setAttribute("transform", `scale(${scale}) rotate(${roll})`);
       glyph.setAttribute(
@@ -256,7 +259,7 @@ export default function GlyphPortal({
       );
 
       if (marks) {
-        marks.setAttribute("transform", `translate(${W / 2} ${H * 0.46 + H * 0.04 * eased}) scale(${scale}) rotate(${roll}) translate(${-cx} ${-cy})`);
+        marks.setAttribute("transform", `translate(${W / 2} ${H * yRatio + H * 0.04 * eased}) scale(${scale}) rotate(${roll}) translate(${-cx} ${-cy})`);
         marks.style.opacity = String(1 - smooth(0.015, 0.15, p));
       }
 
@@ -311,7 +314,7 @@ export default function GlyphPortal({
 
       if (dotOuter && dotInner) {
         dotOuter.setAttribute("transform", `scale(${startScale})`);
-        dotInner.setAttribute("transform", `translate(${W / 2 / startScale - center.x} ${H * 0.46 / startScale - center.y})`);
+        dotInner.setAttribute("transform", `translate(${W / 2 / startScale - center.x} ${H * yRatio / startScale - center.y})`);
       }
 
       section.dataset.gpReady = "true";
@@ -382,7 +385,7 @@ export default function GlyphPortal({
       (root ?? window).removeEventListener("scroll", scroll);
       window.removeEventListener("resize", resize);
     };
-  }, [text, focusChar, fontFamily, weight, length, clipId]);
+  }, [text, focusChar, fontFamily, weight, length, clipId, yRatio]);
 
   return (
     <section

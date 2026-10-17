@@ -113,6 +113,7 @@ const Integrations = () => {
             <GlyphPortal
                 word="Pearl."
                 focusChar="a"
+                verticalRatio={0.30}
                 interactive={false}
                 fontFamily='"Montserrat", "Arial Black", sans-serif'
                 fontWeight={700}
