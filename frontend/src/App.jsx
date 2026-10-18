@@ -52,7 +52,7 @@ function LandingPage() {
             <WebPreload />
 
             {/* ── 1ST SECTION: Hero & 3D Orb Viewport ── */}
-            <div className="hero-viewport-wrap" style={{ position: 'relative', zIndex: 1, minHeight: '100vh' }}>
+            <div className="hero-viewport-wrap" style={{ position: 'relative', zIndex: 1, minHeight: '100vh', overflow: 'hidden' }}>
                 <Suspense fallback={null}>
                     <ThreeBackground />
                 </Suspense>
@@ -77,7 +77,6 @@ function LandingPage() {
                 <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
                     <HowItWorks />
                     <Integrations />
-                    <ObjectionHandling />
                     <ResponseSuggestion />
                     <UseCases />
                     <CrowdSection />

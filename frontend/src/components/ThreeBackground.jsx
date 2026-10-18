@@ -1,6 +1,6 @@
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Float, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
+import { Float, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -25,11 +25,12 @@ const Shape = () => {
         meshRef.current.rotation.x += delta * 0.2;
         meshRef.current.rotation.y += delta * 0.25;
         
-        // Restrained, elegant mouse parallax
-        const targetX = (mouse.x * viewport.width) / 24;
-        const targetY = (mouse.y * viewport.height) / 24;
-        meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.05;
-        meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.05;
+        // Refined micro-parallax: strictly bounded so the orb stays locked inside the orbital rings
+        const targetX = Math.max(-0.16, Math.min(0.16, (mouse.x * viewport.width) / 60));
+        const targetY = Math.max(-0.16, Math.min(0.16, (mouse.y * viewport.height) / 60));
+        // Responsive lerp (0.12 settles in ~100ms, eliminating the 1-2s floating realignment delay)
+        meshRef.current.position.x += (targetX - meshRef.current.position.x) * 0.12;
+        meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.12;
 
         if (materialRef.current) {
             materialRef.current.uniforms.time.value = state.clock.getElapsedTime();
@@ -134,38 +135,23 @@ const ParticleSystem = () => {
 
 const ThreeBackground = () => {
     const containerRef = useRef(null);
-    const [isActive, setIsActive] = useState(true);
 
     useEffect(() => {
         let ctx = gsap.context(() => {
             const heroEl = document.querySelector('.hero') || document.querySelector('.hero-viewport-wrap');
             if (heroEl && containerRef.current) {
-                // Ensure initial state
-                gsap.set(containerRef.current, { opacity: 1, scale: 1, y: 0, visibility: 'visible' });
+                // Ensure initial state: zero transforms, perfectly in-place
+                gsap.set(containerRef.current, { opacity: 1, clearProps: 'transform' });
 
-                // Scroll animation: The orb scales down, fades out, and exits as the 1st section scrolls away
+                // Pure 1:1 scroll fade-out (no scrub lag, no scale or translate displacement)
                 gsap.to(containerRef.current, {
                     opacity: 0,
-                    scale: 0.76,
-                    y: -70,
-                    ease: 'power1.out',
+                    ease: 'none',
                     scrollTrigger: {
                         trigger: heroEl,
                         start: 'top top',
-                        end: 'bottom 15%',
-                        scrub: 1,
-                        onLeave: () => {
-                            if (containerRef.current) {
-                                containerRef.current.style.visibility = 'hidden';
-                            }
-                            setIsActive(false);
-                        },
-                        onEnterBack: () => {
-                            if (containerRef.current) {
-                                containerRef.current.style.visibility = 'visible';
-                            }
-                            setIsActive(true);
-                        }
+                        end: 'bottom 20%',
+                        scrub: true, // Immediate 1:1 tracking with zero 1-2s catch-up delay
                     }
                 });
             }
@@ -181,25 +167,24 @@ const ThreeBackground = () => {
             ref={containerRef}
             className="three-bg-fixed-container"
             style={{ 
-                position: 'fixed', 
+                position: 'absolute', 
                 top: 0, 
                 left: 0, 
-                width: '100vw', 
-                height: '100vh', 
+                width: '100%', 
+                height: '100%', 
                 zIndex: 0, 
                 pointerEvents: 'none',
-                opacity: 1,
-                willChange: 'transform, opacity'
+                overflow: 'hidden'
             }}
         >
             <Canvas 
                 camera={{ position: [0, 0, 8], fov: 45 }} 
-                frameloop={isActive ? 'always' : 'never'}
+                frameloop="always"
                 gl={{ 
                     antialias: true,
                     alpha: true,
                     powerPreference: "high-performance",
-                    preserveDrawingBuffer: true
+                    preserveDrawingBuffer: false
                 }}
                 dpr={[1, 2]}
             >
