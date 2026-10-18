@@ -12,7 +12,7 @@ const ResponseSuggestion = React.lazy(() => import('./components/ResponseSuggest
 const UseCases = React.lazy(() => import('./components/UseCases'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage'));
 const Footer = React.lazy(() => import('./components/Footer'));
-const CrowdSection = React.lazy(() => import('./components/CrowdSection'));
+const MarqueePathSection = React.lazy(() => import('./components/MarqueePathSection'));
 import SmoothScroll from './components/SmoothScroll';
 import LiveCopilotPopup from './components/LiveCopilotPopup';
 import WebPreload from './components/WebPreload';
@@ -79,7 +79,7 @@ function LandingPage() {
                     <Integrations />
                     <ResponseSuggestion />
                     <UseCases />
-                    <CrowdSection />
+                    <MarqueePathSection />
                     <CrowdCanvasSection />
                     <Footer />
                 </Suspense>

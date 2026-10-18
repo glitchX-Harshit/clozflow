@@ -29,9 +29,20 @@ export default function WebPreload({ onComplete }) {
     const fontSize = size;
     const dotSize = Math.max(12, size * 0.175);
 
-    // Lock page scroll on mount while preloader is active
+    // Lock page scroll on mount while preloader is active & ensure top scroll on reload
     useEffect(() => {
-        window.lenis?.stop();
+        // Disable browser's automatic scroll restoration on reload
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+
+        // Immediately enforce scroll position at top
+        window.scrollTo(0, 0);
+        if (window.lenis) {
+            window.lenis.scrollTo(0, { immediate: true });
+            window.lenis.stop();
+        }
+
         const prevOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
 
@@ -50,7 +61,11 @@ export default function WebPreload({ onComplete }) {
     const handleCurtainComplete = () => {
         if (isExiting) {
             setIsVisible(false);
-            window.lenis?.start();
+            window.scrollTo(0, 0);
+            if (window.lenis) {
+                window.lenis.scrollTo(0, { immediate: true });
+                window.lenis.start();
+            }
             document.body.style.overflow = '';
             if (onComplete) onComplete();
         }

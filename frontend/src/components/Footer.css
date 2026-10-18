@@ -209,6 +209,49 @@
     opacity: 0.65;
 }
 
+/* ── Organic Anatomical Eyelids for Lifelike Blinking ── */
+.ft__eyelid {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: #0c0c0c;
+    pointer-events: none;
+    z-index: 10;
+    will-change: transform;
+    transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Upper Eyelid: Sweeps down 72% */
+.ft__eyelid--top {
+    top: 0;
+    height: 72%;
+    border-radius: 0 0 50% 50% / 0 0 40% 40%;
+    transform: translateY(-105%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid #1c1c1e;
+}
+
+/* Lower Eyelid: Meets upward 44% */
+.ft__eyelid--bottom {
+    bottom: 0;
+    height: 44%;
+    border-radius: 50% 50% 0 0 / 40% 40% 0 0;
+    transform: translateY(105%);
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.6);
+    border-top: 1.5px solid #1c1c1e;
+}
+
+/* Active Blinking State */
+.ft__eyeball.is-blinking .ft__eyelid--top {
+    transform: translateY(0%);
+    transition: transform 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ft__eyeball.is-blinking .ft__eyelid--bottom {
+    transform: translateY(0%);
+    transition: transform 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* ── GIANT PORCELAIN / CREAM CARD ── */
 .ft__porcelain-card {
     position: relative;

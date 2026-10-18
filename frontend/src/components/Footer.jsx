@@ -11,7 +11,9 @@ const Footer = () => {
         let rafId = null;
         let mouseX = window.innerWidth / 2;
         let mouseY = 0;
+        let blinkTimeout = null;
 
+        // ── Smooth Cursor Tracking ──
         const updateEyes = () => {
             const eyes = [
                 { eye: leftEyeRef.current, iris: leftIrisRef.current },
@@ -65,10 +67,45 @@ const Footer = () => {
         // Initial look position
         updateEyes();
 
+        // ── Organic Lifelike Blinking Mechanism ──
+        const triggerBlink = () => {
+            const leftEye = leftEyeRef.current;
+            const rightEye = rightEyeRef.current;
+
+            if (leftEye && rightEye) {
+                leftEye.classList.add('is-blinking');
+                rightEye.classList.add('is-blinking');
+
+                setTimeout(() => {
+                    leftEye.classList.remove('is-blinking');
+                    rightEye.classList.remove('is-blinking');
+
+                    // ~22% chance of an authentic double-blink
+                    if (Math.random() < 0.22) {
+                        setTimeout(() => {
+                            leftEye.classList.add('is-blinking');
+                            rightEye.classList.add('is-blinking');
+                            setTimeout(() => {
+                                leftEye.classList.remove('is-blinking');
+                                rightEye.classList.remove('is-blinking');
+                            }, 130);
+                        }, 110);
+                    }
+                }, 160);
+            }
+
+            // Randomized interval: blinks spontaneously every 2.8s to 5.6s
+            const nextInterval = 2800 + Math.random() * 2800;
+            blinkTimeout = setTimeout(triggerBlink, nextInterval);
+        };
+
+        blinkTimeout = setTimeout(triggerBlink, 2200);
+
         return () => {
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('scroll', onScroll);
             if (rafId) cancelAnimationFrame(rafId);
+            if (blinkTimeout) clearTimeout(blinkTimeout);
         };
     }, []);
 
@@ -124,6 +161,9 @@ const Footer = () => {
                                     <div className="ft__eyeball-glint-large" />
                                     <div className="ft__eyeball-glint-small" />
                                 </div>
+                                {/* Realistic Eyelids */}
+                                <div className="ft__eyelid ft__eyelid--top" />
+                                <div className="ft__eyelid ft__eyelid--bottom" />
                             </div>
                         </div>
 
@@ -135,6 +175,9 @@ const Footer = () => {
                                     <div className="ft__eyeball-glint-large" />
                                     <div className="ft__eyeball-glint-small" />
                                 </div>
+                                {/* Realistic Eyelids */}
+                                <div className="ft__eyelid ft__eyelid--top" />
+                                <div className="ft__eyelid ft__eyelid--bottom" />
                             </div>
                         </div>
                     </div>

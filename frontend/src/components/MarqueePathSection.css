@@ -1,0 +1,169 @@
+/* ══════════════════════════════════════════════════════════════
+   MARQUEE PATH SECTION — LUXURY EDITORIAL ORBIT STREAM
+   Minimalist Typography · Non-Generic Dark Glass Cards · Smooth Drag
+   ══════════════════════════════════════════════════════════════ */
+
+.mps__section {
+  position: relative;
+  width: 100%;
+  height: 150vh;
+  min-height: 820px;
+  overflow: visible;
+  background-color: var(--bg, #f4f6f8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  padding: 2rem 0;
+}
+
+/* ── Orbit Canvas Stage: Full Viewport Bleed ── */
+.mps__stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Exact Image Cards (Smaller Size, Zero Border-Radius, Sharp Clean Tiles) ── */
+.mps__img-card {
+  width: clamp(38px, 4.2vw, 54px);
+  aspect-ratio: 1 / 1.16;
+  border-radius: 0 !important;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  user-select: none;
+}
+
+.mps__img-card img {
+  border-radius: 0 !important;
+  transform: translateZ(0);
+}
+
+.mps__img-card:hover {
+  filter: brightness(1.06);
+}
+
+/* ── Interactive Floating Cards Along the Path ── */
+.mps__card {
+  width: clamp(230px, 20vw, 275px);
+  padding: 8px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+  cursor: grab;
+  transform: translate(-50%, -50%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  user-select: none;
+}
+
+.mps__card:active {
+  cursor: grabbing;
+}
+
+.mps__card:hover {
+  transform: translate(-50%, -54%) scale(1.04);
+  box-shadow: 0 24px 48px -12px rgba(16, 55, 255, 0.16), 0 0 0 1px rgba(16, 55, 255, 0.22);
+  border-color: rgba(68, 216, 244, 0.4);
+}
+
+.mps__card-inner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px;
+}
+
+.mps__card-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.mps__card-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.mps__avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid #ffffff;
+}
+
+.mps__card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mps__card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.mps__card-name {
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mps__card-company {
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #1037ff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mps__card-role {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.mps__card-quote {
+  font-size: 0.76rem;
+  line-height: 1.38;
+  color: #334155;
+  font-style: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .mps__section {
+    padding: 4rem 0 6rem;
+  }
+  .mps__stage {
+    height: 460px;
+  }
+}

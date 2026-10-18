@@ -43,6 +43,11 @@ const SmoothScroll = () => {
                 return;
             }
 
+            // Prevent browser from restoring stale scroll position across reloads
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'manual';
+            }
+
             // Initialize Lenis strictly for marketing/landing pages
             const lenis = new Lenis({
                 duration: 1.2,
