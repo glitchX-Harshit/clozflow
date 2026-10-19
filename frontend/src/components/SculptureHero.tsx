@@ -1222,7 +1222,7 @@ const CSS = `
 .sh-h1{font-family:var(--sh-head) !important;font-weight:500 !important;font-size:clamp(40px,min(6.6cqw,11.5cqh),124px) !important;line-height:.92 !important;letter-spacing:-.045em !important;margin:0 !important;
   text-wrap:balance !important;text-transform:none !important;color:inherit !important}
 .sh-h1 .sh-line{display:block !important;text-transform:none !important}
-.sh-accent{font-family:var(--sh-accent) !important;font-style:italic !important;font-weight:400 !important;letter-spacing:-.02em !important;color:var(--sh-acc) !important;text-transform:none !important}
+.sh-accent{font-family:var(--sh-accent) !important;font-style:italic !important;font-weight:400 !important;font-size:0.62em !important;line-height:1.2 !important;letter-spacing:-.02em !important;color:var(--sh-acc) !important;text-transform:none !important;display:inline-block !important;margin-top:0.18em !important;opacity:0.88 !important}
 .sh-aside{max-width:400px !important;justify-self:end !important;padding-bottom:.6em !important}
 .sh-body{font-family:var(--sh-body) !important;font-size:clamp(15px,1.1cqw,17px) !important;line-height:1.5 !important;letter-spacing:-.01em !important;margin:0 0 26px !important;opacity:.78 !important;text-wrap:pretty !important;color:inherit !important;text-transform:none !important}
 .sh-ctas{display:flex !important;flex-wrap:wrap !important;align-items:center !important;gap:22px !important}
