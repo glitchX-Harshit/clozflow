@@ -7,40 +7,45 @@ import './HowItWorks.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const NARRATIVE_TOKENS = [
-    { text: "No" },
-    { text: "call" },
-    { text: "anxiety", hasDot: true },
-    { text: "No" },
-    { text: "burnt-out" },
-    { text: "telemarketers", hasDot: true },
-    { text: "ClozFlow" },
-    { text: "deploys" },
-    { text: "an" },
-    { text: "autonomous" },
-    { text: "conversational" },
-    { text: "voice" },
-    { text: "workforce" },
-    { text: "that" },
-    { text: "cold" },
-    { text: "calls" },
-    { text: "with" },
-    { text: "total" },
-    { text: "conviction," },
-    { text: "crushes" },
-    { text: "enterprise" },
-    { text: "objections" },
-    { text: "in" },
-    { text: "real" },
-    { text: "time," },
+    { text: "Cold" },
+    { text: "outreach" },
+    { text: "fails" },
+    { text: "the" },
+    { text: "second" },
+    { text: "buyers" },
+    { text: "push" },
+    { text: "back", hasDot: true },
+    { text: "Scripted" },
+    { text: "bots" },
+    { text: "freeze," },
     { text: "and" },
-    { text: "books" },
-    { text: "qualified" },
-    { text: "meetings" },
-    { text: "like" },
-    { text: "your" },
-    { text: "sharpest" },
-    { text: "sales" },
-    { text: "veteran", hasDot: true }
+    { text: "human" },
+    { text: "telecallers" },
+    { text: "panic" },
+    { text: "into" },
+    { text: "discounts", hasDot: true },
+    { text: "ClozFlow" },
+    { text: "absorbs" },
+    { text: "friction" },
+    { text: "with" },
+    { text: "calm" },
+    { text: "authority:" },
+    { text: "sub-second" },
+    { text: "reflexes," },
+    { text: "native" },
+    { text: "bilingual" },
+    { text: "fluency," },
+    { text: "and" },
+    { text: "the" },
+    { text: "psychological" },
+    { text: "precision" },
+    { text: "to" },
+    { text: "turn" },
+    { text: "hostile" },
+    { text: "objections" },
+    { text: "into" },
+    { text: "signed" },
+    { text: "meeting", hasDot: true }
 ];
 
 const HowItWorks = () => {
@@ -92,7 +97,7 @@ const HowItWorks = () => {
             {/* Centered Editorial Narrative Block */}
             <div className="container">
                 <div className="hiw__header-wrap">
-                    <p className="hiw__scrub-paragraph" aria-label="No call anxiety. No burnt-out telemarketers. ClozFlow deploys an autonomous conversational voice workforce that cold calls with total conviction, crushes enterprise objections in real time, and books qualified meetings like your sharpest sales veteran.">
+                    <p className="hiw__scrub-paragraph" aria-label="Cold outreach fails the second buyers push back. Scripted bots freeze, and human telecallers panic into discounts. ClozFlow absorbs friction with calm authority: sub-second reflexes, native bilingual fluency, and the psychological precision to turn hostile objections into signed meeting.">
                         {NARRATIVE_TOKENS.map((token, idx) => (
                             <span key={idx} className="hiw__scrub-word">
                                 {token.text}

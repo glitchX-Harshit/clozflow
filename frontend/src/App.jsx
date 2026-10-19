@@ -104,7 +104,7 @@ function LandingPage() {
                         }
                     }}
                     themeToggle={true}
-                    eyebrow="Autonomous Voice Intelligence · Indian Enterprise Grade"
+                    eyebrow=""
                     headline={"India's #1 Voice Closer.\nBuilt to out-negotiate humans."}
                     headlineAccent="Built to out-negotiate humans."
                     body="Indian buyers do not buy from robotic prompts. ClozFlow listens for hesitation, matches regional tone, switches effortlessly between Hindi and English mid-breath, and turns skeptical 'soch ke batata hoon' objections into signed commitments."
