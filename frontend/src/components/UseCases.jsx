@@ -28,7 +28,7 @@ const BATTLEGROUNDS = [
         stat: '+40%',
         statLabel: 'MORE MEETINGS BOOKED',
         nightmare: 'Can you just email me a one-pager? (click, dial tone).',
-        weapon: 'Instant 8-second disarm: "Usually people say that when swamped—which is it right now for your team?" Call rescued.',
+        weapon: 'Instant 8-second disarm: "Usually people say that when swamped, which is it right now for your team?" Call rescued.',
         mobileTrap: '“Can you just email me a one-pager?” (click).',
         mobileWeapon: 'Instant 8-second disarm script. Hang-up converted to booked meeting.',
         tag: 'HANG-UP PREVENTED'
@@ -91,7 +91,7 @@ const UseCases = () => {
                 {/* Header */}
                 <div className="uc__hdr-wrap">
                     <div className="uc__meta-tag uc__anim-hdr">
-                        <span>[ 04 — WHO IT IS FOR ]</span>
+                        <span>[ 04 / WHO IT IS FOR ]</span>
                         <span className="uc__meta-divider">/</span>
                         <span>THE SALES MATRIX</span>
                     </div>

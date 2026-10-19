@@ -61,7 +61,7 @@ const STRATEGIC_BATTLECARDS = [
         category: 'Pacing & Stall',
         tag: 'Deal Killer',
         accent: '#f59e0b',
-        reframe: '"Revisiting later usually means something still doesn\'t feel fully justified — what\'s the real hesitation?"',
+        reframe: '"Revisiting later usually means something still doesn\'t feel fully justified. What\'s the real hesitation?"',
         psychology: 'Delay is never about time; it is about an unspoken internal objection. Surface the hidden blocker before ghosting occurs.',
         trap: 'Never accept passive delays without discovering root objection.'
     },
@@ -81,7 +81,7 @@ const STRATEGIC_BATTLECARDS = [
         category: 'Alternatives',
         tag: 'High Stakes',
         accent: '#ec4899',
-        reframe: '"The question isn\'t which tool has more features — it\'s which one changes the actual number that matters."',
+        reframe: '"The question isn\'t which tool has more features. It\'s which one changes the actual number that matters."',
         psychology: 'Feature comparisons commoditize you. Frame the decision around actual bottom-line velocity and risk elimination.',
         trap: 'Never trash talk competitors or trigger feature-by-feature checklists.'
     }

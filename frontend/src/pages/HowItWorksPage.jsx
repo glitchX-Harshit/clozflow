@@ -585,7 +585,7 @@ const HowItWorksPage = () => {
                             <div className="hiw-guide-step">
                                 <div className="hiw-guide-step__num">3</div>
                                 <div className="hiw-guide-step__text">
-                                    Click <strong>Deploy Capsule</strong>—your Live Pearl Copilot is instantly primed and ready for calls.
+                                    Click <strong>Deploy Capsule</strong>: your Live Pearl Copilot is instantly primed and ready for calls.
                                 </div>
                             </div>
                         </div>
@@ -598,7 +598,7 @@ const HowItWorksPage = () => {
                                 <div className="hiw-feature-card__content">
                                     <h3 className="hiw-feature-card__title">Zero-Configuration Spec Ingestion</h3>
                                     <p className="hiw-feature-card__text">
-                                        Drop in PDF decks, Google Docs, or text battlecards. No complex prompt engineering or multi-week training required—ClozFlow parses structured product knowledge in seconds.
+                                        Drop in PDF decks, Google Docs, or text battlecards. No complex prompt engineering or multi-week training required: ClozFlow parses structured product knowledge in seconds.
                                     </p>
                                 </div>
                             </div>
@@ -760,7 +760,7 @@ const HowItWorksPage = () => {
                                 </div>
                                 <div className="hiw-capsule-row">
                                     <span className="hiw-capsule-label">RECOMMENDED OPENER</span>
-                                    <span className="hiw-capsule-val">“Marcus, saw your team grew 40% last quarter—usually that means pipeline visibility starts breaking down for reps?”</span>
+                                    <span className="hiw-capsule-val">“Marcus, saw your team grew 40% last quarter. Usually that means pipeline visibility starts breaking down for reps?”</span>
                                 </div>
                             </div>
 
@@ -807,7 +807,7 @@ const HowItWorksPage = () => {
                             <div className="hiw-guide-step">
                                 <div className="hiw-guide-step__num">2</div>
                                 <div className="hiw-guide-step__text">
-                                    Click <strong>Start Live Assist Stream</strong>—the app listens silently to live dialogue via WebAudio.
+                                    Click <strong>Start Live Assist Stream</strong>: the app listens silently to live dialogue via WebAudio.
                                 </div>
                             </div>
                             <div className="hiw-guide-step">
@@ -826,7 +826,7 @@ const HowItWorksPage = () => {
                                 <div className="hiw-feature-card__content">
                                     <h3 className="hiw-feature-card__title">Sub-400ms Whisper Latency</h3>
                                     <p className="hiw-feature-card__text">
-                                        Powered by real-time Deepgram speech streaming and fast LLM reasoning router. Zero awkward pauses, zero panic—just steady closing authority.
+                                        Powered by real-time Deepgram speech streaming and fast LLM reasoning router. Zero awkward pauses, zero panic, just steady closing authority.
                                     </p>
                                 </div>
                             </div>
@@ -979,7 +979,7 @@ const HowItWorksPage = () => {
                             <div className="hiw-guide-step">
                                 <div className="hiw-guide-step__num">2</div>
                                 <div className="hiw-guide-step__text">
-                                    Click <strong>Auto-Generate Relay</strong>—ClozFlow compiles key takeaways, proposal terms, and calendar slots.
+                                    Click <strong>Auto-Generate Relay</strong>: ClozFlow compiles key takeaways, proposal terms, and calendar slots.
                                 </div>
                             </div>
                             <div className="hiw-guide-step">
@@ -1103,7 +1103,7 @@ const HowItWorksPage = () => {
                             <div className="hiw-guide-step">
                                 <div className="hiw-guide-step__num">3</div>
                                 <div className="hiw-guide-step__text">
-                                    Enable <strong>Auto-Sync</strong>—your entire revenue team immediately gets the upgraded copilot intelligence on live calls.
+                                    Enable <strong>Auto-Sync</strong>: your entire revenue team immediately gets the upgraded copilot intelligence on live calls.
                                 </div>
                             </div>
                         </div>
@@ -1287,14 +1287,14 @@ const HowItWorksPage = () => {
                                 <div className="hero__modal-screen">
                                     <div className="hero__modal-hud">
                                         <span className="hero__hud-dot" />
-                                        <span>ACTIVE SIMULATION — 02:14</span>
+                                        <span>ACTIVE SIMULATION / 02:14</span>
                                     </div>
                                     <div className="hero__modal-sim-quote">
                                         &ldquo;Your competitor offered 30% discount if we sign this quarter.&rdquo;
                                     </div>
                                     <div className="hero__modal-sim-ai">
                                         <span className="hero__sim-tag">BEHAVIORAL AI COPILOT:</span>
-                                        <p>&ldquo;Pattern interrupt: Validate their budget discipline, then pivot from price to cost of delay. Ask: &lsquo;Fair enough — if price were equal, whose solution best solved the workflow bottleneck?&rsquo;&rdquo;</p>
+                                        <p>&ldquo;Pattern interrupt: Validate their budget discipline, then pivot from price to cost of delay. Ask: &lsquo;Fair enough, if price were equal, whose solution best solved the workflow bottleneck?&rsquo;&rdquo;</p>
                                     </div>
                                 </div>
                             </div>

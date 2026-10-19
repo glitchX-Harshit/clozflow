@@ -82,7 +82,7 @@ const RelayDashboard = ({ onOpenBuilder }) => {
       <header style={styles.header}>
         <div>
           <h1 style={styles.title}>Relay.</h1>
-          <p style={styles.subtitle}>Your deals, moving forward — even when you're not in the room.</p>
+          <p style={styles.subtitle}>Your deals, moving forward, even when you're not in the room.</p>
         </div>
       </header>
 

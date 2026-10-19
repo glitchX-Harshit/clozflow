@@ -48,15 +48,16 @@ const SmoothScroll = () => {
                 window.history.scrollRestoration = 'manual';
             }
 
-            // Initialize Lenis strictly for marketing/landing pages
+            // Initialize Lenis strictly for marketing/landing pages — tuned for ultra-buttery 60/120Hz response
             const lenis = new Lenis({
-                duration: 1.2,
+                duration: 1.1,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                 orientation: 'vertical',
                 gestureOrientation: 'vertical',
                 smoothWheel: true,
-                wheelMultiplier: 1,
-                touchMultiplier: 2,
+                wheelMultiplier: 1.05,
+                touchMultiplier: 1.8,
+                syncTouch: false,
                 infinite: false,
             });
 
@@ -71,7 +72,8 @@ const SmoothScroll = () => {
             updateHandlerRef.current = updateLenis;
 
             gsap.ticker.add(updateLenis);
-            gsap.ticker.lagSmoothing(0);
+            // Allow subtle smoothing on frame drops without stuttering
+            gsap.ticker.lagSmoothing(500, 33);
 
             window.lenis = lenis;
             cleanupClasses();

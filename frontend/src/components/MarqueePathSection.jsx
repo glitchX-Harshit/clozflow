@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import MarqueeAlongSvgPath from '@/components/ui/marquee-along-svg-path';
 import './MarqueePathSection.css';
 
@@ -18,12 +19,52 @@ const IMGS = [
   "https://cdn.cosmos.so/cd346bce-f415-4ea7-8060-99c5f7c1741a?format=jpeg",
 ];
 
-// Complex undulating SVG ribbon path matching the 1040x570 coordinate canvas
+// Continuous ribbon path extracted and fitted 1:1 to Typographic Ribbon Sales Engine.png (1855x848 space)
 const SVG_PATH =
-  "M1.12756 531.57C28.0893 516.8 74.8013 483.241 115.862 435.167M115.862 435.167C142.71 403.734 167.142 366.095 182.056 323.447C229.212 188.604 -65.6747 303.582 53.6794 397.09C73.8056 412.858 94.5052 425.626 115.862 435.167ZM115.862 435.167C221.157 482.211 342.426 450.85 489.709 314.125C517.752 288.093 540.139 265.319 557.876 245.305M557.876 245.305C652.19 138.884 615.024 110.493 597.546 85.1004C576.782 54.9327 401.867 14.2899 417.559 188.351C424.308 263.214 481.985 261.608 557.876 245.305ZM557.876 245.305C646.667 226.232 760.389 187.041 846.65 226.667M846.65 226.667C858.081 231.918 869.031 238.554 879.376 246.804C1034.5 370.518 957.576 540.884 843.253 562.658C768.137 576.964 767.606 395.943 846.65 226.667ZM846.65 226.667C887.908 138.309 950.848 53.1511 1036.18 0.642822";
+  "M -40 640 " +
+  "C 30 540 130 430 230 330 " +
+  "C 340 220 460 110 600 -40 " +
+  "C 720 -150 940 -120 1060 -30 " +
+  "C 1130 50 1180 165 1260 165 " +
+  "C 1340 165 1390 60 1480 -30 " +
+  "C 1560 -120 1740 -80 1830 10 " +
+  "C 1880 70 1780 170 1680 270 " +
+  "C 1560 380 1465 460 1465 540 " +
+  "C 1465 640 1540 730 1660 800 " +
+  "C 1760 860 1860 910 1930 960 " +
+  "C 1750 1040 1250 1000 850 950 " +
+  "C 650 920 480 870 330 880 " +
+  "C 220 890 100 860 35 780 " +
+  "C -30 700 -20 630 -40 640 Z";
 
-export default function MarqueePathSection() {
+// Secondary arch strip matching the user's red stroke path at the lower right
+const SVG_PATH_STRIP_2 =
+  "M 960 960 " +
+  "C 1040 820 1130 715 1230 700 " +
+  "C 1350 680 1520 770 1720 950";
+
+const IMGS_STRIP_2 = [
+  IMGS[4], // teal cursive
+  IMGS[6], // red 'A'
+  IMGS[5], // blue 'g'
+  IMGS[1], // green '&'
+  IMGS[9], // orange 0123
+  IMGS[2], // pink typography
+  IMGS[8], // black knot
+  IMGS[7], // dark green glyph
+];
+
+export default function MarqueePathSection({ onGetStarted }) {
   const [container, setContainer] = React.useState(null);
+  const navigate = useNavigate();
+
+  const handleCta = () => {
+    if (onGetStarted) {
+      onGetStarted();
+    } else {
+      navigate('/dashboard');
+    }
+  };
 
   return (
     <section 
@@ -33,10 +74,47 @@ export default function MarqueePathSection() {
     >
       {/* ── Marquee Along Svg Path Orbit Stage ── */}
       <div className="mps__stage">
+        {/* Strip 2: Lower-Right Secondary Arch (matches user-drawn stroke) */}
+        <MarqueeAlongSvgPath
+          path={SVG_PATH_STRIP_2}
+          pathId="mps-secondary-strip"
+          viewBox="0 0 1855 848"
+          baseVelocity={24.5}
+          scrollSensitivity={0.09}
+          showPath={false}
+          slowdownOnHover={true}
+          draggable={true}
+          dragAwareDirection
+          dragVelocityDecay={0.98}
+          scrollAwareDirection={true}
+          useScrollVelocity={true}
+          scrollContainer={{ current: container }}
+          repeat={1}
+          enableRollingZIndex={true}
+          dragSensitivity={0.05}
+          className="absolute top-0 w-full h-full pointer-events-auto"
+          responsive
+          grabCursor
+        >
+          {IMGS_STRIP_2.map((img, i) => (
+            <div key={`s2-${i}`} className="mps__img-card">
+              <img
+                src={img}
+                alt={`Tile ${i}`}
+                className="w-full h-full object-cover"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </MarqueeAlongSvgPath>
+
+        {/* Strip 1: Main Framing Ribbon */}
         <MarqueeAlongSvgPath
           path={SVG_PATH}
-          viewBox="0 -40 1040 650"
+          pathId="mps-main-strip"
+          viewBox="0 0 1855 848"
           baseVelocity={4}
+          scrollSensitivity={0.015}
           showPath={false}
           slowdownOnHover={true}
           draggable={true}
@@ -48,12 +126,12 @@ export default function MarqueePathSection() {
           repeat={4}
           enableRollingZIndex={true}
           dragSensitivity={0.01}
-          className="absolute top-0 w-full h-full"
+          className="absolute top-0 w-full h-full pointer-events-auto"
           responsive
           grabCursor
         >
           {IMGS.map((img, i) => (
-            <div key={i} className="mps__img-card">
+            <div key={`s1-${i}`} className="mps__img-card">
               <img
                 src={img}
                 alt={`Example ${i}`}
@@ -63,6 +141,34 @@ export default function MarqueePathSection() {
             </div>
           ))}
         </MarqueeAlongSvgPath>
+      </div>
+
+      {/* ── Central Focal Engine & High-Conversion CTA Block ── */}
+      <div className="mps__center-content">
+        <h2 className="mps__headline">
+          <span className="mps__headline-row">
+            आप <span className="mps__headline-latin">product</span> बनाओ<span className="mps__headline-dot">.</span>
+          </span>
+          <span className="mps__headline-row">
+            <span className="mps__headline-latin">Sales</span> की दौड़
+          </span>
+          <span className="mps__headline-row mps__headline-highlight">
+            हम संभालेंगे<span className="mps__headline-dot">.</span>
+          </span>
+        </h2>
+
+        <p className="mps__subheadline">
+          From finding the right prospects to moving sales conversations forward.
+        </p>
+
+        <button 
+          type="button" 
+          className="mps__cta-btn" 
+          onClick={handleCta}
+        >
+          <span>Build your sales engine</span>
+          <span className="mps__cta-arrow">↗</span>
+        </button>
       </div>
     </section>
   );

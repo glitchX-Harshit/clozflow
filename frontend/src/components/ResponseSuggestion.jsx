@@ -36,12 +36,12 @@ const SCENARIOS = [
         mobileObjection: '“Reps are slammed. We can’t learn another complex tool.”',
         rebuttals: {
             Direct: 'Zero onboarding. Zero training. It is a silent whisper widget in Zoom. If your reps know how to talk, they already know how to use it.',
-            Disarming: 'I hear you 100%. That is why reps love it—it auto-fills their CRM notes silently and hands them back eight hours a week from day one.',
+            Disarming: 'I hear you 100%. That is why reps love it: it auto-fills their CRM notes silently and hands them back eight hours a week from day one.',
             'ROI Re-Anchor': 'The tool saves time on call one. Reps spend 30% less time on manual admin, giving them more hours back to close.'
         },
         mobileRebuttals: {
             Direct: '“Zero onboarding. It is a headless Zoom whisper layer. If reps know how to talk, they know how to use it.”',
-            Disarming: '“That’s why reps love it—it auto-fills CRM notes silently and hands them back 8 hours a week.”',
+            Disarming: '“That’s why reps love it: it auto-fills CRM notes silently and hands them back 8 hours a week.”',
             'ROI Re-Anchor': '“Saves time on call one. Reps spend 30% less time on manual admin and more hours closing.”'
         },
         confidence: '94% WIN RATE',
@@ -141,7 +141,7 @@ const ResponseSuggestion = () => {
                 {/* Header */}
                 <div className="resp__hdr-wrap">
                     <div className="resp__meta-tag resp__anim-hdr">
-                        <span>[ 03 — LIVE TELEPROMPTER ]</span>
+                        <span>[ 03 / LIVE TELEPROMPTER ]</span>
                         <span className="resp__meta-divider">/</span>
                         <span>INSTANT REBUTTALS</span>
                     </div>

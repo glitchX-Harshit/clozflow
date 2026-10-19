@@ -162,7 +162,7 @@ const ObjectionHandling = () => {
                 {/* Header */}
                 <div className="obj__hdr-wrap">
                     <div className="obj__meta-tag obj__anim-hdr">
-                        <span>[ 02 — THE EXCUSE RADAR ]</span>
+                        <span>[ 02 / THE EXCUSE RADAR ]</span>
                         <span className="obj__meta-divider">/</span>
                         <span>CALL DECODER</span>
                     </div>

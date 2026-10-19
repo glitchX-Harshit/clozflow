@@ -120,11 +120,12 @@ export default function DepthBlurCarousel({
     const rawScroll = useMotionValue(0);
     const snapTimeout = useRef(null);
     const mountRef = useRef(null);
+    const isUserInteracting = useRef(false);
 
     const smoothScroll = useSpring(rawScroll, {
-        stiffness: 180,
-        damping: scrollDamping,
-        mass: 1,
+        stiffness: 140,
+        damping: 30,
+        mass: 0.8,
         restDelta: 0.001
     });
 
@@ -137,6 +138,36 @@ export default function DepthBlurCarousel({
         });
         return () => unsubscribe();
     }, [smoothScroll, slides.length]);
+
+    // ── Synchronize with Page Up/Down Scroll: moves cards Left and Right ──
+    useEffect(() => {
+        let lastScrollY = window.scrollY;
+        let scrollAccumulator = 0;
+
+        const onScroll = () => {
+            // Only drive carousel if user isn't actively dragging/panning
+            if (isUserInteracting.current) return;
+
+            const currentScrollY = window.scrollY;
+            const deltaY = currentScrollY - lastScrollY;
+            lastScrollY = currentScrollY;
+
+            // Only respond when section is somewhat in viewport view
+            if (mountRef.current) {
+                const rect = mountRef.current.getBoundingClientRect();
+                const vh = window.innerHeight;
+                if (rect.bottom < -100 || rect.top > vh + 100) return;
+            }
+
+            // Scroll down moves carousel right (+), scroll up moves carousel left (-)
+            scrollAccumulator += deltaY * 0.004;
+            scrollTarget.current += deltaY * 0.004;
+            rawScroll.set(scrollTarget.current);
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, [rawScroll]);
 
     // Horizontal wheel navigation
     const handleWheel = (e) => {
@@ -153,7 +184,12 @@ export default function DepthBlurCarousel({
     };
 
     // Pan / Drag navigation
+    const handlePanStart = () => {
+        isUserInteracting.current = true;
+    };
+
     const handlePan = (e, info) => {
+        isUserInteracting.current = true;
         const delta = -info.delta.x * 0.005;
         scrollTarget.current += delta;
         rawScroll.set(scrollTarget.current);
@@ -164,6 +200,9 @@ export default function DepthBlurCarousel({
         scrollTarget.current += -info.velocity.x * 0.0015;
         scrollTarget.current = Math.round(scrollTarget.current);
         rawScroll.set(scrollTarget.current);
+        setTimeout(() => {
+            isUserInteracting.current = false;
+        }, 150);
     };
 
     const prevCard = () => {
@@ -197,6 +236,7 @@ export default function DepthBlurCarousel({
             <motion.div
                 className="dbc-gesture-layer"
                 onWheel={handleWheel}
+                onPanStart={handlePanStart}
                 onPan={handlePan}
                 onPanEnd={handlePanEnd}
             />

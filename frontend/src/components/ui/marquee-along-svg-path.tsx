@@ -51,6 +51,7 @@ interface MarqueeAlongSvgPathProps {
   pathId?: string
   preserveAspectRatio?: PreserveAspectRatio
   showPath?: boolean
+  svgOverlay?: React.ReactNode
 
   // SVG properties
   width?: string | number
@@ -70,6 +71,7 @@ interface MarqueeAlongSvgPathProps {
   scrollAwareDirection?: boolean
   scrollSpringConfig?: SpringOptions
   scrollContainer?: RefObject<HTMLElement | null> | HTMLElement | null
+  scrollSensitivity?: number
 
   // Item repetition
   repeat?: number
@@ -101,6 +103,7 @@ const MarqueeAlongSvgPath = ({
   pathId,
   preserveAspectRatio = "xMidYMid meet",
   showPath = false,
+  svgOverlay,
 
   // SVG defaults
   width = "100%",
@@ -120,6 +123,7 @@ const MarqueeAlongSvgPath = ({
   scrollAwareDirection = false,
   scrollSpringConfig = { damping: 50, stiffness: 400 },
   scrollContainer,
+  scrollSensitivity,
 
   // Items repetition
   repeat = 3,
@@ -248,6 +252,37 @@ const MarqueeAlongSvgPath = ({
     container: (scrollContainer as RefObject<HTMLDivElement | null>) || container,
   })
 
+  // Synchronize with Page Up/Down Scroll (matching Section 2 depth-blur-carousel behavior)
+  const scrollAccumulator = useRef(0)
+
+  useEffect(() => {
+    let lastScrollY = typeof window !== "undefined" ? window.scrollY : 0
+
+    const onScroll = () => {
+      if (isDragging.current) return
+
+      const currentScrollY = window.scrollY
+      const deltaY = currentScrollY - lastScrollY
+      lastScrollY = currentScrollY
+
+      // Only respond when section is visible near viewport
+      const targetEl = (scrollContainer as RefObject<HTMLElement | null>)?.current || container.current
+      if (targetEl) {
+        const rect = targetEl.getBoundingClientRect()
+        const vh = window.innerHeight
+        if (rect.bottom < -100 || rect.top > vh + 100) return
+      }
+
+      // Proportional response: scroll down moves right/forward (+), scroll up moves left/reverse (-)
+      const totalLen = pathRef.current?.getTotalLength() || 2000
+      const ratio = scrollSensitivity !== undefined ? scrollSensitivity : (70 / totalLen)
+      scrollAccumulator.current += deltaY * ratio
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [scrollContainer, scrollSensitivity])
+
   const scrollVelocity = useVelocity(scrollY)
   const smoothVelocity = useSpring(scrollVelocity, scrollSpringConfig)
 
@@ -327,6 +362,13 @@ const MarqueeAlongSvgPath = ({
       } else if (!isDragging.current) {
         dragVelocity.current = 0
       }
+    }
+
+    // Apply scroll-driven movement (synchronized with page scroll up/down like Section 2)
+    if (Math.abs(scrollAccumulator.current) > 0.0001) {
+      const step = scrollAccumulator.current * 0.18
+      moveBy += step
+      scrollAccumulator.current -= step
     }
 
     baseOffset.set(baseOffset.get() + moveBy)
@@ -409,6 +451,7 @@ const MarqueeAlongSvgPath = ({
             fill="none"
             ref={pathRef}
           />
+          {svgOverlay}
         </svg>
 
         {items.map(({ child, repeatIndex, itemIndex, key }) => {

@@ -3,8 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-route
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+import SculptureHero from './components/SculptureHero';
 const HowItWorks = React.lazy(() => import('./components/HowItWorks'));
 const Integrations = React.lazy(() => import('./components/Integrations'));
 const ObjectionHandling = React.lazy(() => import('./components/ObjectionHandling'));
@@ -17,7 +16,6 @@ import SmoothScroll from './components/SmoothScroll';
 import LiveCopilotPopup from './components/LiveCopilotPopup';
 import WebPreload from './components/WebPreload';
 
-const CrowdCanvasSection = React.lazy(() => import('./components/CrowdCanvasSection'));
 const ThreeBackground = React.lazy(() => import('./components/ThreeBackground'));
 const AuthPage = React.lazy(() => import('./pages/AuthPage'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
@@ -51,17 +49,86 @@ function LandingPage() {
             {/* ── Web Preloader (Reload / Entrance Curtain Animation) ── */}
             <WebPreload />
 
-            {/* ── 1ST SECTION: Hero & 3D Orb Viewport ── */}
-            <div className="hero-viewport-wrap" style={{ position: 'relative', zIndex: 1, minHeight: '100vh', overflow: 'hidden' }}>
-                <Suspense fallback={null}>
-                    <ThreeBackground />
-                </Suspense>
-                <Navbar
-                    onGetStarted={() => navigate('/dashboard')}
-                    onSignup={() => navigate('/auth', { state: { view: 'signup' } })}
-                    onLogin={() => navigate('/auth', { state: { view: 'login' } })}
+            {/* ── 1ST SECTION: Sculpture Hero (Liquid Particle Hero) ── */}
+            <div className="hero-viewport-wrap" style={{ position: 'relative', zIndex: 1, minHeight: '100vh', overflow: 'hidden', backgroundColor: 'var(--bg, #f4f6f8)' }}>
+                <SculptureHero
+                    background="#f4f6f8"
+                    brand="ClozFlow®"
+                    brandHref="/"
+                    onBrandClick={(e) => {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    sculptureScale={1}
+                    sculptureY={0}
+                    navLinks={[
+                        { 
+                            label: "Product", 
+                            href: "#objections",
+                            onClick: (e) => {
+                                e.preventDefault();
+                                document.getElementById('objections')?.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        },
+                        { 
+                            label: "How it works", 
+                            href: "/how-it-works",
+                            onClick: (e) => {
+                                e.preventDefault();
+                                navigate('/how-it-works');
+                            }
+                        },
+                        { 
+                            label: "Integrations", 
+                            href: "#integrations",
+                            onClick: (e) => {
+                                e.preventDefault();
+                                document.getElementById('integrations')?.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        },
+                        { 
+                            label: "Pricing", 
+                            href: "/pricing",
+                            onClick: (e) => {
+                                e.preventDefault();
+                                navigate('/pricing');
+                            }
+                        },
+                    ]}
+                    navCta={{
+                        label: "Contact",
+                        href: "/auth",
+                        onClick: (e) => {
+                            e.preventDefault();
+                            navigate('/auth', { state: { view: 'login' } });
+                        }
+                    }}
+                    themeToggle={true}
+                    eyebrow="Autonomous Voice Intelligence · Indian Enterprise Grade"
+                    headline={"India's #1 Voice Closer.\nBuilt to out-negotiate humans."}
+                    headlineAccent="Built to out-negotiate humans."
+                    body="Indian buyers do not buy from robotic prompts. ClozFlow listens for hesitation, matches regional tone, switches effortlessly between Hindi and English mid-breath, and turns skeptical 'soch ke batata hoon' objections into signed commitments."
+                    primaryCta={{
+                        label: "Deploy AI Closer",
+                        href: "/dashboard",
+                        onClick: (e) => {
+                            e.preventDefault();
+                            navigate('/dashboard');
+                        }
+                    }}
+                    secondaryCta={{
+                        label: "Hear live calls",
+                        href: "#how-it-works",
+                        onClick: (e) => {
+                            e.preventDefault();
+                            document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }}
+                    backdropText="clozflow"
+                    showCredit={false}
+                    hint=""
+                    hintTouch=""
                 />
-                <Hero onGetStarted={() => navigate('/dashboard')} />
             </div>
 
             {/* ── SUBSEQUENT SECTIONS: Slides cleanly ABOVE the 1st section & orb ── */}
@@ -79,8 +146,7 @@ function LandingPage() {
                     <Integrations />
                     <ResponseSuggestion />
                     <UseCases />
-                    <MarqueePathSection />
-                    <CrowdCanvasSection />
+                    <MarqueePathSection onGetStarted={() => navigate('/dashboard')} />
                     <Footer />
                 </Suspense>
             </div>

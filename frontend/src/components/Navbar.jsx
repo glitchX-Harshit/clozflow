@@ -13,7 +13,7 @@ const LINKS = [
     { label: 'Early Access', href: 'https://clozflow-waitlist.vercel.app' },
 ];
 
-const Navbar = ({ onSignup, onLogin }) => {
+const Navbar = ({ onSignup, onLogin, hideAtTop = false }) => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('');
@@ -88,7 +88,7 @@ const Navbar = ({ onSignup, onLogin }) => {
     return (
         <>
             <header 
-                className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''} ${hoveredProduct ? 'nb--mega-open' : ''}`}
+                className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''} ${hoveredProduct ? 'nb--mega-open' : ''} ${hideAtTop && !scrolled ? 'nb--hidden-at-top' : ''}`}
                 onMouseLeave={() => setHoveredProduct(false)}
             >
                 <div className="nb__inner">

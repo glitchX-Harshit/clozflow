@@ -120,6 +120,12 @@ p { color: var(--text-dim); line-height: 1.7; }
 section {
   position: relative;
   padding: 9rem 0;
+  contain: layout style;
+}
+
+.landing-main {
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ══ BUTTONS ═══════════════════════════════════════ */

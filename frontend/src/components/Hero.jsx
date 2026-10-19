@@ -345,14 +345,14 @@ const Hero = ({ onGetStarted }) => {
                                 <div className="hero__modal-screen">
                                     <div className="hero__modal-hud">
                                         <span className="hero__hud-dot" />
-                                        <span>ACTIVE SIMULATION — 02:14</span>
+                                        <span>ACTIVE SIMULATION / 02:14</span>
                                     </div>
                                     <div className="hero__modal-sim-quote">
                                         &ldquo;Your competitor offered 30% discount if we sign this quarter.&rdquo;
                                     </div>
                                     <div className="hero__modal-sim-ai">
                                         <span className="hero__sim-tag">BEHAVIORAL AI COPILOT:</span>
-                                        <p>&ldquo;Pattern interrupt: Validate their budget discipline, then pivot from price to cost of delay. Ask: &lsquo;Fair enough — if price were equal, whose solution best solved the workflow bottleneck?&rsquo;&rdquo;</p>
+                                        <p>&ldquo;Pattern interrupt: Validate their budget discipline, then pivot from price to cost of delay. Ask: &lsquo;Fair enough, if price were equal, whose solution best solved the workflow bottleneck?&rsquo;&rdquo;</p>
                                     </div>
                                 </div>
                             </div>

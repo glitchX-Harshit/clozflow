@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import * as THREE from 'three';
@@ -33,7 +33,7 @@ const Shape = () => {
         meshRef.current.position.y += (targetY - meshRef.current.position.y) * 0.12;
 
         if (materialRef.current) {
-            materialRef.current.uniforms.time.value = state.clock.getElapsedTime();
+            materialRef.current.uniforms.time.value += delta;
         }
     });
 
@@ -135,6 +135,7 @@ const ParticleSystem = () => {
 
 const ThreeBackground = () => {
     const containerRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
         let ctx = gsap.context(() => {
@@ -151,7 +152,9 @@ const ThreeBackground = () => {
                         trigger: heroEl,
                         start: 'top top',
                         end: 'bottom 20%',
-                        scrub: true, // Immediate 1:1 tracking with zero 1-2s catch-up delay
+                        scrub: true,
+                        onLeave: () => setIsVisible(false),
+                        onEnterBack: () => setIsVisible(true)
                     }
                 });
             }
@@ -179,7 +182,7 @@ const ThreeBackground = () => {
         >
             <Canvas 
                 camera={{ position: [0, 0, 8], fov: 45 }} 
-                frameloop="always"
+                frameloop={isVisible ? "always" : "never"} 
                 gl={{ 
                     antialias: true,
                     alpha: true,

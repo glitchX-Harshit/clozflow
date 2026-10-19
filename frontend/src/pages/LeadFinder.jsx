@@ -939,7 +939,7 @@ const LeadFinder = ({ onOutreach }) => {
             });
         } catch (err) {
             console.error('Lead search error:', err);
-            showToast('Search failed — check backend connection', '⚠️');
+            showToast('Search failed: check backend connection', '⚠️');
             setLeads([]);
         } finally {
             setLoading(false);
@@ -1193,7 +1193,7 @@ const LeadFinder = ({ onOutreach }) => {
                                 <button
                                     className={`lf__deep-toggle ${deepSearchEnabled ? 'active' : ''}`}
                                     onClick={() => setDeepSearchEnabled(prev => !prev)}
-                                    title="Deep Search — iterates through city neighborhoods to find leads without websites"
+                                    title="Deep Search: iterates through city neighborhoods to find leads without websites"
                                 >
                                     <Crosshair size={14} />
                                     <span>Deep Search</span>
@@ -1304,7 +1304,7 @@ const LeadFinder = ({ onOutreach }) => {
                                 <div className="lf__deep-progress">
                                     <div className="lf__deep-progress-header">
                                         <Crosshair size={18} className="lf__deep-progress-icon spinning" />
-                                        <span>Deep Searching — {deepSearchProgress.level_name || 'Neighborhood'}</span>
+                                        <span>Deep Searching: {deepSearchProgress.level_name || 'Neighborhood'}</span>
                                     </div>
                                     <div className="lf__deep-progress-area">
                                         Scanning: <strong>{deepSearchProgress.area}</strong>

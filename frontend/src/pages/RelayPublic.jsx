@@ -225,7 +225,7 @@ const RelayPublic = ({ previewData = null }) => {
           buyer_corrections: confirmed ? null : correctionText 
         })
       });
-      showToast(confirmed ? 'Context confirmed.' : 'Changes noted — our team has been notified.');
+      showToast(confirmed ? 'Context confirmed.' : 'Changes noted: our team has been notified.');
       setCorrectionMode(false);
       setRelay(prev => ({ ...prev, buyer_confirmed: confirmed }));
     } catch (err) {
@@ -357,7 +357,7 @@ const RelayPublic = ({ previewData = null }) => {
           </h1>
           
           <p className="rp-hero-lead">
-            A precise, living record of our conversation — so every decision maker operates from the exact same verified context.
+            A precise, living record of our conversation, so every decision maker operates from the exact same verified context.
           </p>
           
           <div className="rp-story-meta-ledger">
@@ -440,7 +440,7 @@ const RelayPublic = ({ previewData = null }) => {
                 <div key={idx} className="rp-milestone-item">
                   <div className="rp-milestone-num">0{idx + 1}</div>
                   <div className="rp-milestone-body">
-                    {typeof pt === 'string' ? pt : (pt.issue ? `${pt.issue} — ${pt.what_was_discussed || pt.why_it_matters}` : JSON.stringify(pt))}
+                    {typeof pt === 'string' ? pt : (pt.issue ? `${pt.issue}: ${pt.what_was_discussed || pt.why_it_matters}` : JSON.stringify(pt))}
                   </div>
                 </div>
               ))}
@@ -515,7 +515,7 @@ const RelayPublic = ({ previewData = null }) => {
                 onClick={() => handleVerify(true)}
                 disabled={submitting}
               >
-                <Check size={16} /> YES — THAT'S ACCURATE
+                <Check size={16} /> YES, THAT'S ACCURATE
               </button>
               
               <button 
