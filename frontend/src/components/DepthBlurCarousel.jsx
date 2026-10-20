@@ -1,6 +1,7 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Play, Pause } from 'lucide-react';
+import mascotVoicePoster from '../assets/clozflow-ai-voice-mascot-poster.webp';
 import conversionCloudscape from '../assets/conversion-cloudscape.webp';
 import aiSalesEngineerBanner from '../assets/ai-sales-engineer-banner.webp';
 import futuristicVoicePoster from '../assets/futuristic-multilingual-voice-ai-poster.webp';
@@ -16,6 +17,14 @@ const CAROUSEL_SLIDES = [
         title: 'Built in India, Made Sovereign',
         tag: 'SOVEREIGN DATA ARCHITECTURE',
         metric: '100% On-Soil Compute'
+    },
+    {
+        id: 'voice-mascot-poster',
+        image: mascotVoicePoster,
+        title: 'Clozflow AI Voice Mascot',
+        tag: 'AUTONOMOUS VOICE AGENT',
+        metric: 'Sub-200ms Telemetry',
+        hasAudioPreview: true
     },
     {
         id: 'pearl-call-interface',
@@ -61,6 +70,43 @@ export default function DepthBlurCarousel({
     blurSpread = 25,
     blurStrength = 24
 }) {
+    // Dummy audio playback state (future-ready for MP3 file)
+    const [playingAudioId, setPlayingAudioId] = useState(null);
+    const audioRef = useRef(null);
+
+    const handleToggleAudio = (e, item) => {
+        e.stopPropagation();
+        if (playingAudioId === item.id) {
+            setPlayingAudioId(null);
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+        } else {
+            setPlayingAudioId(item.id);
+            // Future MP3 connection: when item.audioSrc is provided, connect audio playback
+            if (item.audioSrc) {
+                if (!audioRef.current) {
+                    audioRef.current = new Audio(item.audioSrc);
+                    audioRef.current.onended = () => setPlayingAudioId(null);
+                } else {
+                    audioRef.current.src = item.audioSrc;
+                }
+                audioRef.current.play().catch((err) => {
+                    console.warn('Audio playback failed or requires user gesture:', err);
+                });
+            }
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
+        };
+    }, []);
+
     // Responsive card dimensions (scaled down)
     const [dims, setDims] = useState({
         itemWidth,
@@ -255,6 +301,8 @@ export default function DepthBlurCarousel({
                         gap={dims.gap}
                         maxRotation={maxRotation}
                         borderRadius={borderRadius}
+                        isPlaying={playingAudioId === item.id}
+                        onToggleAudio={handleToggleAudio}
                         onClick={() => {
                             scrollTarget.current = i;
                             rawScroll.set(scrollTarget.current);
@@ -335,6 +383,8 @@ function ImageDepthCard({
     gap,
     maxRotation,
     borderRadius,
+    isPlaying,
+    onToggleAudio,
     onClick
 }) {
     const localOffset = useTransform(smoothScroll, (v) => {
@@ -399,6 +449,40 @@ function ImageDepthCard({
                     className="dbc-card-img"
                     loading="lazy"
                 />
+
+                {/* Optional Audio Play/Pause Button on specific card (bottom 15-20%) */}
+                {item.hasAudioPreview && (
+                    <div
+                        className="dbc-audio-trigger-wrap"
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                    >
+                        {isPlaying && (
+                            <div className="dbc-audio-pill">
+                                <span className="dbc-audio-waves">
+                                    <span className="dbc-audio-wave-bar" />
+                                    <span className="dbc-audio-wave-bar" />
+                                    <span className="dbc-audio-wave-bar" />
+                                </span>
+                                <span className="dbc-audio-pill-text">Voice Demo</span>
+                            </div>
+                        )}
+                        <button
+                            type="button"
+                            className={`dbc-audio-btn ${isPlaying ? 'dbc-audio-btn--playing' : ''}`}
+                            onClick={(e) => onToggleAudio(e, item)}
+                            aria-label={isPlaying ? 'Pause voice demo' : 'Play voice demo'}
+                            title={isPlaying ? 'Pause Voice Demo' : 'Play Voice Demo'}
+                        >
+                            {isPlaying ? (
+                                <Pause size={17} className="dbc-audio-icon dbc-audio-icon--pause" />
+                            ) : (
+                                <Play size={17} className="dbc-audio-icon dbc-audio-icon--play" />
+                            )}
+                        </button>
+                    </div>
+                )}
             </motion.div>
         </motion.div>
     );
