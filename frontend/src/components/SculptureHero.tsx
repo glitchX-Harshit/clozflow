@@ -1219,7 +1219,7 @@ const CSS = `
 .sh-eyebrow{font-size:12px !important;letter-spacing:.12em !important;text-transform:uppercase !important;opacity:.62 !important;margin:0 0 clamp(14px,1.6cqw,22px) !important;
   display:flex !important;align-items:center !important;gap:12px !important;color:inherit !important;line-height:1.2 !important}
 .sh-eyebrow::before{display:none !important}
-.sh-h1{font-family:var(--sh-head) !important;font-weight:500 !important;font-size:clamp(40px,min(6.6cqw,11.5cqh),124px) !important;line-height:.92 !important;letter-spacing:-.045em !important;margin:0 !important;
+.sh-h1{font-family:var(--sh-head) !important;font-weight:500 !important;font-size:clamp(36px,min(5.8cqw,10.2cqh),108px) !important;line-height:.92 !important;letter-spacing:-.045em !important;margin:0 !important;
   text-wrap:balance !important;text-transform:none !important;color:inherit !important}
 .sh-h1 .sh-line{display:block !important;text-transform:none !important}
 .sh-accent{font-family:var(--sh-accent) !important;font-style:italic !important;font-weight:400 !important;font-size:0.62em !important;line-height:1.2 !important;letter-spacing:-.02em !important;color:var(--sh-acc) !important;text-transform:none !important;display:inline-block !important;margin-top:0.18em !important;opacity:0.88 !important}
@@ -1240,14 +1240,14 @@ const CSS = `
 @container (max-width:1023px){
   .sh-content{grid-template-columns:1fr !important;gap:28px !important}
   .sh-aside{justify-self:start !important;max-width:520px !important;padding-bottom:0 !important}
-  .sh-h1{font-size:clamp(40px,min(9.5cqw,9cqh),96px) !important}
+  .sh-h1{font-size:clamp(36px,min(8.2cqw,8cqh),84px) !important}
 }
 @container (max-width:767px){
   .sh-links li:not(.sh-keep){display:none !important}
 }
 @container (max-width:639px){
   .sh-nav{padding-top:20px !important}
-  .sh-h1{font-size:clamp(36px,min(12.5cqw,7.2cqh),60px) !important;line-height:.94 !important}
+  .sh-h1{font-size:clamp(32px,min(11cqw,6.5cqh),52px) !important;line-height:.94 !important}
   .sh-body{font-size:15px !important;margin-bottom:20px !important}
   .sh-eyebrow{font-size:11px !important}
   .sh-ctas{gap:18px !important}

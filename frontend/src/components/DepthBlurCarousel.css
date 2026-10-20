@@ -6,8 +6,8 @@
 
 .dbc-stage {
   width: 100vw;
-  height: clamp(320px, 38vh, 420px);
-  min-height: 310px;
+  height: clamp(500px, 58vh, 580px);
+  min-height: 480px;
   position: relative;
   left: 50%;
   right: 50%;
@@ -56,8 +56,10 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-color: #0f172a;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  background-color: transparent;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   transform: translateZ(0);
 }
 
@@ -161,8 +163,8 @@
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .dbc-stage {
-    height: 320px;
-    min-height: 300px;
+    height: 380px;
+    min-height: 360px;
   }
   .dbc-card-overlay {
     padding: 1rem 1.15rem;

@@ -105,8 +105,8 @@ function LandingPage() {
                     }}
                     themeToggle={true}
                     eyebrow=""
-                    headline={"India's #1 Voice Closer.\nBuilt to out-negotiate humans."}
-                    headlineAccent="Built to out-negotiate humans."
+                    headline={"India's #1 AI Voice Closer.\nBuilt to out-perform humans."}
+                    headlineAccent="Built to out-perform humans."
                     body="Indian buyers do not buy from robotic prompts. ClozFlow listens for hesitation, matches regional tone, switches effortlessly between Hindi and English mid-breath, and turns skeptical 'soch ke batata hoon' objections into signed commitments."
                     primaryCta={{
                         label: "Deploy AI Closer",

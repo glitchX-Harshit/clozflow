@@ -1,61 +1,59 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import conversionCloudscape from '../assets/conversion-cloudscape.webp';
+import aiSalesEngineerBanner from '../assets/ai-sales-engineer-banner.webp';
+import futuristicVoicePoster from '../assets/futuristic-multilingual-voice-ai-poster.webp';
+import pearlCallInterface from '../assets/clozflow-pearl-ai-call-interface.webp';
+import builtInIndiaSovereign from '../assets/built-in-india-made-sovereign.webp';
 import './DepthBlurCarousel.css';
 
 // ── Curated Full-Bleed Visual Imagery (Ultra-High Resolution, Editorial Tech & Architecture) ──
 const CAROUSEL_SLIDES = [
     {
-        id: 'voice-closer',
-        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=85',
-        title: 'Pearl Autonomous Voice',
-        tag: 'SUB-200MS TELEMETRY',
-        metric: '4.2X Pipeline'
+        id: 'built-in-india-sovereign',
+        image: builtInIndiaSovereign,
+        title: 'Built in India, Made Sovereign',
+        tag: 'SOVEREIGN DATA ARCHITECTURE',
+        metric: '100% On-Soil Compute'
     },
     {
-        id: 'whisper-radar',
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85',
-        title: 'Micro-Flinch Radar HUD',
-        tag: 'ACOUSTIC RECOGNITION',
-        metric: '320ms Warning'
+        id: 'pearl-call-interface',
+        image: pearlCallInterface,
+        title: 'Pearl AI Call Interface',
+        tag: 'LIVE TELEMETRY HUD',
+        metric: 'Autonomous Dialing'
     },
     {
-        id: 'executive-rebuttal',
-        image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=85',
-        title: 'Executive Objection Decoder',
-        tag: 'BEHAVIORAL PERSUASION',
-        metric: '+43.8% Close Rate'
+        id: 'multilingual-voice-ai',
+        image: futuristicVoicePoster,
+        title: 'Futuristic Multilingual Voice AI',
+        tag: 'NATIVE CODE-SWITCHING',
+        metric: 'Zero-Latency Fluency'
     },
     {
-        id: 'vector-rag',
-        image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=85',
-        title: 'FAISS Rebuttal Knowledge Base',
-        tag: '4M+ VECTOR CORPUS',
-        metric: '99.4% Accuracy'
+        id: 'ai-sales-engineer',
+        image: aiSalesEngineerBanner,
+        title: 'AI Sales Engineer',
+        tag: 'AUTONOMOUS WORKFORCE',
+        metric: 'Full-Stack Execution'
     },
     {
-        id: 'neural-sync',
-        image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=85',
-        title: 'Zero-Touch CRM Hygiene',
-        tag: 'SALESFORCE & HUBSPOT',
-        metric: '14h / Wk Saved'
-    },
-    {
-        id: 'deal-recovery',
-        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=85',
-        title: 'Deal Revival Architecture',
-        tag: 'REVENUE ENGINE',
-        metric: '+$480K Revived'
+        id: 'conversion-cloudscape',
+        image: conversionCloudscape,
+        title: '83% More Conversion Cloudscape',
+        tag: 'HIGH-CONVERSION VELOCITY',
+        metric: '+83% Conversion Lift'
     }
 ];
 
 export default function DepthBlurCarousel({
     slides = CAROUSEL_SLIDES,
-    itemWidth = 430,
-    itemHeight = 270,
-    sideItemWidth = 285,
-    sideItemHeight = 245,
-    gap = 46,
+    itemWidth = 352,
+    itemHeight = 440,
+    sideItemWidth = 280,
+    sideItemHeight = 350,
+    gap = 42,
     maxRotation = 75,
     perspective = 450,
     borderRadius = 16,
@@ -76,27 +74,27 @@ export default function DepthBlurCarousel({
         const updateDims = () => {
             if (window.innerWidth < 640) {
                 setDims({
-                    itemWidth: Math.min(window.innerWidth * 0.82, 270),
-                    itemHeight: 170,
-                    sideItemWidth: Math.min(window.innerWidth * 0.58, 180),
-                    sideItemHeight: 150,
+                    itemWidth: 248,
+                    itemHeight: 310,
+                    sideItemWidth: 192,
+                    sideItemHeight: 240,
                     gap: 18
                 });
             } else if (window.innerWidth < 1024) {
                 setDims({
-                    itemWidth: 350,
-                    itemHeight: 220,
-                    sideItemWidth: 230,
-                    sideItemHeight: 200,
-                    gap: 32
+                    itemWidth: 304,
+                    itemHeight: 380,
+                    sideItemWidth: 248,
+                    sideItemHeight: 310,
+                    gap: 30
                 });
             } else {
                 setDims({
-                    itemWidth: 430,
-                    itemHeight: 270,
-                    sideItemWidth: 285,
-                    sideItemHeight: 245,
-                    gap: 46
+                    itemWidth: 352,
+                    itemHeight: 440,
+                    sideItemWidth: 280,
+                    sideItemHeight: 350,
+                    gap: 42
                 });
             }
         };
