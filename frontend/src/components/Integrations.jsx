@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import GlyphPortal from './ui/glyph-portal';
+import pearlHorizonOrb from '../assets/pearl-horizon-orb.webp';
 import './Integrations.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -131,13 +132,24 @@ const Integrations = () => {
             <GlyphPortal
                 word="Pearl."
                 focusChar="a"
-                verticalRatio={0.30}
+                verticalRatio={0.20}
+                fontScale={0.45}
                 interactive={false}
                 fontFamily='"Montserrat", "Arial Black", sans-serif'
                 fontWeight={700}
                 scrollLength={8.0}
                 annotations={false}
                 className="int__portal"
+                behind={
+                    <div className="int__behind-stage">
+                        <img 
+                            src={pearlHorizonOrb} 
+                            alt="Pearl AI Horizon Orb" 
+                            className="int__stage-image"
+                            loading="eager"
+                        />
+                    </div>
+                }
                 style={{
                     '--gp-paper': '#f4f6f8',
                     '--gp-ink': '#0a0a0a',

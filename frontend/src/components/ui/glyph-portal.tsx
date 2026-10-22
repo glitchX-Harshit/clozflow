@@ -20,11 +20,13 @@ export type GlyphPortalProps = {
   focusChar?: string;
   interactive?: boolean;
   background?: ReactNode;
+  behind?: ReactNode;
   front?: ReactNode;
   children?: ReactNode;
   /** Scroll travel in visible container heights. */
   scrollLength?: number;
   verticalRatio?: number;
+  fontScale?: number;
   fontFamily?: string;
   fontWeight?: number;
   annotations?: boolean;
@@ -94,10 +96,12 @@ export default function GlyphPortal({
   focusChar = "a",
   interactive = false,
   background,
+  behind,
   front,
   children,
   scrollLength = 3.6,
   verticalRatio = 0.30,
+  fontScale = 1.0,
   fontFamily = DEFAULT_FONT,
   fontWeight = 700,
   annotations = false,
@@ -116,6 +120,7 @@ export default function GlyphPortal({
   const weight = Number.isFinite(fontWeight) ? clamp(fontWeight, 100, 900) : 700;
   const q = `:where(#${uid})`;
   const yRatio = Number.isFinite(verticalRatio) ? verticalRatio : 0.30;
+  const fScale = Number.isFinite(fontScale) && fontScale > 0 ? fontScale : 1.0;
 
   useLayoutEffect(() => {
     const section = sectionRef.current!;
@@ -275,6 +280,11 @@ export default function GlyphPortal({
       // Drop clipPath once camera has entered ink so screen becomes 100% solid black
       field.style.clipPath = t >= 1 ? "none" : `url(#${clipId})`;
 
+      // Fade behind & front elements out smoothly as camera plunges into ink
+      const stageOpacity = isStatic ? 1 : 1 - smooth(0.02, 0.22, p);
+      section.style.setProperty("--gp-behind-opacity", String(stageOpacity));
+      section.style.setProperty("--gp-front-opacity", String(stageOpacity));
+
       // Reveal the pinned interior destination room smoothly
       const reveal = isStatic ? 1 : clamp((p - 0.32) / 0.10);
       section.style.setProperty("--gp-reveal", String(reveal));
@@ -307,8 +317,8 @@ export default function GlyphPortal({
       }
       if (!ready) return;
 
-      const wordHeight = H * 0.26;
-      startScale = Math.min((W * 0.65) / bounds.width, wordHeight / bounds.height);
+      const wordHeight = H * 0.26 * fScale;
+      startScale = Math.min((W * 0.65 * fScale) / bounds.width, wordHeight / bounds.height);
 
       select(target);
 
@@ -385,7 +395,7 @@ export default function GlyphPortal({
       (root ?? window).removeEventListener("scroll", scroll);
       window.removeEventListener("resize", resize);
     };
-  }, [text, focusChar, fontFamily, weight, length, clipId, yRatio]);
+  }, [text, focusChar, fontFamily, weight, length, clipId, yRatio, fScale]);
 
   return (
     <section
@@ -436,12 +446,21 @@ export default function GlyphPortal({
           isolation: isolate;
           container-type: size;
         }
+        ${q} [data-gp-behind] {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 1;
+          opacity: var(--gp-behind-opacity, 1);
+          transition: opacity 0.15s ease-out;
+        }
         ${q} [data-gp-field] {
           position: absolute;
           inset: 0;
           background: var(--gp-field);
           opacity: 0;
           pointer-events: none;
+          z-index: 10;
         }
         ${q}[data-gp-ready] [data-gp-field] {
           opacity: 1;
@@ -453,6 +472,7 @@ export default function GlyphPortal({
           height: 100%;
           overflow: visible;
           pointer-events: none;
+          z-index: 15;
         }
         ${q} [data-gp-marks] {
           fill: none;
@@ -467,6 +487,7 @@ export default function GlyphPortal({
       `}</style>
       <div data-gp-viewport aria-hidden="true" />
       <div data-gp-pin>
+        {behind && <div data-gp-behind>{behind}</div>}
         <div data-gp-field aria-hidden="true" inert>
           {background ?? (
             <div
