@@ -16,17 +16,19 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'es2022',
+    cssCodeSplit: true,
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
           'vendor-gsap': ['gsap'],
-          'vendor-matter': ['matter-js'],
           'vendor-lucide': ['lucide-react']
         }
       }
     },
-    chunkSizeWarningLimit: 600
+    chunkSizeWarningLimit: 1200
   }
 })

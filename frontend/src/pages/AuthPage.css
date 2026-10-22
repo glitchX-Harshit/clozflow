@@ -1,0 +1,103 @@
+/* ══ AUTH PAGE SPLIT LAYOUT (50% Left Liquid / 50% Right Auth Form) ═══════ */
+.auth-page-container {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg, #f4f6f8);
+}
+
+/* Left 50% Panel: Pure Liquid Animation */
+.auth-liquid-panel {
+    position: relative;
+    width: 50%;
+    flex: 1 1 50%;
+    height: 100%;
+    overflow: hidden;
+    background: #000000;
+    z-index: 10;
+}
+
+.auth-liquid-canvas-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.auth-liquid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Right 50% Panel: Auth Form */
+.auth-form-panel {
+    position: relative;
+    width: 50%;
+    flex: 1 1 50%;
+    min-width: 380px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: var(--bg, #f4f6f8);
+    border-left: 1px solid var(--border-strong, rgba(0, 0, 0, 0.08));
+    z-index: 20;
+    box-sizing: border-box;
+}
+
+/* Embedded Auth Form Tweaks */
+.auth-form-panel .su-overlay {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    width: 100%;
+    min-height: 100%;
+    background: transparent;
+    padding: 3.5rem 2.5rem 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.auth-form-panel .su-card {
+    width: 100%;
+    max-width: 440px;
+    border: none;
+    box-shadow: none !important;
+    background: transparent;
+    padding: 0;
+    margin: auto 0;
+}
+
+.auth-form-panel .su-back {
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    z-index: 30;
+}
+
+/* Responsive: Under 1024px tablet/mobile, give full width to login */
+@media (max-width: 1024px) {
+    .auth-liquid-panel {
+        display: none;
+    }
+
+    .auth-form-panel {
+        width: 100%;
+        min-width: 0;
+        border-left: none;
+    }
+}

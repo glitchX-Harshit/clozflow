@@ -147,7 +147,26 @@ const Integrations = () => {
                             alt="Pearl AI Horizon Orb" 
                             className="int__stage-image"
                             loading="eager"
+                            decoding="async"
                         />
+                    </div>
+                }
+                front={
+                    <div className="int__subtext-wrap">
+                        <span className="int__eyebrow">
+                            YOUR AI SALES CONVERSATION AGENT
+                        </span>
+                        <div className="int__subtext int__subtext--pyramid">
+                            <h3 className="int__pyramid-lead">
+                                Give Pearl your website or brand details.
+                            </h3>
+                            <p className="int__pyramid-tier int__pyramid-tier--2">
+                                It learns your product, voice, and audience. Deploy your AI Sales Engineer<br className="int__br-desktop" /> for inbound and outbound campaigns.
+                            </p>
+                            <p className="int__pyramid-tier int__pyramid-tier--3">
+                                Choose from 150+ expressive, human-like voices. Switch languages naturally,<br className="int__br-desktop" /> even mid-conversation. From first setup to real conversations in &gt;5 min.
+                            </p>
+                        </div>
                     </div>
                 }
                 style={{

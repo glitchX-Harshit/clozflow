@@ -72,6 +72,15 @@ export const AuthProvider = ({ children }) => {
         if (error) throw error;
     };
 
+
+    const loginWithOAuth = async (provider) => {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider,
+            options: { redirectTo: `${window.location.origin}/auth/callback` },
+        });
+        if (error) throw error;
+    };
+
     // ── Email / password sign-in (legacy support) ─────────────────────────────
     const loginWithEmail = async (email, password) => {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -115,6 +124,7 @@ export const AuthProvider = ({ children }) => {
             loading,
             loginWithGoogle,
             loginWithGithub,
+            loginWithOAuth,
             loginWithEmail,
             signupWithEmail,
             logout,

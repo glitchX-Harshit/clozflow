@@ -282,3 +282,262 @@
 .su-oauth-spin {
     animation: su-spin 0.9s linear infinite;
 }
+
+
+/* ══ PILL AUTHENTICATION DESIGN (1:1 with Reference Mockup) ══════════════ */
+.pill-auth-box {
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.pill-sso-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.pill-sso-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 9999px;
+    background: #f1f3f5;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #111827;
+    cursor: pointer;
+    transition: background 0.16s ease, transform 0.12s ease, border-color 0.16s ease;
+    user-select: none;
+    outline: none;
+}
+
+.pill-sso-btn:hover {
+    background: #e9ecef;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+.pill-sso-btn:active {
+    transform: scale(0.99);
+}
+
+.pill-sso-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pill-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 1.35rem 0;
+    width: 100%;
+}
+
+.pill-divider-line {
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.pill-divider-text {
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.pill-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.pill-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.pill-input {
+    width: 100%;
+    height: 48px;
+    border-radius: 9999px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    padding: 0 1.5rem;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: 0.9375rem;
+    color: #111827;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pill-input::placeholder {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.pill-input:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 0 1px #0f172a;
+}
+
+.pill-password-toggle {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.pill-password-toggle:hover {
+    color: #0f172a;
+}
+
+.pill-terms-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 1.1rem 0 1.25rem 0.25rem;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: 0.8125rem;
+    color: #4b5563;
+    line-height: 1.4;
+    user-select: none;
+}
+
+.pill-checkbox {
+    width: 17px;
+    height: 17px;
+    border-radius: 4px;
+    border: 1px solid #cbd5e1;
+    accent-color: #0f172a;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.pill-terms-link {
+    color: #111827;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s ease;
+}
+
+.pill-terms-link:hover {
+    color: #000000;
+}
+
+.pill-continue-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 9999px;
+    border: none;
+    background: #6b7280;
+    color: #ffffff;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: 0.975rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.12s ease, opacity 0.18s ease;
+    outline: none;
+}
+
+.pill-continue-btn--active {
+    background: #18181b;
+}
+
+.pill-continue-btn--active:hover {
+    background: #000000;
+    transform: translateY(-1px);
+}
+
+.pill-continue-btn--active:active {
+    transform: translateY(0);
+}
+
+.pill-footer-prompt {
+    margin-top: 1.75rem;
+    text-align: center;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: 0.875rem;
+    color: #111827;
+}
+
+.pill-footer-link {
+    color: #111827;
+    font-weight: 600;
+    margin-left: 0.3rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: text-decoration 0.15s ease;
+}
+
+.pill-footer-link:hover {
+    text-decoration: underline;
+}
+
+.pill-account-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.45rem 1rem;
+    border-radius: 9999px;
+    background: #f1f3f5;
+    margin-bottom: 0.85rem;
+    font-size: 0.825rem;
+    color: #4b5563;
+    box-sizing: border-box;
+}
+
+.pill-account-change {
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.pill-account-change:hover {
+    text-decoration: underline;
+}
+
+.pill-error-banner {
+    color: #ef4444;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 9999px;
+    padding: 0.45rem 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    text-align: center;
+    font-weight: 500;
+}

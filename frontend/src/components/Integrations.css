@@ -124,3 +124,112 @@
         line-height: 1.4;
     }
 }
+
+/* ── Subtext Paragraph Below Pearl. Headline (Pyramid Structure) ── */
+.int__subtext-wrap {
+    position: absolute;
+    top: calc(25% + clamp(2.4rem, 4.2vh, 3.6rem));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92vw, 840px);
+    max-width: 840px;
+    padding: 0 1.5rem;
+    text-align: center;
+    box-sizing: border-box;
+    pointer-events: auto;
+    z-index: 20;
+}
+
+.int__eyebrow {
+    display: block;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: clamp(0.68rem, 0.75vw, 0.8rem);
+    font-weight: 550;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: clamp(1rem, 1.8vh, 1.4rem);
+    user-select: text;
+}
+
+.int__subtext--pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+    user-select: text;
+}
+
+.int__pyramid-lead {
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: clamp(1.12rem, 1.25vw, 1.32rem);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    color: #000000;
+    margin: 0 0 0.15rem 0;
+    text-align: center;
+}
+
+.int__pyramid-tier {
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    font-size: clamp(0.96rem, 1.05vw, 1.1rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    color: #475569;
+    margin: 0;
+    text-align: center;
+}
+
+.int__pyramid-tier--2 {
+    max-width: 720px;
+}
+
+.int__pyramid-tier--3 {
+    max-width: 840px;
+}
+
+.int__br-desktop {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .int__subtext-wrap {
+        top: calc(20% + 2.8rem);
+        width: 92vw;
+        max-width: 94vw;
+        padding: 0 1rem;
+    }
+
+    .int__eyebrow {
+        font-size: 0.65rem;
+        letter-spacing: 0.16em;
+        margin-bottom: 0.75rem;
+    }
+
+    .int__subtext--pyramid {
+        gap: 0.5rem;
+    }
+
+    .int__pyramid-lead {
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .int__pyramid-tier {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .int__br-desktop {
+        display: none;
+    }
+
+    .int__pyramid-tier--2,
+    .int__pyramid-tier--3 {
+        width: 100%;
+        max-width: 100%;
+    }
+}
