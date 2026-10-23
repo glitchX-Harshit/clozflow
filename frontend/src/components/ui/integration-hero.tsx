@@ -69,7 +69,6 @@ export default function IntegrationHero() {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '7px',
             padding: '6px 18px',
             borderRadius: '9999px',
             border: '1px solid #e2e8f0',
@@ -78,7 +77,6 @@ export default function IntegrationHero() {
             marginBottom: '22px',
           }}
         >
-          <span style={{ color: '#f59e0b', fontSize: '13px', lineHeight: 1 }}>⚡</span>
           <span style={{ fontSize: '13px', fontWeight: 500, color: '#334155', letterSpacing: '-0.01em' }}>
             Integrations
           </span>

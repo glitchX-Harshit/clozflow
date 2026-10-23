@@ -14,6 +14,16 @@
   --surface-2:    #eaf0f6;   /* Slightly deeper off-white for secondary surfaces */
   --surface-inv:  #0a0a0a;   /* dark surface for inverted cards */
 
+  /* ── Shadcn tokens ── */
+  --primary:              #0a0a0a;
+  --primary-foreground:   #ffffff;
+  --secondary:            #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted:                #f1f5f9;
+  --muted-foreground:     #64748b;
+  --card:                 #ffffff;
+  --card-foreground:      #0a0a0a;
+
   /* ── Text ── */
   --text:         #0a0a0a;
   --text-dim:     #6b7280;

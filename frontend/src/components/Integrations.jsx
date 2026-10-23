@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import GlyphPortal from './ui/glyph-portal';
 import PearlPortalPage from './PearlPortalPage';
+import { Awards } from './ui/award';
 import pearlHorizonOrb from '../assets/pearl-horizon-orb.webp';
 import './Integrations.css';
 
@@ -108,7 +109,15 @@ const Integrations = () => {
     }, []);
 
     return (
-        <section className="int__section" id="integrations" ref={sectionRef}>
+        <section 
+            className="int__section" 
+            id="integrations" 
+            ref={sectionRef}
+            style={{ 
+                paddingBottom: '1rem',
+                paddingTop: '1rem'
+            }}
+        >
             {/* ── Scroll-to-Reveal Problem & Pearl Narrative ── */}
             <div className="container">
                 <div className="int__narrative-wrap">
@@ -184,6 +193,49 @@ const Integrations = () => {
                 {/* ── Inside Pearl: Full In-Depth Showcase Page with Modular Extensibility ── */}
                 <PearlPortalPage />
             </GlyphPortal>
+
+            {/* ── Awards Component: Embedded at the end of Pearl glyph portal in the white box area ── */}
+            <div 
+                className="int__awards-section"
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: '1200px',
+                    margin: '0rem auto 0rem auto',
+                    padding: '0 0px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 20,
+                    textAlign: 'center',
+                }}
+            >
+                <h3
+                    style={{
+                        fontFamily: "var(--font-display, 'Outfit', sans-serif)",
+                        fontSize: "clamp(1rem, 2vw, 1.5rem)",
+                        fontWeight: 500,
+                        color: "#0f172a",
+                        letterSpacing: "-0.025em",
+                        lineHeight: 1.25,
+                        textTransform: "none",
+                        marginBottom: "2rem",
+                        textAlign: "center",
+                    }}
+                >
+                    Recognised by the Top Institute
+                </h3>
+
+                <Awards
+                    variant="award"
+                    title="WINNER"
+                    subtitle="Startup Showcase 2026"
+                    recipient="IIT Patna"
+                    date="May 2026" 
+                    level="gold" 
+                />
+            </div>
         </section>
     );
 };
