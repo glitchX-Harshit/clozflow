@@ -8,6 +8,7 @@ const HowItWorks = React.lazy(() => import('./components/HowItWorks'));
 const Integrations = React.lazy(() => import('./components/Integrations'));
 const ObjectionHandling = React.lazy(() => import('./components/ObjectionHandling'));
 const ResponseSuggestion = React.lazy(() => import('./components/ResponseSuggestion'));
+const IntegrationHero = React.lazy(() => import('./components/ui/integration-hero'));
 const UseCases = React.lazy(() => import('./components/UseCases'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage'));
 const Footer = React.lazy(() => import('./components/Footer'));
@@ -144,7 +145,7 @@ function LandingPage() {
                 <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
                     <HowItWorks />
                     <Integrations />
-                    <ResponseSuggestion />
+                    <IntegrationHero />
                     <UseCases />
                     <MarqueePathSection onGetStarted={() => navigate('/dashboard')} />
                     <Footer />
