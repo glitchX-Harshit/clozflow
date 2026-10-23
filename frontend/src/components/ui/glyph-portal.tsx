@@ -280,17 +280,23 @@ export default function GlyphPortal({
       // Drop clipPath once camera has entered ink so screen becomes 100% solid black
       field.style.clipPath = t >= 1 ? "none" : `url(#${clipId})`;
 
-      // Fade behind & front elements out smoothly as camera plunges into ink
-      const stageOpacity = isStatic ? 1 : 1 - smooth(0.02, 0.22, p);
-      section.style.setProperty("--gp-behind-opacity", String(stageOpacity));
-      section.style.setProperty("--gp-front-opacity", String(stageOpacity));
+      // Front subtext fades out swiftly as camera starts zooming into Pearl (fully gone by p = 0.075)
+      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.002, 0.075, p));
+      section.style.setProperty("--gp-front-opacity", String(frontOpacity));
+      section.style.setProperty("--gp-front-hit", frontOpacity > 0.05 ? "auto" : "none");
+      section.style.setProperty("--gp-front-visibility", frontOpacity > 0.01 ? "visible" : "hidden");
+      section.style.setProperty("--gp-front-y", `${(1 - frontOpacity) * -22}px`);
 
-      // Reveal the pinned interior destination room smoothly
-      const reveal = isStatic ? 1 : clamp((p - 0.32) / 0.10);
+      // Behind dome fades out smoothly
+      const stageOpacity = isStatic ? 1 : 1 - smooth(0.01, 0.20, p);
+      section.style.setProperty("--gp-behind-opacity", String(stageOpacity));
+
+      // Reveal the pinned interior destination room smoothly once inside ink
+      const reveal = isStatic ? 1 : clamp((p - 0.30) / 0.08);
       section.style.setProperty("--gp-reveal", String(reveal));
-      section.style.setProperty("--gp-content-hit", p >= 0.38 ? "auto" : "none");
+      section.style.setProperty("--gp-content-hit", p >= 0.34 ? "auto" : "none");
       section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0, 0.82, p)));
-      section.dataset.gpEntered = String(p >= 0.38);
+      section.dataset.gpEntered = String(p >= 0.34);
       section.dataset.gpProgress = p.toFixed(5);
 
       if (p !== lastProgress) {
@@ -479,6 +485,31 @@ export default function GlyphPortal({
           stroke: var(--gp-ink);
           opacity: 0.6;
         }
+        ${q} [data-gp-front] {
+          position: absolute;
+          inset: 0;
+          pointer-events: var(--gp-front-hit, auto);
+          z-index: 20;
+          opacity: var(--gp-front-opacity, 1);
+          visibility: var(--gp-front-visibility, visible);
+          transform: translateY(var(--gp-front-y, 0px));
+          transition: opacity 0.16s ease-out, transform 0.16s ease-out;
+          will-change: opacity, transform;
+        }
+        ${q} [data-gp-pinned-room] {
+          position: absolute;
+          inset: 0;
+          z-index: 30;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: stretch;
+          justify-content: flex-start;
+          opacity: var(--gp-reveal, 0);
+          pointer-events: var(--gp-content-hit, none);
+          transition: opacity 0.25s ease-out;
+          overflow: hidden;
+        }
         @media(prefers-reduced-motion: reduce) {
           ${q} [data-gp-pin] {
             position: relative !important;
@@ -543,13 +574,16 @@ export default function GlyphPortal({
           style={{
             position: "absolute",
             inset: 0,
-            zIndex: 10,
+            zIndex: 30,
+            width: "100%",
+            height: "100%",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "stretch",
+            justifyContent: "flex-start",
             opacity: "var(--gp-reveal, 0)",
             pointerEvents: "var(--gp-content-hit, none)",
             transition: "opacity 0.25s ease-out",
+            overflow: "hidden",
           }}
         >
           {children}

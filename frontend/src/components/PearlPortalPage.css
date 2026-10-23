@@ -1,0 +1,52 @@
+/* ══════════════════════════════════════════════════════
+   PEARL PORTAL PAGE (BLACK SCREEN CANVAS)
+   Clean full-screen dark canvas for custom Pearl sections
+   ══════════════════════════════════════════════════════ */
+
+.pearl-portal-page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    background-color: #0a0a0a;
+    color: #f8fafc;
+    font-family: var(--font-body, 'Outfit', -apple-system, sans-serif);
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Sleek scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(10, 10, 10, 0.9);
+}
+
+.pearl-portal-page::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pearl-portal-page::-webkit-scrollbar-track {
+    background: rgba(10, 10, 10, 0.9);
+}
+
+.pearl-portal-page::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 9999px;
+}
+
+.pearl-portal-page::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.pearl-portal__container {
+    position: relative;
+    width: 100%;
+    max-width: 1240px;
+    min-height: 100%;
+    padding: clamp(1.5rem, 3vh, 3rem) clamp(1rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import GlyphPortal from './ui/glyph-portal';
+import PearlPortalPage from './PearlPortalPage';
 import pearlHorizonOrb from '../assets/pearl-horizon-orb.webp';
 import './Integrations.css';
 
@@ -180,7 +181,8 @@ const Integrations = () => {
                     <div style={{ position: 'absolute', inset: 0, backgroundColor: '#0a0a0a' }} />
                 }
             >
-                {/* ── Inside Pearl: Clean Black Canvas Ready for Redesign ── */}
+                {/* ── Inside Pearl: Full In-Depth Showcase Page with Modular Extensibility ── */}
+                <PearlPortalPage />
             </GlyphPortal>
         </section>
     );

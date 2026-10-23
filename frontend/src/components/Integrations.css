@@ -136,7 +136,11 @@
     padding: 0 1.5rem;
     text-align: center;
     box-sizing: border-box;
-    pointer-events: auto;
+    pointer-events: var(--gp-front-hit, auto);
+    opacity: var(--gp-front-opacity, 1);
+    visibility: var(--gp-front-visibility, visible);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    will-change: opacity, transform;
     z-index: 20;
 }
 

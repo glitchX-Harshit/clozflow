@@ -148,6 +148,9 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
             </button>
 
             <div className="pill-auth-box" ref={cardRef}>
+                <div className="pill-header">
+                    <h1 className="pill-title">Log in to your account</h1>
+                </div>
                 {error && (
                     <div className="pill-error-banner">
                         {error}
