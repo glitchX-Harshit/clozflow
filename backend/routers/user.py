@@ -14,6 +14,8 @@ router = APIRouter(prefix="/api/user", tags=["user"])
 
 AVATAR_DIR = "static/avatars"
 os.makedirs(AVATAR_DIR, exist_ok=True)
+MAX_AVATAR_SIZE = 5 * 1024 * 1024 # 5 MB
+ALLOWED_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
 
 
 # ── Pydantic schemas ──────────────────────────────────────────────────────────
@@ -112,16 +114,44 @@ async def upload_avatar(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Upload a new profile picture. Accepts image files only."""
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="Only image files are allowed")
+    """Upload a new profile picture. Strictly validates type, size, and image headers."""
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No file selected")
 
-    ext = file.filename.rsplit(".", 1)[-1] if "." in file.filename else "jpg"
-    filename = f"user_{current_user.id}.{ext}"
+    raw_ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if raw_ext not in ALLOWED_IMAGE_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file extension. Allowed extensions are: {', '.join(sorted(ALLOWED_IMAGE_EXTENSIONS))}"
+        )
+
+    # Read initial chunk to inspect magic bytes & size
+    header = await file.read(512)
+    if len(header) < 12:
+        raise HTTPException(status_code=400, detail="File is too small to be a valid image")
+
+    # Validate magic bytes
+    is_jpeg = header.startswith(b"\xff\xd8\xff")
+    is_png = header.startswith(b"\x89PNG\r\n\x1a\n")
+    is_webp = header.startswith(b"RIFF") and b"WEBP" in header[:16]
+
+    if not (is_jpeg or is_png or is_webp):
+        raise HTTPException(status_code=400, detail="Invalid image file format")
+
+    # Read remaining content and check size limit
+    rest = await file.read()
+    total_size = len(header) + len(rest)
+    if total_size > MAX_AVATAR_SIZE:
+        raise HTTPException(status_code=400, detail=f"Image exceeds maximum size limit of {MAX_AVATAR_SIZE // (1024 * 1024)}MB")
+
+    # Determine safe canonical extension
+    canonical_ext = "png" if is_png else ("webp" if is_webp else "jpg")
+    filename = f"user_{current_user.id}.{canonical_ext}"
     filepath = os.path.join(AVATAR_DIR, filename)
 
     with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        buffer.write(header)
+        buffer.write(rest)
 
     current_user.profile_image = f"/static/avatars/{filename}"
     current_user.updated_at = datetime.utcnow()

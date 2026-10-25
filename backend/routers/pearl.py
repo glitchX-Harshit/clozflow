@@ -13,7 +13,7 @@ import asyncio
 import json
 
 from database import get_db
-from routers.auth import get_current_user
+from routers.auth import get_current_user, verify_token_string
 from models import User, Capsule, Lead
 from models_pearl import (
     PearlAgent, PearlCall, PearlEvent, PearlConversation, PearlMessage,
@@ -425,7 +425,10 @@ def get_call_status(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    call = db.query(PearlCall).filter(PearlCall.id == call_id).first()
+    call = db.query(PearlCall).join(PearlAgent).filter(
+        PearlCall.id == call_id,
+        PearlAgent.user_id == user.id
+    ).first()
     if not call:
         raise HTTPException(404, "Call not found")
         
@@ -444,7 +447,10 @@ def cancel_call(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    call = db.query(PearlCall).filter(PearlCall.id == call_id).first()
+    call = db.query(PearlCall).join(PearlAgent).filter(
+        PearlCall.id == call_id,
+        PearlAgent.user_id == user.id
+    ).first()
     if not call:
         raise HTTPException(404, "Call not found")
         
@@ -673,10 +679,19 @@ def _broadcast_to_ui(call_id: str, msg: dict):
 
 @router.websocket("/calls/{call_id}/stream")
 async def call_websocket_endpoint(websocket: WebSocket, call_id: str, db: Session = Depends(get_db)):
-    await websocket.accept()
+    token = websocket.query_params.get("token")
+    user = verify_token_string(token, db) if token else None
     
-    # Ideally, we verify user token here, but for simplicity in MVP we accept
-    call = db.query(PearlCall).filter(PearlCall.id == call_id).first()
+    call = db.query(PearlCall).join(PearlAgent).filter(
+        PearlCall.id == call_id,
+        PearlAgent.user_id == user.id
+    ).first() if user else None
+    
+    if not call:
+        await websocket.close(code=1008)
+        return
+
+    await websocket.accept()
     if not call:
         await websocket.close(code=1008)
         return
@@ -1610,10 +1625,21 @@ async def browser_voice_test_websocket(
       - Supports interruption (barge-in) and clean disconnect
       - Absolutely zero PSTN / telephony interaction
     """
+    token = websocket.query_params.get("token")
+    user = verify_token_string(token, db) if token else None
+
+    session = db.query(PearlTestSession).filter(
+        PearlTestSession.id == session_id,
+        PearlTestSession.user_id == user.id
+    ).first() if user else None
+
+    if not session:
+        print(f"[Browser Voice Test] Unauthorized or invalid session {session_id}")
+        await websocket.close(code=1008)
+        return
+
     print(f"[Browser Voice Test] Connecting session {session_id}")
     await websocket.accept()
-
-    session = db.query(PearlTestSession).filter(PearlTestSession.id == session_id).first()
     if not session:
         print(f"[Browser Voice Test] Session {session_id} not found in DB")
         await websocket.close(code=1008)

@@ -53,14 +53,24 @@ async def lifespan(app):
 
 app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
 
-# Configure CORS for frontend access
-# In production, frontend and backend share the same origin via Nginx reverse proxy,
-# so CORS is only relevant for local development where frontend is on port 5173.
+# Configure CORS with strict allowed origins
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+if not allowed_origins:
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+        "https://clozflow.com",
+        "https://www.clozflow.com",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -122,10 +132,10 @@ async def start_call(request: CallStartRequest, current_user: User = Depends(get
     return {"context_id": context_id, "message": "Call session initialized"}
 
 @app.get("/call/context/{context_id}")
-async def get_call_context(context_id: str):
+async def get_call_context(context_id: str, current_user: User = Depends(get_current_user)):
     context = call_context_engine.get_context(context_id)
-    if not context:
-        return {"error": "Context not found"}
+    if not context or context.get("user_id") != current_user.id:
+        raise HTTPException(status_code=404, detail="Call context not found")
     return {"context": context}
 
 
@@ -148,8 +158,15 @@ async def websocket_endpoint(websocket: WebSocket):
         websocket_manager.disconnect(websocket)
 
 @app.websocket("/ws/audio")
-async def websocket_audio_endpoint(websocket: WebSocket, context_id: str = None):
+async def websocket_audio_endpoint(websocket: WebSocket, context_id: str = None, token: str = None):
     print(f"🔌 WebSocket connection attempt to /ws/audio (context_id: {context_id})")
+    if context_id:
+        context = call_context_engine.get_context(context_id)
+        if not context:
+            print(f"❌ Rejected WebSocket /ws/audio: Invalid context_id {context_id}")
+            await websocket.close(code=1008)
+            return
+
     await websocket_manager.connect(websocket, context_id=context_id)
     print("✅ WebSocket connected to /ws/audio")
     await websocket_manager.handle_audio_stream(websocket)

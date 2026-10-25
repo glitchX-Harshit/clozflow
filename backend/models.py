@@ -44,6 +44,7 @@ class User(Base):
 
     call_logs = relationship("CallLog", back_populates="user")
     capsules  = relationship("Capsule", back_populates="user")
+    leads     = relationship("Lead", back_populates="user")
 
 
 # ── Product Capsule (reusable product context template) ─────────────────────
@@ -82,6 +83,7 @@ class CallLog(Base):
 class Lead(Base):
     __tablename__ = "leads"
     id                = Column(Integer, primary_key=True, index=True)
+    user_id           = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
     business_name     = Column(String, index=True)
     category          = Column(String, nullable=True)
     city              = Column(String, nullable=True)
@@ -94,6 +96,8 @@ class Lead(Base):
     outreach_angle    = Column(Text, nullable=True)
     lead_score        = Column(Integer, default=0)
     created_at        = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="leads")
 
 class CopilotSession(Base):
     __tablename__ = "copilot_sessions"

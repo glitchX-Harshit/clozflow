@@ -1,14 +1,5 @@
-import { Awards } from "@/components/ui/award";
+import ComparisonBlock from "@/components/ui/comparison-2";
 
-export default function DemoOne() {
-  return (
-    <Awards
-      variant="award"
-      title="WINNER"
-      subtitle="A Design Award & Competetion"
-      recipient="Ali Imam"
-      date="June 2025" 
-      level="gold" 
-    />
-  );
+export default function Default() {
+  return <ComparisonBlock />;
 }

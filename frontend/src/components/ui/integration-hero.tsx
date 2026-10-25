@@ -118,6 +118,16 @@ export default function IntegrationHero() {
         {/* CTA Button */}
         <button
           type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              const contactEl = document.getElementById("contact") || document.getElementById("footer");
+              if (contactEl) {
+                contactEl.scrollIntoView({ behavior: "smooth" });
+              } else {
+                window.location.href = "/auth";
+              }
+            }
+          }}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -138,7 +148,7 @@ export default function IntegrationHero() {
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#262626')}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#000000')}
         >
-          Get started
+          Contact us
         </button>
 
         {/* Carousel Container */}

@@ -29,9 +29,10 @@ async def start_session(req: SessionStartRequest, db: Session = Depends(get_db),
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
         
-    # Check for existing active session
+    # Check for existing active session belonging to THIS user
     session = db.query(CopilotSession).filter(
         CopilotSession.lead_id == req.lead_id,
+        CopilotSession.user_id == current_user.id,
         CopilotSession.status == "active"
     ).first()
     

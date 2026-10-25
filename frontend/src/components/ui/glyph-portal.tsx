@@ -142,6 +142,8 @@ export default function GlyphPortal({
     let W = 1, H = 1, travel = 1, startScale = 1, endScale = 1;
     let center = { x: 0, y: 0 }, target: Ink | null = null;
     let lastProgress = -1;
+    let currentProgress = -1;
+    let targetProgress = 0;
     let candidates: Ink[] = [], letters: Letter[] = [];
     let bounds = { x: 0, y: 0, width: 1, height: 1 };
     let fontDirty = true;
@@ -244,8 +246,15 @@ export default function GlyphPortal({
       const isStatic = motion.matches;
       const p = isStatic ? 0 : progress;
 
-      // Camera zooms rapidly into letter 'a', filling viewport by p = 0.32
-      const t = clamp(p / 0.32);
+      // ── PROGRESSION ARCHITECTURE ──
+      // [0.00 -> 0.09]: Reading Runway. Front text is 100% visible, Pearl is at resting scale.
+      // [0.09 -> 0.18]: Front subtext gently fades out and glides upward.
+      // [0.10 -> 0.38]: Camera smoothly dives into letter 'a' (cubic ease).
+      // [0.36 -> 0.44]: Inside portal room reveals smoothly.
+      // [0.40 -> 1.00]: Pinned black portal room experience.
+
+      // Camera zoom starts after the trimmed runway (p >= 0.10)
+      const t = clamp((p - 0.10) / 0.28);
       const eased = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
       const scale = Math.exp(Math.log(startScale) + Math.log(endScale / startScale) * eased);
       const blend = endScale === startScale ? 0 : (1 / scale - 1 / startScale) / (1 / endScale - 1 / startScale);
@@ -265,7 +274,7 @@ export default function GlyphPortal({
 
       if (marks) {
         marks.setAttribute("transform", `translate(${W / 2} ${H * yRatio + H * 0.04 * eased}) scale(${scale}) rotate(${roll}) translate(${-cx} ${-cy})`);
-        marks.style.opacity = String(1 - smooth(0.015, 0.15, p));
+        marks.style.opacity = String(1 - smooth(0.10, 0.24, p));
       }
 
       if (dotOuter) {
@@ -274,29 +283,29 @@ export default function GlyphPortal({
           dotInner.setAttribute("transform", glyph.getAttribute("transform")!);
         }
         // Fade the gradient period dot out smoothly as we zoom into 'a'
-        dotOuter.style.opacity = String(1 - smooth(0.10, 0.25, p));
+        dotOuter.style.opacity = String(1 - smooth(0.12, 0.30, p));
       }
 
       // Drop clipPath once camera has entered ink so screen becomes 100% solid black
       field.style.clipPath = t >= 1 ? "none" : `url(#${clipId})`;
 
-      // Front subtext fades out swiftly as camera starts zooming into Pearl (fully gone by p = 0.075)
-      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.002, 0.075, p));
+      // Front subtext stays 100% visible through the reading runway, then fades gracefully
+      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.09, 0.18, p));
       section.style.setProperty("--gp-front-opacity", String(frontOpacity));
       section.style.setProperty("--gp-front-hit", frontOpacity > 0.05 ? "auto" : "none");
       section.style.setProperty("--gp-front-visibility", frontOpacity > 0.01 ? "visible" : "hidden");
       section.style.setProperty("--gp-front-y", `${(1 - frontOpacity) * -22}px`);
 
-      // Behind dome fades out smoothly
-      const stageOpacity = isStatic ? 1 : 1 - smooth(0.01, 0.20, p);
+      // Behind dome fades out smoothly as zoom takes off
+      const stageOpacity = isStatic ? 1 : 1 - smooth(0.10, 0.26, p);
       section.style.setProperty("--gp-behind-opacity", String(stageOpacity));
 
       // Reveal the pinned interior destination room smoothly once inside ink
-      const reveal = isStatic ? 1 : clamp((p - 0.30) / 0.08);
+      const reveal = isStatic ? 1 : clamp((p - 0.36) / 0.08);
       section.style.setProperty("--gp-reveal", String(reveal));
-      section.style.setProperty("--gp-content-hit", p >= 0.34 ? "auto" : "none");
-      section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0, 0.82, p)));
-      section.dataset.gpEntered = String(p >= 0.34);
+      section.style.setProperty("--gp-content-hit", p >= 0.40 ? "auto" : "none");
+      section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0.10, 0.85, p)));
+      section.dataset.gpEntered = String(p >= 0.40);
       section.dataset.gpProgress = p.toFixed(5);
 
       if (p !== lastProgress) {
@@ -344,7 +353,26 @@ export default function GlyphPortal({
         dirty = false;
         layout();
       }
-      if (ready) paint(position());
+      if (ready) {
+        targetProgress = position();
+
+        // Initial paint or jump without lerp
+        if (currentProgress < 0) {
+          currentProgress = targetProgress;
+        } else {
+          // Fluid damping to absorb high-speed flick / wheel spikes
+          const delta = targetProgress - currentProgress;
+          if (Math.abs(delta) > 0.0001) {
+            currentProgress += delta * 0.14;
+            // Continue frame loop until settled
+            raf = requestAnimationFrame(frame);
+          } else {
+            currentProgress = targetProgress;
+          }
+        }
+
+        paint(currentProgress);
+      }
     };
 
     const schedule = () => {
@@ -354,6 +382,7 @@ export default function GlyphPortal({
     const resize = () => {
       cancelAnimationFrame(raf);
       dirty = true;
+      currentProgress = -1;
       frame();
     };
 

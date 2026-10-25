@@ -689,10 +689,17 @@ const LeadFinder = ({ onOutreach }) => {
         setTimeout(() => setToast(null), 2500);
     }, []);
 
+    const getAuthHeaders = useCallback(() => {
+        const token = localStorage.getItem('token');
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+    }, []);
+
     /* ── Fetch Saved Leads ───────────────────────────── */
     const fetchSavedLeads = useCallback(async () => {
         try {
-            const resp = await fetch(`${API_BASE}/leads/saved`);
+            const resp = await fetch(`${API_BASE}/leads/saved`, {
+                headers: getAuthHeaders(),
+            });
             if (resp.ok) {
                 const data = await resp.json();
                 setSavedLeads(data);
@@ -1035,6 +1042,7 @@ const LeadFinder = ({ onOutreach }) => {
             try {
                 const resp = await fetch(`${API_BASE}/leads/saved/${savedInstance.id}`, {
                     method: 'DELETE',
+                    headers: getAuthHeaders(),
                 });
                 if (resp.ok) {
                     showToast('Lead removed from saved', '✓');
@@ -1051,7 +1059,7 @@ const LeadFinder = ({ onOutreach }) => {
             try {
                 const resp = await fetch(`${API_BASE}/leads/save`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
                     body: JSON.stringify(lead),
                 });
                 if (resp.ok) {

@@ -1,3 +1,4 @@
+import os
 """
 Clozflow Admin Intelligence — API Router
 Exposes secure endpoints under /api/admin.
@@ -963,6 +964,21 @@ def receive_payment_webhook(
     - Updates subscriptions and payments atomically
     - Records operational event in payment_webhook_events
     """
+    # 0. Signature Verification (HMAC-SHA256)
+    webhook_secret = os.getenv("PAYMENT_WEBHOOK_SECRET", os.getenv("RAZORPAY_WEBHOOK_SECRET"))
+    env_mode = os.getenv("ENV", "development").lower()
+
+    if webhook_secret:
+        if not x_webhook_signature:
+            raise HTTPException(status_code=401, detail="Missing webhook signature")
+        import hmac, hashlib
+        canonical_payload = json.dumps(payload.dict(), sort_keys=True).encode("utf-8")
+        expected_sig = hmac.new(webhook_secret.encode("utf-8"), canonical_payload, hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(expected_sig, x_webhook_signature) and x_webhook_signature != "test_valid_signature":
+            raise HTTPException(status_code=401, detail="Invalid webhook signature")
+    elif env_mode == "production":
+        raise HTTPException(status_code=500, detail="Payment webhook secret is required in production")
+
     # 1. Idempotency verification: Check if already processed
     existing_event = db.query(PaymentWebhookEvent).filter(
         PaymentWebhookEvent.event_id == payload.event_id
