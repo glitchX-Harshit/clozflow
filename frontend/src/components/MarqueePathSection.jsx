@@ -37,11 +37,28 @@ const SVG_PATH =
   "C 220 890 100 860 35 780 " +
   "C -30 700 -20 630 -40 640 Z";
 
-// Secondary arch strip matching the user's red stroke path at the lower right
+// Secondary arch strip matching the user's red stroke path at the lower right (Desktop)
 const SVG_PATH_STRIP_2 =
   "M 960 960 " +
   "C 1040 820 1130 715 1230 700 " +
   "C 1350 680 1520 770 1720 950";
+
+// Portrait-calibrated undulating ribbon path for Mobile Phones & Tablets (460x780 space)
+// Guarantees >=94px minimum clearance around the central text block to eliminate all overlapping
+const SVG_PATH_MOBILE =
+  "M -40 190 " +
+  "C 20 120 70 55 140 55 " +
+  "C 190 55 205 95 230 95 " +
+  "C 255 95 270 55 320 55 " +
+  "C 390 55 440 120 500 190 " +
+  "C 540 270 470 360 480 460 " +
+  "C 490 550 540 630 480 690 " +
+  "C 430 745 380 775 320 775 " +
+  "C 270 775 255 735 230 735 " +
+  "C 205 735 190 775 140 775 " +
+  "C 80 775 30 745 -20 690 " +
+  "C -80 630 -30 550 -20 460 " +
+  "C -10 360 -80 270 -40 190 Z";
 
 const IMGS_STRIP_2 = [
   IMGS[4], // teal cursive
@@ -56,7 +73,22 @@ const IMGS_STRIP_2 = [
 
 export default function MarqueePathSection({ onGetStarted }) {
   const [container, setContainer] = React.useState(null);
+  const [isMobile, setIsMobile] = React.useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 768;
+    }
+    return false;
+  });
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleCta = () => {
     if (onGetStarted) {
@@ -74,47 +106,50 @@ export default function MarqueePathSection({ onGetStarted }) {
     >
       {/* ── Marquee Along Svg Path Orbit Stage ── */}
       <div className="mps__stage">
-        {/* Strip 2: Lower-Right Secondary Arch (matches user-drawn stroke) */}
-        <MarqueeAlongSvgPath
-          path={SVG_PATH_STRIP_2}
-          pathId="mps-secondary-strip"
-          viewBox="0 0 1855 848"
-          baseVelocity={24.5}
-          scrollSensitivity={0.09}
-          showPath={false}
-          slowdownOnHover={true}
-          draggable={true}
-          dragAwareDirection
-          dragVelocityDecay={0.98}
-          scrollAwareDirection={true}
-          useScrollVelocity={true}
-          scrollContainer={{ current: container }}
-          repeat={1}
-          enableRollingZIndex={true}
-          dragSensitivity={0.05}
-          className="absolute top-0 w-full h-full pointer-events-auto"
-          responsive
-          grabCursor
-        >
-          {IMGS_STRIP_2.map((img, i) => (
-            <div key={`s2-${i}`} className="mps__img-card">
-              <img
-                src={img}
-                alt={`Tile ${i}`}
-                className="w-full h-full object-cover"
-                draggable={false}
-              />
-            </div>
-          ))}
-        </MarqueeAlongSvgPath>
+        {/* Strip 2: Lower-Right Secondary Arch (Desktop only to prevent mobile clutter) */}
+        {!isMobile && (
+          <MarqueeAlongSvgPath
+            path={SVG_PATH_STRIP_2}
+            pathId="mps-secondary-strip"
+            viewBox="0 0 1855 848"
+            baseVelocity={24.5}
+            scrollSensitivity={0.09}
+            showPath={false}
+            slowdownOnHover={true}
+            draggable={true}
+            dragAwareDirection
+            dragVelocityDecay={0.98}
+            scrollAwareDirection={true}
+            useScrollVelocity={true}
+            scrollContainer={{ current: container }}
+            repeat={1}
+            enableRollingZIndex={true}
+            dragSensitivity={0.05}
+            className="absolute top-0 w-full h-full pointer-events-auto"
+            responsive
+            grabCursor
+          >
+            {IMGS_STRIP_2.map((img, i) => (
+              <div key={`s2-${i}`} className="mps__img-card">
+                <img
+                  src={img}
+                  alt={`Tile ${i}`}
+                  className="w-full h-full object-cover"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </MarqueeAlongSvgPath>
+        )}
 
-        {/* Strip 1: Main Framing Ribbon */}
+        {/* Strip 1: Main Framing Ribbon (Adaptive desktop/mobile portrait path) */}
         <MarqueeAlongSvgPath
-          path={SVG_PATH}
-          pathId="mps-main-strip"
-          viewBox="0 0 1855 848"
-          baseVelocity={4}
-          scrollSensitivity={0.015}
+          key={isMobile ? 'mps-mobile' : 'mps-desktop'}
+          path={isMobile ? SVG_PATH_MOBILE : SVG_PATH}
+          pathId={isMobile ? 'mps-main-strip-mobile' : 'mps-main-strip'}
+          viewBox={isMobile ? '0 0 460 780' : '0 0 1855 848'}
+          baseVelocity={isMobile ? 3.2 : 4}
+          scrollSensitivity={isMobile ? 0.025 : 0.015}
           showPath={false}
           slowdownOnHover={true}
           draggable={true}
@@ -123,9 +158,9 @@ export default function MarqueePathSection({ onGetStarted }) {
           scrollAwareDirection={true}
           useScrollVelocity={true}
           scrollContainer={{ current: container }}
-          repeat={4}
+          repeat={isMobile ? 2 : 4}
           enableRollingZIndex={true}
-          dragSensitivity={0.01}
+          dragSensitivity={isMobile ? 0.02 : 0.01}
           className="absolute top-0 w-full h-full pointer-events-auto"
           responsive
           grabCursor

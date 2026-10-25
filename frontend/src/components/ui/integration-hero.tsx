@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Button } from "./button";
 
 const ICONS_ROW1 = [
   "https://cdn.21st.dev/assets/mirror/86/8622b1a4306b413670d9d200591dac7a11d02f70dc525683e44ba14b91737a90.png",
@@ -28,96 +27,42 @@ const repeatedIcons = (icons: string[], repeat = 4) => Array.from({ length: repe
 
 export default function IntegrationHero() {
   return (
-    <section 
-      style={{
-        position: 'relative',
-        padding: '110px 0 120px 0',
-        overflow: 'hidden',
-        backgroundColor: 'var(--bg, #f4f6f8)',
-        width: '100%',
-      }}
-    >
+    <section className="ih__section">
       {/* Light dot grid background */}
       <div 
+        aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.055) 1.2px, transparent 1.2px)',
+          backgroundImage: 'radial-gradient(circle at center, rgba(0, 0, 0, 0.055) 1.2px, transparent 1.2px)',
           backgroundSize: '28px 28px',
           pointerEvents: 'none',
         }}
       />
 
       {/* Main Centered Container */}
-      <div 
-        style={{
-          position: 'relative',
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '0 24px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          width: '100%',
-        }}
-      >
+      <div className="ih__container">
         {/* Top Pill Badge */}
-        <div 
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '6px 18px',
-            borderRadius: '9999px',
-            border: '1px solid #e2e8f0',
-            backgroundColor: '#ffffff',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-            marginBottom: '22px',
-          }}
-        >
+        <div className="ih__badge">
           <span style={{ fontSize: '13px', fontWeight: 500, color: '#334155', letterSpacing: '-0.01em' }}>
             Integrations
           </span>
         </div>
 
         {/* Heading */}
-        <h2 
-          style={{
-            fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
-            fontWeight: 800,
-            color: '#0f172a',
-            lineHeight: 1.15,
-            letterSpacing: '-0.03em',
-            textTransform: 'none',
-            textAlign: 'center',
-            margin: '0 0 16px 0',
-            whiteSpace: 'nowrap',
-            fontFamily: 'var(--font-display, inherit)',
-          }}
-        >
+        <h2 className="ih__title">
           Integrate with favorite tools
         </h2>
 
         {/* Subtitle */}
-        <p 
-          style={{
-            fontSize: 'clamp(1rem, 2vw, 1.125rem)',
-            color: '#64748b',
-            fontWeight: 400,
-            lineHeight: 1.6,
-            maxWidth: '580px',
-            margin: '0 auto 32px auto',
-            textAlign: 'center',
-          }}
-        >
+        <p className="ih__subtitle">
           250+ top apps are available to integrate seamlessly with your workflow.
         </p>
 
         {/* CTA Button */}
         <button
           type="button"
+          className="ih__btn"
           onClick={() => {
             if (typeof window !== "undefined") {
               const contactEl = document.getElementById("contact") || document.getElementById("footer");
@@ -127,23 +72,6 @@ export default function IntegrationHero() {
                 window.location.href = "/auth";
               }
             }
-          }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '44px',
-            padding: '0 26px',
-            backgroundColor: '#000000',
-            color: '#ffffff',
-            fontSize: '14px',
-            fontWeight: 500,
-            borderRadius: '8px',
-            border: 'none',
-            cursor: 'pointer',
-            marginBottom: '58px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
-            transition: 'background-color 0.2s ease, transform 0.15s ease',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#262626')}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#000000')}
@@ -155,42 +83,21 @@ export default function IntegrationHero() {
         <div style={{ position: 'relative', width: '100%', overflow: 'hidden', paddingBottom: '16px' }}>
           {/* Row 1 */}
           <div 
+            className="ih__marquee-row"
             style={{
-              display: 'flex',
-              gap: '32px',
-              whiteSpace: 'nowrap',
-              width: 'max-content',
               animation: 'scroll-left 35s linear infinite',
             }}
           >
             {repeatedIcons(ICONS_ROW1, 4).map((src, i) => (
               <div 
                 key={i} 
-                style={{
-                  width: '72px',
-                  height: '72px',
-                  minWidth: '72px',
-                  minHeight: '72px',
-                  borderRadius: '50%',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-                  border: '1px solid rgba(0, 0, 0, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '16px',
-                  flexShrink: 0,
-                }}
+                className="ih__icon-card"
               >
                 <img 
                   src={src} 
                   alt="integration icon" 
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    objectFit: 'contain',
-                    display: 'block',
-                  }} 
+                  className="ih__icon-img"
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -198,43 +105,22 @@ export default function IntegrationHero() {
 
           {/* Row 2 */}
           <div 
+            className="ih__marquee-row"
             style={{
-              display: 'flex',
-              gap: '32px',
-              whiteSpace: 'nowrap',
-              width: 'max-content',
-              marginTop: '22px',
+              marginTop: '18px',
               animation: 'scroll-right 35s linear infinite',
             }}
           >
             {repeatedIcons(ICONS_ROW2, 4).map((src, i) => (
               <div 
                 key={i} 
-                style={{
-                  width: '72px',
-                  height: '72px',
-                  minWidth: '72px',
-                  minHeight: '72px',
-                  borderRadius: '50%',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-                  border: '1px solid rgba(0, 0, 0, 0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '16px',
-                  flexShrink: 0,
-                }}
+                className="ih__icon-card"
               >
                 <img 
                   src={src} 
                   alt="integration icon" 
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    objectFit: 'contain',
-                    display: 'block',
-                  }} 
+                  className="ih__icon-img"
+                  loading="lazy"
                 />
               </div>
             ))}
@@ -242,34 +128,142 @@ export default function IntegrationHero() {
 
           {/* Left Fade Overlay */}
           <div 
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              height: '100%',
-              width: '160px',
-              pointerEvents: 'none',
-              zIndex: 10,
-              background: 'linear-gradient(to right, var(--bg, #f4f6f8) 25%, transparent 100%)',
-            }}
+            aria-hidden="true"
+            className="ih__fade-overlay ih__fade-left"
           />
           {/* Right Fade Overlay */}
           <div 
-            style={{
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              height: '100%',
-              width: '160px',
-              pointerEvents: 'none',
-              zIndex: 10,
-              background: 'linear-gradient(to left, var(--bg, #f4f6f8) 25%, transparent 100%)',
-            }}
+            aria-hidden="true"
+            className="ih__fade-overlay ih__fade-right"
           />
         </div>
       </div>
 
       <style>{`
+        .ih__section {
+          position: relative;
+          padding: 100px 0 110px 0;
+          overflow: hidden;
+          background-color: var(--bg, #f4f6f8);
+          width: 100%;
+        }
+
+        .ih__container {
+          position: relative;
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 24px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .ih__badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 6px 18px;
+          border-radius: 9999px;
+          border: 1px solid #e2e8f0;
+          background-color: #ffffff;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+          margin-bottom: 20px;
+        }
+
+        .ih__title {
+          font-size: clamp(1.85rem, 5vw, 3.6rem);
+          font-weight: 800;
+          color: #000000;
+          line-height: 1.15;
+          letter-spacing: -0.035em;
+          text-align: center;
+          margin: 0 0 16px 0;
+          text-wrap: balance;
+          font-family: var(--font-display, inherit);
+          max-width: 900px;
+          word-break: break-word;
+        }
+
+        .ih__subtitle {
+          font-size: clamp(0.95rem, 2vw, 1.125rem);
+          color: #64748b;
+          font-weight: 400;
+          line-height: 1.55;
+          max-width: 580px;
+          margin: 0 auto 30px auto;
+          text-align: center;
+        }
+
+        .ih__btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 44px;
+          padding: 0 26px;
+          background-color: #000000;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 500;
+          border-radius: 8px;
+          border: none;
+          cursor: pointer;
+          margin-bottom: 50px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+          transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .ih__marquee-row {
+          display: flex;
+          gap: 28px;
+          white-space: nowrap;
+          width: max-content;
+        }
+
+        .ih__icon-card {
+          width: 68px;
+          height: 68px;
+          min-width: 68px;
+          min-height: 68px;
+          border-radius: 50%;
+          background-color: #ffffff;
+          box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 14px;
+          flex-shrink: 0;
+          transition: transform 0.2s ease;
+        }
+
+        .ih__icon-img {
+          width: 38px;
+          height: 38px;
+          object-fit: contain;
+          display: block;
+        }
+
+        .ih__fade-overlay {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          width: 140px;
+          pointer-events: none;
+          z-index: 10;
+        }
+        .ih__fade-left {
+          left: 0;
+          background: linear-gradient(to right, var(--bg, #f4f6f8) 25%, transparent 100%);
+        }
+        .ih__fade-right {
+          right: 0;
+          background: linear-gradient(to left, var(--bg, #f4f6f8) 25%, transparent 100%);
+        }
+
         @keyframes scroll-left {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -277,6 +271,86 @@ export default function IntegrationHero() {
         @keyframes scroll-right {
           0% { transform: translateX(-50%); }
           100% { transform: translateX(0); }
+        }
+
+        /* ── Mobile Tablet Adaptations ── */
+        @media (max-width: 768px) {
+          .ih__section {
+            padding: 64px 0 72px 0;
+          }
+          .ih__container {
+            padding: 0 16px;
+          }
+          .ih__badge {
+            padding: 5px 14px;
+            margin-bottom: 16px;
+          }
+          .ih__title {
+            font-size: clamp(1.65rem, 6vw, 2.25rem);
+            letter-spacing: -0.025em;
+            margin-bottom: 12px;
+          }
+          .ih__subtitle {
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            padding: 0 8px;
+          }
+          .ih__btn {
+            height: 42px;
+            padding: 0 22px;
+            font-size: 13.5px;
+            margin-bottom: 36px;
+          }
+          .ih__marquee-row {
+            gap: 16px;
+          }
+          .ih__icon-card {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            min-height: 52px;
+            padding: 10px;
+          }
+          .ih__icon-img {
+            width: 28px;
+            height: 28px;
+          }
+          .ih__fade-overlay {
+            width: 50px;
+          }
+        }
+
+        /* ── Mobile Phone Adaptations (<480px) ── */
+        @media (max-width: 480px) {
+          .ih__section {
+            padding: 48px 0 56px 0;
+          }
+          .ih__title {
+            font-size: 1.62rem;
+            line-height: 1.2;
+          }
+          .ih__subtitle {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+          }
+          .ih__marquee-row {
+            gap: 13px;
+          }
+          .ih__icon-card {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            min-height: 46px;
+            padding: 9px;
+          }
+          .ih__icon-img {
+            width: 24px;
+            height: 24px;
+          }
+          .ih__fade-overlay {
+            width: 36px;
+          }
         }
       `}</style>
     </section>

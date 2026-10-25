@@ -144,6 +144,7 @@ export default function GlyphPortal({
     let lastProgress = -1;
     let currentProgress = -1;
     let targetProgress = 0;
+    let currentYRatio = yRatio;
     let candidates: Ink[] = [], letters: Letter[] = [];
     let bounds = { x: 0, y: 0, width: 1, height: 1 };
     let fontDirty = true;
@@ -247,14 +248,14 @@ export default function GlyphPortal({
       const p = isStatic ? 0 : progress;
 
       // ── PROGRESSION ARCHITECTURE ──
-      // [0.00 -> 0.09]: Reading Runway. Front text is 100% visible, Pearl is at resting scale.
-      // [0.09 -> 0.18]: Front subtext gently fades out and glides upward.
-      // [0.10 -> 0.38]: Camera smoothly dives into letter 'a' (cubic ease).
-      // [0.36 -> 0.44]: Inside portal room reveals smoothly.
-      // [0.40 -> 1.00]: Pinned black portal room experience.
+      // [0.00 -> 0.16]: Reading Runway. Front text is 100% visible, Pearl is at resting scale.
+      // [0.16 -> 0.28]: Front subtext gently fades out and glides upward.
+      // [0.18 -> 0.46]: Camera smoothly dives into letter 'a' (cubic ease).
+      // [0.44 -> 0.52]: Inside portal room reveals smoothly.
+      // [0.48 -> 1.00]: Pinned black portal room experience.
 
-      // Camera zoom starts after the trimmed runway (p >= 0.10)
-      const t = clamp((p - 0.10) / 0.28);
+      // Camera zoom starts after the reading runway (p >= 0.18)
+      const t = clamp((p - 0.18) / 0.28);
       const eased = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
       const scale = Math.exp(Math.log(startScale) + Math.log(endScale / startScale) * eased);
       const blend = endScale === startScale ? 0 : (1 / scale - 1 / startScale) / (1 / endScale - 1 / startScale);
@@ -264,7 +265,7 @@ export default function GlyphPortal({
 
       const radians = (roll * Math.PI) / 180;
       const dx = W / 2 / scale;
-      const dy = (H * yRatio + H * 0.04 * eased) / scale;
+      const dy = (H * currentYRatio + H * 0.04 * eased) / scale;
 
       clip.setAttribute("transform", `scale(${scale}) rotate(${roll})`);
       glyph.setAttribute(
@@ -273,8 +274,8 @@ export default function GlyphPortal({
       );
 
       if (marks) {
-        marks.setAttribute("transform", `translate(${W / 2} ${H * yRatio + H * 0.04 * eased}) scale(${scale}) rotate(${roll}) translate(${-cx} ${-cy})`);
-        marks.style.opacity = String(1 - smooth(0.10, 0.24, p));
+        marks.setAttribute("transform", `translate(${W / 2} ${H * currentYRatio + H * 0.04 * eased}) scale(${scale}) rotate(${roll}) translate(${-cx} ${-cy})`);
+        marks.style.opacity = String(1 - smooth(0.18, 0.32, p));
       }
 
       if (dotOuter) {
@@ -283,29 +284,29 @@ export default function GlyphPortal({
           dotInner.setAttribute("transform", glyph.getAttribute("transform")!);
         }
         // Fade the gradient period dot out smoothly as we zoom into 'a'
-        dotOuter.style.opacity = String(1 - smooth(0.12, 0.30, p));
+        dotOuter.style.opacity = String(1 - smooth(0.20, 0.38, p));
       }
 
       // Drop clipPath once camera has entered ink so screen becomes 100% solid black
       field.style.clipPath = t >= 1 ? "none" : `url(#${clipId})`;
 
       // Front subtext stays 100% visible through the reading runway, then fades gracefully
-      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.09, 0.18, p));
+      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.16, 0.28, p));
       section.style.setProperty("--gp-front-opacity", String(frontOpacity));
       section.style.setProperty("--gp-front-hit", frontOpacity > 0.05 ? "auto" : "none");
       section.style.setProperty("--gp-front-visibility", frontOpacity > 0.01 ? "visible" : "hidden");
       section.style.setProperty("--gp-front-y", `${(1 - frontOpacity) * -22}px`);
 
       // Behind dome fades out smoothly as zoom takes off
-      const stageOpacity = isStatic ? 1 : 1 - smooth(0.10, 0.26, p);
+      const stageOpacity = isStatic ? 1 : 1 - smooth(0.18, 0.35, p);
       section.style.setProperty("--gp-behind-opacity", String(stageOpacity));
 
       // Reveal the pinned interior destination room smoothly once inside ink
-      const reveal = isStatic ? 1 : clamp((p - 0.36) / 0.08);
+      const reveal = isStatic ? 1 : clamp((p - 0.44) / 0.08);
       section.style.setProperty("--gp-reveal", String(reveal));
-      section.style.setProperty("--gp-content-hit", p >= 0.40 ? "auto" : "none");
-      section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0.10, 0.85, p)));
-      section.dataset.gpEntered = String(p >= 0.40);
+      section.style.setProperty("--gp-content-hit", p >= 0.48 ? "auto" : "none");
+      section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0.18, 0.85, p)));
+      section.dataset.gpEntered = String(p >= 0.48);
       section.dataset.gpProgress = p.toFixed(5);
 
       if (p !== lastProgress) {
@@ -322,8 +323,12 @@ export default function GlyphPortal({
       H = motion.matches ? Math.min(viewportHeight * 0.75, 480) : viewportHeight;
       section.style.setProperty("--gp-height", `${H}px`);
 
-      // Travel is the exact scroll track before pin releases: (length - 1) * H
-      travel = Math.max(1, (length - 1) * H);
+      const isMobile = W < 768;
+      // On mobile phones, elevate yRatio slightly and adapt travel length
+      currentYRatio = isMobile ? 0.17 : yRatio;
+      const effectiveLength = isMobile ? Math.min(length, 6.0) : length;
+      section.style.setProperty("--gp-length", String(effectiveLength));
+      travel = Math.max(1, (effectiveLength - 1) * H);
       art.setAttribute("viewBox", `0 0 ${W} ${H}`);
 
       if (fontDirty) {
@@ -332,14 +337,18 @@ export default function GlyphPortal({
       }
       if (!ready) return;
 
-      const wordHeight = H * 0.26 * fScale;
-      startScale = Math.min((W * 0.65 * fScale) / bounds.width, wordHeight / bounds.height);
+      // On mobile screens, scale typography so Pearl is bold, prominent, and proportional
+      const mobileFScale = isMobile ? Math.max(0.78, Math.min(0.92, (W / 400) * 0.85)) : fScale;
+      const widthFactor = isMobile ? 0.84 : 0.65;
+      const heightFactor = isMobile ? 0.18 : 0.26;
+      const wordHeight = H * heightFactor * mobileFScale;
+      startScale = Math.min((W * widthFactor * mobileFScale) / bounds.width, wordHeight / bounds.height);
 
       select(target);
 
       if (dotOuter && dotInner) {
         dotOuter.setAttribute("transform", `scale(${startScale})`);
-        dotInner.setAttribute("transform", `translate(${W / 2 / startScale - center.x} ${H * yRatio / startScale - center.y})`);
+        dotInner.setAttribute("transform", `translate(${W / 2 / startScale - center.x} ${H * currentYRatio / startScale - center.y})`);
       }
 
       section.dataset.gpReady = "true";
@@ -362,8 +371,8 @@ export default function GlyphPortal({
         } else {
           // Fluid damping to absorb high-speed flick / wheel spikes
           const delta = targetProgress - currentProgress;
-          if (Math.abs(delta) > 0.0001) {
-            currentProgress += delta * 0.14;
+          if (Math.abs(delta) > 0.0002) {
+            currentProgress += delta * 0.28;
             // Continue frame loop until settled
             raf = requestAnimationFrame(frame);
           } else {
@@ -517,6 +526,10 @@ export default function GlyphPortal({
         ${q} [data-gp-front] {
           position: absolute;
           inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
           pointer-events: var(--gp-front-hit, auto);
           z-index: 20;
           opacity: var(--gp-front-opacity, 1);

@@ -50,3 +50,15 @@
     flex-direction: column;
     box-sizing: border-box;
 }
+
+@media (max-width: 768px) {
+    .pearl-portal__container {
+        padding: 1.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pearl-portal__container {
+        padding: 1rem 0.75rem;
+    }
+}
