@@ -1199,8 +1199,7 @@ const CSS = `
 .sh-root[data-gl="on"] .sh-fallback{opacity:0}
 .sh-root[data-swap="1"] .sh-canvas{opacity:0;transition-duration:.25s}
 .sh-root[data-swap="1"] .sh-fallback{opacity:0;transition-duration:.25s}
-.sh-backdrop{position:absolute !important;left:50% !important;z-index:0 !important;transform:translate(-50%,-50%) !important;white-space:nowrap !important;pointer-events:none !important;user-select:none !important;
-  font-family:var(--sh-head) !important;font-weight:600 !important;letter-spacing:-.06em !important;line-height:.8 !important;color:color-mix(in srgb,var(--sh-fg) 5%,transparent) !important;text-transform:lowercase !important}
+.sh-backdrop{position:absolute !important;left:50% !important;top:40% !important;z-index:0 !important;transform:translate(-50%,-50%) !important;white-space:nowrap !important;pointer-events:none !important;user-select:none !important;font-size:clamp(60px, 18vw, 180px) !important;font-family:var(--sh-head) !important;font-weight:600 !important;letter-spacing:-.06em !important;line-height:.8 !important;color:color-mix(in srgb,var(--sh-fg) 5%,transparent) !important;text-transform:lowercase !important}
 .sh-nav{position:relative !important;z-index:2 !important;display:flex !important;align-items:center !important;justify-content:space-between !important;gap:24px !important;
   padding:26px clamp(20px,3.2cqw,48px) 0 !important;width:100% !important;flex-shrink:0 !important}
 .sh-brand{font-family:var(--sh-head) !important;font-weight:600 !important;font-size:17px !important;letter-spacing:-.02em !important;color:inherit !important;text-decoration:none !important;text-transform:none !important}
@@ -1469,12 +1468,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
     // a portrait sculpture on phones dissolves into the top of the copy
     if (mob && aspectRef.current < 1.3 && content) band.bottom += content.offsetHeight * 0.3
     const rect = computeRect(w, h, aspectRef.current, band, layout.current)
-    const bd = backdropRef.current
-    if (bd) {
-      const chars = Math.max(1, (bd.textContent || "").length)
-      bd.style.fontSize = Math.min(rect.h * 0.92, (w * 0.92) / (chars * 0.54)) + "px"
-      bd.style.top = (rect.y + rect.h / 2) + "px"
-    }
+    // Backdrop position & font-size are fixed via CSS to eliminate layout shift
     const img = imgRef.current
     if (img) {
       img.style.left = rect.x + "px"

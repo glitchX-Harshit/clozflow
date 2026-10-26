@@ -14,7 +14,7 @@ const PricingPage = React.lazy(() => import('./pages/PricingPage'));
 const Footer = React.lazy(() => import('./components/Footer'));
 const MarqueePathSection = React.lazy(() => import('./components/MarqueePathSection'));
 import SmoothScroll from './components/SmoothScroll';
-import LiveCopilotPopup from './components/LiveCopilotPopup';
+const LiveCopilotPopup = React.lazy(() => import('./components/LiveCopilotPopup'));
 import WebPreload from './components/WebPreload';
 
 const ThreeBackground = React.lazy(() => import('./components/ThreeBackground'));
@@ -45,6 +45,18 @@ const AdminSettings = React.lazy(() => import('./admin/pages/AdminSettings'));
 
 function LandingPage() {
     const navigate = useNavigate();
+    const [loadRest, setLoadRest] = React.useState(false);
+
+    React.useEffect(() => {
+        if ('requestIdleCallback' in window) {
+            const h = window.requestIdleCallback(() => setLoadRest(true), { timeout: 1200 });
+            return () => window.cancelIdleCallback(h);
+        } else {
+            const t = setTimeout(() => setLoadRest(true), 600);
+            return () => clearTimeout(t);
+        }
+    }, []);
+
     return (
         <main className="landing-main" style={{ position: 'relative', width: '100%', overflowX: 'clip' }}>
             {/* ── Web Preloader (Reload / Entrance Curtain Animation) ── */}
@@ -139,17 +151,22 @@ function LandingPage() {
                     position: 'relative', 
                     zIndex: 10, 
                     backgroundColor: 'var(--bg, #f4f6f8)',
-                    boxShadow: '0 -24px 60px rgba(15, 23, 42, 0.04)'
+                    boxShadow: '0 -24px 60px rgba(15, 23, 42, 0.04)',
+                    minHeight: loadRest ? 'auto' : '100vh'
                 }}
             >
-                <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
-                    <HowItWorks />
-                    <Integrations />
-                    <IntegrationHero />
-                    <UseCases />
-                    <MarqueePathSection onGetStarted={() => navigate('/dashboard')} />
-                    <Footer />
-                </Suspense>
+                {loadRest ? (
+                    <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+                        <HowItWorks />
+                        <Integrations />
+                        <IntegrationHero />
+                        <UseCases />
+                        <MarqueePathSection onGetStarted={() => navigate('/dashboard')} />
+                        <Footer />
+                    </Suspense>
+                ) : (
+                    <div style={{ minHeight: '100vh' }} />
+                )}
             </div>
         </main>
     );
@@ -161,7 +178,9 @@ function App() {
             <BrowserRouter>
                 <SmoothScroll />
                 <div className="app-root">
-                    <LiveCopilotPopup />
+                    <Suspense fallback={null}>
+                        <LiveCopilotPopup />
+                    </Suspense>
                     <Routes>
                         <Route path="/"              element={<LandingPage />} />
                         {/* Auth pages — includes /auth/callback for OAuth redirect */}

@@ -9,7 +9,7 @@ export default function WebPreload({ onComplete }) {
   return (
     <FramerAnimationLoader
       brandName="clozflow®"
-      counterDuration={2.6}
+      counterDuration={0.6}
       textColor="#0a0a0a"
       background="#ffffff"
       onComplete={onComplete}

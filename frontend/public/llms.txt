@@ -1,18 +1,19 @@
 # ClozFlow
 
-> Autonomous AI voice telephony and sales copilot platform.
+> Autonomous AI voice sales agent, conversational AI, and B2B cold calling telephony platform.
 
-ClozFlow is an intelligent autonomous AI voice sales employee and copilot platform. It dials inbound and website leads in 25 seconds, answers customer calls on ring one, speaks fluent Hindi and English naturally, and schedules meetings directly onto your CRM calendar.
+ClozFlow is the leading autonomous AI voice sales agent and conversational AI employee platform. Designed for modern B2B sales teams, it deploys autonomous cold calling sales agents and inbound voice agents that pick up calls in 1 ring, dial leads in 25 seconds, navigate objections in native Hindi, English & Hinglish, and automatically sync with your CRM calendar to close high-value deals on autopilot.
 
-## Key Capabilities
+## Core Capabilities
 
-- [Voice Telephony](https://clozflow.in/#how-it-works): Autonomous inbound and outbound phone calling with dedicated virtual lines.
-- [Behavioral Intelligence](https://clozflow.in/#features): Real-time objection detection and live negotiation assistance.
-- [Integrations](https://clozflow.in/#integrations): Direct CRM synchronization with HubSpot, Salesforce, and Webhooks.
-- [Pricing](https://clozflow.in/pricing): Flexible pricing tiers starting with instant setup.
+- [AI Voice Sales Agent](https://clozflow.in/#how-it-works): Autonomous inbound and outbound voice agent with sub-second latency and dedicated virtual lines.
+- [B2B Cold Calling Agent](https://clozflow.in/#features): Autonomous conversational AI SDR that cold calls outbound prospect lists, qualifies buyers, and schedules meetings.
+- [Conversational AI Objections](https://clozflow.in/#objections): Real-time conversational AI objection handling for price resistance, timing hesitation, and competitors.
+- [CRM Integrations](https://clozflow.in/#integrations): Real-time synchronization with HubSpot, Salesforce, Zoho, LeadSquared, and Webhooks.
+- [Pricing & Plans](https://clozflow.in/pricing): Transparent pricing tiers with instant virtual line provisioning.
 
 ## Resources
 
-- [Live Demo](https://clozflow.in/auth): Interactive AI voice and copilot workspace trial.
+- [Deploy AI Closer](https://clozflow.in/auth): Live test calls and interactive voice agent trial.
 - [Terms of Service](https://clozflow.in/terms): Service terms and usage guidelines.
 - [Privacy Policy](https://clozflow.in/privacy): Privacy policy and data protection commitments.

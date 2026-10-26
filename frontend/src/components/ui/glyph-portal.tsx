@@ -5,7 +5,7 @@
  * Origin: UsefulPortal.astro on https://ktzm.dk → UsefulPortal.tsx → ClarityPortal.tsx.
  * Refactored for ClozFlow: High-performance pinned typographic portal.
  */
-import { useId, useLayoutEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useId, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 export type GlyphPortalStyle = CSSProperties & {
   "--gp-paper"?: string;
@@ -194,7 +194,7 @@ export default function GlyphPortal({
   const clipId = `${uid}-clip`;
   const sectionRef = useRef<HTMLElement>(null);
   const progressRef = useRef(onProgress);
-  useLayoutEffect(() => { progressRef.current = onProgress; }, [onProgress]);
+  useEffect(() => { progressRef.current = onProgress; }, [onProgress]);
 
   const text = word.trim().normalize("NFC") || "Pearl.";
   const length = Number.isFinite(scrollLength) ? clamp(scrollLength, 1.5, 8) : 3.6;
@@ -203,7 +203,7 @@ export default function GlyphPortal({
   const yRatio = Number.isFinite(verticalRatio) ? verticalRatio : 0.30;
   const fScale = Number.isFinite(fontScale) && fontScale > 0 ? fontScale : 1.0;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const section = sectionRef.current!;
     const pin = section.querySelector<HTMLElement>("[data-gp-pin]")!;
     const field = section.querySelector<HTMLElement>("[data-gp-field]")!;

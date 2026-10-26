@@ -4,4 +4,3 @@ Disallow: /admin
 Disallow: /api/
 
 Sitemap: https://clozflow.in/sitemap.xml
-Agentmap: /.well-known/ai-catalog.json
