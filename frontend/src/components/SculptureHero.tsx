@@ -1138,9 +1138,9 @@ const DEFAULTS = {
   darkBackground: "#111110",
   textColor: "#151514",
   accentColor: "#151514",
-  headingFont: "'Geist', 'Helvetica Neue', Arial, sans-serif",
-  accentFont: "'Instrument Serif', 'Times New Roman', serif",
-  bodyFont: "'Geist', 'Helvetica Neue', Arial, sans-serif",
+  headingFont: "var(--font-display, 'Outfit', sans-serif)",
+  accentFont: "'Playfair Display', 'Times New Roman', serif",
+  bodyFont: "var(--font-body, 'Outfit', sans-serif)",
 }
 
 /* ────────────────────────────────────────────────────────────────────
@@ -1190,9 +1190,11 @@ const CSS = `
   touch-action:pan-y;display:flex !important;flex-direction:column !important;box-sizing:border-box !important;padding:0 !important;margin:0 !important;contain:none !important}
 .sh-root > style{display:none !important}
 .sh-root *,.sh-root *::before,.sh-root *::after{box-sizing:border-box}
-.sh-stage{position:absolute !important;inset:0 !important;z-index:0 !important;pointer-events:none !important}
+.sh-stage{position:absolute !important;inset:0 !important;z-index:0 !important;pointer-events:none !important;contain:strict !important;overflow:hidden !important}
 .sh-canvas{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;display:block !important;opacity:0;transition:opacity .5s ease}
-.sh-fallback{position:absolute !important;display:block !important;max-width:none !important;user-select:none;-webkit-user-drag:none;transition:opacity .5s ease}
+.sh-fallback{position:absolute !important;display:block !important;max-width:none !important;user-select:none;-webkit-user-drag:none;opacity:0 !important;transition:opacity .3s ease}
+.sh-root[data-gl="off"] .sh-fallback{opacity:1 !important}
+.sh-root[data-gl="on"] .sh-fallback{opacity:0 !important}
 .sh-root[data-gl="on"] .sh-canvas{opacity:1}
 .sh-root[data-gl="on"] .sh-fallback{opacity:0}
 .sh-root[data-swap="1"] .sh-canvas{opacity:0;transition-duration:.25s}
@@ -1354,7 +1356,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
     headingFont = DEFAULTS.headingFont,
     accentFont = DEFAULTS.accentFont,
     bodyFont = DEFAULTS.bodyFont,
-    loadFonts = true,
+    loadFonts = false,
     sculptureScale = 1,
     mobileSculptureScale = 1,
     sculptureX = 0,
@@ -1478,7 +1480,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
       img.style.left = rect.x + "px"
       img.style.top = rect.y + "px"
       img.style.width = rect.w + "px"
-      img.style.height = rect.h + "px"
+      img.style.height = rect.h + "px"; root.dataset.ready = "1"
     }
     const hintEl = hintRef.current
     if (hintEl) {
@@ -1657,7 +1659,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
         </div>
       ) : null}
       <div ref={stageRef} className="sh-stage" aria-hidden="true">
-        <img ref={imgRef} className="sh-fallback" src={activeSrc} alt="" crossOrigin="anonymous" draggable={false} />
+        <img ref={imgRef} className="sh-fallback" src={activeSrc} alt="" width="600" height="600" crossOrigin="anonymous" draggable={false} />
       </div>
       <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{imageAlt}</span>
 

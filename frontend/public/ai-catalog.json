@@ -1,0 +1,31 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "ClozFlow",
+    "identifier": "did:web:clozflow.in"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:clozflow:sales:pearl-voice-agent",
+      "displayName": "ClozFlow Pearl Voice Telephony Agent",
+      "type": "application/agent-card+json",
+      "url": "https://clozflow.in/agent-card.json",
+      "description": "Autonomous voice telephony and inbound/outbound sales negotiation agent.",
+      "representativeQueries": [
+        "deploy autonomous AI sales employee",
+        "outbound voice calling agent for CRM"
+      ]
+    },
+    {
+      "identifier": "urn:air:clozflow:mcp:sales-copilot",
+      "displayName": "ClozFlow Realtime Sales Copilot MCP Server",
+      "type": "application/mcp-server-card+json",
+      "url": "https://clozflow.in/mcp-server-card.json",
+      "description": "Real-time behavioral objection detection and conversational recommendation API.",
+      "representativeQueries": [
+        "real-time sales objection copilot",
+        "crm call transcript analysis"
+      ]
+    }
+  ]
+}

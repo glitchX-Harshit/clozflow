@@ -1,17 +1,18 @@
-# ClozFlow.in
+# ClozFlow
 
-> Autonomous AI Sales Assistant & B2B Outreach Bot
+> Autonomous AI voice telephony and sales copilot platform.
 
-ClozFlow.in is an intelligent B2B sales automation platform. It deploys autonomous cognitive AI sales agents to find local leads, manage WhatsApp & cold email outreach campaigns, handle objections, and sync with CRMs.
+ClozFlow is an intelligent autonomous AI voice sales employee and copilot platform. It dials inbound and website leads in 25 seconds, answers customer calls on ring one, speaks fluent Hindi and English naturally, and schedules meetings directly onto your CRM calendar.
 
-## Core Features
-- **Cognitive Agents**: 98% accuracy in intent detection with <200ms latency.
-- **Outreach Studio**: Multi-channel campaigns via WhatsApp and Email.
-- **Objection Handling**: Real-time contextual rebuttals.
-- **CRM Syncing**: Native integration with Salesforce and HubSpot.
+## Key Capabilities
 
-## Usage Data
-- Pricing: Starting at $0.00 for beta users.
-- Contact: sales@clozflow.in
-- Privacy Policy: /privacy-policy
-- Terms of Service: /terms-of-service
+- [Voice Telephony](https://clozflow.in/#how-it-works): Autonomous inbound and outbound phone calling with dedicated virtual lines.
+- [Behavioral Intelligence](https://clozflow.in/#features): Real-time objection detection and live negotiation assistance.
+- [Integrations](https://clozflow.in/#integrations): Direct CRM synchronization with HubSpot, Salesforce, and Webhooks.
+- [Pricing](https://clozflow.in/pricing): Flexible pricing tiers starting with instant setup.
+
+## Resources
+
+- [Live Demo](https://clozflow.in/auth): Interactive AI voice and copilot workspace trial.
+- [Terms of Service](https://clozflow.in/terms): Service terms and usage guidelines.
+- [Privacy Policy](https://clozflow.in/privacy): Privacy policy and data protection commitments.
