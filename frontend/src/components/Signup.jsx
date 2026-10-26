@@ -302,6 +302,9 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                         >
                             {loading ? <SpinnerIcon size={18} /> : 'Create Account'}
                         </button>
+                        <p style={{ fontSize: '11.5px', color: '#64748b', lineHeight: 1.45, margin: '14px 0 0', textAlign: 'center' }}>
+                            By creating an account, you agree to our <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Terms of Service</a>, <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Privacy Policy</a>, and <a href="/ai-voice-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>AI & Voice Policy</a>.
+                        </p>
                     </form>
                 )}
 

@@ -37,11 +37,11 @@ class LeadDetailsScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
-                Icon(Icons.location_on, size: 16, color: AppColors.textSecondary),
+                const Icon(Icons.location_on, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 4),
                 Text(city, style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary)),
                 const SizedBox(width: 16),
-                Icon(Icons.category, size: 16, color: AppColors.textSecondary),
+                const Icon(Icons.category, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 4),
                 Text(category, style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary)),
               ],

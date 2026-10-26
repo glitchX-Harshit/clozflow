@@ -475,9 +475,22 @@ export const AgentTestingPanel = ({
             <div className={`tp-dot ${agentSpeaking ? 'speaking' : thinking ? 'thinking' : voiceActive ? 'active' : ''}`} />
             <span>{agentSpeaking ? 'Pearl Speaking' : thinking ? 'Thinking...' : voiceActive ? 'Voice Listening' : 'Ready'}</span>
           </div>
-          <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-            {activeTab === 'voice' ? 'Web Audio 16kHz PCM' : 'Real Qwen/Groq LLM'}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ 
+              fontSize: '0.72rem', 
+              fontWeight: 600, 
+              color: '#6366f1', 
+              background: 'rgba(99, 102, 241, 0.08)', 
+              padding: '2px 8px', 
+              borderRadius: '12px',
+              border: '1px solid rgba(99, 102, 241, 0.2)'
+            }}>
+              ⚡ 2 Credits (₹2.00) / test
+            </span>
+            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+              {activeTab === 'voice' ? 'Web Audio 16kHz PCM' : 'Real Qwen/Groq LLM'}
+            </span>
+          </div>
         </div>
 
         {/* Unsaved Agent Warning Banner */}
@@ -502,9 +515,33 @@ export const AgentTestingPanel = ({
 
         {/* Error Alert Banner */}
         {errorMsg && (
-          <div className="tp-error-banner animate-fade-in">
-            <AlertCircle size={15} />
-            <span>{errorMsg}</span>
+          <div className="tp-error-banner animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <AlertCircle size={15} />
+              <span>{errorMsg}</span>
+            </div>
+            {errorMsg.toLowerCase().includes('credit') && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (onClose) onClose();
+                  window.dispatchEvent(new CustomEvent('open-wallet-tab'));
+                }}
+                style={{
+                  alignSelf: 'flex-start',
+                  background: 'var(--accent, #6366f1)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '4px 10px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Go to Wallet & Top Up Credits →
+              </button>
+            )}
           </div>
         )}
 

@@ -130,10 +130,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           fontSize: 36,
                           fontWeight: FontWeight.w800,
                         ),
-                        children: [
+                        children: const [
                           TextSpan(
                             text: '.',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.magenta,
                             ),
                           ),

@@ -3,7 +3,7 @@ import {
   Home, Bot, Workflow, BookOpen, 
   Phone, PhoneIncoming, Megaphone, Code, 
   BarChart3, Kanban, List, Sparkles, Settings,
-  Layers, CircleDot, CreditCard, FileText, PanelLeft
+  Layers, CircleDot, FileText, PanelLeft
 } from 'lucide-react';
 import gsap from 'gsap';
 import './PearlSecondarySidebar.css';
@@ -53,7 +53,6 @@ export const PEARL_MENU_SECTIONS = [
       { id: 'settings', label: 'Settings', icon: Settings },
       { id: 'mcp', label: 'MCP', icon: Layers, badge: 'New' },
       { id: 'usage', label: 'Usage', icon: CircleDot },
-      { id: 'pricing', label: 'Pricing', icon: CreditCard },
       { id: 'documentation', label: 'Documentation', icon: FileText }
     ]
   }

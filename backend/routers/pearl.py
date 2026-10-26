@@ -29,6 +29,14 @@ from services.pearl.policy_engine import PolicyEngine, DEFAULT_AUTONOMY, DEFAULT
 from services.pearl.event_logger import EventLogger
 
 
+from services.credit_service import (
+    deduct_credits,
+    has_sufficient_balance,
+    calculate_call_metering,
+    RATE_PER_TEST_SIMULATION,
+    RATE_PEARL_CALL_PER_MIN
+)
+
 router = APIRouter(prefix="/api/pearl", tags=["pearl"])
 
 
@@ -339,6 +347,13 @@ async def deploy_pearl_call(
         raise HTTPException(404, "Lead not found")
     if not lead.phone_number:
         raise HTTPException(400, "Lead has no phone number")
+        
+    # Pre-check credit balance (minimum 2.5 Credits to place outbound call)
+    if not has_sufficient_balance(db, user.id, RATE_PEARL_CALL_PER_MIN):
+        raise HTTPException(
+            status_code=402,
+            detail="Insufficient credits. Outbound call requires at least 2.50 Credits (₹2.50). Please top up your wallet."
+        )
         
     import sys
     import os
@@ -1234,6 +1249,19 @@ async def exotel_webhook(request: Request, db: Session = Depends(get_db)):
                 call.duration_seconds = int(duration)
             elif call.answered_at:
                 call.duration_seconds = int((datetime.utcnow() - call.answered_at).total_seconds())
+
+            # Dual-Metered deduction: Pearl Voice (2.5 Rs/min) + Vobiz Telephony (0.2 Rs/30s pulse)
+            if call.duration_seconds > 0 and call.agent and call.agent.user_id:
+                meter = calculate_call_metering(call.duration_seconds)
+                try:
+                    deduct_credits(
+                        db=db,
+                        user_id=call.agent.user_id,
+                        amount=meter["total_credits"],
+                        description=f"Outbound Call #{call.id[:8]} ({call.duration_seconds}s) - Pearl AI: ₹{meter['pearl_voice_cost']:.2f}, Telephony ({meter['pulses']} pulses): ₹{meter['telephony_cost']:.2f}"
+                    )
+                except Exception as ce:
+                    print(f"[Webhook Metering Warning] Could not deduct call credits: {ce}")
             
         if provider_call_id:
             call.provider_call_id = provider_call_id
@@ -1336,6 +1364,13 @@ async def create_test_session(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
+    # Enforce meter: 2 Rs / 2 credits per test simulation
+    deduct_credits(
+        db=db,
+        user_id=user.id,
+        amount=RATE_PER_TEST_SIMULATION,
+        description=f"Pearl Agent Test Simulation (Agent #{req.agent_id})"
+    )
     """
     Create a new browser test session for an agent.
     Takes an immutable snapshot of the agent's current configuration.

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, Float, String, DateTime, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
@@ -40,7 +40,7 @@ class User(Base):
     is_admin        = Column(Boolean, default=False, index=True)
     admin_role      = Column(String, default="user", index=True)      # user | admin | super_admin | analyst
     account_status  = Column(String, default="active", index=True)    # active | suspended | deactivated
-    credit_balance  = Column(Integer, default=0)                      # PAYG credits
+    credit_balance  = Column(Float, default=0.0)                      # PAYG credits (1 INR = 1 Credit, starts at 0.0)
 
     call_logs = relationship("CallLog", back_populates="user")
     capsules  = relationship("Capsule", back_populates="user")

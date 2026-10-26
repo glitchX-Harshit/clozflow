@@ -1,240 +1,150 @@
-import { useEffect, useState, useRef } from 'react';
-import { ArrowRight, Telescope, Origami, Fingerprint } from 'lucide-react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import ClozFlowLogo from './ClozFlowLogo';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
-const LINKS = [
-    { label: 'Product', href: '#objections' },
-    { label: 'How it works', href: '/how-it-works' },
-    { label: 'Integrations', href: '#integrations' },
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Early Access', href: 'https://clozflow-waitlist.vercel.app' },
-];
+const SunIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <circle cx="8" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.3" />
+    <path d="M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M3.4 12.6l1.3-1.3M11.3 4.7l1.3-1.3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+  </svg>
+);
 
-const Navbar = ({ onSignup, onLogin, hideAtTop = false }) => {
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [activeSection, setActiveSection] = useState('');
-    const [hoveredProduct, setHoveredProduct] = useState(false);
-    const popoverRef = useRef(null);
+const MoonIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M13.5 9.8A5.5 5.5 0 1 1 6.2 2.5a4.4 4.4 0 0 0 7.3 7.3z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+  </svg>
+);
 
-    useGSAP(() => {
-        if (hoveredProduct && popoverRef.current) {
-            gsap.fromTo(
-                gsap.utils.toArray(popoverRef.current.querySelectorAll('.nb__popover-item')),
-                { y: 15, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power3.out', clearProps: 'all' }
-            );
-        }
-    }, [hoveredProduct]);
+export default function Navbar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const [mode, setMode] = useState(() => {
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  });
 
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    useEffect(() => {
-        if (mobileOpen) {
-            window.lenis?.stop();
+  const toggleTheme = () => {
+    const next = mode === 'dark' ? 'light' : 'dark';
+    setMode(next);
+    if (next === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.setProperty('--bg', '#111110');
+      document.documentElement.style.setProperty('--text', '#F1EFEA');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.setProperty('--bg', '#f4f6f8');
+      document.documentElement.style.setProperty('--text', '#0a0a0a');
+    }
+  };
+
+  const navLinks = [
+    {
+      label: 'Product',
+      href: '/#objections',
+      onClick: (e) => {
+        e.preventDefault();
+        if (location.pathname === '/') {
+          document.getElementById('objections')?.scrollIntoView({ behavior: 'smooth' });
         } else {
-            window.lenis?.start();
+          navigate('/#objections');
         }
-        return () => {
-            window.lenis?.start();
-        };
-    }, [mobileOpen]);
-
-    useEffect(() => {
-        const preventDefault = (e) => e.preventDefault();
-        const drawer = document.querySelector('.nb__drawer');
-        if (mobileOpen && drawer) {
-            drawer.addEventListener('touchmove', preventDefault, { passive: false });
+      },
+    },
+    {
+      label: 'How it works',
+      href: '/how-it-works',
+      onClick: (e) => {
+        e.preventDefault();
+        navigate('/how-it-works');
+      },
+    },
+    {
+      label: 'Integrations',
+      href: '/#integrations',
+      onClick: (e) => {
+        e.preventDefault();
+        if (location.pathname === '/') {
+          document.getElementById('integrations')?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          navigate('/#integrations');
         }
-        return () => {
-            if (drawer) {
-                drawer.removeEventListener('touchmove', preventDefault);
-            }
-        };
-    }, [mobileOpen]);
+      },
+    },
+    {
+      label: 'Pricing',
+      href: '/pricing',
+      active: location.pathname === '/pricing',
+      onClick: (e) => {
+        e.preventDefault();
+        navigate('/pricing');
+      },
+    },
+  ];
 
-    // Active Section Intersection Observer
-    useEffect(() => {
-        const sections = LINKS
-            .filter(link => link.href.startsWith('#'))
-            .map(link => document.querySelector(link.href))
-            .filter(Boolean);
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        }, {
-            rootMargin: '-30% 0px -60% 0px'
-        });
+  return (
+    <header className={`editorial-navbar ${scrolled ? 'editorial-navbar--scrolled' : ''}`}>
+      <nav className="editorial-navbar__inner" aria-label="Primary">
+        {/* Brand */}
+        <a 
+          className="editorial-navbar__brand" 
+          href="/" 
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/');
+          }}
+        >
+          ClozFlow®
+        </a>
 
-        sections.forEach(sec => observer.observe(sec));
-        return () => {
-            sections.forEach(sec => observer.unobserve(sec));
-        };
-    }, []);
+        {/* Links + Theme Toggle + Contact CTA */}
+        <ul className="editorial-navbar__links">
+          {navLinks.map((l, i) => (
+            <li key={i}>
+              <a 
+                className={`editorial-navbar__link ${l.active ? 'editorial-navbar__link--active' : ''}`} 
+                href={l.href} 
+                onClick={l.onClick}
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
 
-    const close = () => setMobileOpen(false);
-
-    return (
-        <>
-            <header 
-                className={`nb ${scrolled ? 'nb--scrolled' : ''} ${mobileOpen ? 'nb--open' : ''} ${hoveredProduct ? 'nb--mega-open' : ''} ${hideAtTop && !scrolled ? 'nb--hidden-at-top' : ''}`}
-                onMouseLeave={() => setHoveredProduct(false)}
+          {/* Theme Toggle */}
+          <li className="editorial-navbar__keep">
+            <button
+              type="button"
+              className="editorial-navbar__theme"
+              aria-label={mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              onClick={toggleTheme}
             >
-                <div className="nb__inner">
-                    {/* Logo & Tagline */}
-                    <a href="/" className="nb__logo" aria-label="Clozflow homepage">
-                        <img 
-                            src="/clozflow_gradient_logo.png" 
-                            alt="Clozflow" 
-                            className="nb__logo-img" 
-                        />
-                    </a>
+              {mode === 'dark' ? <SunIcon /> : <MoonIcon />}
+            </button>
+          </li>
 
-                    {/* Center Navigation Links - Swiss Typography */}
-                    <nav className="nb__links" aria-label="Main Navigation">
-                        {LINKS.map(l => (
-                            <div 
-                                key={l.href} 
-                                className="nb__link-wrapper"
-                                onMouseEnter={() => {
-                                    if (l.label === 'Product') setHoveredProduct(true);
-                                    else setHoveredProduct(false);
-                                }}
-                                onMouseLeave={() => {
-                                    if (l.label === 'Product') setHoveredProduct(false);
-                                }}
-                            >
-                                <a
-                                    href={l.href.startsWith('#') && window.location.pathname !== '/' ? `/${l.href}` : l.href}
-                                    className={`nb__link ${(l.href.startsWith('#') && activeSection === l.href.substring(1)) || window.location.pathname === l.href ? 'nb__link--active' : ''}`}
-                                    {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                                >
-                                    {l.label}
-                                </a>
-                                
-                                {/* Product Popover Menu */}
-                                {l.label === 'Product' && (
-                                    <div ref={popoverRef} className={`nb__popover ${hoveredProduct ? 'nb__popover--open' : ''}`}>
-                                        <div className="nb__popover-inner">
-                                            <a href="https://cf-benchmark.onrender.com" target="_blank" rel="noopener noreferrer" className="nb__popover-item">
-                                                <div className="nb__popover-icon">
-                                                    <Telescope size={18} strokeWidth={1.5} />
-                                                </div>
-                                                <div className="nb__popover-text">
-                                                    <span className="nb__popover-title">CF Benchmark</span>
-                                                    <span className="nb__popover-desc">Evaluate and compare AI models</span>
-                                                </div>
-                                            </a>
-                                            
-                                            <a href="#objections" className="nb__popover-item" onClick={() => setHoveredProduct(false)}>
-                                                <div className="nb__popover-icon">
-                                                    <Origami size={18} strokeWidth={1.5} />
-                                                </div>
-                                                <div className="nb__popover-text">
-                                                    <span className="nb__popover-title">Objection Engine</span>
-                                                    <span className="nb__popover-desc">Real-time persuasion frameworks</span>
-                                                </div>
-                                            </a>
-
-                                            <a href="#integrations" className="nb__popover-item" onClick={() => setHoveredProduct(false)}>
-                                                <div className="nb__popover-icon">
-                                                    <Fingerprint size={18} strokeWidth={1.5} />
-                                                </div>
-                                                <div className="nb__popover-text">
-                                                    <span className="nb__popover-title">AI Copilot</span>
-                                                    <span className="nb__popover-desc">Real-time intelligent assistance</span>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </nav>
-
-                    {/* Right Side Actions */}
-                    <div className="nb__actions">
-                        <button
-                            className="nb__login-btn"
-                            onClick={onLogin}
-                            aria-label="Log in"
-                        >
-                            Log in
-                        </button>
-                        <button
-                            className="nb__cta-btn"
-                            onClick={onSignup}
-                            aria-label="Enter Workspace"
-                        >
-                            <span>Enter Workspace</span>
-                            <ArrowRight size={14} className="nb__cta-arrow" />
-                        </button>
-
-                        {/* Mobile Hamburger */}
-                        <button
-                            className={`nb__hamburger ${mobileOpen ? 'nb__hamburger--active' : ''}`}
-                            onClick={() => setMobileOpen(o => !o)}
-                            aria-label="Toggle navigation menu"
-                            aria-expanded={mobileOpen}
-                        >
-                            <span className="nb__hamburger-line nb__hamburger-line--1"></span>
-                            <span className="nb__hamburger-line nb__hamburger-line--2"></span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            {/* Mobile Drawer */}
-            <div className={`nb__drawer ${mobileOpen ? 'nb__drawer--open' : ''}`}>
-                <div className="nb__drawer-content">
-                    <div className="nb__drawer-links">
-                        {LINKS.map((l, idx) => (
-                            <div key={l.href} className="nb__drawer-link-item">
-                                <span className="nb__drawer-link-num">0{idx + 1}</span>
-                                <a 
-                                    href={l.href.startsWith('#') && window.location.pathname !== '/' ? `/${l.href}` : l.href} 
-                                    className={`nb__drawer-link ${(l.href.startsWith('#') && activeSection === l.href.substring(1)) || window.location.pathname === l.href ? 'nb__drawer-link--active' : ''}`} 
-                                    onClick={close}
-                                    {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                                >
-                                    {l.label}
-                                </a>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="nb__drawer-footer">
-                        <div className="nb__drawer-actions">
-                            <button
-                                className="nb__drawer-login-btn"
-                                onClick={() => { onLogin(); close(); }}
-                            >
-                                Log in
-                            </button>
-                            <button
-                                className="nb__drawer-cta-btn"
-                                onClick={() => { onSignup(); close(); }}
-                            >
-                                <span>Enter Workspace</span>
-                                <ArrowRight size={15} />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-};
-
-export default Navbar;
+          {/* Contact Pill CTA */}
+          <li className="editorial-navbar__keep">
+            <a 
+              className="editorial-navbar__navcta" 
+              href="/auth" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/auth', { state: { view: 'login' } });
+              }}
+            >
+              Contact
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}

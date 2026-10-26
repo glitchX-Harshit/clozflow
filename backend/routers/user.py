@@ -40,6 +40,9 @@ class UserProfile(BaseModel):
     notif_objection_alerts: bool
     notif_deal_risk: bool
     notif_coaching: bool
+    is_admin: Optional[bool] = False
+    admin_role: Optional[str] = "user"
+    credit_balance: Optional[float] = 0.0
     created_at: datetime
 
     class Config:

@@ -287,7 +287,7 @@ class _LeadCard extends StatelessWidget {
   }
 }
 class _QuotesLoader extends StatefulWidget {
-  const _QuotesLoader({super.key});
+  const _QuotesLoader();
 
   @override
   State<_QuotesLoader> createState() => _QuotesLoaderState();

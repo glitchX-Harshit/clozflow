@@ -5,7 +5,7 @@ Admin Audit Logs, and User Activity Events.
 """
 from datetime import datetime
 import uuid
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean, JSON
+from sqlalchemy import Column, Integer, Float, String, DateTime, Text, ForeignKey, Boolean, JSON
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -153,8 +153,8 @@ class CreditTransaction(Base):
 
     id            = Column(Integer, primary_key=True, index=True)
     user_id       = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    amount        = Column(Integer, nullable=False)  # delta credits: positive for top-up/adjustment, negative for usage
-    balance_after = Column(Integer, nullable=False)
+    amount        = Column(Float, nullable=False)  # delta credits: positive for top-up/adjustment, negative for usage
+    balance_after = Column(Float, nullable=False)
     type          = Column(String, nullable=False, index=True)  # topup | consumption | adjustment | refund
     description   = Column(String, nullable=True)
     created_at    = Column(DateTime, default=datetime.utcnow, index=True)

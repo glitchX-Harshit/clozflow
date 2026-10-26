@@ -21,6 +21,7 @@ from routers import capsules as capsules_router
 from routers import relay as relay_router
 from routers import pearl as pearl_router
 from routers import intelligence as intelligence_router
+from routers import wallet as wallet_router
 from admin.routes import router as admin_router
 from routers.auth import get_current_user
 from models import User
@@ -85,6 +86,7 @@ app.include_router(pearl_router.router)
 app.include_router(capsules_router.router)
 app.include_router(relay_router.router)
 app.include_router(intelligence_router.router)
+app.include_router(wallet_router.router)
 app.include_router(admin_router)
 
 # Serve uploaded avatars

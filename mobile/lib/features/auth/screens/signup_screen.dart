@@ -151,10 +151,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           fontSize: 36,
                           fontWeight: FontWeight.w800,
                         ),
-                        children: [
+                        children: const [
                           TextSpan(
                             text: '.',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.magenta,
                             ),
                           ),

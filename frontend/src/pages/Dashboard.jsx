@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -22,7 +23,10 @@ import {
     Send,
     Menu,
     X,
-    Wand2
+    Wand2,
+    Wallet,
+    Headphones,
+    ChevronDown
 } from 'lucide-react';
 import { useDashboardStore } from '../store/useDashboardStore';
 import HistoryView from '../components/HistoryView';
@@ -32,6 +36,7 @@ import SettingsShell from './SettingsShell';
 import MagButton from '../components/MagButton';
 import LeadFinder from './LeadFinder';
 import OutreachStudioPage from './OutreachStudioPage';
+import WalletPage from './WalletPage';
 import { gsap } from 'gsap';
 import ClozFlowLogo from '../components/ClozFlowLogo';
 import Pearl from './Pearl';
@@ -203,7 +208,7 @@ const Dashboard = () => {
                 ease: 'power3.out',
                 boxShadow: '10px 0 35px -5px rgba(0, 0, 0, 0.08)'
             });
-            gsap.to('.db-sidebar .db-nav-label, .db-sidebar .db-user-details, .db-sidebar .db-logout-label, .db-sidebar .db-sidebar-logo-text', {
+            gsap.to('.db-sidebar .db-nav-label, .db-sidebar .db-user-details, .db-sidebar .db-user-chevron, .db-sidebar .db-sidebar-logo-text, .db-sidebar .db-sidebar-wallet-info, .db-sidebar .db-sidebar-wallet-add-btn', {
                 opacity: 1,
                 x: 0,
                 duration: 0.22,
@@ -221,6 +226,7 @@ const Dashboard = () => {
     };
 
     const handleSidebarMouseLeave = () => {
+        if (userMenuOpen) return;
         setSidebarHovered(false);
         if (sidebarRef.current) {
             gsap.killTweensOf(sidebarRef.current);
@@ -230,7 +236,7 @@ const Dashboard = () => {
                 ease: 'power3.out',
                 boxShadow: 'none'
             });
-            gsap.to('.db-sidebar .db-nav-label, .db-sidebar .db-user-details, .db-sidebar .db-logout-label, .db-sidebar .db-sidebar-logo-text', {
+            gsap.to('.db-sidebar .db-nav-label, .db-sidebar .db-user-details, .db-sidebar .db-user-chevron, .db-sidebar .db-sidebar-logo-text, .db-sidebar .db-sidebar-wallet-info, .db-sidebar .db-sidebar-wallet-add-btn', {
                 opacity: 0,
                 x: -8,
                 duration: 0.16,
@@ -337,6 +343,88 @@ const Dashboard = () => {
     }, [activeTab]);
 
     const [relayCallId, setRelayCallId] = useState(null);
+    const [walletBalance, setWalletBalance] = useState(0.0);
+    const [isSuperuser, setIsSuperuser] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const userPillRef = useRef(null);
+    const popoverMenuRef = useRef(null);
+    const [popoverPos, setPopoverPos] = useState({ bottom: 76, left: 16, width: 220 });
+
+    const updatePopoverPosition = () => {
+        if (!userPillRef.current) return;
+        const rect = userPillRef.current.getBoundingClientRect();
+        const isCollapsed = rect.width < 140;
+
+        if (isCollapsed) {
+            // Sidebar is narrow/collapsed (72px): fly out to the right of the avatar
+            setPopoverPos({
+                bottom: Math.max(16, window.innerHeight - rect.bottom),
+                left: rect.right + 10,
+                width: 220
+            });
+        } else {
+            // Sidebar is expanded (240px): sit right above the pill
+            setPopoverPos({
+                bottom: window.innerHeight - rect.top + 8,
+                left: rect.left,
+                width: Math.max(220, rect.width)
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (userMenuOpen) {
+            updatePopoverPosition();
+            const handleScrollOrResize = () => updatePopoverPosition();
+            window.addEventListener('resize', handleScrollOrResize);
+            window.addEventListener('scroll', handleScrollOrResize, true);
+            return () => {
+                window.removeEventListener('resize', handleScrollOrResize);
+                window.removeEventListener('scroll', handleScrollOrResize, true);
+            };
+        }
+    }, [userMenuOpen, sidebarHovered]);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                userPillRef.current && !userPillRef.current.contains(e.target) &&
+                popoverMenuRef.current && !popoverMenuRef.current.contains(e.target)
+            ) {
+                setUserMenuOpen(false);
+            }
+        };
+        if (userMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [userMenuOpen]);
+
+    const fetchWalletBalance = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${window.APP_API_BASE || ''}/api/wallet/balance`, {
+                headers: { Authorization: token ? `Bearer ${token}` : '' }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setWalletBalance(data.credit_balance || 0.0);
+                setIsSuperuser(Boolean(data.is_superuser));
+            }
+        } catch (e) {
+            // silent catch
+        }
+    };
+
+    useEffect(() => {
+        fetchWalletBalance();
+    }, [activeTab]);
+
+    useEffect(() => {
+        const handleOpenWallet = () => setActiveTab('wallet');
+        window.addEventListener('open-wallet-tab', handleOpenWallet);
+        return () => window.removeEventListener('open-wallet-tab', handleOpenWallet);
+    }, []);
 
     const navItems = [
         { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
@@ -346,6 +434,7 @@ const Dashboard = () => {
         { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
         { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
         { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
+        { id: 'wallet',     label: 'Wallet & Billing', icon: Wallet },
         { id: 'settings',   label: 'Settings',       icon: Settings },
     ];
 
@@ -398,23 +487,120 @@ const Dashboard = () => {
                     })}
                 </nav>
 
+                {/* Primary Sidebar Wallet Pill (1 INR = 1 Credit) */}
+                <div 
+                    className="db-sidebar-wallet-pill" 
+                    onClick={() => setActiveTab('wallet')}
+                    title={!sidebarHovered ? (isSuperuser ? 'Unlimited Credits (Admin Mode)' : `Wallet Balance: ₹${walletBalance.toFixed(2)}`) : undefined}
+                >
+                    <div className="db-sidebar-wallet-icon-box">
+                        <Wallet size={16} />
+                    </div>
+                    <div className="db-sidebar-wallet-info">
+                        <span className="db-sidebar-wallet-title">{isSuperuser ? 'Admin Access' : 'Wallet Credits'}</span>
+                        <span className="db-sidebar-wallet-amount">{isSuperuser ? '⚡ Unlimited' : `₹${walletBalance.toFixed(2)}`}</span>
+                    </div>
+                    <button 
+                        type="button"
+                        className="db-sidebar-wallet-add-btn"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveTab('wallet');
+                        }}
+                        title={isSuperuser ? "Superuser Top-Up" : "Upgrade (Coming Soon)"}
+                    >
+                        {isSuperuser ? "+ Test" : "Upgrade"}
+                    </button>
+                </div>
+
                 <div className="db-user-section">
-                    <div className="db-user-info">
-                        <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)', overflow: 'hidden' }}>
+                    {/* Interactive Profile Pill Trigger */}
+                    <div 
+                        ref={userPillRef}
+                        className={`db-user-pill ${userMenuOpen ? 'active' : ''}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setUserMenuOpen(prev => !prev);
+                        }}
+                        title={!sidebarHovered ? (user?.full_name || user?.username || user?.email?.split('@')[0]) : undefined}
+                    >
+                        <div className="db-user-avatar">
                             {user?.profile_image
                                 ? <img src={`${window.APP_API_BASE}${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                                : user?.email?.charAt(0).toUpperCase() || 'U'
+                                : user?.full_name ? user.full_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || 'U'
                             }
                         </div>
                         <div className="db-user-details">
-                            <span className="db-user-name">{user?.username || user?.email?.split('@')[0]}</span>
-                            <span className="db-user-role">{user?.role || 'Closer Intelligence'}</span>
+                            <span className="db-user-name">
+                                {user?.full_name || user?.username || user?.email?.split('@')[0]}
+                            </span>
                         </div>
+                        <ChevronDown 
+                            size={14} 
+                            className={`db-user-chevron ${userMenuOpen ? 'rotated' : ''}`} 
+                        />
                     </div>
-                    <button onClick={handleLogout} className="db-logout-btn interactive" title="Log out">
-                        <LogOut size={16} /> <span className="db-logout-label">Log out</span>
-                    </button>
                 </div>
+
+                {/* Floating Profile Popover Menu rendered via Portal (Breaks out of overflow:hidden & z-index stacking context) */}
+                {userMenuOpen && typeof document !== 'undefined' && createPortal(
+                    <div 
+                        ref={popoverMenuRef}
+                        className="db-user-popover-portal animate-fade-in"
+                        style={{
+                            position: 'fixed',
+                            bottom: `${popoverPos.bottom}px`,
+                            left: `${popoverPos.left}px`,
+                            width: `${popoverPos.width}px`,
+                            backgroundColor: '#ffffff',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '16px',
+                            padding: '6px',
+                            boxShadow: '0 16px 40px -6px rgba(15, 23, 42, 0.22), 0 4px 12px rgba(0, 0, 0, 0.08)',
+                            zIndex: 9999999,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '2px',
+                            boxSizing: 'border-box'
+                        }}
+                    >
+                        <button
+                            type="button"
+                            className="db-user-popover-item"
+                            onClick={() => {
+                                setActiveTab('settings');
+                                setUserMenuOpen(false);
+                            }}
+                        >
+                            <Settings size={16} />
+                            <span>Settings</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="db-user-popover-item"
+                            onClick={() => {
+                                window.open('mailto:support@clozflow.com?subject=Support%20Inquiry', '_blank');
+                                setUserMenuOpen(false);
+                            }}
+                        >
+                            <Headphones size={16} />
+                            <span>Support</span>
+                        </button>
+                        <div style={{ height: '1px', background: '#f1f5f9', margin: '4px 0' }} />
+                        <button
+                            type="button"
+                            className="db-user-popover-item logout"
+                            onClick={() => {
+                                setUserMenuOpen(false);
+                                handleLogout();
+                            }}
+                        >
+                            <LogOut size={16} />
+                            <span>Logout</span>
+                        </button>
+                    </div>,
+                    document.body
+                )}
             </aside>
 
             {/* Pearl Secondary Sidebar — Sits flush without margin right next to primary bar */}
@@ -469,6 +655,7 @@ const Dashboard = () => {
                 )}
                 {activeTab === 'analytics' && <AnalyticsPage />}
                 {activeTab === 'wizard'    && <WizardPage />}
+                {activeTab === 'wallet'    && <WalletPage onBalanceUpdated={(newBal) => setWalletBalance(newBal)} />}
                 {activeTab === 'settings'  && <SettingsShell />}
             </main>
             {/* Floating pill dock — mobile only */}
@@ -529,6 +716,7 @@ const Dashboard = () => {
                             { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
                             { id: 'analytics', label: 'Intelligence', desc: 'Comparative gap matrix & objection lists', icon: BarChart3 },
                             { id: 'wizard', label: 'Wizard', desc: 'Virtual meeting copilot for Meet & Zoom', icon: Wand2 },
+                            { id: 'wallet', label: 'Wallet & Billing', desc: 'Credits balance, top-ups & usage meter', icon: Wallet },
                             { id: 'settings', label: 'Settings', desc: 'Workspace details & prompt overrides', icon: Settings },
                         ].map((item) => {
                             const Icon = item.icon;
@@ -564,22 +752,55 @@ const Dashboard = () => {
                     </div>
 
                     <div className="db-mobile-overlay-footer">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
-                                {user?.username?.charAt(0).toUpperCase() || 'U'}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                            <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, overflow: 'hidden' }}>
+                                {user?.profile_image
+                                    ? <img src={`${window.APP_API_BASE}${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                                    : user?.full_name ? user.full_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || 'U'
+                                }
                             </div>
-                            <div>
-                                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{user?.username || 'Operator'}</div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{user?.email}</div>
+                            <div style={{ minWidth: 0, flex: 1 }}>
+                                <div style={{ fontSize: '0.92rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {user?.full_name || user?.username || 'Operator'}
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {user?.email}
+                                </div>
                             </div>
                         </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                            <button
+                                type="button"
+                                onClick={() => { setActiveTab('settings'); setMenuOpen(false); }}
+                                style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                                    background: 'var(--surface)', border: '1px solid var(--border)',
+                                    borderRadius: 10, padding: '0.65rem', color: 'var(--text)', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer'
+                                }}
+                            >
+                                <Settings size={14} /> Settings
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { window.open('mailto:support@clozflow.com?subject=Support%20Inquiry', '_blank'); setMenuOpen(false); }}
+                                style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                                    background: 'var(--surface)', border: '1px solid var(--border)',
+                                    borderRadius: 10, padding: '0.65rem', color: 'var(--text)', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer'
+                                }}
+                            >
+                                <Headphones size={14} /> Support
+                            </button>
+                        </div>
+
                         <button
                             onClick={() => { handleLogout(); setMenuOpen(false); }}
                             className="interactive"
                             style={{
                                 display: 'flex', alignItems: 'center', gap: '0.5rem',
-                                background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.15)',
-                                borderRadius: 99, padding: '0.75rem 1.5rem', width: '100%',
+                                background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)',
+                                borderRadius: 12, padding: '0.75rem 1.5rem', width: '100%',
                                 justifyContent: 'center', color: '#ef4444', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer'
                             }}
                         >
@@ -873,6 +1094,80 @@ const Dashboard = () => {
                 @keyframes pearl-icon-float {
                     0% { transform: translateY(0px) scale(1); }
                     100% { transform: translateY(-2px) scale(1.12); }
+                }
+
+                /* ── Primary Sidebar Wallet Widget ── */
+                .db-sidebar-wallet-pill {
+                    margin-top: auto;
+                    margin-bottom: 0.65rem;
+                    padding: 0.45rem 0.5rem;
+                    background: rgba(99, 102, 241, 0.06);
+                    border: 1px solid rgba(99, 102, 241, 0.22);
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.65rem;
+                    cursor: pointer;
+                    overflow: hidden;
+                    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                    box-sizing: border-box;
+                    flex-shrink: 0;
+                }
+                .db-sidebar-wallet-pill:hover {
+                    background: rgba(99, 102, 241, 0.12);
+                    border-color: var(--accent);
+                }
+                .db-sidebar-wallet-icon-box {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background: rgba(99, 102, 241, 0.15);
+                    color: var(--accent);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                }
+                .db-sidebar-wallet-info {
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                    opacity: 0;
+                    transform: translateX(-8px);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    pointer-events: none;
+                    flex: 1;
+                }
+                .db-sidebar-wallet-title {
+                    font-size: 0.68rem;
+                    color: var(--text-dim);
+                    font-weight: 500;
+                    line-height: 1.1;
+                }
+                .db-sidebar-wallet-amount {
+                    font-size: 0.85rem;
+                    font-weight: 800;
+                    color: var(--accent);
+                    line-height: 1.2;
+                }
+                .db-sidebar-wallet-add-btn {
+                    opacity: 0;
+                    transform: translateX(-8px);
+                    pointer-events: none;
+                    background: var(--accent);
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 0.68rem;
+                    font-weight: 700;
+                    padding: 0.25rem 0.45rem;
+                    cursor: pointer;
+                    white-space: nowrap;
+                    transition: filter 0.2s;
+                }
+                .db-sidebar-wallet-add-btn:hover {
+                    filter: brightness(1.15);
                 }
 
                 .db-user-section {

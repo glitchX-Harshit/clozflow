@@ -67,10 +67,10 @@ class DashboardScreen extends ConsumerWidget {
               color: Colors.black,
               fontWeight: FontWeight.w900,
             ),
-            children: [
+            children: const [
               TextSpan(
                 text: '.',
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.magenta,
                 ),
               ),
@@ -262,7 +262,7 @@ class DashboardScreen extends ConsumerWidget {
                             Icon(
                               Icons.history_rounded,
                               size: 56,
-                              color: AppColors.textTertiary.withOpacity(0.5),
+                              color: AppColors.textTertiary.withValues(alpha: 0.5),
                             ),
                             const SizedBox(height: AppSpacing.lg),
                             Text(

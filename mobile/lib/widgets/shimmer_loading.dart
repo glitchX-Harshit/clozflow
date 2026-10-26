@@ -36,34 +36,34 @@ class DashboardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+    return const SingleChildScrollView(
+      padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
+            children: [
               Expanded(child: ShimmerLoading(width: double.infinity, height: 120, borderRadius: 16)),
               SizedBox(width: 16),
               Expanded(child: ShimmerLoading(width: double.infinity, height: 120, borderRadius: 16)),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
-            children: const [
+            children: [
               Expanded(child: ShimmerLoading(width: double.infinity, height: 120, borderRadius: 16)),
               SizedBox(width: 16),
               Expanded(child: ShimmerLoading(width: double.infinity, height: 120, borderRadius: 16)),
             ],
           ),
-          const SizedBox(height: 32),
-          const ShimmerLoading(width: 150, height: 24, borderRadius: 4),
-          const SizedBox(height: 16),
-          const ShimmerLoading(width: double.infinity, height: 80, borderRadius: 12),
-          const SizedBox(height: 12),
-          const ShimmerLoading(width: double.infinity, height: 80, borderRadius: 12),
-          const SizedBox(height: 12),
-          const ShimmerLoading(width: double.infinity, height: 80, borderRadius: 12),
+          SizedBox(height: 32),
+          ShimmerLoading(width: 150, height: 24, borderRadius: 4),
+          SizedBox(height: 16),
+          ShimmerLoading(width: double.infinity, height: 80, borderRadius: 12),
+          SizedBox(height: 12),
+          ShimmerLoading(width: double.infinity, height: 80, borderRadius: 12),
+          SizedBox(height: 12),
+          ShimmerLoading(width: double.infinity, height: 80, borderRadius: 12),
         ],
       ),
     );
