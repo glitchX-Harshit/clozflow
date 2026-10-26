@@ -67,7 +67,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   color: #0f172a;
-  text-transform: uppercase;
+  /* text-transform: none; */
 }
 
 .htc-header__latency {
@@ -82,7 +82,7 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   color: #94a3b8;
-  text-transform: uppercase;
+  /* text-transform: none; */
 }
 
 .htc-header__latency-val {
@@ -129,7 +129,7 @@
   font-weight: 650;
   letter-spacing: 0.05em;
   color: #64748b;
-  text-transform: uppercase;
+  /* text-transform: none; */
   white-space: nowrap;
 }
 
@@ -219,7 +219,7 @@
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  /* text-transform: none; */
 }
 
 /* ── Interactive Waveform / Decision Spectrogram ── */
@@ -310,7 +310,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   color: #64748b;
-  text-transform: uppercase;
+  /* text-transform: none; */
   z-index: 1;
 }
 
@@ -347,7 +347,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #0f172a;
-  text-transform: uppercase;
+  /* text-transform: none; */
 }
 
 .htc-script-icon {

@@ -6,10 +6,10 @@ const SCENARIOS = [
     {
         id: 'budget',
         code: '01',
-        label: 'BUDGET FLINCH',
+        label: 'Budget flinch',
         metric: '+43.8%',
         metricLabel: 'Pipeline Conversion Yield',
-        velocity: '3.2X VELOCITY',
+        velocity: '3.2x Velocity',
         latency: '31ms',
         audioTime: '03.2s',
         buyerSpeech: '“Honestly, we just don’t have that kind of budget lying around this quarter.”',
@@ -21,10 +21,10 @@ const SCENARIOS = [
     {
         id: 'stall',
         code: '02',
-        label: 'TIMING STALL',
+        label: 'Timing stall',
         metric: '+51.2%',
         metricLabel: 'Cycle Compression Index',
-        velocity: '2.8X VELOCITY',
+        velocity: '2.8x Velocity',
         latency: '28ms',
         audioTime: '02.7s',
         buyerSpeech: '“Love the demo, but send a one-pager and we’ll review in Q4.”',
@@ -36,10 +36,10 @@ const SCENARIOS = [
     {
         id: 'cfo',
         code: '03',
-        label: 'GATEKEEPER',
+        label: 'Gatekeeper',
         metric: '+38.5%',
         metricLabel: 'Executive Buy-in Lift',
-        velocity: '4.1X VELOCITY',
+        velocity: '4.1x Velocity',
         latency: '36ms',
         audioTime: '04.1s',
         buyerSpeech: '“Leadership froze new seat software for the remainder of this fiscal year.”',
@@ -204,14 +204,14 @@ const HeroTelemetryCard = React.forwardRef(({ onGetStarted }, ref) => {
                     >
                         <span className="htc-scrubber__line" />
                         <div className="htc-scrubber__tag">
-                            <span>{scrubPercent > 50 ? `${activeScenario.audioTime} PIVOT` : 'ANALYZING'}</span>
+                            <span>{scrubPercent > 50 ? `${activeScenario.audioTime} pivot` : 'Analyzing'}</span>
                         </div>
                     </div>
 
                     {/* Subtle Flinch Callout Tag */}
                     <div className="htc-flinch-label">
                         <span className="htc-flinch-dot" />
-                        <span>FLINCH WINDOW: 320ms</span>
+                        <span>Flinch window: 320ms</span>
                     </div>
                 </div>
 
@@ -220,9 +220,9 @@ const HeroTelemetryCard = React.forwardRef(({ onGetStarted }, ref) => {
                     <div className="htc-script-header">
                         <div className="htc-script-tag">
                             <CornerDownRight size={11} strokeWidth={2.5} className="htc-script-icon" />
-                            <span>CO-PILOT COUNTER-STRIKE</span>
+                            <span>Co-pilot counter-strike</span>
                         </div>
-                        <span className="htc-script-win">P(WIN) {activeScenario.winRate}</span>
+                        <span className="htc-script-win">P(Win) {activeScenario.winRate}</span>
                     </div>
                     <p className="htc-script-text">
                         {activeScenario.counter}
@@ -233,13 +233,13 @@ const HeroTelemetryCard = React.forwardRef(({ onGetStarted }, ref) => {
                 <div className="htc-footer">
                     <div className="htc-meta">
                         <div className="htc-meta-item">
-                            <span className="htc-meta-k">ENGINE</span>
-                            <span className="htc-meta-v">HYBRID ML // RAG</span>
+                            <span className="htc-meta-k">Engine</span>
+                            <span className="htc-meta-v">Hybrid ML // RAG</span>
                         </div>
                         <span className="htc-meta-sep">/</span>
                         <div className="htc-meta-item">
-                            <span className="htc-meta-k">MODE</span>
-                            <span className="htc-meta-v">HEADLESS ZERO-TAB</span>
+                            <span className="htc-meta-k">Mode</span>
+                            <span className="htc-meta-v">Headless zero-tab</span>
                         </div>
                     </div>
 
@@ -248,7 +248,7 @@ const HeroTelemetryCard = React.forwardRef(({ onGetStarted }, ref) => {
                         onClick={onGetStarted}
                         aria-label="Test ClozFlow Live Intelligence"
                     >
-                        <span>EXPLORE</span>
+                        <span>Explore</span>
                         <ArrowRight size={13} className="htc-action-arrow" />
                     </button>
                 </div>

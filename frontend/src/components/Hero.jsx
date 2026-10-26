@@ -129,31 +129,31 @@ const Hero = ({ onGetStarted }) => {
                         <h1 className="hero__headline" ref={headlineRef}>
                             <div className="hero__headline-row">
                                 <span className="hero__headline-char">M</span>
-                                <span className="hero__headline-char">A</span>
-                                <span className="hero__headline-char">H</span>
-                                <span className="hero__headline-char">A</span>
-                                <span className="hero__headline-char">U</span>
-                                <span className="hero__headline-char">L</span>
+                                <span className="hero__headline-char">a</span>
+                                <span className="hero__headline-char">h</span>
+                                <span className="hero__headline-char">a</span>
+                                <span className="hero__headline-char">u</span>
+                                <span className="hero__headline-char">l</span>
                                 <span className="hero__headline-space"> </span>
-                                <span className="hero__headline-char">S</span>
-                                <span className="hero__headline-char">A</span>
-                                <span className="hero__headline-char">M</span>
-                                <span className="hero__headline-char">J</span>
-                                <span className="hero__headline-char">H</span>
-                                <span className="hero__headline-char">O</span>
+                                <span className="hero__headline-char">s</span>
+                                <span className="hero__headline-char">a</span>
+                                <span className="hero__headline-char">m</span>
+                                <span className="hero__headline-char">j</span>
+                                <span className="hero__headline-char">h</span>
+                                <span className="hero__headline-char">o</span>
                             </div>
                             <div className="hero__headline-row">
                                 <span className="hero__headline-char">S</span>
-                                <span className="hero__headline-char">A</span>
-                                <span className="hero__headline-char">U</span>
-                                <span className="hero__headline-char">D</span>
-                                <span className="hero__headline-char">A</span>
+                                <span className="hero__headline-char">a</span>
+                                <span className="hero__headline-char">u</span>
+                                <span className="hero__headline-char">d</span>
+                                <span className="hero__headline-char">a</span>
                                 <span className="hero__headline-space"> </span>
-                                <span className="hero__headline-char">P</span>
-                                <span className="hero__headline-char">A</span>
-                                <span className="hero__headline-char">K</span>
-                                <span className="hero__headline-char">K</span>
-                                <span className="hero__headline-char">A</span>
+                                <span className="hero__headline-char">p</span>
+                                <span className="hero__headline-char">a</span>
+                                <span className="hero__headline-char">k</span>
+                                <span className="hero__headline-char">k</span>
+                                <span className="hero__headline-char">a</span>
                                 <span className="hero__headline-char hero__headline-period">.</span>
                             </div>
                         </h1>
@@ -187,14 +187,14 @@ const Hero = ({ onGetStarted }) => {
                                 </div>
                                 <div className="hero__play-meta">
                                     <span className="hero__play-title">See it in action</span>
-                                    <span className="hero__play-duration">2 MIN</span>
+                                    <span className="hero__play-duration">2 min</span>
                                 </div>
                             </button>
                         </div>
 
                         {/* Tagline below actions - Desktop */}
                         <div className="hero__tagline hero__tagline--desktop">
-                            <span className="hero__tagline-text">AI FOR REAL CONVERSATIONS</span>
+                            <span className="hero__tagline-text">AI for real conversations</span>
                         </div>
                     </div>
 
@@ -204,8 +204,8 @@ const Hero = ({ onGetStarted }) => {
                         <div className="hero__orbit-tag">
                             <span className="hero__orbit-tag-line" />
                             <div className="hero__orbit-tag-text">
-                                <span>CONVERSATIONS</span>
-                                <span>INTO OPPORTUNITIES</span>
+                                <span>Conversations</span>
+                                <span>Into opportunities</span>
                             </div>
                         </div>
 
@@ -255,13 +255,13 @@ const Hero = ({ onGetStarted }) => {
                             </div>
                             <div className="hero__play-meta">
                                 <span className="hero__play-title">See it in action</span>
-                                <span className="hero__play-duration">2 MIN</span>
+                                <span className="hero__play-duration">2 min</span>
                             </div>
                         </button>
 
                         {/* Tagline below actions - Mobile */}
                         <div className="hero__tagline hero__tagline--mobile">
-                            <span className="hero__tagline-text">AI FOR REAL CONVERSATIONS</span>
+                            <span className="hero__tagline-text">AI for real conversations</span>
                         </div>
                     </div>
 
@@ -277,7 +277,7 @@ const Hero = ({ onGetStarted }) => {
                 <div className="hero__bottom-inner">
                     {/* Left: Trusted By & Logos */}
                     <div className="hero__trusted-col">
-                        <span className="hero__trusted-label">TRUSTED BY HIGH-PERFORMING TEAMS</span>
+                        <span className="hero__trusted-label">Trusted by high-performing teams</span>
                         <div className="hero__logos-row">
                             <div className="hero__logo-item" title="Stripe"><Logos.Stripe /></div>
                             <div className="hero__logo-item" title="HubSpot"><Logos.HubSpot /></div>
@@ -293,8 +293,8 @@ const Hero = ({ onGetStarted }) => {
                             <ArrowDown size={14} className="hero__scroll-arrow" />
                         </div>
                         <div className="hero__scroll-text">
-                            <span>SCROLL</span>
-                            <span>TO EXPLORE</span>
+                            <span>Scroll</span>
+                            <span>to explore</span>
                         </div>
                     </a>
                 </div>
@@ -329,8 +329,8 @@ const Hero = ({ onGetStarted }) => {
                     <div className="hero__modal" onClick={(e) => e.stopPropagation()}>
                         <div className="hero__modal-header">
                             <div className="hero__modal-title">
-                                <span className="hero__modal-tag">LIVE COPILOT PREVIEW</span>
-                                <h3>See Clozflow in Action</h3>
+                                <span className="hero__modal-tag">Live copilot preview</span>
+                                <h3>See ClozFlow in action</h3>
                             </div>
                             <button 
                                 className="hero__modal-close"

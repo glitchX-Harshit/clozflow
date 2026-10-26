@@ -108,8 +108,8 @@ h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--text);
   line-height: 1.1;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  /* text-transform: none; */
 }
 
 p { color: var(--text-dim); line-height: 1.7; }
@@ -324,7 +324,7 @@ section {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  /* text-transform: none; */
   color: var(--text-dim);
   background: var(--surface);
   margin-bottom: 1.5rem;

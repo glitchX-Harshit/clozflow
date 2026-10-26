@@ -14,7 +14,7 @@ const ARCHITECTURE_LAYERS = [
         desc: "Captures vocal streams via WebRTC, processing audio frames to detect phonetic stress patterns, silent pauses, and lexical hesitation markers in real-time.",
         icon: <Ear size={20} />,
         color: '#ff5e00',
-        tag: 'INPUT STREAM',
+        tag: 'Input stream',
         stats: { latency: '6ms', load: '12%', reliability: '99.98%' },
         tech: 'WebRTC / Web Audio API / Wav2Vec2',
         subtasks: [
@@ -35,7 +35,7 @@ const ARCHITECTURE_LAYERS = [
         desc: "Processes decoded signals against a vector database of 4.2M high-conversion sales call patterns to run psychological intent categorization and predictive mapping.",
         icon: <Cpu size={20} />,
         color: '#4f46e5',
-        tag: 'ANALYSIS ENGINE',
+        tag: 'Analysis engine',
         stats: { latency: '14ms', load: '34%', reliability: '99.99%' },
         tech: 'PyTorch / Hex-Brain v4 / Qdrant DB',
         subtasks: [
@@ -56,7 +56,7 @@ const ARCHITECTURE_LAYERS = [
         desc: "Dynamically synthesizes personalized response directives, balancing tactical reframing strategies, trust-rebuilding protocols, and objection resolution frameworks.",
         icon: <Zap size={20} />,
         color: '#0ea5e9',
-        tag: 'DECISION PROTOCOL',
+        tag: 'Decision protocol',
         stats: { latency: '19ms', load: '18%', reliability: '99.97%' },
         tech: 'Contextual Reframe Agent / vLLM Inference',
         subtasks: [

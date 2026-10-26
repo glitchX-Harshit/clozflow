@@ -136,7 +136,7 @@
     font-size: clamp(0.68rem, 0.75vw, 0.8rem);
     font-weight: 600;
     letter-spacing: 0.22em;
-    text-transform: uppercase;
+    /* text-transform: none; */
     color: #64748b;
     margin-bottom: clamp(0.75rem, 1.5vh, 1.2rem);
     user-select: text;
@@ -402,7 +402,7 @@
     font-size: 0.74rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
+    /* text-transform: none; */
     color: #475569;
     margin-bottom: 1.25rem;
 }

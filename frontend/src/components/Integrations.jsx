@@ -169,7 +169,7 @@ const Integrations = () => {
                     <div className="int__subtext-wrap">
                         <div className="int__subtext int__subtext--pyramid">
                             <h3 className="int__pyramid-lead">
-                                Give Pearl your website or brand details.
+                                Give pearl your website or brand details.
                             </h3>
                             <p className="int__pyramid-tier int__pyramid-tier--2">
                                 It learns your product, voice, and audience. Deploy your AI Sales Engineer<br className="int__br-desktop" /> for inbound and outbound campaigns.
@@ -195,11 +195,11 @@ const Integrations = () => {
                 <div className="pearl-portal-hero-arrival">
                     <div className="pearl-arrival-inner">
                         <span className="pearl-arrival-badge">
-                            Dedicated Voice AI Telephony
+                            Dedicated voice ai telephony
                         </span>
 
                         <h2 className="pearl-arrival-title">
-                            The AI that answers your phone, talks like a human, and books deals.
+                            The ai that answers your phone, talks like a human, and books deals.
                         </h2>
 
                         <p className="pearl-arrival-lead">
@@ -235,12 +235,12 @@ const Integrations = () => {
             {/* ── Awards Component: Embedded at the end of Pearl showcase ── */}
             <div className="int__awards-section">
                 <h3 className="int__awards-title">
-                    Recognised by the Top Institute
+                    Recognised by the top institute
                 </h3>
 
                 <Awards
                     variant="award"
-                    title="WINNER"
+                    title="Winner"
                     subtitle="Startup Showcase 2026"
                     recipient="IIT Patna"
                     date="May 2026" 

@@ -1,0 +1,235 @@
+/* ── Framer Steps Component (Exact Visual Match to Screenshot) ── */
+.framer-steps-wrapper {
+    width: 100%;
+    max-width: 1060px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 10px 0;
+}
+
+/* ── Cards Row: Anchored at bottom (align-items: flex-end) ── */
+.framer-cards-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    width: 100%;
+}
+
+/* ── Individual Card ── */
+.framer-card-item {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 30px 24px 26px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+/* Active card: Taller and Wider */
+.framer-card-item.is-active {
+    flex: 1.45;
+    height: 360px;
+    min-height: 360px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+/* Inactive cards: Shorter and Narrower */
+.framer-card-item.is-inactive {
+    flex: 1;
+    height: 285px;
+    min-height: 285px;
+    opacity: 0.95;
+}
+
+.framer-card-item.is-inactive:hover {
+    opacity: 1;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Card Content ── */
+.framer-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.framer-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #000000;
+    margin: 0;
+    letter-spacing: -0.015em;
+    font-family: var(--font-display, inherit);
+}
+
+.framer-card-desc {
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: #71717a;
+    margin: 0;
+    max-width: 95%;
+}
+
+/* ── Bottom-Left Icon Squircle ── */
+.framer-card-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #f4f4f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #18181b;
+    margin-top: auto;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.framer-card-item.is-active .framer-card-icon-box {
+    background: #ebebeb;
+    transform: scale(1.02);
+}
+
+/* ── Bottom Timeline with Connecting Track ── */
+.framer-timeline-wrap {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+/* Thin horizontal line behind pills */
+.framer-track-line {
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    top: 50%;
+    height: 1.5px;
+    background: rgba(0, 0, 0, 0.12);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+/* Pills row distributing exactly like cards above */
+.framer-pills-row {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.framer-pill-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.framer-pill-slot.slot-active {
+    flex: 1.45;
+}
+
+.framer-pill-slot.slot-inactive {
+    flex: 1;
+}
+
+/* ── Capsule Number Buttons ── */
+.framer-pill-btn {
+    width: 58px;
+    height: 38px;
+    border-radius: 9999px;
+    border: none;
+    outline: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, color 0.22s ease;
+}
+
+/* Inactive: Pure white capsule with black text and subtle shadow */
+.framer-pill-btn.is-inactive {
+    background: #ffffff;
+    color: #000000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.framer-pill-btn.is-inactive:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Active: Solid black capsule with white text */
+.framer-pill-btn.is-active {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
+}
+
+/* ── Responsive Refinements ── */
+@media (max-width: 900px) {
+    .framer-cards-row {
+        gap: 12px;
+    }
+
+    .framer-pills-row {
+        gap: 12px;
+    }
+
+    .framer-card-item {
+        padding: 24px 18px 20px 18px;
+    }
+
+    .framer-card-item.is-active {
+        height: 330px;
+        min-height: 330px;
+    }
+
+    .framer-card-item.is-inactive {
+        height: 270px;
+        min-height: 270px;
+    }
+
+    .framer-card-title {
+        font-size: 1.1rem;
+    }
+
+    .framer-card-desc {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 680px) {
+    .framer-cards-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .framer-card-item.is-active,
+    .framer-card-item.is-inactive {
+        flex: none;
+        height: auto;
+        min-height: auto;
+    }
+
+    .framer-timeline-wrap {
+        display: none;
+    }
+}

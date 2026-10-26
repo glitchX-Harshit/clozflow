@@ -125,7 +125,7 @@
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
+    /* text-transform: none; */
     color: #0284c7;
     margin-bottom: 0.35rem;
 }
@@ -222,7 +222,7 @@
     font-size: 0.76rem;
     font-weight: 600;
     letter-spacing: 0.06em;
-    text-transform: uppercase;
+    /* text-transform: none; */
     color: #64748b;
 }
 
@@ -257,47 +257,7 @@
     flex-shrink: 0;
 }
 
-/* ── 3. How It Works (Open 3-Step Story) ── */
-.pearl-steps-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1.25rem, 2.5vw, 2rem);
-}
-
-.pearl-step-card {
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 20px;
-    padding: clamp(1.5rem, 2.8vw, 2.25rem);
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.02);
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-}
-
-.pearl-step-number {
-    font-family: var(--font-display, 'Outfit', sans-serif);
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #94a3b8;
-    line-height: 1;
-}
-
-.pearl-step-heading {
-    font-family: var(--font-display, 'Outfit', sans-serif);
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0;
-    line-height: 1.35;
-}
-
-.pearl-step-body {
-    font-size: 0.94rem;
-    line-height: 1.6;
-    color: #475569;
-    margin: 0;
-}
+/* ── 3. How It Works (StepsComponent handles internal styles) ── */
 
 /* ── 4. The Difference: Old Way vs. Pearl ── */
 .pearl-comparison-grid {
@@ -329,7 +289,7 @@
     font-size: 0.74rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
+    /* text-transform: none; */
     color: #64748b;
     width: fit-content;
 }
@@ -432,101 +392,7 @@
     line-height: 1.45;
 }
 
-/* ── 6. Final Call to Action ── */
-.pearl-cta-panel {
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    border-radius: 28px;
-    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
-    text-align: center;
-    box-shadow: 0 16px 40px -15px rgba(15, 23, 42, 0.06);
-}
-
-.pearl-cta-inner {
-    max-width: 680px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.pearl-cta-heading {
-    font-family: var(--font-display, 'Outfit', sans-serif);
-    font-size: clamp(1.65rem, 3.2vw, 2.35rem);
-    font-weight: 700;
-    line-height: 1.22;
-    color: #0f172a;
-    margin: 0 0 1rem 0;
-    letter-spacing: -0.02em;
-}
-
-.pearl-cta-description {
-    font-size: clamp(0.96rem, 1.2vw, 1.1rem);
-    color: #475569;
-    line-height: 1.6;
-    margin: 0 0 2.25rem 0;
-    text-wrap: pretty;
-}
-
-.pearl-cta-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.pearl-cta-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.65rem;
-    padding: 0.95rem 2rem;
-    border-radius: 9999px;
-    background: #0f172a;
-    color: #ffffff;
-    font-size: 0.96rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
-}
-
-.pearl-cta-primary:hover {
-    transform: translateY(-2px);
-    background: #1e293b;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.26);
-}
-
-.pearl-cta-secondary {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.95rem 1.85rem;
-    border-radius: 9999px;
-    background: #ffffff;
-    color: #0f172a;
-    border: 1px solid rgba(15, 23, 42, 0.16);
-    font-size: 0.94rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.pearl-cta-secondary:hover {
-    background: #f8fafc;
-    border-color: rgba(15, 23, 42, 0.28);
-}
-
-.pearl-cta-guarantees {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    color: #64748b;
-    font-size: 0.82rem;
-}
+/* ── 6. Final Call to Action (Managed by TabsCardComponent) ── */
 
 .pearl-guarantee-point {
     display: inline-flex;
@@ -536,10 +402,6 @@
 
 /* ── Responsive Refinements ── */
 @media (max-width: 900px) {
-    .pearl-steps-row {
-        grid-template-columns: 1fr;
-    }
-
     .pearl-comparison-grid {
         grid-template-columns: 1fr;
     }
@@ -568,16 +430,5 @@
 
     .pearl-metrics-row {
         grid-template-columns: 1fr;
-    }
-
-    .pearl-cta-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .pearl-cta-primary,
-    .pearl-cta-secondary {
-        width: 100%;
-        justify-content: center;
     }
 }
