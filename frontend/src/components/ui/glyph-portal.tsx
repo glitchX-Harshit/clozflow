@@ -45,7 +45,7 @@ const DEFAULT_FONT = '"Montserrat", "Arial Black", "Arial", sans-serif';
 type Ink = { x: number; y: number; radius: number; index: number };
 type Letter = { index: number; x: number; y: number; width: number; height: number };
 
-/** Largest opaque square, in linear time. */
+/** Largest opaque square inside letter ink, in linear time. */
 function interior(context: CanvasRenderingContext2D, char: string, font: string): Omit<Ink, "index"> | null {
   try {
     const canvas = context.canvas;
@@ -73,6 +73,87 @@ function interior(context: CanvasRenderingContext2D, char: string, font: string)
         if (rows[x + 1] > size) { size = rows[x + 1]; bx = x; by = y; }
       }
     }
+    if (size < 3) return null;
+    return {
+      x: (bx + 1 - size / 2 - pad - left) / 3,
+      y: (by + 1 - size / 2 - pad - ascent) / 3,
+      radius: (size / 2 - 1) / 3
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Largest square inside an enclosed counter hole (e.g. the closed circle of 'a'), in linear time. */
+function findHole(context: CanvasRenderingContext2D, char: string, font: string): Omit<Ink, "index"> | null {
+  try {
+    const canvas = context.canvas;
+    context.font = font;
+    const m = context.measureText(char);
+    const pad = 12;
+    const left = Math.ceil(m.actualBoundingBoxLeft || 0);
+    const ascent = Math.ceil(m.actualBoundingBoxAscent || 70);
+    canvas.width = Math.max(1, Math.ceil((m.actualBoundingBoxLeft || 0) + (m.actualBoundingBoxRight || 50)) + pad * 2);
+    canvas.height = Math.max(1, Math.ceil((m.actualBoundingBoxAscent || 70) + (m.actualBoundingBoxDescent || 20)) + pad * 2);
+    context.font = font;
+    context.fontKerning = "none";
+    context.fillText(char, pad + left, pad + ascent);
+    const { width, height } = canvas;
+    const pixels = context.getImageData(0, 0, width, height).data;
+
+    // Flood fill from borders to identify all exterior background pixels
+    const total = width * height;
+    const isExterior = new Uint8Array(total);
+    const queue = new Int32Array(total);
+    let qHead = 0, qTail = 0;
+
+    const pushExterior = (x: number, y: number) => {
+      const idx = y * width + x;
+      if (!isExterior[idx] && pixels[idx * 4 + 3] < 128) {
+        isExterior[idx] = 1;
+        queue[qTail++] = idx;
+      }
+    };
+
+    for (let x = 0; x < width; x++) {
+      pushExterior(x, 0);
+      pushExterior(x, height - 1);
+    }
+    for (let y = 0; y < height; y++) {
+      pushExterior(0, y);
+      pushExterior(width - 1, y);
+    }
+
+    while (qHead < qTail) {
+      const idx = queue[qHead++];
+      const cx = idx % width;
+      const cy = Math.floor(idx / width);
+
+      if (cx > 0) pushExterior(cx - 1, cy);
+      if (cx < width - 1) pushExterior(cx + 1, cy);
+      if (cy > 0) pushExterior(cx, cy - 1);
+      if (cy < height - 1) pushExterior(cx, cy + 1);
+    }
+
+    // Identify enclosed counter hole (isExterior === 0 and alpha < 128)
+    const rows = new Uint16Array(width + 1);
+    let size = 0, bx = 0, by = 0;
+    for (let y = 0; y < height; y++) {
+      let diagonal = 0;
+      for (let x = 0; x < width; x++) {
+        const idx = y * width + x;
+        const above = rows[x + 1];
+        const isHole = !isExterior[idx] && pixels[idx * 4 + 3] < 128;
+        rows[x + 1] = isHole ? Math.min(above, rows[x], diagonal) + 1 : 0;
+        diagonal = above;
+        if (rows[x + 1] > size) {
+          size = rows[x + 1];
+          bx = x;
+          by = y;
+        }
+      }
+    }
+
     if (size < 3) return null;
     return {
       x: (bx + 1 - size / 2 - pad - left) / 3,
@@ -191,24 +272,26 @@ export default function GlyphPortal({
           height: lHeight
         });
 
-        const found = interior(context, char, scanFont);
+        // Find the enclosed counter hole for the character (e.g. the closed circle of 'a')
+        const found = findHole(context, char, scanFont) ?? interior(context, char, scanFont);
         if (found) {
           candidates.push({ ...found, x: found.x + advances[offset], index: offset });
         }
         offset += char.length;
       }
 
-      // Lock camera target to letter 'a' (index 2 for "Pearl.")
+      // Lock camera target to the hole / counter of letter 'a' (index 2 for "Pearl.")
       const targetLetter = (requested !== -1 ? letters.find((l) => l.index === requested) : null) ?? letters[2] ?? letters[0];
       const foundCandidate = requested !== -1 ? candidates.find((c) => c.index === requested) : null;
 
       if (foundCandidate) {
         target = foundCandidate;
       } else if (targetLetter) {
+        // Fallback directly to the closed circle (counter bowl) inside the letter 'a'
         target = {
-          x: targetLetter.x + targetLetter.width * 0.52,
-          y: targetLetter.y + targetLetter.height * 0.54,
-          radius: Math.max(12, Math.min(targetLetter.width, targetLetter.height) * 0.28),
+          x: targetLetter.x + targetLetter.width * 0.46,
+          y: targetLetter.y + targetLetter.height * 0.68,
+          radius: Math.max(10, Math.min(targetLetter.width, targetLetter.height) * 0.22),
           index: targetLetter.index
         };
       } else {
@@ -233,8 +316,8 @@ export default function GlyphPortal({
 
     const select = (next: Ink | null) => {
       target = next ?? target;
-      // Ultra-deep zoom into the character ink
-      endScale = target ? Math.max(startScale * 60, Math.hypot(W, H) / (target.radius * 0.85)) : startScale * 60;
+      // Deep zoom into the closed circle hole of 'a' so it comfortably expands past all screen corners
+      endScale = target ? Math.max(startScale * 80, Math.hypot(W, H) / (target.radius * 0.65)) : startScale * 80;
       section.dataset.gpFocus = target ? Array.from(text.slice(target.index))[0] : "";
     };
 
@@ -248,15 +331,15 @@ export default function GlyphPortal({
       const p = isStatic ? 0 : progress;
 
       // ── PROGRESSION ARCHITECTURE ──
-      // [0.00 -> 0.16]: Reading Runway. Front text is 100% visible, Pearl is at resting scale.
-      // [0.16 -> 0.28]: Front subtext gently fades out and glides upward.
-      // [0.18 -> 0.46]: Camera smoothly dives into letter 'a' (cubic ease).
-      // [0.44 -> 0.52]: Inside portal room reveals smoothly.
-      // [0.48 -> 1.00]: Pinned black portal room experience.
+      // [0.00 -> 0.22]: Reading Runway (Comfortable Delay). Pearl is at resting scale, copy is 100% readable.
+      // [0.18 -> 0.30]: Front subtext gently fades out and glides upward.
+      // [0.22 -> 0.60]: Cinematic Camera Glide into the hole of 'a' (smooth, measured pacing).
+      // [0.54 -> 0.64]: Inside showroom room reveals smoothly.
+      // [0.58 -> 1.00]: Pinned matte white showroom experience.
 
-      // Camera zoom starts after the reading runway (p >= 0.18)
-      const t = clamp((p - 0.18) / 0.28);
-      const eased = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+      // Camera zoom starts after the initial reading delay (p >= 0.22)
+      const t = clamp((p - 0.22) / 0.36);
+      const eased = t * t * (3 - 2 * t);
       const scale = Math.exp(Math.log(startScale) + Math.log(endScale / startScale) * eased);
       const blend = endScale === startScale ? 0 : (1 / scale - 1 / startScale) / (1 / endScale - 1 / startScale);
       const cx = center.x + ((target?.x ?? center.x) - center.x) * blend;
@@ -275,7 +358,7 @@ export default function GlyphPortal({
 
       if (marks) {
         marks.setAttribute("transform", `translate(${W / 2} ${H * currentYRatio + H * 0.04 * eased}) scale(${scale}) rotate(${roll}) translate(${-cx} ${-cy})`);
-        marks.style.opacity = String(1 - smooth(0.18, 0.32, p));
+        marks.style.opacity = String(1 - smooth(0.20, 0.36, p));
       }
 
       if (dotOuter) {
@@ -284,30 +367,37 @@ export default function GlyphPortal({
           dotInner.setAttribute("transform", glyph.getAttribute("transform")!);
         }
         // Fade the gradient period dot out smoothly as we zoom into 'a'
-        dotOuter.style.opacity = String(1 - smooth(0.20, 0.38, p));
+        dotOuter.style.opacity = String(1 - smooth(0.22, 0.42, p));
       }
 
-      // Drop clipPath once camera has entered ink so screen becomes 100% solid black
-      field.style.clipPath = t >= 1 ? "none" : `url(#${clipId})`;
+      // When zooming into the hole of 'a', keep field clipped to the glyph letters
+      field.style.clipPath = `url(#${clipId})`;
+      // As camera passes deep into the hole (t >= 0.85), gracefully fade field opacity to eliminate any edge bleeding
+      field.style.opacity = String(1 - smooth(0.85, 0.98, t));
 
       // Front subtext stays 100% visible through the reading runway, then fades gracefully
-      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.16, 0.28, p));
+      const frontOpacity = isStatic ? 1 : Math.max(0, 1 - smooth(0.18, 0.30, p));
       section.style.setProperty("--gp-front-opacity", String(frontOpacity));
       section.style.setProperty("--gp-front-hit", frontOpacity > 0.05 ? "auto" : "none");
       section.style.setProperty("--gp-front-visibility", frontOpacity > 0.01 ? "visible" : "hidden");
       section.style.setProperty("--gp-front-y", `${(1 - frontOpacity) * -22}px`);
 
       // Behind dome fades out smoothly as zoom takes off
-      const stageOpacity = isStatic ? 1 : 1 - smooth(0.18, 0.35, p);
+      const stageOpacity = isStatic ? 1 : 1 - smooth(0.22, 0.40, p);
       section.style.setProperty("--gp-behind-opacity", String(stageOpacity));
 
-      // Reveal the pinned interior destination room smoothly once inside ink
-      const reveal = isStatic ? 1 : clamp((p - 0.44) / 0.08);
+      // Reveal the pinned interior destination room smoothly once inside the white hole
+      const reveal = isStatic ? 1 : clamp((p - 0.54) / 0.10);
       section.style.setProperty("--gp-reveal", String(reveal));
-      section.style.setProperty("--gp-content-hit", p >= 0.48 ? "auto" : "none");
-      section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0.18, 0.85, p)));
-      section.dataset.gpEntered = String(p >= 0.48);
+      section.style.setProperty("--gp-content-hit", p >= 0.58 ? "auto" : "none");
+      section.style.setProperty("--gp-field-scale", String(1 + 0.14 * smooth(0.22, 0.88, p)));
+      section.dataset.gpEntered = String(p >= 0.50);
       section.dataset.gpProgress = p.toFixed(5);
+      if (p >= 0.50) {
+        section.style.background = "#f4f6f8";
+      } else {
+        section.style.background = "";
+      }
 
       if (p !== lastProgress) {
         lastProgress = p;
@@ -372,7 +462,7 @@ export default function GlyphPortal({
           // Fluid damping to absorb high-speed flick / wheel spikes
           const delta = targetProgress - currentProgress;
           if (Math.abs(delta) > 0.0002) {
-            currentProgress += delta * 0.28;
+            currentProgress += delta * 0.20;
             // Continue frame loop until settled
             raf = requestAnimationFrame(frame);
           } else {
@@ -460,7 +550,7 @@ export default function GlyphPortal({
           --gp-paper: #f4f6f8;
           --gp-ink: #0a0a0a;
           --gp-field: #0a0a0a;
-          --gp-foreground: #f8fafc;
+          --gp-foreground: #0f172a;
           position: relative;
           isolation: isolate;
           background: var(--gp-paper);
@@ -469,6 +559,12 @@ export default function GlyphPortal({
           /* Critical: Section must span the full multi-viewport scroll track so pin holds */
           height: calc(var(--gp-length, 3.6) * var(--gp-height, 100svh));
           min-height: calc(var(--gp-length, 3.6) * 100vh);
+          margin: 0 !important;
+          padding: 0 !important;
+          transition: background-color 0.25s ease;
+        }
+        ${q}[data-gp-entered="true"] {
+          background: #f4f6f8 !important;
         }
         ${q} > [data-gp-viewport] {
           position: absolute;

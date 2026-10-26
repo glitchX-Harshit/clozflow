@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Phone, Globe2, Zap } from 'lucide-react';
 import GlyphPortal from './ui/glyph-portal';
 import PearlPortalPage from './PearlPortalPage';
 import { Awards } from './ui/award';
@@ -81,6 +82,7 @@ const PEARL_NARRATIVE_TOKENS = [
 
 const Integrations = () => {
     const sectionRef = useRef(null);
+    const [portalProgress, setPortalProgress] = useState(0);
 
     useEffect(() => {
         let ctx = gsap.context(() => {
@@ -114,8 +116,9 @@ const Integrations = () => {
             id="integrations" 
             ref={sectionRef}
             style={{ 
-                paddingBottom: '1rem',
-                paddingTop: '1rem'
+                paddingBottom: '0',
+                paddingTop: '1rem',
+                overflow: 'visible'
             }}
         >
             {/* ── Scroll-to-Reveal Problem & Pearl Narrative ── */}
@@ -138,7 +141,7 @@ const Integrations = () => {
                 </div>
             </div>
 
-            {/* ── Typographic Camera Portal: Pearl. (Zoom through 'a') ── */}
+            {/* ── Typographic Camera Portal: Pearl. (Cinematic Zoom through 'a') ── */}
             <GlyphPortal
                 word="Pearl."
                 focusChar="a"
@@ -147,8 +150,9 @@ const Integrations = () => {
                 interactive={false}
                 fontFamily='"Montserrat", "Arial Black", sans-serif'
                 fontWeight={700}
-                scrollLength={8.0}
+                scrollLength={3.0}
                 annotations={false}
+                onProgress={setPortalProgress}
                 className="int__portal"
                 behind={
                     <div className="int__behind-stage">
@@ -163,9 +167,6 @@ const Integrations = () => {
                 }
                 front={
                     <div className="int__subtext-wrap">
-                        <span className="int__eyebrow">
-                            YOUR AI SALES CONVERSATION AGENT
-                        </span>
                         <div className="int__subtext int__subtext--pyramid">
                             <h3 className="int__pyramid-lead">
                                 Give Pearl your website or brand details.
@@ -183,18 +184,55 @@ const Integrations = () => {
                     '--gp-paper': '#f4f6f8',
                     '--gp-ink': '#0a0a0a',
                     '--gp-field': '#0a0a0a',
-                    '--gp-foreground': '#f8fafc',
+                    '--gp-foreground': '#0f172a',
                 }}
                 /* Pure Black Ink so Pearl text is 100% solid black */
                 background={
                     <div style={{ position: 'absolute', inset: 0, backgroundColor: '#0a0a0a' }} />
                 }
             >
-                {/* ── Inside Pearl: Full In-Depth Showcase Page with Modular Extensibility ── */}
-                <PearlPortalPage />
+                {/* ── Inside Glyph: Immediate Arrival Hero Block ── */}
+                <div className="pearl-portal-hero-arrival">
+                    <div className="pearl-arrival-inner">
+                        <span className="pearl-arrival-badge">
+                            Dedicated Voice AI Telephony
+                        </span>
+
+                        <h2 className="pearl-arrival-title">
+                            The AI that answers your phone, talks like a human, and books deals.
+                        </h2>
+
+                        <p className="pearl-arrival-lead">
+                            Pearl is an autonomous sales and support agent with its own real phone number. 
+                            It picks up inbound calls in one ring, dials website leads in 25 seconds, speaks fluent Hindi, Hinglish, or English, and schedules meetings directly onto your calendar.
+                        </p>
+
+                        <div className="pearl-arrival-highlights">
+                            <div className="pearl-arrival-pill">
+                                <Phone size={15} className="pearl-arrival-icon" />
+                                <span>Dedicated phone numbers (+91 &amp; global)</span>
+                            </div>
+                            <div className="pearl-arrival-pill">
+                                <Globe2 size={15} className="pearl-arrival-icon" />
+                                <span>Speaks fluent, natural Hindi &amp; Hinglish</span>
+                            </div>
+                            <div className="pearl-arrival-pill">
+                                <Zap size={15} className="pearl-arrival-icon" />
+                                <span>Under 5-minute setup directly from your website</span>
+                            </div>
+                        </div>
+
+                        <div className="pearl-arrival-indicator" aria-hidden="true">
+                            <span className="pearl-arrival-arrow">↓</span>
+                        </div>
+                    </div>
+                </div>
             </GlyphPortal>
 
-            {/* ── Awards Component: Embedded at the end of Pearl glyph portal in the white box area ── */}
+            {/* ── Inside Pearl: Full In-Depth White Theme Showcase Page (Main Window Scroll) ── */}
+            <PearlPortalPage />
+
+            {/* ── Awards Component: Embedded at the end of Pearl showcase ── */}
             <div className="int__awards-section">
                 <h3 className="int__awards-title">
                     Recognised by the Top Institute

@@ -1,0 +1,176 @@
+/* ═══════════════════════════════════════════════════════════════════
+   INSTITUTE RECOGNITION STRAP (LUXURY WHITE STRAP DESIGN)
+   Extremely low height, horizontal ribbon profile, pure white background
+   ═══════════════════════════════════════════════════════════════════ */
+
+.inst-strap-section {
+    position: relative;
+    width: 100%;
+    background-color: #ffffff !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 2px 8px rgba(0, 0, 0, 0.015);
+    z-index: 25;
+    padding: 0.55rem 1rem;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    max-height: 56px;
+    overflow: hidden;
+}
+
+.inst-strap-container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    font-family: var(--font-display, 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif);
+    white-space: nowrap;
+}
+
+/* ── Left / Leading Group: Icon & Recognition Title ── */
+.inst-strap-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+}
+
+.inst-strap-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #d97706;
+    flex-shrink: 0;
+}
+
+.inst-strap-title {
+    font-size: 0.8125rem; /* ~13px */
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #0f172a;
+    text-transform: none;
+    line-height: 1;
+}
+
+/* ── Subtle Vertical Divider ── */
+.inst-strap-divider {
+    width: 1px;
+    height: 14px;
+    background-color: rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+}
+
+/* ── Content Group: Winner Badge + IIT Patna + Showcase + Date ── */
+.inst-strap-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-shrink: 0;
+}
+
+.inst-strap-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+    font-size: 0.6875rem; /* ~11px */
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    box-shadow: 0 1px 2px rgba(217, 119, 6, 0.25);
+    flex-shrink: 0;
+}
+
+.inst-strap-recipient {
+    font-size: 0.8125rem; /* ~13px */
+    font-weight: 700;
+    color: #0a0a0a;
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+
+.inst-strap-dot {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    user-select: none;
+    line-height: 1;
+}
+
+.inst-strap-subtitle {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #475569;
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+
+.inst-strap-date {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    line-height: 1;
+}
+
+.inst-strap-laurel-right {
+    display: inline-flex;
+    align-items: center;
+    color: #d97706;
+    opacity: 0.85;
+    flex-shrink: 0;
+}
+
+/* ── Mobile & Tablet Responsiveness ── */
+@media (max-width: 768px) {
+    .inst-strap-section {
+        min-height: 44px;
+        max-height: 52px;
+        padding: 0.45rem 0.75rem;
+    }
+
+    .inst-strap-container {
+        gap: 0.5rem;
+        overflow-x: auto;
+        justify-content: flex-start;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    .inst-strap-container::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+    }
+
+    .inst-strap-title {
+        font-size: 0.75rem;
+    }
+
+    .inst-strap-badge {
+        font-size: 0.625rem;
+        padding: 0.125rem 0.4rem;
+    }
+
+    .inst-strap-recipient {
+        font-size: 0.75rem;
+    }
+
+    .inst-strap-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .inst-strap-date {
+        font-size: 0.6875rem;
+    }
+
+    .inst-strap-laurel-right {
+        display: none;
+    }
+}
