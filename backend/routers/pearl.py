@@ -1,3 +1,4 @@
+from utils.capsule_formatter import format_capsule_context
 """
 Pearl API Router
 All Pearl endpoints live under /api/pearl.
@@ -773,17 +774,7 @@ async def call_audio_stream(websocket: WebSocket, call_id: str, db: Session = De
     conversation_id = call.conversation.id if call.conversation else None
     
     agent = db.query(PearlAgent).filter(PearlAgent.id == call.agent_id).first()
-    capsule_text = "No specific product context provided."
-    if agent and agent.capsule:
-        c = agent.capsule
-        capsule_text = (
-            f"Product Name: {c.product_name}\n"
-            f"Price: {c.product_price}\n"
-            f"Specs: {c.product_specification}\n"
-            f"Target Audience: {c.target_audience}\n"
-            f"Key Differentiators: {c.key_differentiators}\n"
-            f"Pain Points Solved: {c.pain_points_solved}"
-        )
+    capsule_text = format_capsule_context(agent.capsule) if (agent and agent.capsule) else "No specific product context provided." 
 
     prospect_name = "there"
     if call.lead and call.lead.business_name:
@@ -1382,19 +1373,8 @@ async def create_test_session(
     if not agent:
         raise HTTPException(404, "Agent not found")
 
-    # Build comprehensive capsule context if linked
-    capsule_text = "No specific product context provided."
-    if agent.capsule:
-        c = agent.capsule
-        capsule_text = (
-            f"Product Name: {c.product_name}\n"
-            f"Price: {c.product_price or 'N/A'}\n"
-            f"Specs: {c.product_specification or 'N/A'}\n"
-            f"Target Audience: {c.target_audience or 'N/A'}\n"
-            f"Key Differentiators: {c.key_differentiators or 'N/A'}\n"
-            f"Pain Points Solved: {c.pain_points_solved or 'N/A'}\n"
-            f"Extra Context: {c.additional_context or ''}"
-        )
+    # Build comprehensive capsule context via format_capsule_context
+    capsule_text = format_capsule_context(agent.capsule)
 
     # greeting is ONLY set if explicitly configured by the user; no canned fallback!
     custom_greeting = agent.greeting if (agent.greeting and agent.greeting.strip()) else None

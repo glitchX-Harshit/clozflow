@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, Float, String, DateTime, Text, ForeignKey, Boolean, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
+import models_knowledge  # Register knowledge tables
 
 class User(Base):
     __tablename__ = "users"
@@ -47,7 +48,7 @@ class User(Base):
     leads     = relationship("Lead", back_populates="user")
 
 
-# ── Product Capsule (reusable product context template) ─────────────────────
+# ── Product & Company Capsule (knowledge intelligence template) ──────────────
 class Capsule(Base):
     __tablename__ = "capsules"
     id                    = Column(Integer, primary_key=True, index=True)
@@ -61,6 +62,12 @@ class Capsule(Base):
     pain_points_solved    = Column(Text, nullable=True)                      # Customer problems it addresses
     additional_context    = Column(Text, nullable=True)                      # Any extra AI context
     is_default            = Column(Boolean, default=False)                   # Auto-select on briefing form
+    capsule_type          = Column(String, default="product")                # "company" | "product"
+    company_name          = Column(String, nullable=True)                    # Associated business name
+    brand_tone            = Column(String, nullable=True)                    # Extracted/custom voice tone
+    version               = Column(Integer, default=1)                       # Current published version
+    status                = Column(String, default="published")              # "draft" | "approved" | "published"
+    intelligence_data     = Column(JSON, nullable=True)                      # Structured intelligence JSON
     created_at            = Column(DateTime, default=datetime.utcnow)
     updated_at            = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

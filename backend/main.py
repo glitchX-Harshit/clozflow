@@ -16,11 +16,11 @@ from routers import auth, calls
 from routers import user as user_router
 from routers import leads as leads_router
 from routers import outreach as outreach_router
-from routers import copilot as copilot_router
 from routers import capsules as capsules_router
 from routers import relay as relay_router
 from routers import pearl as pearl_router
 from routers import intelligence as intelligence_router
+from routers import knowledge as knowledge_router
 from routers import wallet as wallet_router
 from admin.routes import router as admin_router
 from routers.auth import get_current_user
@@ -81,11 +81,11 @@ app.include_router(calls.router)
 app.include_router(user_router.router)
 app.include_router(leads_router.router)
 app.include_router(outreach_router.router)
-app.include_router(copilot_router.router, prefix="/api/copilot", tags=["copilot"])
 app.include_router(pearl_router.router)
 app.include_router(capsules_router.router)
 app.include_router(relay_router.router)
 app.include_router(intelligence_router.router)
+app.include_router(knowledge_router.router)
 app.include_router(wallet_router.router)
 app.include_router(admin_router)
 
