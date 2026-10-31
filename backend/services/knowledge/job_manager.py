@@ -119,7 +119,7 @@ class KnowledgeJobManager:
 
             crawler = WebsiteCrawler(
                 base_url=website_url,
-                max_pages=12,
+                max_pages=18,
                 event_callback=lambda evt: self._handle_crawler_event(job_id, evt)
             )
 
@@ -146,41 +146,27 @@ class KnowledgeJobManager:
             source.status = "extracting"
             db.commit()
 
-            # STAGE 3-7: Intelligence Extraction Stages
-            await self.emit_job_event(job_id, {
-                "stage": 3, "status": "running", "progress": 40,
-                "title": STAGES[2]["title"], "message": "Analyzing company mission, positioning, and market focus..."
-            })
-            await asyncio.sleep(0.5)
+            # STAGES 3-7: Deep Multi-Pass Intelligence Extraction with Pacing
+            async def extraction_notifier(evt: Dict[str, Any]):
+                stage_idx = min(evt.get("stage", 3), len(STAGES))
+                stage_info = STAGES[stage_idx - 1] if 1 <= stage_idx <= len(STAGES) else STAGES[2]
+                await self.emit_job_event(job_id, {
+                    "stage": evt.get("stage", 3),
+                    "status": "running",
+                    "progress": evt.get("progress", 50),
+                    "title": stage_info["title"],
+                    "message": evt.get("message", "Synthesizing deep business intelligence...")
+                })
 
-            await self.emit_job_event(job_id, {
-                "stage": 4, "status": "running", "progress": 50,
-                "title": STAGES[3]["title"], "message": "Synthesizing product catalog and capability matrices..."
-            })
-
-            await self.emit_job_event(job_id, {
-                "stage": 5, "status": "running", "progress": 60,
-                "title": STAGES[4]["title"], "message": "Extracting features, pricing structures, and specifications..."
-            })
-
-            # Run LLM Extraction Engine
-            intel_data = await self.engine.extract_structured_intelligence(crawled_pages)
-
-            await self.emit_job_event(job_id, {
-                "stage": 6, "status": "running", "progress": 70,
-                "title": STAGES[5]["title"], "message": "Profiling buyer personas, decision makers, and industry segments..."
-            })
-            await asyncio.sleep(0.4)
-
-            await self.emit_job_event(job_id, {
-                "stage": 7, "status": "running", "progress": 80,
-                "title": STAGES[6]["title"], "message": "Synthesizing evidence-backed objections and competitive pivots..."
-            })
-            await asyncio.sleep(0.4)
+            # Run Multi-Pass Extraction Engine
+            intel_data = await self.engine.extract_structured_intelligence(
+                crawled_pages,
+                notifier=extraction_notifier
+            )
 
             # STAGE 8: Building Knowledge Capsules
             await self.emit_job_event(job_id, {
-                "stage": 8, "status": "running", "progress": 90,
+                "stage": 8, "status": "running", "progress": 92,
                 "title": STAGES[7]["title"], "message": "Generating Company Capsule & Product Capsules..."
             })
 
@@ -264,13 +250,16 @@ class KnowledgeJobManager:
             source.pages_processed = len(corpus_pages)
             db.commit()
 
-            await self.emit_job_event(job_id, {
-                "stage": 4, "status": "running", "progress": 50,
-                "title": "Extracting Structured Business Truth",
-                "message": "Extracting features, customer segments, and specifications..."
-            })
+            async def doc_notifier(evt: Dict[str, Any]):
+                await self.emit_job_event(job_id, {
+                    "stage": evt.get("stage", 4),
+                    "status": "running",
+                    "progress": evt.get("progress", 50),
+                    "title": "Extracting Structured Business Truth",
+                    "message": evt.get("message", "Synthesizing documentation intelligence...")
+                })
 
-            intel_data = await self.engine.extract_structured_intelligence(corpus_pages)
+            intel_data = await self.engine.extract_structured_intelligence(corpus_pages, notifier=doc_notifier)
 
             await self.emit_job_event(job_id, {
                 "stage": 8, "status": "running", "progress": 85,

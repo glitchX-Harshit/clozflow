@@ -492,26 +492,26 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
   // 4. Phone Numbers — Exactly matching reference screenshot
   if (section === 'phone_numbers') {
     return (
-      <div className="pearl-home-root animate-fade-in">
+      <div className="pearl-home-root phone-numbers-root animate-fade-in">
         {/* Top Breadcrumb Bar */}
         <div className="pearl-top-breadcrumb-bar">
           <span className="breadcrumb-title">Phone numbers</span>
         </div>
 
-        <div className="pearl-phone-canvas">
-          {/* Centered Serif Heading matching image */}
-          <h1 className="pearl-phone-hero-title">Take your agent live</h1>
+        <div className="pearl-phone-viewport">
+          <div className="pearl-phone-header">
+            <h1 className="pearl-phone-hero-title">Take your agent live</h1>
+            <p className="pearl-phone-hero-subtitle">
+              Provision managed virtual numbers or integrate your existing carrier trunks
+            </p>
+          </div>
 
           {/* Two Cards Grid */}
           <div className="pearl-phone-grid">
             {/* Card 1: Rent from ClozFlow */}
-            <div 
-              className="pearl-phone-card theme-copper"
-              onMouseEnter={() => setPhoneCard1Hovered(true)}
-              onMouseLeave={() => setPhoneCard1Hovered(false)}
-            >
+            <div className="pearl-phone-card">
               <div className="phone-card-top-icon">
-                <ClozFlowTelephonyNode isHovered={phoneCard1Hovered} />
+                <ClozFlowTelephonyNode />
               </div>
 
               <div className="phone-card-title-row">
@@ -525,21 +525,21 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
 
               <ul className="phone-card-checklist">
                 <li>
-                  <span className="check-mark">✓</span>
+                  <Check size={14} className="check-mark" strokeWidth={2.5} />
                   <span>Add or release numbers anytime</span>
                 </li>
                 <li>
-                  <span className="check-mark">✓</span>
+                  <Check size={14} className="check-mark" strokeWidth={2.5} />
                   <span>Buy numbers directly, billed through ClozFlow Credits</span>
                 </li>
                 <li>
-                  <span className="check-mark">✓</span>
+                  <Check size={14} className="check-mark" strokeWidth={2.5} />
                   <span>Set up fully managed telephony infra in 2 minutes</span>
                 </li>
               </ul>
 
               <div className="phone-pricing-row">
-                <span>Usage-based pricing · </span>
+                <span>Usage-based pricing &middot; </span>
                 <button 
                   type="button" 
                   onClick={() => setShowPricingModal(true)} 
@@ -556,20 +556,16 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
                   onClick={() => setShowKycModal(true)}
                 >
                   <span>Resume KYC</span>
-                  <ArrowRight size={14} />
+                  <ArrowRight size={13} />
                 </button>
                 <span className="phone-powered-by">Powered by Vobiz</span>
               </div>
             </div>
 
             {/* Card 2: Bring your own telephony */}
-            <div 
-              className="pearl-phone-card theme-emerald"
-              onMouseEnter={() => setPhoneCard2Hovered(true)}
-              onMouseLeave={() => setPhoneCard2Hovered(false)}
-            >
+            <div className="pearl-phone-card">
               <div className="phone-card-top-icon">
-                <BringYourOwnTrunkNode isHovered={phoneCard2Hovered} />
+                <BringYourOwnTrunkNode />
               </div>
 
               <div className="phone-card-title-row">
@@ -582,31 +578,31 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
 
               <ul className="phone-card-checklist">
                 <li>
-                  <span className="check-mark">✓</span>
+                  <Check size={14} className="check-mark" strokeWidth={2.5} />
                   <span>Works with 6 leading providers</span>
                 </li>
                 <li>
-                  <span className="check-mark">✓</span>
+                  <Check size={14} className="check-mark" strokeWidth={2.5} />
                   <span>Integrate your existing telephony instantly</span>
                 </li>
                 <li>
-                  <span className="check-mark">✓</span>
+                  <Check size={14} className="check-mark" strokeWidth={2.5} />
                   <span>Keep your current numbers and rates</span>
                 </li>
               </ul>
 
-              {/* Provider Badges matching Image */}
+              {/* Provider Badges */}
               <div className="phone-providers-grid">
                 <div className="telephony-pill">
-                  <span className="prov-dot exotel">✕</span>
+                  <span className="prov-dot exotel">&times;</span>
                   <span>Exotel</span>
                 </div>
                 <div className="telephony-pill">
-                  <span className="prov-dot smartflo">☁</span>
+                  <span className="prov-dot smartflo">&bull;</span>
                   <span>Smartflo</span>
                 </div>
                 <div className="telephony-pill">
-                  <Activity size={12} className="prov-pulse-icon" />
+                  <Activity size={11} className="prov-pulse-icon" />
                   <span>Pulse</span>
                 </div>
                 <div className="telephony-pill">
@@ -630,7 +626,7 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
                   onClick={() => setShowConnectModal(true)}
                 >
                   <span>Connect</span>
-                  <ArrowRight size={14} />
+                  <ArrowRight size={13} />
                 </button>
               </div>
             </div>

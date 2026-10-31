@@ -89,6 +89,7 @@ PRIORITY_PATTERNS = [
     (r"/(faq|frequently-asked-questions|help|knowledge-base)", 65, "faq"),
     (r"/(case-studies|customers|testimonials|reviews|success-stories)", 60, "case_study"),
     (r"/(docs|documentation|guides|resources)", 50, "documentation"),
+    (r"/(blog|posts|articles|insights|news|stories)", 45, "blog"),
 ]
 
 def score_page_priority(path: str) -> tuple[int, str]:
@@ -187,7 +188,7 @@ class WebsiteCrawler:
     def __init__(
         self,
         base_url: str,
-        max_pages: int = 12,
+        max_pages: int = 18,
         max_depth: int = 2,
         request_timeout: float = 12.0,
         event_callback: Optional[Callable[[Dict[str, Any]], Any]] = None
