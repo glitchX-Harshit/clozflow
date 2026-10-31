@@ -65,7 +65,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   children: const [
                     TextSpan(
                       text: '.',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.magenta,
                       ),
                     ),

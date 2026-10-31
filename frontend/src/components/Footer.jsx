@@ -194,7 +194,7 @@ const Footer = () => {
                         {/* Bottom Row inside Card */}
                         <div className="ft__card-footer">
                             <span className="ft__copyright-text">
-                                © 2026 ClozFlow, made for closers
+                                © 2026 ClozFlow AI, made for closers
                             </span>
                             <div className="ft__legal-group">
                                 <a href="/privacy">Privacy</a>

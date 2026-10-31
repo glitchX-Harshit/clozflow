@@ -6,7 +6,6 @@ import {
     LayoutGrid, 
     Phone, 
     History, 
-    BarChart3, 
     Target, 
     Settings, 
     LogOut, 
@@ -432,7 +431,6 @@ const Dashboard = () => {
         { id: 'history',    label: 'Session History', icon: History },
         { id: 'relay',      label: 'Relay',          icon: Send },
         { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
-        { id: 'analytics',  label: 'Intelligence',   icon: BarChart3 },
         { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
         { id: 'wallet',     label: 'Wallet & Billing', icon: Wallet },
         { id: 'settings',   label: 'Settings',       icon: Settings },
@@ -678,15 +676,6 @@ const Dashboard = () => {
                     <span>Pearl</span>
                 </button>
 
-                {/* Intelligence */}
-                <button
-                    onClick={() => { setActiveTab('analytics'); setMenuOpen(false); }}
-                    className={`db-bottom-tab ${activeTab === 'analytics' ? 'active' : ''}`}
-                >
-                    <BarChart3 size={20} strokeWidth={activeTab === 'analytics' ? 2.5 : 1.75} />
-                    <span>Intelligence</span>
-                </button>
-
                 {/* More Menu Toggle */}
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
@@ -714,7 +703,6 @@ const Dashboard = () => {
                             { id: 'history', label: 'Session History', desc: 'Call transcripts & diagnostic ratings', icon: History },
                             { id: 'relay', label: 'Relay', desc: 'Follow-up pages & meeting booking', icon: Send },
                             { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
-                            { id: 'analytics', label: 'Intelligence', desc: 'Comparative gap matrix & objection lists', icon: BarChart3 },
                             { id: 'wizard', label: 'Wizard', desc: 'Virtual meeting copilot for Meet & Zoom', icon: Wand2 },
                             { id: 'wallet', label: 'Wallet & Billing', desc: 'Credits balance, top-ups & usage meter', icon: Wallet },
                             { id: 'settings', label: 'Settings', desc: 'Workspace details & prompt overrides', icon: Settings },

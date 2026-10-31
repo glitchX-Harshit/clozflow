@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:clozflow/core/theme/app_colors.dart';
 import 'package:clozflow/core/theme/app_spacing.dart';
 import 'package:clozflow/core/theme/app_text_styles.dart';
 import 'package:clozflow/features/prospects/providers/prospects_provider.dart';

@@ -1,7 +1,7 @@
 /* ══════════════════════════════════════════════════════════════════
    DEPTH BLUR CAROUSEL — ULTRA-PREMIUM 3D STAGE
    Full-Bleed Visual Imagery · Authentic Edge Progressive Blur
-   Subtle 3D Perspective · Pan & Drag Mechanics
+   Subtle 3D Perspective · Smooth Pan & Drag Mechanics
    ══════════════════════════════════════════════════════════════════ */
 
 .dbc-stage {
@@ -18,18 +18,11 @@
   justify-content: center;
   overflow: hidden;
   user-select: none;
-}
-
-/* ── Interactive Gesture Layer ── */
-.dbc-gesture-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 100;
   cursor: grab;
   touch-action: pan-y;
 }
 
-.dbc-gesture-layer:active {
+.dbc-stage:active {
   cursor: grabbing;
 }
 
@@ -111,6 +104,7 @@
   padding: 0.4rem 0.85rem;
   border-radius: 9999px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  pointer-events: auto;
 }
 
 .dbc-nav-btn {
@@ -160,67 +154,45 @@
   background: linear-gradient(135deg, #44d8f4, #1037ff);
 }
 
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .dbc-stage {
-    height: 380px;
-    min-height: 360px;
-  }
-  .dbc-audio-trigger-wrap {
-    bottom: 18%;
-    right: 10px;
-  }
-  .dbc-audio-btn {
-    width: 36px;
-    height: 36px;
-  }
-  .dbc-audio-pill {
-    display: none;
-  }
-  .dbc-card-overlay {
-    padding: 1rem 1.15rem;
-  }
-  .dbc-card-title {
-    font-size: 0.95rem;
-  }
-}
-
-/* ── Mascot Audio Play/Pause Button (Corner at bottom 15-20%) ── */
+/* ══════════════════════════════════════════════════════════════════
+   MASCOT AUDIO PLAY BUTTON (Seamlessly integrated into poster)
+   ══════════════════════════════════════════════════════════════════ */
 .dbc-audio-trigger-wrap {
   position: absolute;
-  bottom: 18%;
-  right: 14px;
-  z-index: 50;
+  bottom: 16%;
+  right: 18px;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 8px;
   pointer-events: auto;
 }
 
 .dbc-audio-btn {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.24);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0;
   position: relative;
+  z-index: 1001;
 }
 
 .dbc-audio-btn:hover {
-  transform: scale(1.08);
+  transform: scale(1.1);
   background: #0f172a;
-  border-color: rgba(68, 216, 244, 0.85);
-  box-shadow: 0 10px 28px rgba(16, 55, 255, 0.35), 0 0 16px rgba(68, 216, 244, 0.45);
+  border-color: rgba(68, 216, 244, 0.95);
+  box-shadow: 0 12px 30px rgba(16, 55, 255, 0.4), 0 0 20px rgba(68, 216, 244, 0.55);
 }
 
 .dbc-audio-btn:active {
@@ -230,7 +202,20 @@
 .dbc-audio-btn--playing {
   background: #090d16;
   border-color: #44d8f4;
-  box-shadow: 0 0 20px rgba(68, 216, 244, 0.5), inset 0 0 10px rgba(68, 216, 244, 0.2);
+  box-shadow: 0 0 22px rgba(68, 216, 244, 0.65), inset 0 0 10px rgba(68, 216, 244, 0.3);
+  animation: dbcPlayPulse 2s ease-in-out infinite;
+}
+
+@keyframes dbcPlayPulse {
+  0% {
+    box-shadow: 0 0 16px rgba(68, 216, 244, 0.5), inset 0 0 8px rgba(68, 216, 244, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(68, 216, 244, 0.85), 0 0 0 4px rgba(68, 216, 244, 0.25), inset 0 0 12px rgba(68, 216, 244, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 16px rgba(68, 216, 244, 0.5), inset 0 0 8px rgba(68, 216, 244, 0.2);
+  }
 }
 
 .dbc-audio-icon {
@@ -248,81 +233,18 @@
   fill: #44d8f4;
 }
 
-/* Audio wave equalizer bars */
-.dbc-audio-waves {
-  display: inline-flex;
-  align-items: center;
-  gap: 2.5px;
-  height: 14px;
-}
-
-.dbc-audio-wave-bar {
-  width: 2.5px;
-  border-radius: 9999px;
-  background: #44d8f4;
-  animation: dbcWavePulse 0.8s ease-in-out infinite alternate;
-}
-
-.dbc-audio-wave-bar:nth-child(1) {
-  height: 5px;
-  animation-delay: 0s;
-}
-
-.dbc-audio-wave-bar:nth-child(2) {
-  height: 12px;
-  animation-delay: 0.2s;
-}
-
-.dbc-audio-wave-bar:nth-child(3) {
-  height: 7px;
-  animation-delay: 0.4s;
-}
-
-@keyframes dbcWavePulse {
-  0% {
-    height: 4px;
-    opacity: 0.5;
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .dbc-stage {
+    height: 380px;
+    min-height: 360px;
   }
-  100% {
-    height: 13px;
-    opacity: 1;
+  .dbc-audio-trigger-wrap {
+    bottom: 16%;
+    right: 12px;
   }
-}
-
-/* Pill badge when playing */
-.dbc-audio-pill {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  /* text-transform: none; */
-  color: #ffffff;
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 4px 10px;
-  border-radius: 9999px;
-  border: 1px solid rgba(68, 216, 244, 0.35);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-  pointer-events: none;
-  animation: dbcPillFade 0.3s ease;
-}
-
-@keyframes dbcPillFade {
-  from {
-    opacity: 0;
-    transform: translateX(6px);
+  .dbc-audio-btn {
+    width: 38px;
+    height: 38px;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.dbc-audio-pill-text {
-  font-size: 0.65rem;
-  color: #e2e8f0;
 }

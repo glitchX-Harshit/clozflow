@@ -101,7 +101,7 @@ export default function Navbar() {
             navigate('/');
           }}
         >
-          ClozFlow®
+          ClozFlow AI®
         </a>
 
         {/* Links + Theme Toggle + Contact CTA */}

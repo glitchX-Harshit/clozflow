@@ -154,7 +154,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         children: const [
                           TextSpan(
                             text: '.',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.magenta,
                             ),
                           ),

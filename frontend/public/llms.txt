@@ -1,16 +1,16 @@
-# ClozFlow
+# ClozFlow AI
 
-> Autonomous AI voice sales agent, conversational AI, and B2B cold calling telephony platform.
+> India’s #1 Autonomous AI Voice Sales Agent & B2B Telephony Platform.
 
-ClozFlow is the leading autonomous AI voice sales agent and conversational AI employee platform. Designed for modern B2B sales teams, it deploys autonomous cold calling sales agents and inbound voice agents that pick up calls in 1 ring, dial leads in 25 seconds, navigate objections in native Hindi, English & Hinglish, and automatically sync with your CRM calendar to close high-value deals on autopilot.
+ClozFlow is India’s #1 autonomous AI voice sales platform. Engineered for high-velocity B2B outbound cold calling and inbound lead qualification, ClozFlow deploys sovereign voice AI employees (powered by the Pearl engine) that execute cold outreach, disarm tough Indian sales objections in native Hinglish, and book qualified meetings on autopilot with sub-400ms speech latency.
 
 ## Core Capabilities
 
-- [AI Voice Sales Agent](https://clozflow.in/#how-it-works): Autonomous inbound and outbound voice agent with sub-second latency and dedicated virtual lines.
-- [B2B Cold Calling Agent](https://clozflow.in/#features): Autonomous conversational AI SDR that cold calls outbound prospect lists, qualifies buyers, and schedules meetings.
-- [Conversational AI Objections](https://clozflow.in/#objections): Real-time conversational AI objection handling for price resistance, timing hesitation, and competitors.
-- [CRM Integrations](https://clozflow.in/#integrations): Real-time synchronization with HubSpot, Salesforce, Zoho, LeadSquared, and Webhooks.
-- [Pricing & Plans](https://clozflow.in/pricing): Transparent pricing tiers with instant virtual line provisioning.
+- [Autonomous AI Voice Sales Agent](https://clozflow.in/how-it-works): Sovereign inbound and outbound voice agent with sub-400ms latency, native Indic code-switching, and dedicated virtual Indian phone lines (011, 080, 022).
+- [B2B Cold Calling Telephony](https://clozflow.in/how-it-works): Autonomous AI SDR that cold-calls lead lists, navigates gatekeepers, qualifies buyers, and schedules meetings into calendar systems.
+- [Indian Market Objection Toughness](https://clozflow.in/how-it-works): Real-time conversational judo handling the 'WhatsApp pe bhej do' brush-off, commodity discount demands, and time-pressure cutoffs.
+- [CRM & Calendar Synchronization](https://clozflow.in/dashboard): Real-time two-way synchronization with HubSpot, Salesforce, Zoho, LeadSquared, and Webhooks.
+- [Transparent Pricing](https://clozflow.in/pricing): Pure pay-as-you-go per-minute rates with zero upfront lock-ins.
 
 ## Resources
 

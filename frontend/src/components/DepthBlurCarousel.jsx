@@ -1,12 +1,13 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Sparkles, Play, Pause } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Play, Pause } from 'lucide-react';
 import mascotVoicePoster from '../assets/clozflow-ai-voice-mascot-poster.webp';
 import conversionCloudscape from '../assets/conversion-cloudscape.webp';
 import aiSalesEngineerBanner from '../assets/ai-sales-engineer-banner.webp';
 import futuristicVoicePoster from '../assets/futuristic-multilingual-voice-ai-poster.webp';
 import pearlCallInterface from '../assets/clozflow-pearl-ai-call-interface.webp';
 import builtInIndiaSovereign from '../assets/built-in-india-made-sovereign.webp';
+import whyWeAreWinningAudio from '../assets/why-we-are-winning-demo.wav';
 import './DepthBlurCarousel.css';
 
 // ── Curated Full-Bleed Visual Imagery (Ultra-High Resolution, Editorial Tech & Architecture) ──
@@ -21,10 +22,12 @@ const CAROUSEL_SLIDES = [
     {
         id: 'voice-mascot-poster',
         image: mascotVoicePoster,
-        title: 'Clozflow AI Voice Mascot',
+        title: 'Why we are winning?',
         tag: 'AUTONOMOUS VOICE AGENT',
         metric: 'Sub-200ms Telemetry',
-        hasAudioPreview: true
+        hasAudioPreview: true,
+        audioSrc: whyWeAreWinningAudio || '/audio/why-we-are-winning-demo.wav',
+        audioFallbackSrc: '/audio/why-we-are-winning-demo.mp3'
     },
     {
         id: 'pearl-call-interface',
@@ -70,42 +73,69 @@ export default function DepthBlurCarousel({
     blurSpread = 25,
     blurStrength = 24
 }) {
-    // Dummy audio playback state (future-ready for MP3 file)
+    // ── Dedicated High-Fidelity Audio Controller ──
     const [playingAudioId, setPlayingAudioId] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
     const audioRef = useRef(null);
 
-    const handleToggleAudio = (e, item) => {
-        e.stopPropagation();
-        if (playingAudioId === item.id) {
+    // Initialize global Audio instance with lifecycle listeners
+    useEffect(() => {
+        const audio = new Audio();
+        audio.preload = 'metadata';
+        audioRef.current = audio;
+
+        const handleEnded = () => {
+            setIsPlaying(false);
             setPlayingAudioId(null);
-            if (audioRef.current) {
-                audioRef.current.pause();
+        };
+
+        const handlePause = () => {
+            setIsPlaying(false);
+        };
+
+        const handlePlay = () => {
+            setIsPlaying(true);
+        };
+
+        audio.addEventListener('ended', handleEnded);
+        audio.addEventListener('pause', handlePause);
+        audio.addEventListener('play', handlePlay);
+
+        return () => {
+            audio.removeEventListener('ended', handleEnded);
+            audio.removeEventListener('pause', handlePause);
+            audio.removeEventListener('play', handlePlay);
+            audio.pause();
+            audio.src = '';
+            audioRef.current = null;
+        };
+    }, []);
+
+    const handleToggleAudio = (e, item) => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        if (playingAudioId === item.id) {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play().catch((err) => {
+                    console.warn('Audio play failed or requires user interaction:', err);
+                });
             }
         } else {
             setPlayingAudioId(item.id);
-            // Future MP3 connection: when item.audioSrc is provided, connect audio playback
-            if (item.audioSrc) {
-                if (!audioRef.current) {
-                    audioRef.current = new Audio(item.audioSrc);
-                    audioRef.current.onended = () => setPlayingAudioId(null);
-                } else {
-                    audioRef.current.src = item.audioSrc;
-                }
-                audioRef.current.play().catch((err) => {
-                    console.warn('Audio playback failed or requires user gesture:', err);
-                });
+            const targetSrc = item.audioSrc || '/audio/why-we-are-winning-demo.wav';
+            if (!audio.src || !audio.src.includes('why-we-are-winning-demo')) {
+                audio.src = targetSrc;
+                audio.currentTime = 0;
             }
+            audio.play().catch((err) => {
+                console.warn('Audio play failed:', err);
+            });
         }
     };
-
-    useEffect(() => {
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current = null;
-            }
-        };
-    }, []);
 
     // Responsive card dimensions (scaled down)
     const [dims, setDims] = useState({
@@ -186,25 +216,20 @@ export default function DepthBlurCarousel({
     // ── Synchronize with Page Up/Down Scroll: moves cards Left and Right ──
     useEffect(() => {
         let lastScrollY = window.scrollY;
-        let scrollAccumulator = 0;
 
         const onScroll = () => {
-            // Only drive carousel if user isn't actively dragging/panning
             if (isUserInteracting.current) return;
 
             const currentScrollY = window.scrollY;
             const deltaY = currentScrollY - lastScrollY;
             lastScrollY = currentScrollY;
 
-            // Only respond when section is somewhat in viewport view
             if (mountRef.current) {
                 const rect = mountRef.current.getBoundingClientRect();
                 const vh = window.innerHeight;
                 if (rect.bottom < -100 || rect.top > vh + 100) return;
             }
 
-            // Scroll down moves carousel right (+), scroll up moves carousel left (-)
-            scrollAccumulator += deltaY * 0.004;
             scrollTarget.current += deltaY * 0.004;
             rawScroll.set(scrollTarget.current);
         };
@@ -227,7 +252,7 @@ export default function DepthBlurCarousel({
         }
     };
 
-    // Pan / Drag navigation
+    // Pan / Drag navigation on the stage container
     const handlePanStart = () => {
         isUserInteracting.current = true;
     };
@@ -269,23 +294,18 @@ export default function DepthBlurCarousel({
     };
 
     return (
-        <div
+        <motion.div
             className="dbc-stage"
             ref={mountRef}
+            onWheel={handleWheel}
+            onPanStart={handlePanStart}
+            onPan={handlePan}
+            onPanEnd={handlePanEnd}
             style={{
                 perspective: Math.max(perspective, 1)
             }}
         >
-            {/* Gesture Interaction Layer */}
-            <motion.div
-                className="dbc-gesture-layer"
-                onWheel={handleWheel}
-                onPanStart={handlePanStart}
-                onPan={handlePan}
-                onPanEnd={handlePanEnd}
-            />
-
-            {/* 3D Origin Container */}
+            {/* 3D Origin Container — Cards render directly without blocking gesture overlay */}
             <div className="dbc-3d-origin">
                 {renderItems.map((item, i) => (
                     <ImageDepthCard
@@ -301,11 +321,13 @@ export default function DepthBlurCarousel({
                         gap={dims.gap}
                         maxRotation={maxRotation}
                         borderRadius={borderRadius}
-                        isPlaying={playingAudioId === item.id}
+                        isPlaying={isPlaying && playingAudioId === item.id}
                         onToggleAudio={handleToggleAudio}
                         onClick={() => {
-                            scrollTarget.current = i;
-                            rawScroll.set(scrollTarget.current);
+                            if (!isUserInteracting.current) {
+                                scrollTarget.current = i;
+                                rawScroll.set(scrollTarget.current);
+                            }
                         }}
                     />
                 ))}
@@ -336,7 +358,12 @@ export default function DepthBlurCarousel({
             />
 
             {/* ── Bottom Controls: Minimal Dots + Arrows ── */}
-            <div className="dbc-controls">
+            <div
+                className="dbc-controls"
+                onPointerDown={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+            >
                 <button
                     type="button"
                     className="dbc-nav-btn dbc-nav-btn--prev"
@@ -367,7 +394,7 @@ export default function DepthBlurCarousel({
                     <ArrowRight size={16} />
                 </button>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -442,7 +469,7 @@ function ImageDepthCard({
                     opacity: visibilityOpacity
                 }}
             >
-                {/* Pure Full-Bleed Image (Zero bottom overlay / shadow) */}
+                {/* Pure Full-Bleed Image */}
                 <img
                     src={item.image}
                     alt={item.title || 'ClozFlow Visual'}
@@ -450,35 +477,46 @@ function ImageDepthCard({
                     loading="lazy"
                 />
 
-                {/* Optional Audio Play/Pause Button on specific card (bottom 15-20%) */}
+                {/* ── Play Button directly connected to conversation audio ── */}
                 {item.hasAudioPreview && (
                     <div
                         className="dbc-audio-trigger-wrap"
-                        onClick={(e) => e.stopPropagation()}
-                        onPointerDown={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                        onPointerDown={(e) => {
+                            e.stopPropagation();
+                        }}
+                        onMouseDown={(e) => {
+                            e.stopPropagation();
+                        }}
+                        onTouchStart={(e) => {
+                            e.stopPropagation();
+                        }}
                     >
-                        {isPlaying && (
-                            <div className="dbc-audio-pill">
-                                <span className="dbc-audio-waves">
-                                    <span className="dbc-audio-wave-bar" />
-                                    <span className="dbc-audio-wave-bar" />
-                                    <span className="dbc-audio-wave-bar" />
-                                </span>
-                                <span className="dbc-audio-pill-text">Voice Demo</span>
-                            </div>
-                        )}
                         <button
                             type="button"
                             className={`dbc-audio-btn ${isPlaying ? 'dbc-audio-btn--playing' : ''}`}
-                            onClick={(e) => onToggleAudio(e, item)}
-                            aria-label={isPlaying ? 'Pause voice demo' : 'Play voice demo'}
-                            title={isPlaying ? 'Pause Voice Demo' : 'Play Voice Demo'}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleAudio(e, item);
+                            }}
+                            onPointerDown={(e) => {
+                                e.stopPropagation();
+                            }}
+                            onMouseDown={(e) => {
+                                e.stopPropagation();
+                            }}
+                            onTouchStart={(e) => {
+                                e.stopPropagation();
+                            }}
+                            aria-label={isPlaying ? 'Pause conversation' : 'Play conversation'}
+                            title={isPlaying ? 'Pause conversation' : 'Play conversation'}
                         >
                             {isPlaying ? (
-                                <Pause size={17} className="dbc-audio-icon dbc-audio-icon--pause" />
+                                <Pause size={18} className="dbc-audio-icon dbc-audio-icon--pause" />
                             ) : (
-                                <Play size={17} className="dbc-audio-icon dbc-audio-icon--play" />
+                                <Play size={18} className="dbc-audio-icon dbc-audio-icon--play" />
                             )}
                         </button>
                     </div>

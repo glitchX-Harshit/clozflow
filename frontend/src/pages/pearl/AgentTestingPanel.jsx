@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  X, MessageSquare, Mic, MicOff, Send, RefreshCw, 
-  Volume2, AlertCircle, Sparkles, Check, 
-  Loader2, Play, Square, Bot, Radio, Save
+  X, RefreshCw, Mic, MicOff, ArrowRight, Loader2, Save
 } from 'lucide-react';
 import { floatTo16BitPCM } from '../../audio/audioEncoder';
 import './AgentTestingPanel.css';
@@ -14,7 +12,7 @@ export const AgentTestingPanel = ({
   onClose,
   onSaveAndTest 
 }) => {
-  const [activeTab, setActiveTab] = useState('chat'); // 'chat' | 'voice'
+  const [activeTab, setActiveTab] = useState('voice');
   const [sessionId, setSessionId] = useState(null);
   const [sessionData, setSessionData] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -23,32 +21,48 @@ export const AgentTestingPanel = ({
   const [thinking, setThinking] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  // Normalize agent ID and name (ID is a string UUID in Clozflow Pearl)
+  // Normalize agent ID and name
   const agentId = agentProp?.id || agentIdProp;
   const agentName = agentProp?.name || agentNameProp || 'Pearl Agent';
 
-  // ── Voice Mode State ──
+  // ── Voice State ──
   const [voiceActive, setVoiceActive] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [agentSpeaking, setAgentSpeaking] = useState(false);
   const [voiceTranscript, setVoiceTranscript] = useState([]);
-  const [voiceStateText, setVoiceStateText] = useState('Ready to test');
+  const [streamingUserText, setStreamingUserText] = useState('');
+  const [voiceStateText, setVoiceStateText] = useState('Ready');
+  const [micLevel, setMicLevel] = useState(0);
 
-  // Refs for audio pipeline
+  // Refs
   const wsRef = useRef(null);
   const audioCtxRef = useRef(null);
   const micStreamRef = useRef(null);
   const scriptProcessorRef = useRef(null);
+  const analyserRef = useRef(null);
+  const animFrameRef = useRef(null);
   const nextStartTimeRef = useRef(0);
   const currentSourceRef = useRef(null);
   const activeSourcesRef = useRef([]);
   const messagesEndRef = useRef(null);
   const agentSpeakingRef = useRef(false);
 
-  // Initialize or fetch test session
-  const initSession = async (mode = 'chat') => {
+  // Dismiss on ESC key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (voiceActive) stopVoiceSession();
+        onClose?.();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [voiceActive, onClose]);
+
+  // Init session
+  const initSession = async (mode = 'voice') => {
     if (!agentId) {
-      setErrorMsg('This agent configuration must be saved before testing.');
+      setErrorMsg('Save agent before testing.');
       return null;
     }
     setLoading(true);
@@ -65,7 +79,7 @@ export const AgentTestingPanel = ({
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || 'Failed to initialize test session');
+        throw new Error(err.detail || 'Failed to start session');
       }
       const data = await res.json();
       setSessionId(data.id);
@@ -83,19 +97,18 @@ export const AgentTestingPanel = ({
 
   useEffect(() => {
     if (agentId && !sessionId) {
-      initSession('chat');
+      initSession(activeTab);
     }
     return () => {
       stopVoiceSession();
     };
   }, [agentId]);
 
-  // Scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, voiceTranscript, thinking]);
+  }, [messages, voiceTranscript, streamingUserText, thinking]);
 
-  // ── Chat Mode Handler ──
+  // ── Chat Handler ──
   const handleSendMessage = async (e) => {
     e?.preventDefault();
     const text = inputMessage.trim();
@@ -131,7 +144,7 @@ export const AgentTestingPanel = ({
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || 'Server error while generating response');
+        throw new Error(err.detail || 'Failed to generate response');
       }
 
       const data = await res.json();
@@ -160,18 +173,19 @@ export const AgentTestingPanel = ({
         const data = await res.json();
         setMessages(data.messages || []);
         setVoiceTranscript([]);
+        setStreamingUserText('');
       }
     } catch (err) {
-      console.error('Clear session error:', err);
+      console.error('Clear error:', err);
     }
   };
 
-  // ── Browser Voice Mode Implementation ──
+  // ── Voice Mode ──
   const playAudioChunk = (pcmBytes) => {
     if (!audioCtxRef.current) return;
     try {
       const audioCtx = audioCtxRef.current;
-      const sampleRate = 8000; // Sarvam Bulbul output sample rate
+      const sampleRate = 8000;
       const int16Array = new Int16Array(pcmBytes.buffer, pcmBytes.byteOffset, pcmBytes.byteLength / 2);
       const float32Array = new Float32Array(int16Array.length);
 
@@ -191,7 +205,6 @@ export const AgentTestingPanel = ({
       setAgentSpeaking(true);
       agentSpeakingRef.current = true;
 
-      // Seamless sequential scheduling
       const startTime = Math.max(audioCtx.currentTime, nextStartTimeRef.current);
       source.start(startTime);
       nextStartTimeRef.current = startTime + audioBuffer.duration;
@@ -204,35 +217,27 @@ export const AgentTestingPanel = ({
         }
       };
     } catch (e) {
-      console.error('Audio playback error:', e);
+      console.error('Playback error:', e);
     }
   };
 
   const startVoiceSession = async () => {
     setErrorMsg(null);
 
-    // Verify browser support for microphone
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      const err = 'Your browser does not support audio capture, or the application is running in an insecure (non-HTTPS) context.';
-      setErrorMsg(err);
-      setVoiceStateText(err);
+      setErrorMsg('Microphone not supported in this browser.');
       return;
     }
 
     let currSessionId = sessionId;
     if (!currSessionId) {
       currSessionId = await initSession('voice');
-      if (!currSessionId) {
-        setErrorMsg('Please save the agent before testing in Voice mode.');
-        setVoiceStateText('Agent not saved');
-        return;
-      }
+      if (!currSessionId) return;
     }
 
-    setVoiceStateText('Requesting microphone permission...');
+    setVoiceStateText('Connecting...');
 
     try {
-      // 1. Get browser microphone
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           sampleRate: 16000,
@@ -244,7 +249,6 @@ export const AgentTestingPanel = ({
       });
       micStreamRef.current = stream;
 
-      // 2. Audio Context for playback and capture
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       const audioCtx = new AudioContext({ sampleRate: 16000 });
       audioCtxRef.current = audioCtx;
@@ -253,7 +257,7 @@ export const AgentTestingPanel = ({
       }
       nextStartTimeRef.current = audioCtx.currentTime;
 
-      // 3. Connect WebSocket using bulletproof base URL
+      const token = localStorage.getItem('token') || '';
       let wsBase = window.APP_WS_BASE;
       if (!wsBase) {
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -264,29 +268,30 @@ export const AgentTestingPanel = ({
         else wsBase = `${protocol}//${host}`;
       }
       wsBase = wsBase.replace(/\/+$/, '');
-      const wsUrl = `${wsBase}/api/pearl/test-sessions/${currSessionId}/voice`;
+      const wsUrl = `${wsBase}/api/pearl/test-sessions/${currSessionId}/voice${token ? `?token=${encodeURIComponent(token)}` : ''}`;
 
-      setVoiceStateText('Connecting to Pearl Voice Engine...');
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
         setVoiceActive(true);
-        setVoiceStateText('Connected · Listening for speech...');
+        setVoiceStateText('Listening');
       };
 
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'transcript') {
+            setStreamingUserText('');
             setVoiceTranscript(prev => [...prev, { speaker: data.speaker, text: data.text }]);
             if (data.speaker === 'agent') {
-              setVoiceStateText('Pearl responding...');
+              setVoiceStateText(`${agentName} speaking`);
             }
+          } else if (data.type === 'partial_transcript') {
+            setStreamingUserText(data.text || '');
           } else if (data.type === 'agent_thinking') {
-            setVoiceStateText('Pearl thinking...');
+            setVoiceStateText('Thinking...');
           } else if (data.type === 'audio' && data.data) {
-            // Base64 audio chunk received from Sarvam TTS
             const binary = atob(data.data);
             const bytes = new Uint8Array(binary.length);
             for (let i = 0; i < binary.length; i++) {
@@ -294,7 +299,6 @@ export const AgentTestingPanel = ({
             }
             playAudioChunk(bytes);
           } else if (data.type === 'interrupted') {
-            // User interrupted Pearl: halt all active playback immediately
             activeSourcesRef.current.forEach(s => {
               try { s.stop(); } catch (e) {}
             });
@@ -303,38 +307,57 @@ export const AgentTestingPanel = ({
             nextStartTimeRef.current = 0;
             setAgentSpeaking(false);
             agentSpeakingRef.current = false;
-            setVoiceStateText('Listening (barge-in)...');
+            setStreamingUserText('');
+            setVoiceStateText('Listening');
           } else if (data.type === 'tts_finished') {
             if (activeSourcesRef.current.length === 0) {
               setAgentSpeaking(false);
               agentSpeakingRef.current = false;
+              setVoiceStateText('Listening');
             }
           } else if (data.type === 'ready') {
-            setVoiceStateText('Connected · Speak freely into your mic');
+            setVoiceStateText('Listening');
           } else if (data.type === 'error') {
-            setErrorMsg(data.message || 'Voice engine error');
-            setVoiceStateText(data.message || 'Voice error');
+            setErrorMsg(data.message || 'Audio error');
+            setVoiceStateText('Error');
           }
         } catch (err) {
-          console.error('Voice WS message error:', err);
+          console.error('WS parse error:', err);
         }
       };
 
-      ws.onerror = (e) => {
-        console.error('Voice WS error:', e);
-        setErrorMsg('WebSocket connection encountered an error.');
-        setVoiceStateText('Connection error');
+      ws.onerror = () => {
+        setErrorMsg('Connection error.');
+        setVoiceStateText('Error');
       };
 
       ws.onclose = () => {
         setVoiceActive(false);
-        setVoiceStateText('Session ended');
+        setVoiceStateText('Ended');
       };
 
-      // 4. Hook microphone capture to WebSocket (16kHz PCM)
       const micSource = audioCtx.createMediaStreamSource(stream);
       const scriptProcessor = audioCtx.createScriptProcessor(1024, 1, 1);
       scriptProcessorRef.current = scriptProcessor;
+
+      // Micro analyser for subtle bar activity
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 64;
+      analyser.smoothingTimeConstant = 0.3;
+      micSource.connect(analyser);
+      analyserRef.current = analyser;
+
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      const updateMeter = () => {
+        if (!analyserRef.current) return;
+        analyserRef.current.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+        const avg = sum / dataArray.length;
+        setMicLevel(Math.min(100, Math.round((avg / 128) * 100)));
+        animFrameRef.current = requestAnimationFrame(updateMeter);
+      };
+      animFrameRef.current = requestAnimationFrame(updateMeter);
 
       scriptProcessor.onaudioprocess = (e) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
@@ -342,15 +365,11 @@ export const AgentTestingPanel = ({
 
         const floatData = e.inputBuffer.getChannelData(0);
 
-        // Acoustic Echo Guard: If Pearl is speaking out loud through laptop speakers,
-        // filter out speaker bleed so Pearl doesn't interrupt herself!
+        // Acoustic Echo Guard
         if (agentSpeakingRef.current) {
           let sum = 0;
-          for (let i = 0; i < floatData.length; i++) {
-            sum += floatData[i] * floatData[i];
-          }
+          for (let i = 0; i < floatData.length; i++) sum += floatData[i] * floatData[i];
           const rms = Math.sqrt(sum / floatData.length);
-          // Only pass audio if the user is deliberately speaking over Pearl (> 0.04 threshold)
           if (rms < 0.04) return;
         }
 
@@ -358,22 +377,17 @@ export const AgentTestingPanel = ({
         wsRef.current.send(pcm16);
       };
 
-      const silentGain = audioCtx.createGain();
-      silentGain.gain.value = 0;
-      silentGain.connect(audioCtx.destination);
       micSource.connect(scriptProcessor);
-      scriptProcessor.connect(silentGain);
+      scriptProcessor.connect(audioCtx.destination);
 
     } catch (err) {
-      console.error('Voice test init error:', err);
-      let msg = err.message || 'Failed to start voice test';
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        msg = 'Microphone permission was denied. Please allow microphone access in your browser.';
-      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        msg = 'No microphone device was detected on your computer.';
+      console.error('Start voice error:', err);
+      let userFriendly = 'Microphone permission blocked or not detected.';
+      if (err.name === 'NotAllowedError') {
+        userFriendly = 'Microphone access blocked. Allow mic in browser settings.';
       }
-      setErrorMsg(msg);
-      setVoiceStateText(msg);
+      setErrorMsg(userFriendly);
+      setVoiceStateText('Ready');
       stopVoiceSession();
     }
   };
@@ -381,22 +395,27 @@ export const AgentTestingPanel = ({
   const stopVoiceSession = () => {
     setVoiceActive(false);
     setAgentSpeaking(false);
+    setStreamingUserText('');
+    setMicLevel(0);
     agentSpeakingRef.current = false;
-    setVoiceStateText('Ready to test');
-    nextStartTimeRef.current = 0;
+    setVoiceStateText('Ready');
 
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    analyserRef.current = null;
+
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
     activeSourcesRef.current.forEach(s => {
       try { s.stop(); } catch (e) {}
     });
     activeSourcesRef.current = [];
-    if (currentSourceRef.current) {
-      try { currentSourceRef.current.stop(); } catch (e) {}
-      currentSourceRef.current = null;
-    }
-    if (wsRef.current) {
-      try { wsRef.current.close(); } catch (e) {}
-      wsRef.current = null;
-    }
+    currentSourceRef.current = null;
+
     if (micStreamRef.current) {
       micStreamRef.current.getTracks().forEach(t => t.stop());
       micStreamRef.current = null;
@@ -415,268 +434,232 @@ export const AgentTestingPanel = ({
     <div className="testing-panel-backdrop" onClick={onClose}>
       <div className="testing-panel-container" onClick={e => e.stopPropagation()}>
         
-        {/* Header */}
-        <div className="testing-panel-header">
-          <div className="tp-header-left">
-            <div className="tp-agent-icon-box">
-              <Bot size={18} />
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h3 className="tp-agent-name">{agentName}</h3>
-                <span className="tp-agent-mode-tag">Browser Testing</span>
-              </div>
-              <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b' }}>
-                Interactive Sandbox &bull; Zero PSTN Calls &bull; Real AI Speech
-              </p>
-            </div>
+        {/* Minimal Header */}
+        <div className="tp-min-header">
+          <div className="tp-min-title-wrap">
+            <h3 className="tp-min-title">{agentName}</h3>
+            <span className="tp-min-pill">Test</span>
           </div>
-          <div className="tp-header-actions">
+          <div className="tp-min-actions">
             <button 
               type="button" 
-              className="tp-btn-icon" 
+              className="tp-min-btn-icon" 
               onClick={handleClearSession}
-              title="Clear transcript & restart context"
+              title="Reset context"
             >
-              <RefreshCw size={14} />
+              <RefreshCw size={13} />
             </button>
-            <button type="button" className="tp-btn-icon" onClick={onClose} title="Close Testing Sidebar">
-              <X size={16} />
+            <button 
+              type="button" 
+              className="tp-min-btn-icon" 
+              onClick={onClose} 
+              title="Close (ESC)"
+            >
+              <X size={15} />
             </button>
           </div>
         </div>
 
-        {/* Tab Switcher: Chat vs Voice */}
-        <div className="tp-tabs-bar">
-          <button 
-            type="button" 
-            className={`tp-tab-btn ${activeTab === 'chat' ? 'active' : ''}`}
-            onClick={() => {
-              if (voiceActive) stopVoiceSession();
-              setActiveTab('chat');
-            }}
-          >
-            <MessageSquare size={15} />
-            <span>Chat Test</span>
-          </button>
-          <button 
-            type="button" 
-            className={`tp-tab-btn ${activeTab === 'voice' ? 'active' : ''}`}
-            onClick={() => setActiveTab('voice')}
-          >
-            <Mic size={15} />
-            <span>Voice Test</span>
-          </button>
-        </div>
-
-        {/* Status Strip */}
-        <div className="tp-status-strip">
-          <div className="tp-status-indicator">
-            <div className={`tp-dot ${agentSpeaking ? 'speaking' : thinking ? 'thinking' : voiceActive ? 'active' : ''}`} />
-            <span>{agentSpeaking ? 'Pearl Speaking' : thinking ? 'Thinking...' : voiceActive ? 'Voice Listening' : 'Ready'}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ 
-              fontSize: '0.72rem', 
-              fontWeight: 600, 
-              color: '#6366f1', 
-              background: 'rgba(99, 102, 241, 0.08)', 
-              padding: '2px 8px', 
-              borderRadius: '12px',
-              border: '1px solid rgba(99, 102, 241, 0.2)'
-            }}>
-              ⚡ 2 Credits (₹2.00) / test
-            </span>
-            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-              {activeTab === 'voice' ? 'Web Audio 16kHz PCM' : 'Real Qwen/Groq LLM'}
-            </span>
+        {/* Minimal Segmented Tabs */}
+        <div className="tp-min-tabs-wrap">
+          <div className="tp-min-tabs">
+            <button 
+              type="button" 
+              className={`tp-min-tab ${activeTab === 'voice' ? 'active' : ''}`}
+              onClick={() => setActiveTab('voice')}
+            >
+              Voice
+            </button>
+            <button 
+              type="button" 
+              className={`tp-min-tab ${activeTab === 'chat' ? 'active' : ''}`}
+              onClick={() => {
+                if (voiceActive) stopVoiceSession();
+                setActiveTab('chat');
+              }}
+            >
+              Chat
+            </button>
           </div>
         </div>
 
-        {/* Unsaved Agent Warning Banner */}
+        {/* Unsaved Agent Warning */}
         {!agentId && (
-          <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: '8px', color: '#b91c1c', fontSize: '0.84rem', margin: '14px 20px 0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>⚠️ Save this agent before starting browser testing.</span>
+          <div className="tp-min-banner">
+            <span>Save agent to start testing.</span>
             {onSaveAndTest && (
               <button 
                 type="button" 
-                style={{ background: '#dc2626', color: '#fff', border: 'none', padding: '5px 12px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                 onClick={async () => {
                   const savedId = await onSaveAndTest();
                   if (savedId) initSession(activeTab);
                 }}
+                style={{ background: '#09090b', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.74rem', cursor: 'pointer' }}
               >
-                <Save size={12} />
-                <span>Save & Test</span>
+                Save
               </button>
             )}
           </div>
         )}
 
-        {/* Error Alert Banner */}
+        {/* Error Banner */}
         {errorMsg && (
-          <div className="tp-error-banner animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <AlertCircle size={15} />
-              <span>{errorMsg}</span>
-            </div>
-            {errorMsg.toLowerCase().includes('credit') && (
-              <button
-                type="button"
-                onClick={() => {
-                  if (onClose) onClose();
-                  window.dispatchEvent(new CustomEvent('open-wallet-tab'));
-                }}
-                style={{
-                  alignSelf: 'flex-start',
-                  background: 'var(--accent, #6366f1)',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '4px 10px',
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                Go to Wallet & Top Up Credits →
-              </button>
-            )}
+          <div className="tp-min-banner tp-min-banner-error">
+            <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* Content View: CHAT MODE */}
+        {/* ── VOICE MODE ── */}
+        {activeTab === 'voice' && (
+          <div className="tp-min-voice-stage">
+            
+            {/* Minimal Visualizer (Restrained, no giant waves) */}
+            <div className="tp-min-visualizer">
+              <div className={`tp-min-orb ${agentSpeaking ? 'speaking' : voiceActive ? 'listening' : ''}`}>
+                <div className="tp-min-bars">
+                  <span 
+                    className="tp-min-bar" 
+                    style={{ height: voiceActive && !agentSpeaking ? `${Math.max(6, micLevel * 0.28)}px` : undefined }} 
+                  />
+                  <span 
+                    className="tp-min-bar" 
+                    style={{ height: voiceActive && !agentSpeaking ? `${Math.max(10, micLevel * 0.45)}px` : undefined }} 
+                  />
+                  <span 
+                    className="tp-min-bar" 
+                    style={{ height: voiceActive && !agentSpeaking ? `${Math.max(14, micLevel * 0.6)}px` : undefined }} 
+                  />
+                  <span 
+                    className="tp-min-bar" 
+                    style={{ height: voiceActive && !agentSpeaking ? `${Math.max(10, micLevel * 0.45)}px` : undefined }} 
+                  />
+                  <span 
+                    className="tp-min-bar" 
+                    style={{ height: voiceActive && !agentSpeaking ? `${Math.max(6, micLevel * 0.28)}px` : undefined }} 
+                  />
+                </div>
+              </div>
+
+              <span className="tp-min-status-label">
+                {agentSpeaking ? `${agentName} speaking` : voiceActive ? 'Listening' : 'Ready'}
+              </span>
+            </div>
+
+            {/* Minimal Feed */}
+            <div className="tp-min-feed">
+              {voiceTranscript.length === 0 && !streamingUserText ? (
+                <div className="tp-min-feed-placeholder">
+                  {voiceActive ? 'Listening for speech' : 'Click start to test voice'}
+                </div>
+              ) : (
+                <div className="tp-min-messages">
+                  {voiceTranscript.map((t, idx) => (
+                    <div key={idx} className={`tp-min-msg ${t.speaker === 'user' ? 'user' : 'agent'}`}>
+                      <span className="tp-min-speaker">{t.speaker === 'user' ? 'You' : agentName}</span>
+                      <div className="tp-min-text">{t.text}</div>
+                    </div>
+                  ))}
+
+                  {streamingUserText && (
+                    <div className="tp-min-msg user streaming">
+                      <span className="tp-min-speaker">You</span>
+                      <div className="tp-min-text">{streamingUserText}...</div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </div>
+
+            {/* Minimal Controls */}
+            <div className="tp-min-controls">
+              {!voiceActive ? (
+                <button 
+                  type="button" 
+                  className="tp-min-btn-primary" 
+                  onClick={startVoiceSession}
+                  disabled={loading || !agentId}
+                >
+                  {loading && <Loader2 size={14} className="animate-spin" />}
+                  <span>{loading ? 'Connecting' : 'Start Voice'}</span>
+                </button>
+              ) : (
+                <div className="tp-min-active-controls">
+                  <button 
+                    type="button" 
+                    className={`tp-min-btn-subtle ${isMuted ? 'muted' : ''}`}
+                    onClick={() => setIsMuted(!isMuted)}
+                    title={isMuted ? 'Unmute' : 'Mute'}
+                  >
+                    {isMuted ? <MicOff size={15} /> : <Mic size={15} />}
+                  </button>
+
+                  <button 
+                    type="button" 
+                    className="tp-min-btn-danger" 
+                    onClick={stopVoiceSession}
+                  >
+                    End Session
+                  </button>
+                </div>
+              )}
+            </div>
+
+          </div>
+        )}
+
+        {/* ── CHAT MODE ── */}
         {activeTab === 'chat' && (
-          <>
-            <div className="tp-messages-viewport">
+          <div className="tp-min-chat-stage">
+            <div className="tp-min-chat-messages">
               {messages.length === 0 && !loading && (
-                <div style={{ textAlign: 'center', padding: '48px 20px', color: '#94a3b8' }}>
-                  <Bot size={36} color="#94a3b8" style={{ margin: '0 auto 10px auto' }} />
-                  <h4 style={{ margin: '0 0 6px 0', color: '#1e293b', fontSize: '0.98rem' }}>Start Chatting</h4>
-                  <p style={{ margin: 0, fontSize: '0.82rem', lineHeight: 1.5 }}>
-                    Type a message as a prospect to test Pearl's conversational replies using your configured instructions.
-                  </p>
+                <div className="tp-min-feed-placeholder">
+                  Type a message to test {agentName}
                 </div>
               )}
 
               {loading && messages.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '48px 20px', color: '#64748b' }}>
-                  <Loader2 size={26} className="animate-spin" color="#2563eb" style={{ margin: '0 auto 8px auto' }} />
-                  <p style={{ fontSize: '0.82rem' }}>Initializing agent test session...</p>
+                <div className="tp-min-feed-placeholder">
+                  <Loader2 size={15} className="animate-spin" style={{ margin: '0 auto 6px' }} />
+                  <span>Connecting...</span>
                 </div>
               )}
 
               {messages.map((m) => (
-                <div key={m.id} className={`tp-message-bubble ${m.role === 'user' ? 'user' : 'assistant'}`}>
-                  <span className="tp-sender-label">
-                    {m.role === 'user' ? 'You (Prospect)' : agentName}
-                  </span>
-                  <div className="tp-bubble-content">
-                    {m.text}
-                  </div>
-                  {m.meta?.latency_ms && (
-                    <span className="tp-bubble-meta">{m.meta.latency_ms}ms response</span>
-                  )}
+                <div key={m.id} className={`tp-min-msg ${m.role === 'user' ? 'user' : 'agent'}`}>
+                  <span className="tp-min-speaker">{m.role === 'user' ? 'You' : agentName}</span>
+                  <div className="tp-min-text">{m.text}</div>
                 </div>
               ))}
 
               {thinking && (
-                <div className="tp-thinking-bubble">
-                  <div className="tp-typing-dot" />
-                  <div className="tp-typing-dot" />
-                  <div className="tp-typing-dot" />
+                <div className="tp-min-msg agent thinking">
+                  <span className="tp-min-speaker">{agentName}</span>
+                  <div className="tp-min-text tp-min-dots">
+                    <span /><span /><span />
+                  </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            <form className="tp-chat-input-bar" onSubmit={handleSendMessage}>
+            <form className="tp-min-input-bar" onSubmit={handleSendMessage}>
               <input 
                 type="text" 
-                className="tp-chat-input"
-                placeholder={!agentId ? "Save agent first to enable chat..." : "Type a message as a prospect..."}
+                className="tp-min-input"
+                placeholder="Type a message..."
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 disabled={thinking || !agentId}
               />
               <button 
                 type="submit" 
-                className="tp-btn-send"
+                className="tp-min-btn-send"
                 disabled={!inputMessage.trim() || thinking || !agentId}
               >
-                {thinking ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
-                <span>Send</span>
+                <ArrowRight size={14} />
               </button>
             </form>
-          </>
-        )}
-
-        {/* Content View: BROWSER VOICE MODE */}
-        {activeTab === 'voice' && (
-          <div className="tp-voice-stage">
-            <div className="tp-voice-visual-core">
-              <div className={`tp-voice-avatar-orb ${agentSpeaking ? 'speaking' : ''}`}>
-                <Radio size={42} />
-              </div>
-              <div>
-                <h4 className="tp-voice-status-title">
-                  {agentSpeaking ? 'Pearl Speaking' : voiceActive ? 'Listening to You...' : 'Browser Voice Session'}
-                </h4>
-                <p className="tp-voice-subtext">
-                  Real-time conversational speech test through your browser microphone and speakers. Zero PSTN phone calls.
-                </p>
-                <div style={{ marginTop: '8px', fontSize: '0.8rem', fontWeight: 600, color: voiceActive ? '#16a34a' : '#64748b', textAlign: 'center' }}>
-                  {voiceStateText}
-                </div>
-              </div>
-            </div>
-
-            {/* Live Transcript Feed */}
-            <div className="tp-voice-transcript-feed">
-              {voiceTranscript.length === 0 ? (
-                <div className="tp-voice-feed-empty">
-                  {voiceActive ? 'Speak into your microphone to talk to Pearl...' : 'Click "Start Voice Test" below to begin talking'}
-                </div>
-              ) : (
-                voiceTranscript.map((t, idx) => (
-                  <div key={idx} className={`tp-message-bubble ${t.speaker === 'user' ? 'user' : 'assistant'}`}>
-                    <span className="tp-sender-label">{t.speaker === 'user' ? 'You' : agentName}</span>
-                    <div className="tp-bubble-content">{t.text}</div>
-                  </div>
-                ))
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Voice Controls */}
-            <div className="tp-voice-controls">
-              {!voiceActive ? (
-                <button 
-                  type="button" 
-                  className="tp-btn-voice-start" 
-                  onClick={startVoiceSession}
-                  disabled={loading || !agentId}
-                >
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} fill="currentColor" />}
-                  <span>{loading ? 'Connecting...' : 'Start Voice Test'}</span>
-                </button>
-              ) : (
-                <>
-                  <button 
-                    type="button" 
-                    className={`tp-btn-voice-mute ${isMuted ? 'muted' : ''}`}
-                    onClick={() => setIsMuted(!isMuted)}
-                    title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
-                  >
-                    {isMuted ? <MicOff size={18} /> : <Mic size={18} />}
-                  </button>
-                  <button type="button" className="tp-btn-voice-end" onClick={stopVoiceSession}>
-                    <Square size={16} fill="currentColor" />
-                    <span>End Voice Session</span>
-                  </button>
-                </>
-              )}
-            </div>
           </div>
         )}
 

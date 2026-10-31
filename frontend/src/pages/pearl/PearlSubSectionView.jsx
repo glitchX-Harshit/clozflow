@@ -9,6 +9,7 @@ import {
 import Pearl from '../Pearl';
 import AgentWorkspace from './AgentWorkspace';
 import CampaignWorkspace from './CampaignWorkspace';
+import KnowledgeBaseView from './KnowledgeBaseView';
 import { ClozFlowTelephonyNode, BringYourOwnTrunkNode } from '../../components/PearlTelephony3DIcon';
 import './PearlSubSectionView.css';
 
@@ -483,44 +484,9 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
     );
   }
 
-  // 3. Knowledge Base
+  // 3. Knowledge Base — Automated Ingestion & Business Intelligence
   if (section === 'knowledge') {
-    return (
-      <div className="pearl-home-root animate-fade-in">
-        <div className="pearl-top-breadcrumb-bar">
-          <span className="breadcrumb-title">Knowledge base</span>
-        </div>
-        <div className="pearl-subview-wrap">
-          <div className="pearl-subview-header">
-            <div>
-              <h1 className="pearl-subview-title">Knowledge base</h1>
-              <p className="pearl-subview-desc">
-                Upload product sheets, pricing tables, and competitor battlecards for real-time RAG context during calls.
-              </p>
-            </div>
-            <button type="button" className="pearl-subview-cta">
-              <Plus size={15} />
-              <span>Add Capsule</span>
-            </button>
-          </div>
-
-          <div className="pearl-cards-list">
-            <div className="pearl-list-card">
-              <div className="card-top-row">
-                <span className="pearl-clean-badge active">Indexed</span>
-                <span className="card-spec">12 Documents</span>
-              </div>
-              <h3>ClozFlow Product & Pricing Matrix</h3>
-              <p>Comprehensive B2B product features, enterprise tier pricing, and ROI calculators.</p>
-              <div className="card-tags">
-                <span>Vector Search</span>
-                <span>Zero Hallucination</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <KnowledgeBaseView user={user} onNavigateSection={onNavigateSection} />;
   }
 
   // 4. Phone Numbers — Exactly matching reference screenshot

@@ -173,7 +173,7 @@ const ObjectionHandling = () => {
 
                     <p className="obj__main-sub obj__anim-hdr">
                         Buyers never tell you the real reason they walk.
-                        ClozFlow decodes the unvoiced hesitation and hands you the winning counter-move in real time.
+                        ClozFlow AI decodes the unvoiced hesitation and hands you the winning counter-move in real time.
                     </p>
                 </div>
 

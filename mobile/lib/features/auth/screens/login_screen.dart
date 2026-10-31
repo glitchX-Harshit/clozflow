@@ -133,7 +133,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: const [
                           TextSpan(
                             text: '.',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.magenta,
                             ),
                           ),

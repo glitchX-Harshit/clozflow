@@ -36,7 +36,6 @@ import { useLeadFinderStore } from '../store/useLeadFinderStore';
 import { useLeadIntelligenceStore } from '../store/useLeadIntelligenceStore';
 import LeadIntelligencePanel from '../components/LeadIntelligencePanel';
 import MagButton from '../components/MagButton';
-import CopilotStatus from '../components/CopilotStatus';
 import { gsap } from 'gsap';
 import './LeadFinder.css';
 
@@ -1492,8 +1491,7 @@ const LeadFinder = ({ onOutreach }) => {
             {/* ── Saved Leads View ── */}
             {viewMode === 'saved' && (
                 <div className="animate-fade-in" style={{ marginTop: '2.5rem' }}>
-                    <CopilotStatus />
-                    {savedLeads.length > 0 ? (
+                                        {savedLeads.length > 0 ? (
                         <div className="lf__results-wrapper">
                             <div className="lf__results-meta">
                                 <span className="lf__results-count">

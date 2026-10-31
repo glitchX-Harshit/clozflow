@@ -137,7 +137,7 @@ const Features = () => {
                         The Three-Layer Intelligence Stack
                     </h2>
                     <p className="arch__subtitle arch__header-animate">
-                        ClozFlow is built on a proprietary multi-layer neural architecture 
+                        ClozFlow AI is built on a proprietary multi-layer neural architecture 
                         designed to solve the most complex human persuasion problems.
                     </p>
                 </div>

@@ -6,7 +6,6 @@ import 'package:clozflow/core/auth/auth_state.dart';
 import 'package:clozflow/core/theme/app_colors.dart';
 import 'package:clozflow/core/theme/app_spacing.dart';
 import 'package:clozflow/core/theme/app_text_styles.dart';
-import 'package:clozflow/widgets/stat_card.dart';
 import 'package:clozflow/widgets/shimmer_loading.dart';
 import 'package:clozflow/features/dashboard/providers/dashboard_provider.dart';
 
@@ -70,7 +69,7 @@ class DashboardScreen extends ConsumerWidget {
             children: const [
               TextSpan(
                 text: '.',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.magenta,
                 ),
               ),

@@ -709,12 +709,7 @@ const NAV_GROUPS = [
             { id: 'directives', label: 'Prompt Override', icon: Terminal },
         ]
     },
-    {
-        title: 'Sales Context',
-        items: [
-            { id: 'capsules', label: 'Product Capsules', icon: Pill },
-        ]
-    },
+
     {
         title: 'Security & System',
         items: [
@@ -726,12 +721,28 @@ const NAV_GROUPS = [
     }
 ];
 
+const CapsulesRedirectNotice = () => (
+    <div style={{ padding: '3rem 2rem', textAlign: 'center', background: 'var(--surface)', borderRadius: 16, border: '1px solid var(--border)' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text)' }}>Product Knowledge Has Moved</h3>
+        <p style={{ color: 'var(--text-dim)', maxWidth: 480, margin: '0 auto 1.5rem', lineHeight: 1.5, fontSize: '0.9rem' }}>
+            Product Capsules are now managed directly inside <strong>Pearl &gt; Knowledge Base</strong> with automated website crawling and document intelligence.
+        </p>
+        <button 
+            type="button"
+            onClick={() => window.location.href = '/dashboard?tab=pearl&section=knowledge'}
+            style={{ background: 'var(--text)', color: 'var(--bg)', padding: '0.75rem 1.5rem', borderRadius: 10, border: 'none', fontWeight: 600, cursor: 'pointer' }}
+        >
+            Go to Pearl Knowledge Base &rarr;
+        </button>
+    </div>
+);
+
 const PANELS = {
     profile: <ProfilePanel />,
     workspace: <WorkspacePanel />,
     ai: <AiPanel />,
     directives: <PromptDirectivePanel />,
-    capsules: <CapsulesPanel />,
+    capsules: <CapsulesRedirectNotice />,
     notifications: <NotificationsPanel />,
     security: <SecurityPanel />,
     billing: <BillingPanel />,

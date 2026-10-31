@@ -330,7 +330,7 @@ const Hero = ({ onGetStarted }) => {
                         <div className="hero__modal-header">
                             <div className="hero__modal-title">
                                 <span className="hero__modal-tag">Live copilot preview</span>
-                                <h3>See ClozFlow in action</h3>
+                                <h3>See ClozFlow AI in action</h3>
                             </div>
                             <button 
                                 className="hero__modal-close"

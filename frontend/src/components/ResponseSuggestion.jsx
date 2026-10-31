@@ -15,12 +15,12 @@ const SCENARIOS = [
         objection: 'Why should we pay double when Competitor X does the same thing for half the cost?',
         mobileObjection: '“Why pay double when Competitor X does the same for half?”',
         rebuttals: {
-            Direct: 'Competitors record why you lost the deal after you hang up. ClozFlow guides you during the call so you actually win it.',
+            Direct: 'Competitors record why you lost the deal after you hang up. ClozFlow AI guides you during the call so you actually win it.',
             Disarming: 'If you just want basic call transcripts, they are fine. But if you want reps to stop fumbling objections and close 40% more pipeline, that is why teams switch to us.',
-            'ROI Re-Anchor': 'Cheaper software that does not rescue deals is the most expensive mistake in sales. One saved contract pays for ClozFlow for the next three years.'
+            'ROI Re-Anchor': 'Cheaper software that does not rescue deals is the most expensive mistake in sales. One saved contract pays for ClozFlow AI for the next three years.'
         },
         mobileRebuttals: {
-            Direct: '“Competitors record why you lost after you hang up. ClozFlow guides you live so you actually win it.”',
+            Direct: '“Competitors record why you lost after you hang up. ClozFlow AI guides you live so you actually win it.”',
             Disarming: '“If you just want transcripts, they work. If you want reps to close 40% more pipeline, teams switch to us.”',
             'ROI Re-Anchor': '“Cheaper software that doesn’t rescue deals is the costliest mistake. One saved deal covers three years.”'
         },

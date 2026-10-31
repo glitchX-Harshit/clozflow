@@ -24,7 +24,7 @@ const NARRATIVE_TOKENS = [
     { text: "panic" },
     { text: "into" },
     { text: "discounts", hasDot: true },
-    { text: "ClozFlow" },
+    { text: "ClozFlow AI" },
     { text: "absorbs" },
     { text: "friction" },
     { text: "with" },

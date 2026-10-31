@@ -115,7 +115,7 @@ const CrowdSection = () => {
                 <div className="crowd__header">
                     <span className="crowd__eyebrow-text crowd__header-animate">// Loved by closers</span>
                     <h2 className="section-title crowd__header-animate">
-                        Winning sales teams trust ClozFlow
+                        Winning sales teams trust ClozFlow AI
                     </h2>
                     <p className="crowd__subtitle crowd__header-animate">
                         Hear from the Account Executives, Sales Managers, and Founders who use our behavioral intelligence layer daily.

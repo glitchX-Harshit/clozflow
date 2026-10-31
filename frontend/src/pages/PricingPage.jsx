@@ -161,6 +161,19 @@ export default function PricingPage() {
       <Navbar />
 
       <main className="minimal-pricing-container">
+        {/* ── Hero Header ── */}
+        <header className="minimal-hero">
+          <div className="minimal-eyebrow">
+            <span>Predictable, Transparent Pricing</span>
+          </div>
+          <h1 className="minimal-title">
+            Simple plans for high-velocity teams.
+          </h1>
+          <p className="minimal-subtitle">
+            Pay only for connected minutes with zero hidden markups. Upgrade, downgrade, or cancel anytime.
+          </p>
+        </header>
+
         {/* ── 5 Minimal Plans Grid ── */}
         <section className="minimal-plans-wrapper" aria-label="Plans and Pricing">
           <div className="minimal-plans-grid">
