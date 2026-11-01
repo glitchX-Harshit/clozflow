@@ -113,7 +113,8 @@ export default function AdminUserDetail() {
     pearl_agents = [],
     recent_activities = [],
     credit_transactions = [],
-    telephony_provisioning = {}
+    telephony_provisioning = {},
+    pearl_economics = {}
   } = data;
 
   return (
@@ -210,6 +211,69 @@ export default function AdminUserDetail() {
 
                 <span style={{ color: 'var(--admin-text-muted)' }}>Last Account Update</span>
                 <span>{user.updated_at ? new Date(user.updated_at).toLocaleString() : '—'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Customer Pearl Call Economics Card */}
+        <div className="admin-card" style={{ marginBottom: '24px' }}>
+          <div className="admin-card-header">
+            <div>
+              <h3 className="admin-card-title">Customer Voice AI Economics & Telemetry</h3>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', color: 'var(--admin-text-muted)' }}>
+                Realized call volume, revenue billed, upstream carrier COGS, and client gross profit
+              </p>
+            </div>
+            <span
+              className="mono strong"
+              style={{
+                fontSize: '15px',
+                padding: '4px 12px',
+                borderRadius: '14px',
+                backgroundColor: (pearl_economics.gross_margin_pct >= 50 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(59, 130, 246, 0.15)'),
+                color: (pearl_economics.gross_margin_pct >= 50 ? '#10b981' : '#3b82f6')
+              }}
+            >
+              {(pearl_economics.gross_margin_pct || 0).toFixed(1)}% Gross Margin
+            </span>
+          </div>
+          <div style={{ padding: '20px' }}>
+            <div className="admin-kpi-grid">
+              <div style={{ padding: '14px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>Total Calls</span>
+                <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '4px' }}>
+                  {pearl_economics.total_calls || 0}
+                </div>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>
+                  {pearl_economics.connected_minutes || 0} connected mins
+                </span>
+              </div>
+
+              <div style={{ padding: '14px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>Revenue Billed</span>
+                <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '4px', color: '#10b981' }}>
+                  ₹{(pearl_economics.total_revenue_billed || 0).toLocaleString()}
+                </div>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>Credits burned</span>
+              </div>
+
+              <div style={{ padding: '14px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>Upstream COGS</span>
+                <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '4px', color: 'var(--admin-text-muted)' }}>
+                  ₹{(pearl_economics.total_cogs || 0).toLocaleString()}
+                </div>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>Vobiz + AI Providers</span>
+              </div>
+
+              <div style={{ padding: '14px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>Gross Profit</span>
+                <div style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '4px' }}>
+                  ₹{(pearl_economics.gross_profit || 0).toLocaleString()}
+                </div>
+                <span style={{ fontSize: '11px', color: (pearl_economics.gross_margin_pct >= 50 ? '#10b981' : '#3b82f6'), fontWeight: 600 }}>
+                  {(pearl_economics.gross_margin_pct || 0).toFixed(1)}% Realized Margin
+                </span>
               </div>
             </div>
           </div>

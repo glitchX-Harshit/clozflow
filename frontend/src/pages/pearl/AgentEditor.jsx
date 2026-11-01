@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import './AgentEditor.css';
 import AgentTestingPanel from './AgentTestingPanel';
-import VoicePersonaSelector from '../../components/VoicePersonaSelector';
+import VoicePersonaSelector, { CLOZFLOW_VOICE_LIST } from '../../components/VoicePersonaSelector';
 import CapsuleSelector from '../../components/CapsuleSelector';
 
 export const AgentEditor = ({ agentId = null, onBack }) => {
@@ -113,6 +113,9 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
     setSaving(true);
     setSaveSuccess(false);
 
+    const activePersona = (CLOZFLOW_VOICE_LIST || []).find(v => v.id.toLowerCase() === (speaker || '').toLowerCase());
+    const personaGender = activePersona ? activePersona.gender : 'Male';
+
     const payload = {
       name: agentName.trim() || 'Untitled Agent',
       role,
@@ -123,7 +126,8 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
         speaker,
         language,
         pace: parseFloat(pace),
-        tone
+        tone,
+        gender: personaGender
       },
       capsule_id: capsuleId ? parseInt(capsuleId) : null,
       test_variables: testVariables,
@@ -213,7 +217,13 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
     mission,
     system_prompt: systemPrompt,
     greeting: greetingEnabled ? greetingText : null,
-    voice_config: { speaker, language, pace, tone },
+    voice_config: { 
+      speaker, 
+      language, 
+      pace, 
+      tone,
+      gender: (CLOZFLOW_VOICE_LIST || []).find(v => v.id.toLowerCase() === (speaker || '').toLowerCase())?.gender || 'Male'
+    },
     capsule_id: capsuleId,
     test_variables: testVariables
   };
@@ -280,7 +290,7 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
             className="editor-textarea"
             value={greetingText}
             onChange={(e) => { setGreetingText(e.target.value); setIsDirty(true); }}
-            placeholder="e.g. Hi {{prospect_name}}, this is Pearl from Clozflow. Am I speaking with the founder?"
+            placeholder={`e.g. Hi {{prospect_name}}, this is ${agentName || 'Shivangi'} from Clozflow. Am I speaking with the founder?`}
           />
         )}
       </div>

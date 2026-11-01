@@ -3,7 +3,7 @@ Pearl Domain Models
 Autonomous AI Sales Agent — Database entities for PearlAgent, PearlCall, PearlEvent.
 Follows the same patterns as models.py and models_relay.py.
 """
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Boolean, JSON
+from sqlalchemy import Column, Integer, Float, String, DateTime, Text, ForeignKey, Boolean, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
@@ -119,6 +119,20 @@ class PearlCall(Base):
     # Results
     qualification_result = Column(JSON, nullable=True)      # { decision_maker, problem, fit, intent, timeline, budget, meeting, score }
     transcript_reference = Column(String, nullable=True)    # Reference to stored transcript
+
+    # Real Financial & Unit Economics Ledger (Real-time telemetry)
+    revenue_billed      = Column(Float, default=0.0)
+    cogs_telephony      = Column(Float, default=0.0)
+    cogs_tts            = Column(Float, default=0.0)
+    cogs_stt            = Column(Float, default=0.0)
+    cogs_llm            = Column(Float, default=0.0)
+    total_cogs          = Column(Float, default=0.0)
+    gross_profit        = Column(Float, default=0.0)
+    gross_margin_pct    = Column(Float, default=0.0)
+    tts_characters      = Column(Integer, default=0)
+    stt_seconds         = Column(Integer, default=0)
+    llm_tokens          = Column(Integer, default=0)
+    pulses_30s          = Column(Integer, default=0)
 
     # Timestamps
     created_at          = Column(DateTime, default=datetime.utcnow)

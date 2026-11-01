@@ -6,7 +6,10 @@ import {
   Receipt,
   Download,
   AlertCircle,
-  Loader2
+  Loader2,
+  TrendingUp,
+  DollarSign,
+  Users
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
 import { useAdminPeriod } from '../components/AdminLayout';
@@ -50,6 +53,8 @@ export default function AdminPearl() {
   }
 
   const metrics = data?.call_metrics || {};
+  const financial = data?.financial_summary || {};
+  const userEconomics = data?.user_economics || [];
   const breakdowns = data?.breakdowns || {};
   const statuses = breakdowns.statuses || {};
   const outcomes = breakdowns.outcomes || {};
@@ -63,7 +68,7 @@ export default function AdminPearl() {
       <header className="admin-header">
         <div className="admin-header-title-box">
           <h1>Pearl AI Telemetry & Unit Economics</h1>
-          <p>Autonomous outbound qualification calls, duration, and provider COGS</p>
+          <p>Real-time telemetry, user-by-user COGS, revenue billed, and gross margin proof</p>
         </div>
         <div className="admin-header-actions">
           <PeriodSelector selectedPeriod={period} onChange={setPeriod} />
@@ -75,8 +80,40 @@ export default function AdminPearl() {
       </header>
 
       <div className="admin-content">
-        {/* Core Call KPIs */}
-        <div className="admin-kpi-grid">
+        {/* ── Executive Financial Proof Grid (Top Proof Bar) ── */}
+        <div className="admin-kpi-grid" style={{ marginBottom: '24px' }}>
+          <KPICard
+            label="Total Call Revenue"
+            value={financial.total_revenue_billed || 0}
+            prefix="₹"
+            footnote="Credits deducted for live voice calls"
+            icon={Receipt}
+          />
+          <KPICard
+            label="Upstream Carrier & AI COGS"
+            value={financial.total_cogs || 0}
+            prefix="₹"
+            footnote="Vobiz PSTN + Sarvam + Gemini + Groq"
+            icon={DollarSign}
+          />
+          <KPICard
+            label="Net Gross Profit"
+            value={financial.total_gross_profit || 0}
+            prefix="₹"
+            footnote="Retained profit before operating expenses"
+            icon={TrendingUp}
+          />
+          <KPICard
+            label="Blended Gross Margin"
+            value={financial.blended_gross_margin_pct || 0}
+            suffix="%"
+            footnote="Realized campaign gross margin"
+            icon={Activity}
+          />
+        </div>
+
+        {/* ── Operational Call Telemetry KPIs ── */}
+        <div className="admin-kpi-grid" style={{ marginBottom: '24px' }}>
           <KPICard
             label="Total Calls Initiated"
             value={metrics.total_initiated || 0}
@@ -106,11 +143,11 @@ export default function AdminPearl() {
           />
         </div>
 
-        {/* Unit Economics & COGS Matrix */}
-        <div className="admin-card">
+        {/* ── Real Provider COGS Matrix ── */}
+        <div className="admin-card" style={{ marginBottom: '24px' }}>
           <div className="admin-card-header">
             <div>
-              <h3 className="admin-card-title">Provider COGS & Unit Economics (INR)</h3>
+              <h3 className="admin-card-title">Provider COGS Breakdown (INR)</h3>
               <p style={{ margin: '2px 0 0', fontSize: '12px', color: 'var(--admin-text-muted)' }}>
                 {unitEconomics.label}
               </p>
@@ -120,60 +157,144 @@ export default function AdminPearl() {
             </span>
           </div>
           <div style={{ padding: '24px' }}>
-            <div className="admin-kpi-grid" style={{ marginBottom: '20px' }}>
+            <div className="admin-kpi-grid">
               <div style={{ padding: '16px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>
-                  Telephony (Exotel)
+                  Telephony (Vobiz PSTN)
                 </span>
                 <div style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '6px' }}>
                   ₹{(unitEconomics.telephony_cogs || 0).toLocaleString()}
                 </div>
                 <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>
-                  Rate: ₹{unitEconomics.rates?.exotel_per_minute}/min
+                  Rate: ₹{unitEconomics.rates?.vobiz_per_pulse_30s || 0.25} / 30s pulse
                 </span>
               </div>
 
               <div style={{ padding: '16px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>
-                  Voice TTS (Sarvam)
+                  Voice TTS (Sarvam Bulbul v4)
                 </span>
                 <div style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '6px' }}>
                   ₹{(unitEconomics.tts_cogs || 0).toLocaleString()}
                 </div>
                 <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>
-                  Rate: ₹3 per 1k characters
+                  Rate: ₹20 per 10k chars (₹0.002/char)
                 </span>
               </div>
 
               <div style={{ padding: '16px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>
-                  Audio STT (Gemini)
+                  Audio STT (Gemini 1.5 Flash)
                 </span>
                 <div style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '6px' }}>
                   ₹{(unitEconomics.stt_cogs || 0).toLocaleString()}
                 </div>
                 <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>
-                  Rate: ₹{unitEconomics.rates?.gemini_stt_per_sec}/audio sec
+                  Rate: ₹{unitEconomics.rates?.gemini_stt_per_sec || 0.005} / audio sec
                 </span>
               </div>
 
               <div style={{ padding: '16px', backgroundColor: 'var(--admin-surface-2)', borderRadius: '10px' }}>
                 <span style={{ fontSize: '11.5px', color: 'var(--admin-text-muted)', textTransform: 'uppercase' }}>
-                  Workflow Compute
+                  LLM Reasoning (Groq Qwen)
                 </span>
                 <div style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'var(--admin-mono)', marginTop: '6px' }}>
-                  ₹{(unitEconomics.infra_cogs || 0).toLocaleString()}
+                  ₹{(unitEconomics.llm_cogs || 0).toLocaleString()}
                 </div>
                 <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)' }}>
-                  Rate: ₹{unitEconomics.rates?.infra_per_call}/call run
+                  Rate: ~$0.15/1M tokens (₹0.035/min)
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Breakdowns Grid */}
-        <div className="admin-grid-2">
+        {/* ── NEW: Customer Unit Economics (User by User) ── */}
+        <div className="admin-card" style={{ marginBottom: '24px' }}>
+          <div className="admin-card-header">
+            <div>
+              <h3 className="admin-card-title">Customer Unit Economics (User by User)</h3>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', color: 'var(--admin-text-muted)' }}>
+                Itemized revenue billed, upstream COGS, gross profit, and margin per client
+              </p>
+            </div>
+            <span style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>
+              {userEconomics.length} clients active
+            </span>
+          </div>
+          <div className="admin-table-container">
+            {userEconomics.length > 0 ? (
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Calls</th>
+                    <th>Minutes</th>
+                    <th>30s Pulses</th>
+                    <th>Revenue (₹)</th>
+                    <th>COGS (₹)</th>
+                    <th>Gross Profit (₹)</th>
+                    <th>Gross Margin</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userEconomics.map((u) => {
+                    const gm = u.gross_margin_pct || 0;
+                    const gmColor = gm >= 50 ? '#10b981' : gm >= 35 ? '#3b82f6' : '#f59e0b';
+                    return (
+                      <tr key={u.user_id}>
+                        <td className="strong">
+                          <a href={`/admin/users/${u.user_id}`} style={{ color: 'inherit', textDecoration: 'underline' }}>
+                            {u.user_name}
+                          </a>
+                          {u.company_name && u.company_name !== '—' && (
+                            <span style={{ display: 'block', fontSize: '11px', color: 'var(--admin-text-muted)' }}>
+                              {u.company_name}
+                            </span>
+                          )}
+                        </td>
+                        <td style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>{u.email}</td>
+                        <td>{u.total_calls} ({u.connected_calls} connected)</td>
+                        <td className="mono">{u.connected_minutes}m</td>
+                        <td className="mono">{u.total_pulses}</td>
+                        <td className="mono strong" style={{ color: '#10b981' }}>
+                          ₹{(u.revenue_billed || 0).toLocaleString()}
+                        </td>
+                        <td className="mono" style={{ color: 'var(--admin-text-muted)' }}>
+                          ₹{(u.total_cogs || 0).toLocaleString()}
+                        </td>
+                        <td className="mono strong">
+                          ₹{(u.gross_profit || 0).toLocaleString()}
+                        </td>
+                        <td>
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '11.5px',
+                              fontWeight: 600,
+                              backgroundColor: `${gmColor}15`,
+                              color: gmColor
+                            }}
+                          >
+                            {gm.toFixed(1)}%
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <EmptyState title="No customer calls" description="Zero call telemetry recorded in this period." />
+            )}
+          </div>
+        </div>
+
+        {/* ── Breakdowns Grid (Statuses & Providers) ── */}
+        <div className="admin-grid-2" style={{ marginBottom: '24px' }}>
           {/* Statuses Breakdown */}
           <div className="admin-card">
             <div className="admin-card-header">
@@ -234,60 +355,17 @@ export default function AdminPearl() {
           </div>
         </div>
 
-        {/* Configured Agents */}
+        {/* ── Recent Call Records Table with Financials ── */}
         <div className="admin-card">
           <div className="admin-card-header">
-            <h3 className="admin-card-title">Pearl Autonomous Sales Agents</h3>
+            <div>
+              <h3 className="admin-card-title">Recent Telemetry Calls & Unit Economics</h3>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', color: 'var(--admin-text-muted)' }}>
+                Showing up to 50 recent live calls with exact duration, COGS, revenue, and gross profit
+              </p>
+            </div>
             <span style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>
-              {agents.length} agents in database
-            </span>
-          </div>
-          <div className="admin-table-container">
-            {agents.length > 0 ? (
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Agent Name</th>
-                    <th>User ID</th>
-                    <th>Status</th>
-                    <th>Provider</th>
-                    <th>Total Calls</th>
-                    <th>Connected Minutes</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {agents.map((a) => (
-                    <tr key={a.agent_id}>
-                      <td className="strong">{a.agent_name}</td>
-                      <td>
-                        <a href={`/admin/users/${a.user_id}`} style={{ color: 'inherit', textDecoration: 'underline' }}>
-                          User #{a.user_id}
-                        </a>
-                      </td>
-                      <td><StatusBadge status={a.status} /></td>
-                      <td style={{ textTransform: 'capitalize' }}>{a.call_provider}</td>
-                      <td>{a.total_calls}</td>
-                      <td className="mono">{a.connected_minutes}m</td>
-                      <td style={{ fontSize: '12px' }}>
-                        {a.created_at ? new Date(a.created_at).toLocaleDateString() : '—'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <EmptyState title="No agents created" description="No Pearl autonomous agents exist in the database." />
-            )}
-          </div>
-        </div>
-
-        {/* Recent Call Records Table */}
-        <div className="admin-card">
-          <div className="admin-card-header">
-            <h3 className="admin-card-title">Recent Telemetry Calls</h3>
-            <span style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>
-              Showing up to 50 recent calls
+              Showing {recentCalls.length} calls
             </span>
           </div>
           <div className="admin-table-container">
@@ -296,32 +374,71 @@ export default function AdminPearl() {
                 <thead>
                   <tr>
                     <th>Call ID</th>
-                    <th>Agent ID</th>
+                    <th>Customer</th>
+                    <th>Agent</th>
                     <th>Status</th>
                     <th>Provider</th>
                     <th>Duration</th>
-                    <th>Outcome</th>
-                    <th>Error Code</th>
+                    <th>Billed (₹)</th>
+                    <th>COGS (₹)</th>
+                    <th>Profit (₹)</th>
+                    <th>GM %</th>
                     <th>Timestamp</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {recentCalls.map((c) => (
-                    <tr key={c.id}>
-                      <td className="mono strong">{c.id.slice(0, 10)}...</td>
-                      <td className="mono" style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>
-                        {c.agent_id.slice(0, 8)}...
-                      </td>
-                      <td><StatusBadge status={c.status} /></td>
-                      <td style={{ textTransform: 'capitalize' }}>{c.provider}</td>
-                      <td className="mono">{c.duration_seconds}s</td>
-                      <td style={{ fontSize: '12px' }}>{c.outcome}</td>
-                      <td style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>{c.error_code || '—'}</td>
-                      <td style={{ fontSize: '12px' }}>
-                        {c.created_at ? new Date(c.created_at).toLocaleString() : '—'}
-                      </td>
-                    </tr>
-                  ))}
+                  {recentCalls.map((c) => {
+                    const gm = c.gross_margin_pct || 0;
+                    const gmColor = gm >= 50 ? '#10b981' : gm >= 35 ? '#3b82f6' : '#f59e0b';
+                    return (
+                      <tr key={c.id}>
+                        <td className="mono strong">{c.id.slice(0, 8)}...</td>
+                        <td>
+                          {c.user_id ? (
+                            <a href={`/admin/users/${c.user_id}`} style={{ color: 'inherit', textDecoration: 'underline' }}>
+                              {c.user_name}
+                            </a>
+                          ) : '—'}
+                        </td>
+                        <td>{c.agent_name || c.agent_id.slice(0, 8)}</td>
+                        <td><StatusBadge status={c.status} /></td>
+                        <td style={{ textTransform: 'capitalize' }}>{c.provider}</td>
+                        <td className="mono">
+                          {c.duration_seconds}s
+                          <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', marginLeft: '4px' }}>
+                            ({c.pulses_30s}p)
+                          </span>
+                        </td>
+                        <td className="mono strong" style={{ color: '#10b981' }}>
+                          ₹{(c.revenue_billed || 0).toFixed(2)}
+                        </td>
+                        <td className="mono" style={{ color: 'var(--admin-text-muted)' }}>
+                          ₹{(c.total_cogs || 0).toFixed(2)}
+                        </td>
+                        <td className="mono strong">
+                          ₹{(c.gross_profit || 0).toFixed(2)}
+                        </td>
+                        <td>
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              fontSize: '11.5px',
+                              fontWeight: 600,
+                              backgroundColor: `${gmColor}15`,
+                              color: gmColor
+                            }}
+                          >
+                            {gm.toFixed(1)}%
+                          </span>
+                        </td>
+                        <td style={{ fontSize: '12px' }}>
+                          {c.created_at ? new Date(c.created_at).toLocaleString() : '—'}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (

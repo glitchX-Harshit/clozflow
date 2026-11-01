@@ -247,7 +247,8 @@ export const KnowledgeBaseView = ({ user, onNavigateSection }) => {
 
     try {
       const token = localStorage.getItem('token');
-      const streamUrl = `${window.APP_API_BASE || ''}/api/knowledge/jobs/${activeJobId}/stream`;
+      const tokenQuery = token ? `?token=${encodeURIComponent(token)}` : '';
+      const streamUrl = `${window.APP_API_BASE || ''}/api/knowledge/jobs/${activeJobId}/stream${tokenQuery}`;
       
       eventSource = new EventSource(streamUrl);
 

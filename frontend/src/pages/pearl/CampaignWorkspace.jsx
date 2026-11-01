@@ -10,6 +10,69 @@ import './CampaignWorkspace.css';
 
 const API_BASE = window.APP_API_BASE || '';
 
+export const TELEPHONY_PROVIDERS = [
+  {
+    id: 'vobiz',
+    name: 'Vobiz Telephony',
+    badge: 'Native • Recommended',
+    badgeColor: '#059669',
+    badgeBg: '#ecfdf5',
+    desc: 'Ultra low latency native carrier SIP trunk with built-in DoT/TRAI compliance and high pickup rates.',
+    region: 'India (All Networks)',
+    rate: '₹0.20 / 30s pulse'
+  },
+  {
+    id: 'exotel',
+    name: 'Exotel Trunk',
+    badge: 'Enterprise Gateway',
+    badgeColor: '#4f46e5',
+    badgeBg: '#eef2ff',
+    desc: 'Enterprise Indian telecom gateway with virtual DID routing, PRI and PSTN trunking.',
+    region: 'India PSTN',
+    rate: '₹0.85 / min'
+  },
+  {
+    id: 'smartflo',
+    name: 'Tata Smartflo',
+    badge: 'TTBS Cloud Trunk',
+    badgeColor: '#0284c7',
+    badgeBg: '#f0f9ff',
+    desc: 'Tata Tele Business Services enterprise SIP infrastructure with high concurrent line capacity.',
+    region: 'India Enterprise',
+    rate: 'Direct TTBS Billing'
+  },
+  {
+    id: 'twilio',
+    name: 'Twilio Voice',
+    badge: 'Global PSTN',
+    badgeColor: '#dc2626',
+    badgeBg: '#fef2f2',
+    desc: 'Global carrier termination for US, UK, Europe, UAE, and cross-border international calls.',
+    region: 'Global / Multi-country',
+    rate: 'Usage Based ($)'
+  },
+  {
+    id: 'pulse',
+    name: 'Pulse Telephony',
+    badge: 'Carrier VoIP',
+    badgeColor: '#7c3aed',
+    badgeBg: '#f5f3ff',
+    desc: 'Managed enterprise VoIP & PSTN termination gateway with low jitter and dedicated voice routes.',
+    region: 'India & APAC',
+    rate: 'Metered Trunk'
+  },
+  {
+    id: 'intalk',
+    name: 'InTalk Cloud',
+    badge: 'Contact Center SIP',
+    badgeColor: '#d97706',
+    badgeBg: '#fffbeb',
+    desc: 'Multi-channel outbound dialer infrastructure with high pickup ratio and caller ID rotation.',
+    region: 'India Hosted',
+    rate: 'Metered Trunk'
+  }
+];
+
 const getHeaders = (isJson = true) => {
   const token = localStorage.getItem('token');
   const headers = {};
@@ -62,7 +125,7 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
     max_retries: 2,
     retry_interval_minutes: 30,
     concurrency_limit: 1,
-    call_provider: 'exotel'
+    call_provider: 'vobiz'
   });
 
   // Step 4 / Launch state
@@ -72,6 +135,7 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
   const [monitorData, setMonitorData] = useState(null);
   const [monitorRecipients, setMonitorRecipients] = useState([]);
   const [selectedTranscript, setSelectedTranscript] = useState(null);
+  const [selectedError, setSelectedError] = useState(null);
   const pollIntervalRef = useRef(null);
 
   // 1. Fetch campaigns list
@@ -682,9 +746,31 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
                         <td>{r.business_name || '—'}</td>
                         <td style={{ fontFamily: 'monospace' }}>{r.normalized_phone || r.phone_number}</td>
                         <td>
-                          <span className={`cw-badge ${r.status}`}>
-                            {r.status}
-                          </span>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span className={`cw-badge ${r.status}`}>
+                              {r.status}
+                            </span>
+                            {r.status === 'failed' && r.error_reason && (
+                              <span 
+                                title={r.error_reason}
+                                style={{ 
+                                  fontSize: '0.72rem', 
+                                  color: '#dc2626', 
+                                  maxWidth: '170px', 
+                                  whiteSpace: 'nowrap', 
+                                  overflow: 'hidden', 
+                                  textOverflow: 'ellipsis',
+                                  cursor: 'pointer',
+                                  fontWeight: 500
+                                }}
+                                onClick={() => setSelectedError(r)}
+                              >
+                                {r.error_reason.includes('Insufficient balance') 
+                                  ? 'Exotel: Low Balance' 
+                                  : r.error_reason.slice(0, 30) + '...'}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td>{r.attempts || 0}</td>
                         <td>{r.duration_seconds ? `${r.duration_seconds}s` : '—'}</td>
@@ -707,6 +793,16 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
                             >
                               <FileText size={12} />
                               <span>Transcript</span>
+                            </button>
+                          ) : r.status === 'failed' && r.error_reason ? (
+                            <button 
+                              type="button" 
+                              className="cw-btn-back" 
+                              style={{ padding: '4px 10px', fontSize: '0.78rem', color: '#dc2626', borderColor: '#fca5a5', background: '#fef2f2' }}
+                              onClick={() => setSelectedError(r)}
+                            >
+                              <AlertCircle size={12} />
+                              <span>View Error</span>
                             </button>
                           ) : (
                             <span style={{ color: '#cbd5e1', fontSize: '0.78rem' }}>No log</span>
@@ -747,6 +843,48 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
               <div className="modal-footer">
                 <button type="button" className="cw-btn-primary" onClick={() => setSelectedTranscript(null)}>
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Error Details Modal */}
+        {selectedError && (
+          <div className="pearl-phone-modal-backdrop" onClick={() => setSelectedError(null)}>
+            <div className="pearl-phone-modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: '560px' }}>
+              <div className="modal-header">
+                <div>
+                  <h3 className="modal-title" style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <AlertTriangle size={18} color="#dc2626" />
+                    Telephony Dispatch Failed
+                  </h3>
+                  <p className="modal-sub">{selectedError.name} ({selectedError.normalized_phone || selectedError.phone_number})</p>
+                </div>
+                <button type="button" className="modal-close-btn" onClick={() => setSelectedError(null)}>✕</button>
+              </div>
+              <div className="modal-body">
+                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+                  <div style={{ fontWeight: 700, color: '#991b1b', marginBottom: '6px', fontSize: '0.9rem' }}>
+                    {selectedError.error_reason?.includes('Insufficient balance') 
+                      ? 'Telephony Provider Balance Depleted (403 Forbidden)' 
+                      : 'Carrier Gateway Rejection'}
+                  </div>
+                  <div style={{ fontSize: '0.84rem', color: '#7f1d1d', lineHeight: 1.5 }}>
+                    {selectedError.error_reason?.includes('Insufficient balance') 
+                      ? 'The Exotel carrier account has insufficient balance to initiate outbound PSTN phone calls. Please recharge your Exotel account balance or switch to an active provider to resume automated dialing.' 
+                      : selectedError.error_reason}
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '0.78rem', color: '#64748b', background: '#f8fafc', padding: '12px', borderRadius: '6px', border: '1px solid #e2e8f0', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                  <strong>Raw Gateway Response:</strong>
+                  <div style={{ marginTop: '4px' }}>{selectedError.error_reason}</div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="phone-btn-dark" onClick={() => setSelectedError(null)}>
+                  Dismiss
                 </button>
               </div>
             </div>
@@ -1198,7 +1336,33 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
             <div className="cw-card">
               <div className="cw-card-header">
                 <h3 className="cw-card-title">3. Telephony & Calling Configuration</h3>
-                <p className="cw-card-desc">Define calling window, retries, and pacing parameters</p>
+                <p className="cw-card-desc">Choose outbound telephony gateway, calling window, retries, and pacing</p>
+              </div>
+
+              {/* Telephony Connection Selection (Dropdown Menu) */}
+              <div className="cw-form-group" style={{ marginBottom: '22px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <label style={{ margin: 0, fontSize: '0.88rem', fontWeight: 700, color: '#1e293b' }}>
+                    Outbound Telephony Gateway / Connection
+                  </label>
+                  <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                    Select carrier trunk for PSTN termination & audio streaming
+                  </span>
+                </div>
+                
+                <select
+                  className="cw-select"
+                  style={{ fontSize: '0.92rem', padding: '11px 14px', fontWeight: 600, color: '#0f172a', background: '#ffffff', border: '1.5px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer' }}
+                  value={callSettings.call_provider || 'vobiz'}
+                  onChange={e => setCallSettings({ ...callSettings, call_provider: e.target.value })}
+                >
+                  <option value="vobiz">Vobiz Telephony (Direct Carrier Trunk — Recommended for India)</option>
+                  <option value="exotel">Exotel Trunk (Enterprise PRI / DID)</option>
+                  <option value="smartflo">Tata Smartflo (TTBS Enterprise Trunk)</option>
+                  <option value="twilio">Twilio Voice (Global / Multi-country PSTN)</option>
+                  <option value="pulse">Pulse Telephony (Carrier VoIP)</option>
+                  <option value="intalk">InTalk Cloud (Contact Center SIP)</option>
+                </select>
               </div>
 
               <div className="cw-grid-2">
@@ -1278,13 +1442,6 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
                 </div>
               </div>
 
-              <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '14px 18px', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <ShieldCheck size={20} color="#16a34a" />
-                <div style={{ fontSize: '0.84rem', color: '#15803d' }}>
-                  <strong>Authorized Outbound Provider:</strong> Exotel Telephony Engine is verified and active for outbound dialing.
-                </div>
-              </div>
-
               <div className="cw-footer-actions">
                 <button type="button" className="cw-btn-back" onClick={() => setWizardStep(2)}>
                   <ArrowLeft size={16} />
@@ -1306,7 +1463,7 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
                 <p className="cw-card-desc">Carefully review all campaign parameters before initiating real phone calls</p>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px', marginBottom: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '18px', marginBottom: '24px' }}>
                 <div style={{ background: '#f8fafc', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                   <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>Campaign & Persona</div>
                   <h4 style={{ margin: '0 0 6px 0', fontSize: '1rem', color: '#0f172a' }}>{campaignForm.name}</h4>
@@ -1327,12 +1484,25 @@ export const CampaignWorkspace = ({ onNavigateSection }) => {
                     Excluded / Invalid: {recipientsStats.excluded + recipientsStats.invalid} leads
                   </div>
                 </div>
+
+                <div style={{ background: '#f8fafc', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>Telephony & Window</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>
+                    {TELEPHONY_PROVIDERS.find(p => p.id === (callSettings.call_provider || 'vobiz'))?.name || 'Vobiz Telephony'}
+                  </div>
+                  <div style={{ fontSize: '0.84rem', color: '#475569' }}>
+                    Window: {callSettings.window_start} - {callSettings.window_end} ({callSettings.timezone.split('/')[1] || 'IST'})
+                  </div>
+                  <div style={{ fontSize: '0.84rem', color: '#64748b', marginTop: '4px' }}>
+                    Retries: {callSettings.max_retries} &bull; Concurrency: {callSettings.concurrency_limit}
+                  </div>
+                </div>
               </div>
 
               <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '8px', padding: '16px', display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '24px' }}>
                 <AlertTriangle size={20} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div style={{ fontSize: '0.84rem', color: '#92400e', lineHeight: 1.5 }}>
-                  <strong>Explicit Launch Notice:</strong> Launching this campaign will begin automated PSTN dialing to the verified recipients above through the configured Exotel telephony trunk. Each recipient will interact in real-time with Pearl AI according to your selected agent instructions.
+                  <strong>Explicit Launch Notice:</strong> Launching this campaign will begin automated PSTN dialing to the verified recipients above through the configured <strong>{TELEPHONY_PROVIDERS.find(p => p.id === (callSettings.call_provider || 'vobiz'))?.name || 'Vobiz Telephony'}</strong> trunk. Each recipient will interact in real-time with Pearl AI according to your selected agent instructions.
                 </div>
               </div>
 

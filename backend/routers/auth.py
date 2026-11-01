@@ -4,7 +4,7 @@ from typing import Optional
 import os
 import bcrypt
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException, status, Header, Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -132,17 +132,26 @@ class Token(BaseModel):
     email: str
 
 
-def get_current_user(authorization: str = Header(None), db: Session = Depends(get_db)):
+def get_current_user(
+    authorization: Optional[str] = Header(None),
+    token: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    if not authorization or not authorization.startswith("Bearer "):
+    raw_token = None
+    if authorization and authorization.startswith("Bearer "):
+        raw_token = authorization.split(" ")[1]
+    elif token:
+        raw_token = token.replace("Bearer ", "").strip() if token.startswith("Bearer ") else token.strip()
+
+    if not raw_token:
         raise credentials_exception
-    token = authorization.split(" ")[1]
     
-    user = verify_token_string(token, db)
+    user = verify_token_string(raw_token, db)
     if not user:
         raise credentials_exception
         

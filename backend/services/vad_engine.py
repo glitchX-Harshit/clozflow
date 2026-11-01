@@ -55,12 +55,18 @@ class SileroVADEngine:
         import os
         
         # Read from environment or use defaults
-        env_threshold = float(os.getenv("PEARL_VAD_THRESHOLD", "0.5"))
-        self.threshold = threshold if threshold is not None else env_threshold
+        env_threshold = float(os.getenv("PEARL_VAD_THRESHOLD", "0.48"))
+        self._default_threshold = threshold if threshold is not None else env_threshold
+        self.threshold = self._default_threshold
         
         env_min_speech_ms = int(os.getenv("PEARL_MIN_SPEECH_MS", "64"))
         env_min_speech_frames = max(1, env_min_speech_ms // 32) # 32ms per frame
-        self.min_speech_frames = min_speech_frames if min_speech_frames is not None else env_min_speech_frames
+        self._default_min_speech_frames = min_speech_frames if min_speech_frames is not None else env_min_speech_frames
+        self.min_speech_frames = self._default_min_speech_frames
+
+        # Barge-in adaptive settings (applied when agent is actively speaking)
+        self.barge_in_threshold = float(os.getenv("PEARL_VAD_BARGE_IN_THRESHOLD", "0.65"))
+        self.barge_in_min_speech_frames = int(os.getenv("PEARL_VAD_BARGE_IN_FRAMES", "5")) # ~160ms
 
         self.sample_rate = sample_rate
         self.min_silence_frames = min_silence_frames
@@ -69,10 +75,27 @@ class SileroVADEngine:
         self._initialized = False
 
         # Internal state tracking
+        self._agent_speaking = False
         self._is_speaking = False
         self._consecutive_speech = 0
         self._consecutive_silence = 0
         self._speech_start_time: Optional[float] = None
+
+    def set_agent_speaking(self, is_speaking: bool):
+        """
+        Dynamically adjust VAD thresholds based on agent playback state.
+        When agent is speaking, higher threshold (0.65) and more consecutive frames (~160ms)
+        are required to prevent telephone hybrid echo / sidetone from triggering false barge-in.
+        When agent is listening, lower threshold (0.48) and fewer frames (~64ms) ensure
+        immediate responsiveness to user speech.
+        """
+        self._agent_speaking = is_speaking
+        if is_speaking:
+            self.threshold = self.barge_in_threshold
+            self.min_speech_frames = self.barge_in_min_speech_frames
+        else:
+            self.threshold = self._default_threshold
+            self.min_speech_frames = self._default_min_speech_frames
 
     @classmethod
     async def warmup(cls):

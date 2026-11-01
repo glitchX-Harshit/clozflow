@@ -16,9 +16,9 @@ from admin.models import CreditTransaction, Payment
 
 # ── Canonical Pricing Rates ───────────────────────────────────────────────────
 RATE_PER_TEST_SIMULATION   = 2.0     # ₹2.00 flat per simulation
-RATE_PEARL_CALL_PER_MIN    = 2.5     # ₹2.50 per 60 seconds
-RATE_TELEPHONY_PULSE_30S   = 0.2     # ₹0.20 per 30-second pulse
-RATE_PHONE_RENTAL_MONTHLY  = 199.0   # ₹199.00 / month
+RATE_PEARL_CALL_PER_MIN    = 3.0     # ₹3.00 per 60 seconds (All-inclusive: Voice AI + Vobiz PSTN)
+RATE_TELEPHONY_PULSE_30S   = 0.25    # ₹0.25 per 30-second pulse (Upstream Vobiz COGS)
+RATE_PHONE_RENTAL_MONTHLY  = 179.0   # ₹179.00 / month (Customer price | Upstream Vobiz DID cost: $1.00 = ₹84.00)
 
 
 def is_user_superuser(db: Session, user_id: int) -> bool:
@@ -166,14 +166,11 @@ def calculate_call_metering(duration_seconds: int) -> Dict[str, Any]:
             "total_credits": 0.0
         }
 
-    # Pearl AI Voice Engine (2.5 Rs / min calculated pro-rata)
-    pearl_voice_cost = round((duration_seconds / 60.0) * RATE_PEARL_CALL_PER_MIN, 2)
-
-    # Vobiz Telephony Pulse (0.2 Rs per 30 seconds pulse)
+    # All-inclusive Pearl Live Call (₹3.00 / min pro-rata, bundled with Vobiz telephony)
     pulses = math.ceil(duration_seconds / 30.0)
+    total_credits = max(round(0.5 * RATE_PEARL_CALL_PER_MIN, 2), round((duration_seconds / 60.0) * RATE_PEARL_CALL_PER_MIN, 2))
     telephony_cost = round(pulses * RATE_TELEPHONY_PULSE_30S, 2)
-
-    total_credits = round(pearl_voice_cost + telephony_cost, 2)
+    pearl_voice_cost = round(total_credits - telephony_cost, 2)
 
     return {
         "duration_seconds": duration_seconds,

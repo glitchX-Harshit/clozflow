@@ -1,47 +1,23 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { ChevronDown, Check, Search, X } from 'lucide-react';
+import { ChevronDown, Check, Search, X, Play, Square, Volume2 } from 'lucide-react';
 import gsap from 'gsap';
+import { CLOZFLOW_VOICE_LIST } from './voiceList';
 import './VoicePersonaSelector.css';
 
-export const CLOZFLOW_VOICE_LIST = [
-  { id: 'shubh_enhi_ads', name: 'Shubh', gender: 'Male', language: 'Hinglish', category: 'Sales & Ads', style: 'Hinglish · Outbound Pitch & High-Energy Ads' },
-  { id: 'ritu_hi_customer', name: 'Ritu', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Customer Support & Advisory' },
-  { id: 'simran_en_customer', name: 'Simran', gender: 'Female', language: 'Indian English', category: 'Support & Care', style: 'English · Customer Care & Qualification' },
-  { id: 'priya_hi_recovery', name: 'Priya', gender: 'Female', language: 'Hindi', category: 'Debt & Recovery', style: 'Hindi · Debt Recovery & Direct Follow-up' },
-  { id: 'rohan_en_recovery', name: 'Rohan', gender: 'Male', language: 'Indian English', category: 'Debt & Recovery', style: 'English · Enterprise Recovery & Sales' },
-  { id: 'kavya_en_conversational', name: 'Kavya', gender: 'Female', language: 'Indian English', category: 'Conversational', style: 'English · Warm Conversational & Discovery' },
-  { id: 'rahul_en_conversational', name: 'Rahul', gender: 'Male', language: 'Hinglish/English', category: 'B2B Sales', style: 'Hinglish/English · B2B Sales & Demo Booking' },
-  { id: 'aditya_en_conversational', name: 'Aditya', gender: 'Male', language: 'Indian English', category: 'Executive', style: 'English · Executive Gravitas & Strategy' },
-  { id: 'ishita_en_customer', name: 'Ishita', gender: 'Female', language: 'Indian English', category: 'Support & Care', style: 'English · Empathetic Support & Care' },
-  { id: 'dev_en_recovery', name: 'Dev', gender: 'Male', language: 'Indian English', category: 'Closing & Recovery', style: 'English · Assertive Challenge & Closing' },
-  { id: 'anand_hi_news', name: 'Anand', gender: 'Male', language: 'Hindi', category: 'Executive', style: 'Hindi · Formal & Operational Presentation' },
-  { id: 'neha_hi_customer', name: 'Neha', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Warm Retention & Relationship' },
-  { id: 'pooja_hi_conversational', name: 'Pooja', gender: 'Female', language: 'Hindi', category: 'Conversational', style: 'Hindi · Gentle & Persuasive Conversation' },
-  { id: 'tarun_en_conversational', name: 'Tarun', gender: 'Male', language: 'Indian English', category: 'Conversational', style: 'English · Polished & Focused Discovery' },
-  { id: 'sumit_enhi_ads', name: 'Sumit', gender: 'Male', language: 'Hinglish', category: 'Sales & Ads', style: 'Hinglish · Calm Professional Pitch' },
-  { id: 'kabir_enhi_ads', name: 'Kabir', gender: 'Male', language: 'Hinglish', category: 'Sales & Ads', style: 'Hinglish · Bold & Dynamic Campaign' },
-  { id: 'aayan_en_conversational', name: 'Aayan', gender: 'Male', language: 'Indian English', category: 'Conversational', style: 'English · Natural & Confident Dialogue' },
-  { id: 'shreya_en_conversational', name: 'Shreya', gender: 'Female', language: 'Indian English', category: 'Conversational', style: 'English · Dynamic & Fast-Paced Closer' },
-  { id: 'varun_en_conversational', name: 'Varun', gender: 'Male', language: 'Indian English', category: 'Consulting', style: 'English · Strategic & Composed Consultation' },
-  { id: 'shruti_hi_customer', name: 'Shruti', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Bright & Explanatory Support' },
-  { id: 'mohit_hi_recovery', name: 'Mohit', gender: 'Male', language: 'Hindi', category: 'Debt & Recovery', style: 'Hindi · Resilient & Paced Reminders' },
-  { id: 'suhani_hi_conversational', name: 'Suhani', gender: 'Female', language: 'Hindi', category: 'Conversational', style: 'Hindi · Engaging & Conversational Partner' },
-  { id: 'rehan_en_conversational', name: 'Rehan', gender: 'Male', language: 'Indian English', category: 'B2B Sales', style: 'English · Smooth & Strategic Closer' },
-  { id: 'rupali_hi_customer', name: 'Rupali', gender: 'Female', language: 'Hindi', category: 'Support & Care', style: 'Hindi · Trustworthy & Reassuring Support' }
-];
-
+export { CLOZFLOW_VOICE_LIST };
 export const SARVAM_VOICE_LIST = CLOZFLOW_VOICE_LIST;
 
 const VoicePersonaSelector = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all'); // all | female | male
-  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [filter, setFilter] = useState('all'); // all | female | male | hindi | english | regional
+  const [playingId, setPlayingId] = useState(null);
 
   const containerRef = useRef(null);
   const dropdownRef = useRef(null);
   const chevronRef = useRef(null);
   const inputRef = useRef(null);
+  const audioRef = useRef(null);
 
   // Active voice
   const activeVoice = useMemo(() => {
@@ -56,14 +32,64 @@ const VoicePersonaSelector = ({ value, onChange }) => {
     return CLOZFLOW_VOICE_LIST[0];
   }, [value]);
 
+  // Audio preview toggle (Uses Bulbul v4 Flash with server-side caching)
+  const togglePreview = (voiceId) => {
+    if (playingId === voiceId) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      setPlayingId(null);
+      return;
+    }
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    const audioUrl = `/api/pearl/voice-preview/${encodeURIComponent(voiceId)}`;
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+    setPlayingId(voiceId);
+
+    audio.onended = () => {
+      setPlayingId(null);
+      audioRef.current = null;
+    };
+    audio.onerror = () => {
+      setPlayingId(null);
+      audioRef.current = null;
+    };
+    audio.play().catch(() => {
+      setPlayingId(null);
+      audioRef.current = null;
+    });
+  };
+
+  // Cleanup audio on unmount or close
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   // Filtered voice list
   const filtered = useMemo(() => {
     return CLOZFLOW_VOICE_LIST.filter(v => {
       if (filter === 'female' && v.gender !== 'Female') return false;
       if (filter === 'male' && v.gender !== 'Male') return false;
+      if (filter === 'hindi' && !(v.language === 'Hindi' || v.language === 'Hinglish')) return false;
+      if (filter === 'english' && v.language !== 'Indian English') return false;
+      if (filter === 'regional' && ['Hindi', 'Hinglish', 'Indian English'].includes(v.language)) return false;
+
       if (search.trim()) {
         const q = search.toLowerCase().trim();
         return (
+          v.id.toLowerCase().includes(q) ||
           v.name.toLowerCase().includes(q) ||
           v.style.toLowerCase().includes(q) ||
           v.gender.toLowerCase().includes(q) ||
@@ -146,6 +172,21 @@ const VoicePersonaSelector = ({ value, onChange }) => {
         </div>
 
         <div className="aw-trigger-right">
+          <button
+            type="button"
+            className={`aw-trigger-preview-btn ${playingId === activeVoice.id ? 'is-playing' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePreview(activeVoice.id);
+            }}
+            title="Listen to selected voice preview"
+          >
+            {playingId === activeVoice.id ? (
+              <Square size={10} fill="currentColor" />
+            ) : (
+              <Volume2 size={13} />
+            )}
+          </button>
           <span ref={chevronRef} className="aw-chevron-wrap">
             <ChevronDown size={14} strokeWidth={2} />
           </span>
@@ -168,7 +209,7 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                 ref={inputRef}
                 type="text"
                 className="aw-search-field"
-                placeholder="Search..."
+                placeholder="Search 224 voices by name, accent, style..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -181,16 +222,19 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                   <X size={12} />
                 </button>
               ) : (
-                <span className="aw-search-shortcut">ESC</span>
+                <span className="aw-search-shortcut">{filtered.length}</span>
               )}
             </div>
 
             {/* Filter Pills */}
             <div className="aw-filter-row">
               {[
-                { key: 'all', label: 'All' },
+                { key: 'all', label: `All (${CLOZFLOW_VOICE_LIST.length})` },
                 { key: 'female', label: 'Female' },
-                { key: 'male', label: 'Male' }
+                { key: 'male', label: 'Male' },
+                { key: 'hindi', label: 'Hindi / Hinglish' },
+                { key: 'english', label: 'English' },
+                { key: 'regional', label: 'Regional (Indic)' }
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -212,11 +256,12 @@ const VoicePersonaSelector = ({ value, onChange }) => {
           >
             {filtered.length === 0 ? (
               <div className="aw-empty-row">
-                <span>No results</span>
+                <span>No voice persona matching your search</span>
               </div>
             ) : (
               filtered.map((voice) => {
                 const isSelected = voice.id.toLowerCase() === activeVoice.id.toLowerCase();
+                const isItemPlaying = playingId === voice.id;
                 return (
                   <div
                     key={voice.id}
@@ -233,6 +278,9 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                           <span style={{ fontSize: '0.68rem', padding: '1px 5px', borderRadius: '4px', background: '#f1f5f9', color: '#475569', fontWeight: 600 }}>
                             {voice.language}
                           </span>
+                          <span style={{ fontSize: '0.66rem', padding: '1px 5px', borderRadius: '4px', background: '#e0f2fe', color: '#0369a1', fontWeight: 500 }}>
+                            {voice.category}
+                          </span>
                         </div>
                         <span style={{ fontSize: '0.73rem', color: '#64748b', fontWeight: 400 }}>
                           {voice.style}
@@ -241,6 +289,21 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                     </div>
 
                     <div className="aw-option-right">
+                      <button
+                        type="button"
+                        className={`aw-preview-btn ${isItemPlaying ? 'is-playing' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          togglePreview(voice.id);
+                        }}
+                        title={`Preview ${voice.name} (Bulbul v4 Flash)`}
+                      >
+                        {isItemPlaying ? (
+                          <Square size={10} fill="currentColor" />
+                        ) : (
+                          <Play size={10} fill="currentColor" style={{ marginLeft: '1px' }} />
+                        )}
+                      </button>
                       {isSelected && (
                         <span className="aw-option-check">
                           <Check size={13} strokeWidth={2.5} />

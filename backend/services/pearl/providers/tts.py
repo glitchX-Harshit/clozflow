@@ -88,24 +88,46 @@ class ElevenLabsTTSProvider(TTSProvider):
 
 
 VALID_SARVAM_WS_SPEAKERS = {
-    "aditya", "ritu", "ashutosh", "priya", "neha", "rahul", "pooja", "rohan",
-    "simran", "kavya", "amit", "dev", "ishita", "shreya", "ratan", "varun",
-    "manan", "sumit", "roopa", "kabir", "aayan", "shubh", "advait", "anand",
-    "tanya", "tarun", "sunny", "mani", "gokul", "vijay", "shruti", "suhani",
-    "mohit", "kavitha", "rehan", "soham", "rupali"
+    "aakash", "aayan", "aditi", "aditya", "advait", "alok", "amit", "anand",
+    "ananya", "aniket", "anoop", "anusha", "anushka", "arjun", "ashutosh",
+    "baljeet", "bhavani", "bhavna", "biju", "biswajit", "chetan", "chirag",
+    "debasish", "deepa", "deepak", "dev", "divya", "gokul", "gurpreet",
+    "hansa", "harish", "harpreet", "ishita", "jaswinder", "jatin", "kabir",
+    "karthik", "kavitha", "kavya", "ketan", "lakshmi", "lipsa", "madhav",
+    "manan", "mani", "manjula", "mohit", "neha", "pooja", "poulomi",
+    "pradeep", "priya", "raghu", "rahul", "rajesh", "ratan", "rehan",
+    "remya", "ritu", "rohan", "roopa", "rupali", "sai", "selvi",
+    "shreya", "shruti", "shubh", "simran", "simranjit", "soham", "sourav",
+    "sreeja", "srinivas", "subhash", "subrat", "suhani", "sumit", "sunita",
+    "sunny", "swapna", "swati", "tanima", "tanvi", "tanya", "tarun",
+    "varun", "vijay"
 }
+
+def normalize_sarvam_v4_speaker(speaker: str | None) -> str:
+    """
+    Ensure a valid persona ID for Sarvam Bulbul v4 Flash (e.g. 'shubh_enhi_ads', 'ritu_hi_customer').
+    If a legacy short name is passed (e.g. 'shubh'), maps to its primary v4 persona.
+    """
+    if not speaker:
+        return "shubh_enhi_ads"
+    sp = speaker.strip().lower()
+    if "_" in sp:
+        return sp
+    # Legacy short name fallbacks
+    if sp in ["shubh", "rohan", "rahul", "dev", "kabir", "sumit", "tarun", "aayan", "aditya", "alok"]:
+        return f"{sp}_enhi_ads"
+    if sp in ["ritu", "priya", "pooja", "neha", "shruti", "rupali", "aditi"]:
+        return f"{sp}_hi_customer"
+    if sp in ["simran", "kavya", "ishita", "shreya", "anushka", "divya"]:
+        return f"{sp}_en_customer"
+    return f"{sp}_enhi_ads"
 
 def get_sarvam_ws_speaker(speaker: str | None) -> str:
     """
-    Extract a valid base speaker accepted by Sarvam WebSocket API.
-    Strips persona descriptors (e.g. 'shubh_enhi_ads' -> 'shubh', 'ritu_hi_customer' -> 'ritu').
+    Extract a valid persona speaker accepted by Sarvam bulbul:v4-flash WebSocket API.
+    Uses expanded persona ID format (e.g. 'shubh_enhi_ads', 'ritu_hi_customer').
     """
-    if not speaker:
-        return "shubh"
-    base = speaker.strip().lower().split("_")[0]
-    if base in VALID_SARVAM_WS_SPEAKERS:
-        return base
-    return "shubh"
+    return normalize_sarvam_v4_speaker(speaker)
 
 
 class SarvamTTSProvider(TTSProvider):
@@ -119,6 +141,7 @@ class SarvamTTSProvider(TTSProvider):
         if not self.api_key:
             print("WARNING: SARVAM_API_KEY not found in environment.")
         self.ws = None
+        self._lock = asyncio.Lock()
         self._cancel_event = asyncio.Event()
         self._flush_requested = False
         self._last_language_code = "hi-IN"
@@ -132,15 +155,18 @@ class SarvamTTSProvider(TTSProvider):
         if not self.api_key:
             return
             
-        url = "wss://api.sarvam.ai/text-to-speech/ws"
-        headers = {"api-subscription-key": self.api_key}
-        
-        try:
-            self.ws = await websockets.connect(url, extra_headers=headers)
-        except Exception as e:
-            print(f"[SarvamTTS] Connection failed: {e}")
-            self.ws = None
-            raise
+        async with self._lock:
+            if self.ws and not getattr(self.ws, 'closed', False):
+                return
+            url = "wss://api.sarvam.ai/text-to-speech/ws?model=bulbul:v4-flash&send_completion_event=true"
+            headers = {"api-subscription-key": self.api_key}
+            
+            try:
+                self.ws = await websockets.connect(url, extra_headers=headers)
+            except Exception as e:
+                print(f"[SarvamTTS] Connection failed: {e}")
+                self.ws = None
+                raise
 
     async def configure(self, language_code: str = "hi-IN", speaker: str = "shubh", pace: float = 1.0, temperature: float = 0.6):
         if not self.ws:
@@ -148,8 +174,41 @@ class SarvamTTSProvider(TTSProvider):
             
         ws_speaker = get_sarvam_ws_speaker(speaker)
         actual_lang = language_code
-        if actual_lang in ["Auto", None, ""]:
-            actual_lang = "en-IN" if "_en_" in speaker else "hi-IN"
+
+        # Map language names to BCP-47 codes
+        LANG_MAP = {
+            "Auto": None,
+            "English": "en-IN",
+            "Indian English": "en-IN",
+            "Hindi": "hi-IN",
+            "Hinglish": "hi-IN",
+            "Tamil": "ta-IN",
+            "Telugu": "te-IN",
+            "Bengali": "bn-IN",
+            "Marathi": "mr-IN",
+            "Kannada": "kn-IN",
+            "Gujarati": "gu-IN",
+            "Punjabi": "pa-IN",
+            "Malayalam": "ml-IN",
+            "Odia": "od-IN",
+        }
+        if actual_lang in LANG_MAP:
+            actual_lang = LANG_MAP[actual_lang]
+
+        # If language code is empty or default, infer from persona ID suffix
+        if not actual_lang:
+            sp_lower = (speaker or "").lower()
+            if "_ta_" in sp_lower: actual_lang = "ta-IN"
+            elif "_te_" in sp_lower: actual_lang = "te-IN"
+            elif "_bn_" in sp_lower: actual_lang = "bn-IN"
+            elif "_mr_" in sp_lower: actual_lang = "mr-IN"
+            elif "_kn_" in sp_lower: actual_lang = "kn-IN"
+            elif "_gu_" in sp_lower: actual_lang = "gu-IN"
+            elif "_pa_" in sp_lower: actual_lang = "pa-IN"
+            elif "_ml_" in sp_lower: actual_lang = "ml-IN"
+            elif "_od_" in sp_lower: actual_lang = "od-IN"
+            elif "_en_" in sp_lower: actual_lang = "en-IN"
+            else: actual_lang = "hi-IN"
 
         self._last_language_code = actual_lang
         self._last_speaker = ws_speaker
@@ -159,15 +218,20 @@ class SarvamTTSProvider(TTSProvider):
         config = {
             "type": "config",
             "data": {
+                "model": "bulbul:v4-flash",
+                "target_language_code": actual_lang,
                 "language_code": actual_lang,
                 "speaker": ws_speaker,
                 "pace": pace,
                 "temperature": temperature,
+                "speech_sample_rate": 8000,
                 "sample_rate": 8000,
-                "enable_events": True
+                "output_audio_codec": "linear16",
+                "min_buffer_size": 30,
+                "max_chunk_length": 150
             }
         }
-        print(f"[TTS] Configuring Sarvam TTS stream (speaker: {ws_speaker}, lang: {actual_lang})")
+        print(f"[TTS] Configuring Sarvam linear16 PCM stream (speaker: {ws_speaker}, lang: {actual_lang})")
         await self.ws.send(json.dumps(config))
 
     async def flush(self):
@@ -189,11 +253,10 @@ class SarvamTTSProvider(TTSProvider):
             first_chunk_received = False
             self._mp3_buffer = b""
             self._last_yielded_len = 0
-            import miniaudio
 
             while True:
-                # If a flush was requested and audio has started arriving, detect turn end on 350ms network idle
-                timeout = 0.35 if (self._flush_requested and first_chunk_received) else None
+                # If flush requested, use 0.4s idle timeout as safety boundary
+                timeout = 0.40 if (self._flush_requested and first_chunk_received) else None
                 try:
                     if timeout:
                         message = await asyncio.wait_for(self.ws.recv(), timeout=timeout)
@@ -203,78 +266,98 @@ class SarvamTTSProvider(TTSProvider):
                     if self._flush_requested:
                         self._flush_requested = False
                         first_chunk_received = False
-                        self._mp3_buffer = b""
-                        self._last_yielded_len = 0
                         yield b"__FLUSH_COMPLETE__"
                     continue
 
-                # If we were cancelled during this turn, drop audio
+                # If cancelled during this turn, discard residual audio
                 if self._cancel_event.is_set():
-                    self._mp3_buffer = b""
-                    self._last_yielded_len = 0
                     continue
 
                 if isinstance(message, str):
                     data = json.loads(message)
-                    if data.get("type") == "audio" and "data" in data and "audio" in data["data"]:
-                        audio_b64 = data["data"]["audio"]
-                        audio_bytes = base64.b64decode(audio_b64)
-                        
-                        pcm_bytes = b""
+                    msg_type = data.get("type")
 
-                        # 1. Fast-path: decode this chunk standalone (zero buffer accumulation)
-                        try:
-                            decoded = miniaudio.decode(audio_bytes, nchannels=1, sample_rate=8000)
-                            pcm_bytes = bytes(decoded.samples)
-                            self._mp3_buffer = b""
-                            self._last_yielded_len = 0
-                        except Exception:
-                            # 2. Chunk spans MP3 frame boundary: append to stream buffer
-                            self._mp3_buffer += audio_bytes
-                            try:
-                                decoded = miniaudio.decode(self._mp3_buffer, nchannels=1, sample_rate=8000)
-                                all_pcm = bytes(decoded.samples)
-                                if len(all_pcm) > self._last_yielded_len:
-                                    pcm_bytes = all_pcm[self._last_yielded_len:]
-                                    self._last_yielded_len = len(all_pcm)
-                                    
-                                if len(self._mp3_buffer) > 16384:
-                                    self._mp3_buffer = b""
-                                    self._last_yielded_len = 0
-                            except Exception:
-                                pass
+                    if msg_type == "audio" and "data" in data and "audio" in data["data"]:
+                        audio_b64 = data["data"]["audio"]
+                        raw_bytes = base64.b64decode(audio_b64)
+                        content_type = data["data"].get("content_type", "")
                         
-                        if pcm_bytes:
+                        # Direct Linear16 PCM fast-path (uncompressed, lossless, zero jitter)
+                        # Strip container WAV/RIFF header (first 44 bytes) if returned by provider
+                        if len(raw_bytes) > 44 and raw_bytes.startswith(b"RIFF"):
+                            raw_bytes = raw_bytes[44:]
+
+                        if content_type in ("audio/pcm", "audio/x-l16", "linear16") or not (
+                            raw_bytes.startswith(b"ID3") or raw_bytes.startswith(b"\xff\xfb") or raw_bytes.startswith(b"\xff\xf3")
+                        ):
+                            pcm_bytes = raw_bytes
+                        else:
+                            # Fallback if compressed MP3 frames are returned
+                            try:
+                                import miniaudio
+                                decoded = miniaudio.decode(raw_bytes, nchannels=1, sample_rate=8000)
+                                pcm_bytes = bytes(decoded.samples)
+                            except Exception:
+                                pcm_bytes = raw_bytes
+                        
+                        if pcm_bytes and not self._cancel_event.is_set():
                             if not first_chunk_received:
-                                print(f"[TTS] First audio chunk received")
+                                print(f"[TTS] First audio chunk received ({len(pcm_bytes)} bytes PCM)")
                                 first_chunk_received = True
                                 
                             yield pcm_bytes
-                    elif data.get("type") == "error":
-                        print(f"[SarvamTTS] Error received: {data}")
-                    elif data.get("type") == "flush_complete":
+
+                    elif msg_type == "event":
+                        event_type = data.get("data", {}).get("event_type")
+                        if event_type in ("final", "flush_complete", "completion"):
+                            self._flush_requested = False
+                            first_chunk_received = False
+                            yield b"__FLUSH_COMPLETE__"
+
+                    elif msg_type == "flush_complete":
                         self._flush_requested = False
                         first_chunk_received = False
-                        self._mp3_buffer = b""
-                        self._last_yielded_len = 0
                         yield b"__FLUSH_COMPLETE__"
+
+                    elif msg_type == "error":
+                        print(f"[SarvamTTS] Error received: {data}")
+
                 else:
-                    # binary message (raw audio)
-                    if not first_chunk_received:
-                        print(f"[TTS] First audio chunk received")
-                        first_chunk_received = True
-                    yield message
+                    # Raw binary message
+                    if not self._cancel_event.is_set():
+                        if not first_chunk_received:
+                            print(f"[TTS] First audio chunk received ({len(message)} bytes)")
+                            first_chunk_received = True
+                        yield message
+
         except websockets.exceptions.ConnectionClosed:
             pass
         except Exception as e:
             print(f"[SarvamTTS] Receive error: {e}")
 
+    async def _reconnect_warmup(self):
+        """Warm up fresh connection in background after cancellation so next turn starts instantly."""
+        try:
+            await self.connect()
+            await self.configure(
+                language_code=getattr(self, '_last_language_code', 'hi-IN'),
+                speaker=getattr(self, '_last_speaker', 'shubh'),
+                pace=getattr(self, '_last_pace', 1.0),
+                temperature=getattr(self, '_last_temperature', 0.6)
+            )
+            # Note: _cancel_event is intentionally NOT cleared here.
+            # It will be cleanly cleared when the next turn begins in send_text().
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            print(f"[SarvamTTS] Background reconnect warmup error: {e}")
+
     async def send_text(self, text: str):
-        if not self.ws or not text:
+        if not text:
             return
             
-        if getattr(self.ws, 'closed', False):
-            print(f"[SarvamTTS] WebSocket closed. Reconnecting to send text...")
+        if not self.ws or getattr(self.ws, 'closed', False):
+            print(f"[SarvamTTS] Connecting fresh WebSocket to send text...")
             await self.connect()
             await self.configure(
                 language_code=getattr(self, '_last_language_code', 'hi-IN'),
@@ -306,12 +389,24 @@ class SarvamTTSProvider(TTSProvider):
             await self.ws.send(json.dumps(payload))
 
     async def cancel(self):
+        """Instantly kill server synthesis, close active socket, and warm a fresh connection in background."""
         self._cancel_event.set()
         self._flush_requested = False
         self._mp3_buffer = b""
         self._last_yielded_len = 0
+        if hasattr(self, '_warmup_task') and self._warmup_task and not self._warmup_task.done():
+            self._warmup_task.cancel()
+        if self.ws:
+            try:
+                await self.ws.close()
+            except Exception:
+                pass
+            self.ws = None
+        # Warm up fresh connection immediately in background while user speaks
+        self._warmup_task = asyncio.create_task(self._reconnect_warmup())
 
     async def close(self):
+        self._cancel_event.set()
         if self.ws:
             await self.ws.close()
             self.ws = None

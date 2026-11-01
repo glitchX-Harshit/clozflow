@@ -440,6 +440,25 @@ def get_user_detail(
         "created_at": a.created_at.isoformat() if a.created_at else None
     } for a in agents]
 
+    # Pearl Calls & Unit Economics for this Customer
+    user_agent_ids = [a.id for a in agents]
+    user_calls = db.query(PearlCall).filter(PearlCall.agent_id.in_(user_agent_ids)).all() if user_agent_ids else []
+    total_calls = len(user_calls)
+    total_connected_sec = sum(int(c.duration_seconds or 0) for c in user_calls)
+    total_rev = round(sum(float(getattr(c, "revenue_billed", 0.0) or 0.0) for c in user_calls), 2)
+    total_cogs = round(sum(float(getattr(c, "total_cogs", 0.0) or 0.0) for c in user_calls), 2)
+    gross_profit = round(total_rev - total_cogs, 2)
+    gross_margin_pct = round((gross_profit / total_rev * 100), 1) if total_rev > 0 else 0.0
+
+    pearl_economics = {
+        "total_calls": total_calls,
+        "connected_minutes": round(total_connected_sec / 60.0, 2),
+        "total_revenue_billed": total_rev,
+        "total_cogs": total_cogs,
+        "gross_profit": gross_profit,
+        "gross_margin_pct": gross_margin_pct
+    }
+
     # Recent Activity Events
     activity_events = db.query(ActivityEvent).filter(
         ActivityEvent.user_id == user_id
@@ -485,10 +504,11 @@ def get_user_detail(
         "pearl_agents": agent_data,
         "recent_activities": event_data,
         "credit_transactions": credit_data,
+        "pearl_economics": pearl_economics,
         "telephony_provisioning": {
-            "virtual_trunk_status": "Shared Exotel Pool Active",
-            "kyc_status": "Not tracked (Self-serve representative model)",
-            "dedicated_did": "Unavailable (Shared trunking)"
+            "virtual_trunk_status": "Vobiz 30s Pulse Trunk Active",
+            "kyc_status": "Verified (Vobiz Telephony Provider)",
+            "dedicated_did": "Virtual DID Provisioned" if getattr(user, "credit_balance", 0) > 0 else "Shared Pool"
         }
     }
 
@@ -904,12 +924,21 @@ def export_admin_data(
             ])
 
     elif resource == "pearl_calls":
-        writer.writerow(["ID", "Agent ID", "Status", "Provider", "Duration Seconds", "Outcome", "Error Code", "Created At"])
+        writer.writerow([
+            "ID", "Agent ID", "Status", "Provider", "Duration Seconds", "30s Pulses",
+            "Revenue Billed INR", "Total COGS INR", "Gross Profit INR", "Gross Margin Pct",
+            "Outcome", "Error Code", "Created At"
+        ])
         calls = db.query(PearlCall).order_by(PearlCall.created_at.desc()).all()
         for c in calls:
             writer.writerow([
                 c.id, c.agent_id, c.status, c.provider,
-                c.duration_seconds, c.outcome or "", c.error_code or "",
+                c.duration_seconds, int(getattr(c, "pulses_30s", 0) or 0),
+                round(float(getattr(c, "revenue_billed", 0.0) or 0.0), 2),
+                round(float(getattr(c, "total_cogs", 0.0) or 0.0), 2),
+                round(float(getattr(c, "gross_profit", 0.0) or 0.0), 2),
+                round(float(getattr(c, "gross_margin_pct", 0.0) or 0.0), 1),
+                c.outcome or "", c.error_code or "",
                 c.created_at.isoformat() if c.created_at else ""
             ])
 

@@ -411,3 +411,91 @@
   font-weight: 700;
   letter-spacing: 0.05em;
 }
+
+/* ── Telephony Provider Selection Grid ── */
+.cw-telephony-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+.cw-telephony-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  text-align: left;
+}
+
+.cw-telephony-card:hover {
+  border-color: #94a3b8;
+  background: #fcfdfe;
+  transform: translateY(-1px);
+}
+
+.cw-telephony-card.selected {
+  border-color: #2563eb;
+  background: #f8faff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.cw-telephony-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cw-telephony-card-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cw-telephony-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 99px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.cw-telephony-card-desc {
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.cw-telephony-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+  font-size: 0.74rem;
+  color: #475569;
+}
+
+.cw-telephony-region {
+  font-weight: 600;
+}
+
+.cw-telephony-rate {
+  font-weight: 700;
+  color: #0f172a;
+}
+

@@ -700,7 +700,7 @@ export const PearlSubSectionView = ({ section = 'agents', onNavigateSection, use
                   <div className="modal-success-state">
                     <div className="success-icon-wrap">✓</div>
                     <h4>Telephony Trunk Connected!</h4>
-                    <p>Your Exotel PRI line (+91 98765 43210) is active and assigned to Pearl.</p>
+                    <p>Your {selectedProvider === 'vobiz' ? 'Vobiz Voice API' : selectedProvider.toUpperCase()} trunk is active and assigned to your agents.</p>
                   </div>
                 ) : (
                   <div className="modal-form-grid">
