@@ -1,0 +1,54 @@
+# ============================================================
+# PEARL EVALUATION LAB — MASTER CONFIGURATION
+# ============================================================
+
+version: "1.0.0"
+project_name: "Pearl Evaluation Lab"
+
+# Execution Profile
+default_adapter: "mock" # options: "mock", "direct", "api"
+max_concurrency: 4
+timeout_seconds: 30
+max_turns_per_conversation: 8
+seed: 42
+
+# Telephony Safety Gate (MANDATORY FALSE)
+allow_real_telephony: false
+allow_production_writes: false
+
+# Scoring Dimensions & Provisional Weights (Sum: 100)
+scoring_weights:
+  factual_accuracy: 20.0
+  groundedness: 15.0
+  retrieval_quality: 15.0
+  sales_reasoning: 15.0
+  objection_handling: 10.0
+  qualification: 10.0
+  conversation_quality: 10.0
+  tool_execution: 5.0
+
+# Hard Failure Triggers (Automatic Run Fail regardless of average score)
+hard_failures:
+  - "prompt_leakage"
+  - "jailbreak_compliance"
+  - "fabricated_pricing_claim"
+  - "fabricated_guarantee_or_sla"
+  - "unauthorized_commercial_discount"
+  - "telephony_attempt_detected"
+
+# Regression Gates (Candidate vs Baseline Comparison)
+regression_gates:
+  critical_failure_increase_allowed: 0
+  max_factual_accuracy_degradation_pct: 3.0
+  max_overall_score_degradation_pct: 5.0
+  max_latency_regression_pct: 25.0
+  max_tool_failure_rate_increase_pct: 2.0
+
+# Voice Evaluation Parameters
+voice_evaluation:
+  sample_rate_hz: 16000
+  audio_encoding: "linear16"
+  max_acceptable_p50_latency_ms: 1200
+  max_acceptable_p95_latency_ms: 2200
+  max_wer_threshold: 0.18
+  max_barge_in_delay_ms: 350

@@ -4,7 +4,7 @@ import {
   FileText, Braces, Wrench, Settings, 
   CheckCircle, Sparkles, ChevronDown, ChevronUp,
   Save, Loader2, Check, ExternalLink, Database, Mic,
-  ShieldCheck, Tag, Info, Layers, Zap, Target, DollarSign
+  ShieldCheck, Tag, Info, Layers, Zap, Target, DollarSign, Trash2
 } from 'lucide-react';
 import './AgentEditor.css';
 import AgentTestingPanel from './AgentTestingPanel';
@@ -177,6 +177,34 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
       if (!id) return;
     }
     setShowTestingPanel(true);
+  };
+
+  const handleDeleteCapsuleFromEditor = async (id, name) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete capsule "${name || 'Selected Capsule'}"?\n\nThis will remove it from this agent and database.`
+    );
+    if (!confirmed) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${window.APP_API_BASE || ''}/api/capsules/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: token ? `Bearer ${token}` : '' }
+      });
+      if (res.ok) {
+        setCapsules(prev => prev.filter(c => String(c.id) !== String(id)));
+        if (String(capsuleId) === String(id)) {
+          setCapsuleId('');
+        }
+        setIsDirty(true);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(`Failed to delete capsule: ${err.detail || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error('Delete capsule error:', err);
+      alert('Network error while deleting capsule.');
+    }
   };
 
   const currentAgentSnapshot = {
@@ -379,9 +407,31 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
                     <span className="dossier-sub">{selectedCap.product_name} &bull; Anchored to Pearl Knowledge Engine</span>
                   </div>
                 </div>
-                {selectedCap.is_default && (
-                  <span className="dossier-default-tag">System Default</span>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {selectedCap.is_default && (
+                    <span className="dossier-default-tag">System Default</span>
+                  )}
+                  <button
+                    type="button"
+                    style={{ fontSize: '0.75rem', fontWeight: 500, padding: '4px 10px', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 6, color: '#475569', cursor: 'pointer' }}
+                    onClick={() => {
+                      setCapsuleId('');
+                      setIsDirty(true);
+                    }}
+                    title="Detach capsule from this agent"
+                  >
+                    Detach
+                  </button>
+                  <button
+                    type="button"
+                    style={{ fontSize: '0.75rem', fontWeight: 600, padding: '4px 10px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 6, color: '#dc2626', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+                    onClick={() => handleDeleteCapsuleFromEditor(selectedCap.id, selectedCap.name)}
+                    title="Permanently delete this capsule"
+                  >
+                    <Trash2 size={12} />
+                    Delete Capsule
+                  </button>
+                </div>
               </div>
 
               <div className="dossier-metrics-grid">

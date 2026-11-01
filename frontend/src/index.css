@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+}
+
 /* ══════════════════════════════════════════════════
    CLOZFLOW.AI — LUXURY WHITE DESIGN SYSTEM
    Editorial · Premium · Non-Generic
@@ -79,6 +92,8 @@
   --surface-inv:  #0a0a0a;   /* dark surface for inverted cards */
 
   /* ── Shadcn tokens ── */
+  --background:           #f4f6f8;
+  --foreground:           #0a0a0a;
   --primary:              #0a0a0a;
   --primary-foreground:   #ffffff;
   --secondary:            #f1f5f9;

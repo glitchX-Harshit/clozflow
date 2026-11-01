@@ -159,6 +159,20 @@ def delete_capsule(
     if not capsule:
         raise HTTPException(status_code=404, detail="Capsule not found")
 
+    try:
+        from models_pearl import PearlAgent
+        db.query(PearlAgent).filter(PearlAgent.capsule_id == capsule_id).update({"capsule_id": None})
+    except Exception:
+        pass
+
+    try:
+        from models_knowledge import CapsuleVersion, KnowledgeFact, KnowledgeChunk
+        db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id == capsule_id).delete(synchronize_session=False)
+        db.query(KnowledgeFact).filter(KnowledgeFact.capsule_id == capsule_id).update({"capsule_id": None})
+        db.query(KnowledgeChunk).filter(KnowledgeChunk.capsule_id == capsule_id).update({"capsule_id": None})
+    except Exception:
+        pass
+
     db.delete(capsule)
     db.commit()
     return {"message": "Capsule deleted"}

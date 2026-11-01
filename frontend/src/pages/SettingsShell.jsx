@@ -742,7 +742,7 @@ const PANELS = {
     workspace: <WorkspacePanel />,
     ai: <AiPanel />,
     directives: <PromptDirectivePanel />,
-    capsules: <CapsulesRedirectNotice />,
+    capsules: <CapsulesPanel />,
     notifications: <NotificationsPanel />,
     security: <SecurityPanel />,
     billing: <BillingPanel />,

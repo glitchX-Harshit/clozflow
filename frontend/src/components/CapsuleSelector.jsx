@@ -129,10 +129,24 @@ const CapsuleSelector = ({
 
         <div className="capsule-trigger-right">
           {activeCapsule && (
-            <span className="capsule-verified-tag">
-              <ShieldCheck size={12} />
-              <span>Grounded</span>
-            </span>
+            <>
+              <button
+                type="button"
+                className="capsule-detach-btn"
+                title="Detach capsule"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSelect('');
+                }}
+              >
+                <X size={12} />
+                <span>Detach</span>
+              </button>
+              <span className="capsule-verified-tag">
+                <ShieldCheck size={12} />
+                <span>Grounded</span>
+              </span>
+            </>
           )}
           <span ref={chevronRef} className="capsule-chevron-wrap">
             <ChevronDown size={14} strokeWidth={2} />

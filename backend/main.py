@@ -119,6 +119,11 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+@app.get("/api/copilot/sessions/active")
+async def get_active_copilot_sessions_legacy():
+    """Stub to gracefully handle legacy/uninstalled extension polling."""
+    return []
+
 @app.post("/call/start")
 async def start_call(request: CallStartRequest, current_user: User = Depends(get_current_user)):
     context_id = call_context_engine.create_context(

@@ -38,7 +38,26 @@ class KnowledgeJobManager:
         self._listeners: Dict[str, List[asyncio.Queue]] = {}
         # Cached in-memory status snapshots: job_id -> dict
         self._job_cache: Dict[str, Dict[str, Any]] = {}
+        # Active background tasks: job_id -> asyncio.Task
+        self._active_tasks: Dict[str, asyncio.Task] = {}
+        self._job_user_map: Dict[str, int] = {}
         self.engine = IntelligenceEngine()
+
+    def _cleanup_task(self, job_id: str):
+        self._active_tasks.pop(job_id, None)
+        self._job_user_map.pop(job_id, None)
+
+    def cancel_job(self, job_id: str):
+        task = self._active_tasks.pop(job_id, None)
+        self._job_user_map.pop(job_id, None)
+        if task and not task.done():
+            task.cancel()
+            print(f"[KnowledgeJobManager] Cancelled task for job {job_id}")
+
+    def cancel_user_jobs(self, user_id: int):
+        jobs_to_cancel = [jid for jid, uid in list(self._job_user_map.items()) if uid == user_id]
+        for jid in jobs_to_cancel:
+            self.cancel_job(jid)
 
     def get_cached_job(self, job_id: str) -> Optional[Dict[str, Any]]:
         return self._job_cache.get(job_id)
@@ -75,7 +94,12 @@ class KnowledgeJobManager:
         website_url: str
     ):
         """Asynchronously executes the full 9-stage website crawl and intelligence pipeline."""
-        asyncio.create_task(self._run_website_pipeline(job_id, user_id, website_url))
+        # Cancel any previous job for same ID if active
+        self.cancel_job(job_id)
+        task = asyncio.create_task(self._run_website_pipeline(job_id, user_id, website_url))
+        self._active_tasks[job_id] = task
+        self._job_user_map[job_id] = user_id
+        task.add_done_callback(lambda t: self._cleanup_task(job_id))
 
     async def start_document_ingestion_job(
         self,
@@ -84,7 +108,11 @@ class KnowledgeJobManager:
         files_data: List[tuple[str, bytes]]
     ):
         """Asynchronously processes uploaded documents and generates capsules."""
-        asyncio.create_task(self._run_document_pipeline(job_id, user_id, files_data))
+        self.cancel_job(job_id)
+        task = asyncio.create_task(self._run_document_pipeline(job_id, user_id, files_data))
+        self._active_tasks[job_id] = task
+        self._job_user_map[job_id] = user_id
+        task.add_done_callback(lambda t: self._cleanup_task(job_id))
 
     async def _run_website_pipeline(self, job_id: str, user_id: int, website_url: str):
         db: Session = SessionLocal()
@@ -141,8 +169,33 @@ class KnowledgeJobManager:
                 db.add(kp)
                 db_pages.append(kp)
 
+            processed_pages = [p for p in crawled_pages if p.get("status") == "processed" and len(p.get("clean_text", "")) >= 40]
             source.pages_discovered = len(crawled_pages)
-            source.pages_processed = len([p for p in crawled_pages if p["status"] == "processed"])
+            source.pages_processed = len(processed_pages)
+
+            if not processed_pages:
+                failed_reasons = set(p.get("error_message") or f"HTTP {p.get('http_status')}" for p in crawled_pages if p.get("error_message") or p.get("http_status"))
+                reasons_str = ", ".join(failed_reasons) if failed_reasons else "Access denied or content blocked"
+                err_msg = f"Could not extract content from website ({reasons_str}). The server blocked automated requests or rate-limited the connection. Please upload a business document or PDF instead."
+                source.status = "failed"
+                source.error_message = err_msg
+                db.commit()
+
+                await self.emit_job_event(job_id, {
+                    "stage": 2,
+                    "status": "failed",
+                    "progress": 25,
+                    "title": "Website Crawl Blocked",
+                    "error": err_msg,
+                    "message": err_msg
+                })
+                return
+
+            # Verify source still exists before proceeding (avoids race condition if deleted/reset)
+            if not db.query(KnowledgeSource.id).filter(KnowledgeSource.id == job_id).first():
+                print(f"[Knowledge Pipeline Cancelled] Source {job_id} was removed.")
+                return
+
             source.status = "extracting"
             db.commit()
 
@@ -158,9 +211,9 @@ class KnowledgeJobManager:
                     "message": evt.get("message", "Synthesizing deep business intelligence...")
                 })
 
-            # Run Multi-Pass Extraction Engine
+            # Run Multi-Pass Extraction Engine on processed pages
             intel_data = await self.engine.extract_structured_intelligence(
-                crawled_pages,
+                processed_pages,
                 notifier=extraction_notifier
             )
 
@@ -169,6 +222,10 @@ class KnowledgeJobManager:
                 "stage": 8, "status": "running", "progress": 92,
                 "title": STAGES[7]["title"], "message": "Generating Company Capsule & Product Capsules..."
             })
+
+            if not db.query(KnowledgeSource.id).filter(KnowledgeSource.id == job_id).first():
+                print(f"[Knowledge Pipeline Cancelled] Source {job_id} was removed before saving capsules.")
+                return
 
             created_capsules = self._persist_capsules_and_facts(db, user_id, website_url, intel_data, crawled_pages)
 
@@ -186,18 +243,37 @@ class KnowledgeJobManager:
                 ]
             })
 
+        except asyncio.CancelledError:
+            print(f"[Knowledge Pipeline Cancelled] Task for {job_id} was cancelled.")
+            try:
+                db.rollback()
+            except Exception:
+                pass
+            return
         except Exception as e:
             print(f"[Knowledge Pipeline Failed] {e}")
-            if source:
-                source.status = "failed"
-                source.error_message = str(e)
-                db.commit()
+            try:
+                db.rollback()
+                active_source = db.query(KnowledgeSource).filter(KnowledgeSource.id == job_id).first()
+                if active_source:
+                    active_source.status = "failed"
+                    active_source.error_message = str(e)
+                    db.commit()
+            except Exception as db_err:
+                print(f"[Knowledge Pipeline DB Recovery Failed] {db_err}")
+                try:
+                    db.rollback()
+                except Exception:
+                    pass
             await self.emit_job_event(job_id, {
                 "stage": -1, "status": "failed", "progress": 0,
                 "error": str(e), "message": f"Pipeline halted: {str(e)}"
             })
         finally:
-            db.close()
+            try:
+                db.close()
+            except Exception:
+                pass
 
     async def _run_document_pipeline(
         self,
@@ -267,6 +343,10 @@ class KnowledgeJobManager:
                 "message": "Building product capsules from documentation..."
             })
 
+            if not db.query(KnowledgeSource.id).filter(KnowledgeSource.id == job_id).first():
+                print(f"[Document Pipeline Cancelled] Source {job_id} was removed.")
+                return
+
             created_capsules = self._persist_capsules_and_facts(
                 db, user_id, f"document://{filenames[0]}", intel_data, corpus_pages
             )
@@ -284,18 +364,37 @@ class KnowledgeJobManager:
                 ]
             })
 
+        except asyncio.CancelledError:
+            print(f"[Document Pipeline Cancelled] Task for {job_id} was cancelled.")
+            try:
+                db.rollback()
+            except Exception:
+                pass
+            return
         except Exception as e:
             print(f"[Document Pipeline Failed] {e}")
-            if source:
-                source.status = "failed"
-                source.error_message = str(e)
-                db.commit()
+            try:
+                db.rollback()
+                active_source = db.query(KnowledgeSource).filter(KnowledgeSource.id == job_id).first()
+                if active_source:
+                    active_source.status = "failed"
+                    active_source.error_message = str(e)
+                    db.commit()
+            except Exception as db_err:
+                print(f"[Document Pipeline Recovery Error] {db_err}")
+                try:
+                    db.rollback()
+                except Exception:
+                    pass
             await self.emit_job_event(job_id, {
                 "stage": -1, "status": "failed", "progress": 0,
                 "error": str(e), "message": f"Document extraction failed: {str(e)}"
             })
         finally:
-            db.close()
+            try:
+                db.close()
+            except Exception:
+                pass
 
     def _persist_capsules_and_facts(
         self,
@@ -309,21 +408,82 @@ class KnowledgeJobManager:
         Creates Company Capsule and Product Capsule(s) plus fine-grained facts and versioning.
         Preserves complete backward compatibility with existing Capsule schema.
         """
-        biz = intel.get("business_intelligence", {})
-        prods = intel.get("products", [])
-        cust = intel.get("customer_intelligence", {})
-        sales = intel.get("sales_intelligence", {})
+        biz = intel.get("business_intelligence", {}) if isinstance(intel, dict) else {}
+        if isinstance(biz, list):
+            biz = biz[0] if (biz and isinstance(biz[0], dict)) else {}
+        elif not isinstance(biz, dict):
+            biz = {}
 
-        company_name = biz.get("company_name", {}).get("value") or "My Company"
-        company_desc = biz.get("business_description", {}).get("value") or ""
-        brand_tone = biz.get("brand_tone", {}).get("value") or "Consultative & Professional"
-        differentiators = biz.get("key_differentiators", {}).get("value") or ""
+        prods_raw = intel.get("products", []) if isinstance(intel, dict) else []
+        if isinstance(prods_raw, dict):
+            prods = [prods_raw]
+        elif isinstance(prods_raw, list):
+            prods = []
+            for p in prods_raw:
+                if isinstance(p, dict):
+                    prods.append(p)
+                elif isinstance(p, str) and p:
+                    prods.append({"product_name": p, "description": p, "pricing_and_plans": "Contact Sales"})
+        else:
+            prods = []
 
-        target_audience_str = ", ".join(cust.get("target_segments", [])) or "B2B Decision Makers"
-        pain_points_list = [p.get("problem", "") if isinstance(p, dict) else str(p) for p in cust.get("pain_points", [])]
+        cust = intel.get("customer_intelligence", {}) if isinstance(intel, dict) else {}
+        if isinstance(cust, list):
+            cust = cust[0] if (cust and isinstance(cust[0], dict)) else {}
+        elif not isinstance(cust, dict):
+            cust = {}
+
+        sales = intel.get("sales_intelligence", {}) if isinstance(intel, dict) else {}
+        if isinstance(sales, list):
+            sales = sales[0] if (sales and isinstance(sales[0], dict)) else {}
+        elif not isinstance(sales, dict):
+            sales = {}
+
+        c_name = biz.get("company_name", {}) if isinstance(biz, dict) else {}
+        company_name = c_name.get("value") if isinstance(c_name, dict) else (str(c_name) if c_name else "My Company")
+        company_name = company_name or "My Company"
+
+        b_desc = biz.get("business_description", {}) if isinstance(biz, dict) else {}
+        company_desc = b_desc.get("value") if isinstance(b_desc, dict) else (str(b_desc) if b_desc else "")
+        company_desc = company_desc or ""
+
+        b_tone = biz.get("brand_tone", {}) if isinstance(biz, dict) else {}
+        brand_tone = b_tone.get("value") if isinstance(b_tone, dict) else (str(b_tone) if b_tone else "Consultative & Professional")
+        brand_tone = brand_tone or "Consultative & Professional"
+
+        diff_obj = biz.get("key_differentiators", {}) if isinstance(biz, dict) else {}
+        differentiators = diff_obj.get("value") if isinstance(diff_obj, dict) else (str(diff_obj) if diff_obj else "")
+        differentiators = differentiators or ""
+
+        t_segs = cust.get("target_segments", []) if isinstance(cust, dict) else []
+        if isinstance(t_segs, list):
+            target_audience_str = ", ".join(str(s) for s in t_segs if s) or "B2B Decision Makers"
+        else:
+            target_audience_str = str(t_segs) or "B2B Decision Makers"
+
+        p_points = cust.get("pain_points", []) if isinstance(cust, dict) else []
+        if isinstance(p_points, list):
+            pain_points_list = [p.get("problem", "") if isinstance(p, dict) else str(p) for p in p_points]
+        else:
+            pain_points_list = [str(p_points)]
         pain_points_str = "\n".join(f"- {p}" for p in pain_points_list if p)
 
         created_capsules = []
+
+        # Remove previous draft capsules for this company/domain to prevent duplicate overviews
+        try:
+            old_caps = db.query(Capsule).filter(
+                Capsule.user_id == user_id,
+                (Capsule.company_name == company_name) | (Capsule.name.ilike(f"{company_name}%"))
+            ).all()
+            if old_caps:
+                old_ids = [c.id for c in old_caps]
+                db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id.in_(old_ids)).delete(synchronize_session=False)
+                db.query(KnowledgeFact).filter(KnowledgeFact.capsule_id.in_(old_ids)).delete(synchronize_session=False)
+                db.query(Capsule).filter(Capsule.id.in_(old_ids)).delete(synchronize_session=False)
+                db.flush()
+        except Exception:
+            pass
 
         # 1. COMPANY CAPSULE (Shared context)
         company_capsule = Capsule(
@@ -335,13 +495,14 @@ class KnowledgeJobManager:
             target_audience=target_audience_str,
             key_differentiators=differentiators,
             pain_points_solved=pain_points_str,
-            additional_context=json.dumps(sales.get("sales_talking_points", [])),
+            additional_context=json.dumps(sales.get("sales_talking_points", []) if isinstance(sales, dict) else []),
             capsule_type="company",
             company_name=company_name,
             brand_tone=brand_tone,
             version=1,
             status="draft",
             intelligence_data={
+                "source_url": source_url,
                 "business_intelligence": biz,
                 "customer_intelligence": cust,
                 "sales_intelligence": sales
@@ -353,11 +514,13 @@ class KnowledgeJobManager:
 
         # 2. PRODUCT CAPSULES (Individual products)
         for p in prods:
+            if not isinstance(p, dict):
+                continue
             p_name = p.get("product_name") or f"{company_name} Solution"
             p_desc = p.get("description") or company_desc
             p_price = p.get("pricing_and_plans") or "Custom Quote"
-            features = p.get("features", [])
-            benefits = p.get("benefits", [])
+            features = p.get("features", []) if isinstance(p.get("features"), list) else []
+            benefits = p.get("benefits", []) if isinstance(p.get("benefits"), list) else []
             specs_combined = f"Features:\n" + "\n".join(f"- {f}" for f in features)
             if benefits:
                 specs_combined += "\n\nBenefits:\n" + "\n".join(f"- {b}" for b in benefits)
@@ -372,16 +535,17 @@ class KnowledgeJobManager:
                 key_differentiators=differentiators,
                 pain_points_solved=pain_points_str,
                 additional_context=json.dumps({
-                    "faqs": p.get("product_faqs", []),
-                    "integrations": p.get("integrations", []),
-                    "use_cases": p.get("use_cases", [])
+                    "source_url": source_url,
+                    "faqs": p.get("product_faqs", []) if isinstance(p.get("product_faqs"), list) else [],
+                    "integrations": p.get("integrations", []) if isinstance(p.get("integrations"), list) else [],
+                    "use_cases": p.get("use_cases", []) if isinstance(p.get("use_cases"), list) else []
                 }),
                 capsule_type="product",
                 company_name=company_name,
                 brand_tone=brand_tone,
                 version=1,
                 status="draft",
-                intelligence_data={"product": p, "sales": sales}
+                intelligence_data={"source_url": source_url, "product": p, "sales": sales}
             )
             db.add(prod_capsule)
             db.flush()
@@ -412,14 +576,15 @@ class KnowledgeJobManager:
 
         # 5. Create KnowledgeChunks for hybrid search
         for p in pages:
-            chunk = KnowledgeChunk(
-                user_id=user_id,
-                capsule_id=company_capsule.id,
-                category="web_page",
-                content=f"Page: {p.get('title', '')}\nURL: {p.get('url', '')}\n\n{p.get('clean_text', '')[:1200]}",
-                source_url=p.get("url")
-            )
-            db.add(chunk)
+            if isinstance(p, dict):
+                chunk = KnowledgeChunk(
+                    user_id=user_id,
+                    capsule_id=company_capsule.id,
+                    category="web_page",
+                    content=f"Page: {p.get('title', '')}\nURL: {p.get('url', '')}\n\n{(p.get('clean_text') or '')[:1200]}",
+                    source_url=p.get("url")
+                )
+                db.add(chunk)
 
         db.commit()
         return created_capsules
@@ -432,9 +597,17 @@ class KnowledgeJobManager:
         intel: Dict[str, Any],
         source_url: str
     ):
-        biz = intel.get("business_intelligence", {})
-        cust = intel.get("customer_intelligence", {})
-        sales = intel.get("sales_intelligence", {})
+        biz = intel.get("business_intelligence", {}) if isinstance(intel, dict) else {}
+        if isinstance(biz, list):
+            biz = biz[0] if (biz and isinstance(biz[0], dict)) else {}
+        elif not isinstance(biz, dict):
+            biz = {}
+
+        cust = intel.get("customer_intelligence", {}) if isinstance(intel, dict) else {}
+        if isinstance(cust, list):
+            cust = cust[0] if (cust and isinstance(cust[0], dict)) else {}
+        elif not isinstance(cust, dict):
+            cust = {}
 
         # Business facts
         for key, item in biz.items():
@@ -452,23 +625,38 @@ class KnowledgeJobManager:
                     approval_status="approved"
                 )
                 db.add(fact)
-
-        # Objection facts
-        for obj in cust.get("potential_objections", []):
-            if isinstance(obj, dict) and obj.get("objection"):
-                val = f"Objection: {obj['objection']}\nPivot: {obj.get('suggested_pivot', '')}"
+            elif isinstance(item, str) and item:
                 fact = KnowledgeFact(
                     user_id=user_id,
                     capsule_id=capsule_id,
-                    category="sales",
-                    field_name="Objection Handler",
-                    value=val,
+                    category="business",
+                    field_name=key.replace("_", " ").title(),
+                    value=item,
                     source_url=source_url,
-                    confidence=float(obj.get("confidence", 0.85)),
-                    inference_type=obj.get("inference_type", "ai_inference"),
+                    confidence=0.9,
+                    inference_type="observed_fact",
                     approval_status="approved"
                 )
                 db.add(fact)
+
+        # Objection facts
+        pot_objs = cust.get("potential_objections", []) if isinstance(cust, dict) else []
+        if isinstance(pot_objs, list):
+            for obj in pot_objs:
+                if isinstance(obj, dict) and obj.get("objection"):
+                    val = f"Objection: {obj['objection']}\nPivot: {obj.get('suggested_pivot', '')}"
+                    fact = KnowledgeFact(
+                        user_id=user_id,
+                        capsule_id=capsule_id,
+                        category="sales",
+                        field_name="Objection Handler",
+                        value=val,
+                        source_url=source_url,
+                        confidence=float(obj.get("confidence", 0.85)),
+                        inference_type=obj.get("inference_type", "ai_inference"),
+                        approval_status="approved"
+                    )
+                    db.add(fact)
 
     async def _handle_crawler_event(self, job_id: str, evt: Dict[str, Any]):
         """Forward crawler micro-events to SSE subscribers."""

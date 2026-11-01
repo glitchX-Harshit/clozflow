@@ -345,7 +345,7 @@ def update_fact(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Edit value or approve/reject individual knowledge facts."""
+    """Edit value or approve/reject individual knowledge facts with input validation."""
     fact = db.query(KnowledgeFact).filter(
         KnowledgeFact.id == fact_id,
         KnowledgeFact.user_id == current_user.id
@@ -354,12 +354,17 @@ def update_fact(
         raise HTTPException(404, "Fact not found")
 
     if req.value is not None:
-        fact.value = req.value
+        clean_val = req.value.strip()[:3000]
+        fact.value = clean_val
         fact.inference_type = "user_confirmed"
     if req.approval_status is not None:
-        fact.approval_status = req.approval_status
+        status_clean = req.approval_status.lower().strip()
+        if status_clean in ("approved", "rejected", "draft"):
+            fact.approval_status = status_clean
     if req.inference_type is not None:
-        fact.inference_type = req.inference_type
+        inf_clean = req.inference_type.lower().strip()
+        if inf_clean in ("observed_fact", "ai_inference", "user_confirmed"):
+            fact.inference_type = inf_clean
 
     fact.updated_at = datetime.utcnow()
     db.commit()
@@ -481,6 +486,12 @@ async def resync_source(
     current_user: User = Depends(get_current_user)
 ):
     """Re-runs crawl and intelligence extraction for an existing source."""
+    try:
+        from services.knowledge.job_manager import KnowledgeJobManager
+        KnowledgeJobManager.get_instance().cancel_job(source_id)
+    except Exception:
+        pass
+
     source = db.query(KnowledgeSource).filter(
         KnowledgeSource.id == source_id,
         KnowledgeSource.user_id == current_user.id
@@ -491,3 +502,128 @@ async def resync_source(
     job_mgr = KnowledgeJobManager.get_instance()
     await job_mgr.start_website_ingestion_job(source.id, current_user.id, source.source_url)
     return {"job_id": source.id, "status": "crawling", "message": "Re-synchronization started"}
+
+
+@router.delete("/capsules/{capsule_id}")
+def delete_knowledge_capsule(
+    capsule_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Deletes a single knowledge capsule and unbinds it from agents."""
+    capsule = db.query(Capsule).filter(
+        Capsule.id == capsule_id,
+        Capsule.user_id == current_user.id
+    ).first()
+    if not capsule:
+        raise HTTPException(404, "Capsule not found")
+
+    try:
+        from models_pearl import PearlAgent
+        db.query(PearlAgent).filter(PearlAgent.capsule_id == capsule_id).update({"capsule_id": None})
+    except Exception:
+        pass
+
+    db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id == capsule_id).delete(synchronize_session=False)
+    db.query(KnowledgeFact).filter(KnowledgeFact.capsule_id == capsule_id).update({"capsule_id": None})
+    db.query(KnowledgeChunk).filter(KnowledgeChunk.capsule_id == capsule_id).update({"capsule_id": None})
+    db.delete(capsule)
+    db.commit()
+    return {"message": "Capsule removed"}
+
+
+@router.delete("/sources/{source_id}")
+def delete_knowledge_source(
+    source_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Deletes a crawled or uploaded knowledge source, its pages, and derived capsules."""
+    try:
+        from services.knowledge.job_manager import KnowledgeJobManager
+        KnowledgeJobManager.get_instance().cancel_job(source_id)
+    except Exception:
+        pass
+
+    source = db.query(KnowledgeSource).filter(
+        KnowledgeSource.id == source_id,
+        KnowledgeSource.user_id == current_user.id
+    ).first()
+    if not source:
+        raise HTTPException(404, "Source not found")
+
+    domain = source.title.lower() if source.title else ""
+    source_url = source.source_url or ""
+
+    # 1. Delete pages
+    db.query(KnowledgePage).filter(KnowledgePage.source_id == source_id).delete(synchronize_session=False)
+
+    # 2. Delete facts matching source
+    if domain or source_url:
+        db.query(KnowledgeFact).filter(
+            KnowledgeFact.user_id == current_user.id,
+            (KnowledgeFact.source_url.ilike(f"%{domain}%")) | (KnowledgeFact.source_url == source_url)
+        ).delete(synchronize_session=False)
+
+    # 3. Delete chunks matching source
+    if domain or source_url:
+        db.query(KnowledgeChunk).filter(
+            KnowledgeChunk.user_id == current_user.id,
+            (KnowledgeChunk.source_url.ilike(f"%{domain}%")) | (KnowledgeChunk.source_url == source_url)
+        ).delete(synchronize_session=False)
+
+    # 4. Find and delete capsules associated with this source
+    capsules = db.query(Capsule).filter(Capsule.user_id == current_user.id).all()
+    capsules_to_delete = []
+    for c in capsules:
+        c_source_id = (c.intelligence_data or {}).get("source_id") if isinstance(c.intelligence_data, dict) else None
+        c_company = (c.company_name or "").lower()
+        c_name = (c.name or "").lower()
+        if c_source_id == source_id or (domain and (domain in c_company or domain in c_name)):
+            capsules_to_delete.append(c.id)
+
+    if capsules_to_delete:
+        db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id.in_(capsules_to_delete)).delete(synchronize_session=False)
+        db.query(Capsule).filter(Capsule.id.in_(capsules_to_delete)).delete(synchronize_session=False)
+
+    db.delete(source)
+    db.commit()
+    return {"message": "Source, indexed pages, and associated capsules removed"}
+
+
+@router.post("/reset")
+def reset_entire_knowledge_base(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Completely purges all Knowledge Base context, sources, facts, chunks, and capsules
+    for the current user, resetting to a clean slate.
+    """
+    try:
+        from services.knowledge.job_manager import KnowledgeJobManager
+        KnowledgeJobManager.get_instance().cancel_user_jobs(current_user.id)
+    except Exception:
+        pass
+
+    try:
+        from models_pearl import PearlAgent
+        db.query(PearlAgent).filter(PearlAgent.user_id == current_user.id).update({"capsule_id": None})
+    except Exception:
+        pass
+
+    db.query(KnowledgeFact).filter(KnowledgeFact.user_id == current_user.id).delete(synchronize_session=False)
+    db.query(KnowledgeChunk).filter(KnowledgeChunk.user_id == current_user.id).delete(synchronize_session=False)
+
+    source_ids = [s.id for s in db.query(KnowledgeSource.id).filter(KnowledgeSource.user_id == current_user.id).all()]
+    if source_ids:
+        db.query(KnowledgePage).filter(KnowledgePage.source_id.in_(source_ids)).delete(synchronize_session=False)
+    db.query(KnowledgeSource).filter(KnowledgeSource.user_id == current_user.id).delete(synchronize_session=False)
+
+    capsule_ids = [c.id for c in db.query(Capsule.id).filter(Capsule.user_id == current_user.id).all()]
+    if capsule_ids:
+        db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id.in_(capsule_ids)).delete(synchronize_session=False)
+    db.query(Capsule).filter(Capsule.user_id == current_user.id).delete(synchronize_session=False)
+
+    db.commit()
+    return {"message": "All knowledge base context and capsules have been completely removed."}
