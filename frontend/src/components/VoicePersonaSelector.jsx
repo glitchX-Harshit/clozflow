@@ -84,6 +84,15 @@ const VoicePersonaSelector = ({ value, onChange }) => {
       if (filter === 'male' && v.gender !== 'Male') return false;
       if (filter === 'hindi' && !(v.language === 'Hindi' || v.language === 'Hinglish')) return false;
       if (filter === 'english' && v.language !== 'Indian English') return false;
+      if (filter === 'bengali' && v.language !== 'Bengali') return false;
+      if (filter === 'tamil' && v.language !== 'Tamil') return false;
+      if (filter === 'telugu' && v.language !== 'Telugu') return false;
+      if (filter === 'marathi' && v.language !== 'Marathi') return false;
+      if (filter === 'gujarati' && v.language !== 'Gujarati') return false;
+      if (filter === 'kannada' && v.language !== 'Kannada') return false;
+      if (filter === 'punjabi' && v.language !== 'Punjabi') return false;
+      if (filter === 'malayalam' && v.language !== 'Malayalam') return false;
+      if (filter === 'odia' && v.language !== 'Odia') return false;
       if (filter === 'regional' && ['Hindi', 'Hinglish', 'Indian English'].includes(v.language)) return false;
 
       if (search.trim()) {
@@ -232,9 +241,18 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                 { key: 'all', label: `All (${CLOZFLOW_VOICE_LIST.length})` },
                 { key: 'female', label: 'Female' },
                 { key: 'male', label: 'Male' },
-                { key: 'hindi', label: 'Hindi / Hinglish' },
+                { key: 'hindi', label: 'Hindi' },
                 { key: 'english', label: 'English' },
-                { key: 'regional', label: 'Regional (Indic)' }
+                { key: 'bengali', label: 'Bengali' },
+                { key: 'tamil', label: 'Tamil' },
+                { key: 'telugu', label: 'Telugu' },
+                { key: 'marathi', label: 'Marathi' },
+                { key: 'gujarati', label: 'Gujarati' },
+                { key: 'kannada', label: 'Kannada' },
+                { key: 'punjabi', label: 'Punjabi' },
+                { key: 'malayalam', label: 'Malayalam' },
+                { key: 'odia', label: 'Odia' },
+                { key: 'regional', label: 'Other Regional' }
               ].map((tab) => (
                 <button
                   key={tab.key}

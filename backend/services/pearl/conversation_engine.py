@@ -216,6 +216,71 @@ class ConversationEngine:
 
         
 
+    def _resolve_language_instruction(self) -> str:
+        target_lang = ((self.voice_config or {}).get("language") or (self.lead or {}).get("language") or "Auto").strip()
+        tl_lower = target_lang.lower()
+
+        if tl_lower == "marathi":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: MARATHI (मराठी). You MUST speak and generate all conversational responses in natural, fluent, polite Marathi (मराठी). "
+                "Use authentic spoken Marathi expressions: 'हो नक्कीच', 'नमस्कार', 'बघा', 'काही हरकत नाही', 'नक्की'. "
+                "Standard tech/business terms (like 'demo', 'pricing', 'meeting', 'CRM', 'software') can be used naturally inside Marathi phrasing. "
+                "If the prospect speaks Marathi, stay strictly in Marathi. If they switch to English, match their language."
+            )
+        elif tl_lower in ("bengali", "bangla"):
+            return (
+                "PRIMARY SPOKEN LANGUAGE: BENGALI (বাংলা). You MUST speak and generate all conversational responses in natural, fluent, polite Bengali (বাংলা). "
+                "Use authentic spoken Bengali expressions: 'হ্যাঁ নিশ্চয়ই', 'নমস্কার', 'একদম ঠিক', 'শুনুন'."
+            )
+        elif tl_lower == "gujarati":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: GUJARATI (ગુજરાતી). You MUST speak and generate all conversational responses in natural, fluent, polite Gujarati (ગુજરાતી). "
+                "Use authentic spoken Gujarati expressions: 'હા ચોક્કસ', 'નમસ્તે', 'બરાબર છે', 'જોવો'."
+            )
+        elif tl_lower == "tamil":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: TAMIL (தமிழ்). You MUST speak and generate all conversational responses in natural, fluent, polite spoken Tamil (தமிழ்). "
+                "Use authentic spoken Tamil expressions: 'வணக்கம்', 'கண்டிப்பா', 'சரிங்க', 'பாருங்க'."
+            )
+        elif tl_lower == "telugu":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: TELUGU (తెలుగు). You MUST speak and generate all conversational responses in natural, fluent, polite spoken Telugu (తెలుగు). "
+                "Use authentic spoken Telugu expressions: 'నమస్కారం', 'తప్పకుండా', 'అవునండి', 'చూడండి'."
+            )
+        elif tl_lower == "kannada":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: KANNADA (ಕನ್ನಡ). You MUST speak and generate all conversational responses in natural, fluent, polite spoken Kannada (ಕನ್ನಡ). "
+                "Use authentic spoken Kannada expressions: 'ನಮಸ್ಕಾರ', 'ಖಂಡಿತ', 'ಸರಿ', 'ನೋಡಿ'."
+            )
+        elif tl_lower == "malayalam":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: MALAYALAM (മലയാളം). You MUST speak and generate all conversational responses in natural, fluent, polite spoken Malayalam (മലയാളം). "
+                "Use authentic spoken Malayalam expressions: 'നമസ്കാരം', 'തീർച്ചയായും', 'ശരി', 'നോക്കൂ'."
+            )
+        elif tl_lower == "punjabi":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: PUNJABI (ਪੰਜਾਬੀ). You MUST speak and generate all conversational responses in natural, warm, polite spoken Punjabi (ਪੰਜਾਬੀ). "
+                "Use authentic spoken Punjabi expressions: 'ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ', 'ਹਾਂਜੀ ਬਿਲਕੁਲ', 'ਠੀਕ ਹੈ ਜੀ'."
+            )
+        elif tl_lower == "odia":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: ODIA (ଓଡ଼ିଆ). You MUST speak and generate all conversational responses in natural, fluent, polite spoken Odia (ଓଡ଼ିଆ). "
+                "Use authentic spoken Odia expressions: 'ନମସ୍କାର', 'ନିଶ୍ଚୟ', 'ଠିକ ଅଛି'."
+            )
+        elif tl_lower == "hindi":
+            return (
+                "PRIMARY SPOKEN LANGUAGE: HINDI (हिन्दी). Speak in natural, polished, conversational Hindi with respectful tone and common everyday business vocabulary."
+            )
+        elif tl_lower in ("english", "indian english"):
+            return (
+                "PRIMARY SPOKEN LANGUAGE: INDIAN ENGLISH. Speak in clear, natural Indian English with consultative professional cadence."
+            )
+        else:
+            return (
+                "Default naturally toward conversational Hinglish. Mix Hindi and English the way educated Indian speakers naturally do in real conversations; do not translate everything into Hindi or English. "
+                "Dynamically mirror the prospect's language, vocabulary, pace, formality, and energy. If they speak mostly Hindi, use more Hindi. If mostly English, use mostly English with natural Indian conversational phrasing. If they code-switch, code-switch naturally with them."
+            )
+
     def _build_system_prompt(self, custom_instructions: Optional[str] = None) -> str:
 
         name = self.lead.get('business_name') or self.lead.get('prospect_name') or 'Unknown'
@@ -248,7 +313,7 @@ class ConversationEngine:
 
     f"- Sound like a real Indian having a spontaneous phone conversation, never like a scripted AI or corporate assistant.\n"
 
-    f"- Default naturally toward conversational Hinglish. Mix Hindi and English the way educated Indian speakers naturally do in real conversations; do not translate everything into Hindi or English.\n"
+    f"- Language & Accent Mode: {getattr(self, '_resolve_language_instruction', lambda: '- Default naturally toward conversational Hinglish.')()}\n"
 
     f"- Dynamically mirror the prospect's language, vocabulary, pace, formality, and energy. If they speak mostly Hindi, use more Hindi. If mostly English, use mostly English with natural Indian conversational phrasing. If they code-switch, code-switch naturally with them.\n"
 

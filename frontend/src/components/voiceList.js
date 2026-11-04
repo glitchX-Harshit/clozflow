@@ -223,4 +223,10 @@ export const CLOZFLOW_VOICE_LIST = [
   {"id": "vandana_hi_ecomm", "name": "Vandana", "gender": "Female", "language": "Hindi", "category": "Conversational", "style": "Hindi · Ecomm"},
   {"id": "vipul_hi_social", "name": "Vipul", "gender": "Male", "language": "Hindi", "category": "Social & Community", "style": "Hindi · Engaging & Vibrant Community Interaction"},
   {"id": "mukul_mr_stories", "name": "Mukul", "gender": "Male", "language": "Marathi", "category": "Narrative", "style": "Marathi · Immersive Narrative & Character Voice"},
+  {"id": "biju_ml_conversational", "name": "Biju", "gender": "Male", "language": "Malayalam", "category": "Conversational", "style": "Malayalam · Natural Dialogue & Regional Consultation"},
+  {"id": "remya_ml_customer", "name": "Remya", "gender": "Female", "language": "Malayalam", "category": "Support & Care", "style": "Malayalam · Customer Care & Clear Inquiry Resolution"},
+  {"id": "sreeja_ml_conversational", "name": "Sreeja", "gender": "Female", "language": "Malayalam", "category": "Conversational", "style": "Malayalam · Warm Consultative Pacing"},
+  {"id": "lipsa_od_conversational", "name": "Lipsa", "gender": "Female", "language": "Odia", "category": "Conversational", "style": "Odia · Natural Dialogue & Outbound Advisory"},
+  {"id": "subrat_od_conversational", "name": "Subrat", "gender": "Male", "language": "Odia", "category": "Conversational", "style": "Odia · Direct Business Discovery"},
+  {"id": "debasish_od_customer", "name": "Debasish", "gender": "Male", "language": "Odia", "category": "Support & Care", "style": "Odia · Helpful Support & Relationship Care"},
 ];
