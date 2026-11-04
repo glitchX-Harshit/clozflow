@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "22fbae69-52c1-4f3a-bd3c-1d144c2df525",
+    "event_type": "SESSION_START",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:17:52.976631+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_84",
+      "crm_opportunity_id": "opp_84"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "5d6e3466-d67f-4a3f-ba93-3707c882ecd9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:17:56.976631+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], great to finally connect. I wanted to show you how our HR automation suite can significantly reduce the administrative burden on your team.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.891411962369153,
+    "metadata": {}
+  },
+  {
+    "event_id": "5588a54a-f2ed-4eee-a65a-716871fa49e0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:17:58.976631+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi. Honestly, we just went through a major software implementation last year, and it was a nightmare. The team is still recovering. I'm really hesitant to introduce anything new right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8944337222056244,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ccdfaf4-781f-4522-a91e-8a2a8d3bfbf2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:01.976631+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand that hesitation. Our implementation process is designed to be as seamless as possible, with dedicated project managers and minimal disruption to your daily operations. We focus on quick wins first.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9849106117317267,
+    "metadata": {}
+  },
+  {
+    "event_id": "746646c7-1662-425e-bd9a-be7d25156e96",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:04.976631+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Everyone says that. Last time, 'seamless' meant six months of troubleshooting. What exactly does 'quick wins' mean?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.892510929128577,
+    "metadata": {}
+  },
+  {
+    "event_id": "c96fab39-49cd-446e-bd62-d01a7c7be374",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:06.976631+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It means we can start with automating just one module, like employee onboarding or leave management, which typically takes a few weeks to get fully operational and immediately frees up significant time for your HR staff.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9615241953357647,
+    "metadata": {}
+  },
+  {
+    "event_id": "6a2179e6-370d-4a1d-976e-a121c827b5e7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:11.976631+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's slightly less daunting. But what about the cost? We just renewed licenses for our current HRIS.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9865797249184088,
+    "metadata": {}
+  },
+  {
+    "event_id": "69025886-501f-44f9-8f91-f33c6c6f30a0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:15.976631+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our solution is designed to complement, not replace, existing HRIS systems, filling in gaps. We offer flexible subscription models that can often be justified by the efficiency gains within months.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9721295540457636,
+    "metadata": {}
+  },
+  {
+    "event_id": "71864673-b3d0-4b1c-8249-3134f73fa911",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:18.976631+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'll have to consider it. Send me some case studies of companies similar to ours who've integrated this smoothly. I'm still very skeptical about another 'easy' implementation.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8682517303326502,
+    "metadata": {}
+  },
+  {
+    "event_id": "2dfe1c7f-cc4e-450e-ac19-af20f3980a39",
+    "event_type": "SESSION_END",
+    "session_id": "3a0158a2-c7b2-4346-b7ac-904b6edd650d",
+    "tenant_id": "a2b37ce0-c5b5-4a19-ab29-86806185542d",
+    "timestamp_utc": "2026-06-28T22:18:23.976631+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

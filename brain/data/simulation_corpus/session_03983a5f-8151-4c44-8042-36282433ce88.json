@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "58aacb6e-c09b-4305-a97b-4a9caa389454",
+    "event_type": "SESSION_START",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:23.832465+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_97",
+      "crm_opportunity_id": "opp_97"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c93d92c7-b54d-4389-a23f-bad9db54d2b2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:25.832465+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Jessica, thanks for joining. I'm excited to showcase how our AI-powered content generation tool can revolutionize your marketing output.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8780301188263263,
+    "metadata": {}
+  },
+  {
+    "event_id": "927ae766-a647-47fc-b8c7-9dbdcbb067d7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:30.832465+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI content? So, it writes blog posts for me? Because I've seen some of those tools, and they're usually just spinning existing content with weird phrasing.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.858021439419717,
+    "metadata": {}
+  },
+  {
+    "event_id": "7e1bcc1f-e9d2-41a5-8053-9d328cb2438e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:35.832465+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair concern, Jessica. Our platform goes beyond basic spinning. It uses advanced natural language generation to create original, high-quality drafts based on your specific inputs, tone, and brand guidelines, acting as a powerful assistant for your writers.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.946136649079584,
+    "metadata": {}
+  },
+  {
+    "event_id": "a37d6fe2-938c-4e3f-bb60-9a71f2ed3055",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:38.832465+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Assistant, not replacement. Got it. So I still need a human to edit it? What's the point then? My writers are already busy.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9523133440955205,
+    "metadata": {}
+  },
+  {
+    "event_id": "41678a49-7665-4fc0-a4f3-14246c318cf5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:42.832465+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Exactly, an assistant. It significantly reduces the time spent on initial drafts, research, and overcoming writer's block, allowing your team to focus on refinement and strategic oversight. We've seen teams increase content production by 3x.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9224209309231681,
+    "metadata": {}
+  },
+  {
+    "event_id": "023942b5-a7e4-48c9-b42a-8f26f85a5ca8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:47.832465+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Three times? I'd like to see that. My team is small, we produce maybe 4-5 articles a month. This sounds like it's for much larger operations. Is it overkill for us?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8876843425278519,
+    "metadata": {}
+  },
+  {
+    "event_id": "d5466b75-2ada-403e-9c4a-57d4ae7604d2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:49.832465+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It scales perfectly for smaller teams too, Jessica. Even generating just a few high-quality drafts can save significant time and resources, freeing up your team for more strategic tasks or allowing them to produce more without burnout.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9197422025514536,
+    "metadata": {}
+  },
+  {
+    "event_id": "cef02000-44bb-47ae-b109-71f8a9efe4c8",
+    "event_type": "SESSION_END",
+    "session_id": "03983a5f-8151-4c44-8042-36282433ce88",
+    "tenant_id": "2d01b221-d0f0-4112-b5dd-7f39b8838e7f",
+    "timestamp_utc": "2026-06-28T22:18:54.832465+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

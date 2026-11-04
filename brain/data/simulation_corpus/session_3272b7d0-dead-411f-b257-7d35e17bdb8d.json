@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "13335dec-6816-4c3f-9972-9b11b8e83763",
+    "event_type": "SESSION_START",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:14.896565+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_56",
+      "crm_opportunity_id": "opp_56"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "b2459272-8518-4537-9b3e-b3b3100f7937",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:17.896565+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Robert, thanks for taking my call. I'm with SalesFlow AI, and we help sales teams identify and prioritize high-intent leads using predictive analytics.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9042002447180744,
+    "metadata": {}
+  },
+  {
+    "event_id": "df6f2848-30f7-4af1-af5e-832012d7b74c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:19.896565+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "SalesFlow AI? We use Salesforce and have our own lead scoring. It's not perfect, but it's what we've always done. Why would I need another system?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9375360003584319,
+    "metadata": {}
+  },
+  {
+    "event_id": "18427599-ddcc-441c-bd61-35a6bead1a32",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:23.896565+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair question. Many companies have internal scoring, but ours leverages external signals and AI to predict purchase likelihood with greater accuracy, often uncovering opportunities your current system might miss.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8819500646261993,
+    "metadata": {}
+  },
+  {
+    "event_id": "6cf49e20-9cc0-42eb-b65a-3ca3ca6db5d5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:27.896565+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Greater accuracy, higher likelihood... everyone says that. How much does this magic cost? Because if it's going to be another huge monthly SaaS fee, I'm out. My budget is already stretched thin.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8661279578867195,
+    "metadata": {}
+  },
+  {
+    "event_id": "55d1e4a4-7865-41da-bbce-4b34dc72c584",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:29.896565+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand budget concerns. Our pricing is tiered, and many clients see an ROI within the first few months by closing more deals faster. Could I schedule a brief demo to show you how our insights are generated? It's often clearer when you see it in action.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8552218754233506,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7142c76-bc55-4c35-a53f-cc3cb66d877a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:33.896565+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Nah, not right now. We're in the middle of a big hiring push, and I need to focus on onboarding. Maybe next quarter, if things calm down. Send me an email, I'll review it then.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.988881766144323,
+    "metadata": {}
+  },
+  {
+    "event_id": "f00debc9-105e-4afd-8511-d89144e2af7e",
+    "event_type": "SESSION_END",
+    "session_id": "3272b7d0-dead-411f-b257-7d35e17bdb8d",
+    "tenant_id": "47d0b281-6a3b-4c78-993b-c71b5b742e43",
+    "timestamp_utc": "2026-06-28T22:16:38.896565+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

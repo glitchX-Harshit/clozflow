@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "source": "CCBS Volume X, Chapter 1.2",
+  "priority_scale": {
+    "1": "critical",
+    "2": "urgent",
+    "3": "normal",
+    "4": "low",
+    "5": "background"
+  },
+  "event_types": {
+    "TRANSCRIPT_SEGMENT": { "priority_ceiling": 1, "ttl_ms": 200 },
+    "SILENCE_DETECTED": { "priority_ceiling": 2, "ttl_ms": 500 },
+    "SPEAKER_CHANGE": { "priority_ceiling": 1, "ttl_ms": 200 },
+    "CRM_FIELD_UPDATED": { "priority_ceiling": 3, "ttl_ms": 2000 },
+    "CALENDAR_EVENT": { "priority_ceiling": 3, "ttl_ms": 5000 },
+    "PRODUCT_UPDATED": { "priority_ceiling": 4, "ttl_ms": 30000 },
+    "CONFIDENCE_THRESHOLD": { "priority_ceiling": 2, "ttl_ms": 1000 },
+    "SESSION_START": { "priority_ceiling": 1, "ttl_ms": 500 },
+    "SESSION_END": { "priority_ceiling": 1, "ttl_ms": 500 },
+    "MODULE_FAILURE": { "priority_ceiling": 1, "ttl_ms": 300 },
+    "EXTERNAL_KNOWLEDGE": { "priority_ceiling": 3, "ttl_ms": 1500 },
+    "RECOMMENDATION_ACK": { "priority_ceiling": 2, "ttl_ms": 1000 },
+    "LEARNING_SIGNAL": { "priority_ceiling": 5, "ttl_ms": 60000 }
+  }
+}
+

@@ -1,2 +1,0 @@
-scenario_id,title,category,score,passed,turns_count,duration_seconds,failures
-INB-001,SaaS Pricing Inquiry,inbound_enquiries,79.0,True,4,1.14,knowledge_gap; latency_violation

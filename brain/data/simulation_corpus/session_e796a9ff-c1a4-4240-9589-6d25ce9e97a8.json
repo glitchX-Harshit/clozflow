@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "b419f40d-c0c6-4d69-9c05-d53337ca2059",
+    "event_type": "SESSION_START",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:24.162281+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_80",
+      "crm_opportunity_id": "opp_80"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "881bc196-3286-43a2-a6e9-4b1366439351",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:29.162281+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining today. I'm here to discuss how our platform, BuildOps, can help your construction firm at [Company Name] manage your project portfolio more efficiently and profitably.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9585259174418332,
+    "metadata": {}
+  },
+  {
+    "event_id": "7b4e67b4-2c91-4fe9-b2b2-548b1af560ff",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:34.162281+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, thanks. I'm just getting over a long site visit, so forgive me if I'm a bit distracted. What was this about again? Project portfolio management? We've got pretty established processes for that with our existing software, even if it's a bit dated.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9075660499014224,
+    "metadata": {}
+  },
+  {
+    "event_id": "0fc99314-21e0-4e09-a92a-cc054b75ba04",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:36.162281+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No worries at all, I appreciate you still making the time. BuildOps is designed to go beyond traditional project management. It offers real-time financial tracking against budgets, predictive risk assessment for delays and cost overruns, and optimized resource allocation across all your active projects. This helps firms like yours typically increase project margins by 5-10% and reduce delays by 20%.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9742454151065687,
+    "metadata": {}
+  },
+  {
+    "event_id": "93cbf3e2-a197-44d0-aef8-def6a32914c3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:41.162281+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Five to ten percent margin increase? That's a bold claim. We're in construction, margins are razor-thin as it is. And I've heard 'predictive risk' before. Does it just tell me what I already know, but with a fancy graph? My project managers are already stretched trying to hit deadlines, they don't need another system to learn that just rehashes old news.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.942182862172765,
+    "metadata": {}
+  },
+  {
+    "event_id": "dfdfc07a-2172-4714-b76a-8a3604b952b4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:44.162281+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's much more than just fancy graphs. BuildOps uses historical data and current project inputs to identify specific risks *before* they become critical, like a subcontractor falling behind schedule in a way that will impact another project, or a material cost spike that hasn't been factored in. It provides actionable alerts, not just raw data, and integrates directly with your scheduling and accounting systems. This means less manual data entry and more time for your PMs to actually *manage* the project, rather than chase information.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.859928424496719,
+    "metadata": {}
+  },
+  {
+    "event_id": "d946fd42-7e60-4257-92db-a1600faebfe0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:47.162281+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Alright, but what's the learning curve like? My guys are good at building, not at learning complex software every other year. If it's going to take weeks of training and slow down our current projects, it's a non-starter. We can't afford that kind of disruption.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8632162776560324,
+    "metadata": {}
+  },
+  {
+    "event_id": "74ab8a64-938f-4056-b65b-da32ebf67cb0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:52.162281+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very valid concern. BuildOps is designed with an intuitive, construction-specific interface to minimize the learning curve. We offer comprehensive, role-based training that can be completed in just a few days, and our support team provides ongoing assistance. We've found that the time saved by automating tedious tasks quickly outweighs the initial training investment. Perhaps we could schedule a quick, personalized demo for your lead project manager and superintendent next week, focusing specifically on their day-to-day use cases?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9406709417762349,
+    "metadata": {}
+  },
+  {
+    "event_id": "670d46a2-059b-4dd8-94a2-691d22096b14",
+    "event_type": "SESSION_END",
+    "session_id": "e796a9ff-c1a4-4240-9589-6d25ce9e97a8",
+    "tenant_id": "b4838689-6d8b-4086-9bbc-82e5fecf4612",
+    "timestamp_utc": "2026-06-28T22:17:57.162281+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

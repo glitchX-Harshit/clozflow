@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "ebc748e8-7bf0-4503-8981-afd9cdc655d5",
+    "event_type": "SESSION_START",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:00.577700+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_126",
+      "crm_opportunity_id": "opp_126"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "fb35609d-a30c-4cce-ba91-dd46631c63c7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:05.577700+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "And here, you can see how the automated workflow engine triggers notifications to your support team the moment a critical incident is detected, significantly cutting down response times.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8700287434514945,
+    "metadata": {}
+  },
+  {
+    "event_id": "de7ca53a-fa43-407f-87af-d00db375e161",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:07.577700+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "(Muffled voice, sounds like typing) Sorry, just got pulled into something urgent on Slack. Can you repeat that last part about the notifications?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9464597832421991,
+    "metadata": {}
+  },
+  {
+    "event_id": "c598ff3a-095d-42d3-b3e9-d131c2bc59d5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:12.577700+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No problem at all. I was explaining how our automated incident response feature instantly alerts the relevant support personnel to critical issues, ensuring they're addressed faster.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9050020236422384,
+    "metadata": {}
+  },
+  {
+    "event_id": "b279eddb-2601-49a6-a12f-419f6b32574d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:16.577700+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "(Sound of phone ringing in background) Ugh, hold on, I need to take this. It's a client. This is just a bad time. I'm really sorry, but I can't focus on this right now. Can we reschedule?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9435437936099151,
+    "metadata": {}
+  },
+  {
+    "event_id": "965bf77f-b4da-4dde-ae48-ec3dd902475a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:20.577700+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Completely understandable, David. Client emergencies take priority. How about I send over a brief summary of what we covered and my calendar link, so you can pick a time that works better for you?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9540728166773262,
+    "metadata": {}
+  },
+  {
+    "event_id": "d0f33e45-6db6-43f2-b500-7d48badb5c05",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:25.577700+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, that'd be great. I'll get back to you. Thanks for understanding.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8577257817850721,
+    "metadata": {}
+  },
+  {
+    "event_id": "308ffb02-e80f-45c0-abc1-9f3229f2b257",
+    "event_type": "SESSION_END",
+    "session_id": "22b6dcc5-6cf4-40df-96a3-a7c03265e936",
+    "tenant_id": "8e60dda4-57a7-4c28-9563-e779e9df0c8f",
+    "timestamp_utc": "2026-06-28T22:20:30.577700+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "4d1d0ce3-8375-4a1b-8dbc-8f12fca8bdef",
+    "event_type": "SESSION_START",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:18:54.915666+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_109",
+      "crm_opportunity_id": "opp_109"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "44d92cae-a685-432a-a75c-80b5d8de5036",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:18:59.915666+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our project management suite provides unparalleled visibility across all your teams and projects, ensuring deadlines are met and resources are optimized. What are your biggest bottlenecks in project delivery right now?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9270765993477134,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7e7cc89-3a3f-46e4-a27d-08b3ce775cc7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:19:01.915666+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Honestly, we tried a 'unified project management suite' about three years ago, and it was a complete disaster. Massive budget overrun, adoption was terrible, and half the features never worked as promised. We're still recovering from that.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8731615360018474,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ad72e8d-a86e-49ba-b1ea-654cff1e85b8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:19:04.915666+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I can certainly appreciate your hesitation given a past experience like that. Many early solutions in this space were indeed overly complex. Our approach focuses on user-centric design and gradual adoption, backed by a 98% customer satisfaction rate for onboarding.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9206620423434517,
+    "metadata": {}
+  },
+  {
+    "event_id": "52bad979-b1b9-431d-b7a2-f8ea7c764f84",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:19:09.915666+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "User-centric design is what everyone says. We were promised the moon and got a glorified spreadsheet. I'm just really wary of investing more time and money into something that might just be another empty promise.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8885713841477949,
+    "metadata": {}
+  },
+  {
+    "event_id": "62503b01-265c-4303-af34-4f6dbecec3eb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:19:11.915666+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's completely fair. What if we started with a proof of concept on one smaller team or project, with a dedicated implementation manager? That way, you can see concrete results with minimal risk before any broader rollout.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9032351278694578,
+    "metadata": {}
+  },
+  {
+    "event_id": "86b13305-6e97-4d26-8ffa-ce5d17dc61de",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:19:13.915666+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A proof of concept, huh? I'd need to really understand the terms, but it sounds like less of a commitment than our last fiasco. Send me details on how that would work.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8664200601442484,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ccccd64-e2b0-4ee4-8b23-7494d2ecf3c1",
+    "event_type": "SESSION_END",
+    "session_id": "06d85e0e-982a-4e85-a569-cd3791c23d8f",
+    "tenant_id": "ccdee7bb-1125-44bd-81c9-06455455e3f0",
+    "timestamp_utc": "2026-06-28T22:19:18.915666+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

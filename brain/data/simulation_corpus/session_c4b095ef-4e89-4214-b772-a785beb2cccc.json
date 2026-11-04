@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "9997005c-d816-4e18-87bb-e2641bbb8074",
+    "event_type": "SESSION_START",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:29.299464+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_120",
+      "crm_opportunity_id": "opp_120"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ff6359d0-12fe-4d36-b40e-71e47891385e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:34.299464+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for connecting. I'm [Salesperson Name] from [Our Product Name]. We help small to medium businesses manage their customer support more efficiently. What's your current biggest challenge in customer service?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8665460163987989,
+    "metadata": {}
+  },
+  {
+    "event_id": "5f6407e2-7238-49a3-ae2b-95092c18b70e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:39.299464+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Uh, hi. Challenge? We have a lot of tickets. And keeping up with them is hard. But we're just a small team. And we use a shared inbox. It's... fine.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9127066936541237,
+    "metadata": {}
+  },
+  {
+    "event_id": "a46841e6-3d59-45eb-b5d1-7c8be20a1f44",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:41.299464+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A shared inbox can certainly get overwhelming as you grow. Many small teams start there. Our platform helps by centralizing all customer communication\u2014email, chat, social\u2014into one place, with automation to route tickets and provide self-service options. Are your agents feeling overwhelmed or burning out from the volume?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8818477994169912,
+    "metadata": {}
+  },
+  {
+    "event_id": "8081469b-3856-4cc7-9791-a5e6c27daaf1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:45.299464+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Overwhelmed? Yeah, sometimes. But it's part of the job. And self-service, we tried that once, customers just ignore it. They want to talk to a person.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.878521831716766,
+    "metadata": {}
+  },
+  {
+    "event_id": "8c2936da-71da-4951-9e67-729a0a307c79",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:49.299464+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear that. The key to successful self-service is providing relevant, easy-to-find answers, which our AI-powered knowledge base excels at. This frees up your agents to focus on complex, high-value issues, improving both agent satisfaction and customer experience. What's your average first response time currently?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8827517197928949,
+    "metadata": {}
+  },
+  {
+    "event_id": "e43c6afd-2741-4e1a-b206-3fe9627adeec",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:53.299464+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "First response time? Uh, it varies. Sometimes minutes, sometimes an hour or two. It's not great, I know. But we can't afford a huge enterprise system. We just don't have the budget for something like Zendesk.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9714002215752393,
+    "metadata": {}
+  },
+  {
+    "event_id": "1911a3cb-5afb-466f-a7a2-a02aa445ed3f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:19:55.299464+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "You're right, enterprise systems can be overkill and expensive for SMBs. Our solution is specifically designed and priced for growing businesses like yours, offering powerful features without the enterprise price tag. What if I could show you how a quick, affordable implementation could reduce your response times by 50%?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8856422696532369,
+    "metadata": {}
+  },
+  {
+    "event_id": "90d011e7-206d-44c9-8355-010ad7508c16",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:20:00.299464+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Fifty percent? That's a bold claim. And 'affordable' is relative. What's the actual number? Because if it's over a few hundred bucks a month, it's a non-starter right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 31000,
+      "end_ms": 32500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8992914359371061,
+    "metadata": {}
+  },
+  {
+    "event_id": "f675697b-3858-4a83-a838-ccfc8bba21ec",
+    "event_type": "SESSION_END",
+    "session_id": "c4b095ef-4e89-4214-b772-a785beb2cccc",
+    "tenant_id": "097bef91-12e4-4113-bad5-d71463772d64",
+    "timestamp_utc": "2026-06-28T22:20:05.299464+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "eb0b0756-5250-4ac4-9ee8-6fce67918d9a",
+    "event_type": "SESSION_START",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:30.804527+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_30",
+      "crm_opportunity_id": "opp_30"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "adfc6f69-435a-4bc7-a09b-ca1c1d10eabf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:32.804527+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. I'm calling about [Product Name], our cutting-edge sales forecasting and pipeline management tool. We help sales leaders get unprecedented accuracy in their predictions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9277948750378948,
+    "metadata": {}
+  },
+  {
+    "event_id": "802c4d72-3ac1-4443-91d5-1cd05d63c45d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:36.804527+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Unprecedented accuracy, huh? We've heard that before. Every CRM and sales tool promises better forecasting. How is yours actually different? We're using Salesforce's built-in forecasting, and it's... adequate.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.945483168211561,
+    "metadata": {}
+  },
+  {
+    "event_id": "e21f70bc-c5db-4fe5-b3aa-c687e157fdd0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:41.804527+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fair. The key differentiator for [Product Name] is our proprietary AI engine. It not only analyzes historical data and rep activity but also factors in external market signals, sentiment analysis from call transcripts, and even competitor movements to provide a probabilistic forecast.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8801165412861329,
+    "metadata": {}
+  },
+  {
+    "event_id": "e72594d2-1959-448a-bef0-9f3cd40ad1a0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:43.804527+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Probabilistic forecast? So, it's not a definitive number, it's a 'maybe'? And you're telling me it can analyze call transcripts? We have a strict data privacy policy around that. This sounds overly complex and potentially intrusive.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9790469065447954,
+    "metadata": {}
+  },
+  {
+    "event_id": "e2c77c17-2627-4ed7-8de3-69fcf4ebd4f7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:47.804527+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It provides a range with confidence levels, giving you a much more realistic view than a single number. And regarding call transcripts, it's an opt-in feature, and all data is anonymized and aggregated for trend analysis, never individual performance review. It's about spotting patterns.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9680891609956996,
+    "metadata": {}
+  },
+  {
+    "event_id": "0af9ba02-dad7-4e50-8242-5fa9a622b632",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:51.804527+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Patterns are great, but our sales team is already burdened with logging data. Adding another layer of analysis, even if it's 'automatic,' feels like more overhead. And what about the cost? This kind of AI usually doesn't come cheap.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9807732422105533,
+    "metadata": {}
+  },
+  {
+    "event_id": "767850e4-f583-4d5f-9e17-7ebbe5b173bf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:55.804527+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It actually *reduces* overhead by automating much of the manual forecasting work. Reps spend less time updating spreadsheets and more time selling. Pricing starts at $Y per user per month, but the ROI from even a 5% improvement in forecast accuracy can be substantial.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9349396067032707,
+    "metadata": {}
+  },
+  {
+    "event_id": "55d0bd01-05ef-452e-88b5-4c1f8a8f1a30",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:13:59.804527+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Y dollars? For something that might just tell us what we already suspect? I'm highly skeptical. I'd need to see some incredibly compelling evidence that this isn't just a glorified guess-maker. Frankly, it sounds a bit too good to be true.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9542910304949155,
+    "metadata": {}
+  },
+  {
+    "event_id": "a73952ec-14f0-4a99-8df9-e3f29bfba849",
+    "event_type": "SESSION_END",
+    "session_id": "394c619c-b24b-4d96-b89c-2be255fa484a",
+    "tenant_id": "3e5aff56-7ee6-418c-8a3f-f1c6e2b3bfae",
+    "timestamp_utc": "2026-06-28T22:14:04.804527+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

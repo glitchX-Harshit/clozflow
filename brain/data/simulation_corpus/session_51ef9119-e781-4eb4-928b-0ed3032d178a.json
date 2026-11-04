@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "ee8eb440-d5c0-4f1b-b2c0-052cbd0d9bef",
+    "event_type": "SESSION_START",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:24.159204+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_78",
+      "crm_opportunity_id": "opp_78"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "14b12817-8c1a-4529-af68-d9e9922ad8c4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:27.159204+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning [Buyer Name], thanks for connecting. I wanted to share how our platform, SecureFlow, can significantly enhance your data security and compliance posture at [Company Name].",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9731962316389786,
+    "metadata": {}
+  },
+  {
+    "event_id": "9c3479ed-a91d-4d2f-a497-bfa6ef995776",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:30.159204+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Morning. Yeah, security is always a concern. But we just went through a major audit and invested heavily in a new firewall and endpoint protection suite. I really don't see a huge gap right now, to be honest. Our budget for 'new security' is pretty much depleted for the year.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8636853090767084,
+    "metadata": {}
+  },
+  {
+    "event_id": "329e65f6-bc96-45a7-ac0c-836bdfa921c7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:33.159204+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate that. A strong perimeter and endpoint defense are absolutely crucial. Where SecureFlow comes in is by addressing the 'inside-out' risk \u2013 insider threats, misconfigurations, and human error that often bypass traditional defenses. We provide continuous monitoring and automated remediation for cloud environments and SaaS applications, which are often overlooked. We often see a 70% reduction in critical misconfigurations within the first month.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8569903412123442,
+    "metadata": {}
+  },
+  {
+    "event_id": "fd051911-b9c9-4397-8c4e-a6a8128aa194",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:36.159204+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Inside-out? We have policies and training for that. And 'automated remediation' sounds like it could break things. What if it automatically shuts down a critical service because it thinks it's a 'misconfiguration'? We can't afford that kind of disruption.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9771841715870693,
+    "metadata": {}
+  },
+  {
+    "event_id": "4d2613d2-fbf9-4e83-bfc4-a65e2b39f071",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:41.159204+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very important concern. SecureFlow is highly configurable. You define the remediation policies. You can start with alerts only, then move to automated remediation for low-risk items, or require approval for critical fixes. We also have a rollback feature to ensure business continuity. It's designed to be a safety net that catches issues before they escalate, often preventing breaches that bypass firewalls. We've had clients prevent major data leaks stemming from simple misconfigured S3 buckets, for example.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9323385620841143,
+    "metadata": {}
+  },
+  {
+    "event_id": "9c9b8b11-948e-47cf-a2a6-39aad67a8349",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:46.159204+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "S3 buckets, sure. But we use Azure, not AWS for most of our cloud infrastructure. Does it even work with Azure? And how quickly can it detect something? A 'reduction in critical misconfigurations' is nice, but if it takes hours, that's not much help.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9543541025642032,
+    "metadata": {}
+  },
+  {
+    "event_id": "536939f0-f6a9-4371-a06c-e15396c07951",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:48.159204+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yes, SecureFlow is fully compatible with Azure, AWS, and Google Cloud Platform, providing unified visibility across your multi-cloud environment. Detection is virtually instantaneous \u2013 real-time. Any misconfiguration or compliance deviation is flagged and, depending on your policy, remediated within seconds. This proactive stance is what makes the difference. Would you be open to a quick, 15-minute diagnostic scan of a small, non-critical part of your Azure environment to show you what we can detect?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9403824161413753,
+    "metadata": {}
+  },
+  {
+    "event_id": "cbcdf14c-0c72-4dfe-aecd-fc617037112d",
+    "event_type": "SESSION_END",
+    "session_id": "51ef9119-e781-4eb4-928b-0ed3032d178a",
+    "tenant_id": "0543007c-31d4-4989-b45d-3fa3e9653b97",
+    "timestamp_utc": "2026-06-28T22:17:53.159204+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "729fb2d7-32df-424c-a438-60d4c9949b72",
+    "event_type": "SESSION_START",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:23.827711+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_92",
+      "crm_opportunity_id": "opp_92"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "0c567869-7810-47db-8aae-7c8a9426cc28",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:25.827711+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Alex, thanks for making time today. I know your schedule is packed. We've been seeing great results for companies similar to yours, specifically in streamlining their customer onboarding process.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8518463337828786,
+    "metadata": {}
+  },
+  {
+    "event_id": "e0375ba6-84f4-421f-a723-35ebea4e44e9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:27.827711+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, look, I only have about seven minutes before my next call starts. Can you just get straight to the point? What's the pricing like for this 'streamlining'?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.905105718308018,
+    "metadata": {}
+  },
+  {
+    "event_id": "c3782366-683d-4f68-b6d5-e230aa32ee35",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:30.827711+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Certainly, I can jump straight to pricing, but I'd love to briefly understand your current challenges first, so I can ensure I'm giving you relevant information. Are you currently using a manual process for onboarding?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8500586714923901,
+    "metadata": {}
+  },
+  {
+    "event_id": "faaa0bf7-10dc-4d4e-8c17-957e43dc4bd0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:34.827711+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We use a mix of spreadsheets and a basic CRM. It's... fine. Just tell me the ballpark. We don't have an unlimited budget for new tools right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.880068214459359,
+    "metadata": {}
+  },
+  {
+    "event_id": "afe58ee9-3a46-4ba9-b340-d6c567ded180",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:38.827711+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our entry-level package starts at $500 a month, scaling up based on the number of users and advanced integrations. That typically covers unlimited onboarding flows and dedicated support.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8941924179584593,
+    "metadata": {}
+  },
+  {
+    "event_id": "7054921b-5e11-4104-86b6-6b70149a8f78",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:42.827711+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Five hundred? For onboarding? That seems... steep. We're a small team. I think I'm going to have to pass. Thanks for your time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9832923408024604,
+    "metadata": {}
+  },
+  {
+    "event_id": "ef2e77e8-615c-4341-ac57-6cb81626133b",
+    "event_type": "SESSION_END",
+    "session_id": "9a549193-3e8f-4043-bab6-06eea5c421d8",
+    "tenant_id": "64c1f448-3c8a-441a-b2f2-3949891aff53",
+    "timestamp_utc": "2026-06-28T22:18:47.827711+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

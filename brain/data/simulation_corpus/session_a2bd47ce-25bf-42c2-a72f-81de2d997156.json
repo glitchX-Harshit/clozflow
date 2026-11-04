@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "a9a36b77-e5e7-4d19-9e4a-4d46e8ff4158",
+    "event_type": "SESSION_START",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:12:54.284883+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_11",
+      "crm_opportunity_id": "opp_11"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c6848e39-9aff-4901-aff2-b3640564b30d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:12:59.284883+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Alex, thanks for making time today. I know we spoke briefly about how our platform helps streamline marketing automation for mid-market SaaS companies.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9852285075840477,
+    "metadata": {}
+  },
+  {
+    "event_id": "f0268501-43e4-4def-93be-287cac48c2de",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:13:01.284883+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, look, I'm really swamped today. I only have about 10 minutes before my next call. Can you just get straight to the point? What's the main differentiator here?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9864677252891828,
+    "metadata": {}
+  },
+  {
+    "event_id": "1ba1c675-34dd-4650-92df-dc799129ea63",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:13:04.284883+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, Alex. The core differentiator is our AI-driven content personalization engine. It learns from user behavior to dynamically adjust your campaign messages, boosting engagement by an average of 30% without requiring constant manual A/B testing.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9077385134376463,
+    "metadata": {}
+  },
+  {
+    "event_id": "86a437f4-d23d-4fc1-9078-fd23499dd40e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:13:06.284883+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI... right. Everyone says AI. We use HubSpot now, and it's 'good enough.' Is this going to be a huge rip-and-replace project, or can it integrate?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8591112258241086,
+    "metadata": {}
+  },
+  {
+    "event_id": "272cb2ea-1492-4b48-9c02-68c1fc17e973",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:13:08.284883+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It integrates seamlessly with HubSpot, Alex. We complement your existing CRM by enhancing your content delivery, not replacing your core infrastructure. It's an overlay that maximizes your current investment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9632740260720086,
+    "metadata": {}
+  },
+  {
+    "event_id": "0b1125eb-fd1f-4e7e-a9cb-20df1e926565",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:13:12.284883+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, okay. But what's the typical implementation time? We just finished a massive migration and my team is burned out.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8830195867307179,
+    "metadata": {}
+  },
+  {
+    "event_id": "0e20f76c-403e-40cb-a7f5-b60accf8dfd6",
+    "event_type": "SESSION_END",
+    "session_id": "a2bd47ce-25bf-42c2-a72f-81de2d997156",
+    "tenant_id": "f703c8af-b720-4f76-ab3f-fff82917a38d",
+    "timestamp_utc": "2026-06-28T22:13:17.284883+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

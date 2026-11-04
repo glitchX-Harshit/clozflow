@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "1af2f2d8-a09c-4c5c-a52c-c8780244bdba",
+    "event_type": "SESSION_START",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:15.114869+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_43",
+      "crm_opportunity_id": "opp_43"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "8cb1a072-5b08-4929-81ea-2de3035d7b77",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:19.114869+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Mark, thanks for joining. I'm excited to show you how our new analytics platform can transform your customer churn predictions. To start, what methods are you currently using to identify at-risk customers?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8791608049840705,
+    "metadata": {}
+  },
+  {
+    "event_id": "aed6cd1c-a81b-4b5a-8c0f-6bf6ebc96dbe",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:23.114869+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Churn prediction... (sighs) Honestly, we're pretty reactive. We look at support ticket volume, last login, and maybe if their contract is up for renewal soon. It's mostly guesswork, to be frank.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8763447733655649,
+    "metadata": {}
+  },
+  {
+    "event_id": "77a7041b-28f8-4dd7-aa79-e1c7d5328c37",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:25.114869+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Many companies are in a similar boat. Our platform uses machine learning to analyze dozens of behavioral signals \u2013 not just logins or tickets \u2013 to give you a dynamic churn risk score for each customer, with clear reasons why.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8811642039478941,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d441be4-a087-474d-867c-9c98cd7dda84",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:30.114869+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Machine learning, behavioral signals... I'm not sure I follow. So it just tells me who's going to leave? How does it know? Is it just guessing with fancy words?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9587702740009915,
+    "metadata": {}
+  },
+  {
+    "event_id": "7d6421ec-f295-441d-80d9-d2a891b6ee21",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:35.114869+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question, Mark. It's not guessing. The system learns from your past customer data \u2013 who churned, who stayed, and what their interactions looked like. For example, it might identify that customers who stop using a specific feature or have a sudden drop in engagement with your product are 3x more likely to churn within the next 90 days.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8875698524031821,
+    "metadata": {}
+  },
+  {
+    "event_id": "64ae968e-a922-461a-aaa6-503c6bc6d9a2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:38.114869+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, so it identifies patterns. I think I get it now. But what about implementation? Our data is a mess, and our engineering team is swamped. This sounds like a huge lift.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8822991094114399,
+    "metadata": {}
+  },
+  {
+    "event_id": "1e238497-e52b-4ec5-8bef-674286cd49e0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:42.114869+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We've designed it for minimal engineering lift. We offer pre-built connectors for most popular CRMs and data warehouses, and our onboarding team handles the initial data mapping. Most clients are up and running, seeing initial predictions, within 2-3 weeks.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8927548474696017,
+    "metadata": {}
+  },
+  {
+    "event_id": "46c02013-e3c6-48a6-a0c7-ea2669c9cd18",
+    "event_type": "SESSION_END",
+    "session_id": "b1683f99-221f-406b-840d-58690a9038de",
+    "tenant_id": "cdad6466-b68c-44bb-9384-f34af8c6760f",
+    "timestamp_utc": "2026-06-28T22:15:47.114869+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

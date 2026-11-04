@@ -1,3 +1,4 @@
+import LocalAuthProvider from './LocalAuthProvider';
 import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -5,7 +6,7 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+const SupabaseAuthProvider = ({ children }) => {
     const [user, setUser]                   = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading]             = useState(true);
@@ -137,3 +138,7 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
+export const AuthProvider = ({ children }) => import.meta.env.VITE_AUTH_MODE === "local"
+    ? <LocalAuthProvider context={AuthContext}>{children}</LocalAuthProvider>
+    : <SupabaseAuthProvider>{children}</SupabaseAuthProvider>;

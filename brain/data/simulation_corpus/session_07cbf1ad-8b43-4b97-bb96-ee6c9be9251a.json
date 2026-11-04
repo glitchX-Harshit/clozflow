@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "eb8a9097-8cdb-4f5d-a3d0-2eab8751703f",
+    "event_type": "SESSION_START",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:18:54.916324+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_110",
+      "crm_opportunity_id": "opp_110"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "02a3d037-d222-471f-b3e1-f625221768ab",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:18:58.916324+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform offers real-time inventory management with predictive reordering, significantly reducing stockouts and overstock situations, ultimately saving you warehousing costs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8650743429856719,
+    "metadata": {}
+  },
+  {
+    "event_id": "a658c35e-a6bc-4aac-a2cb-4230d15486dc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:19:03.916324+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right, I've seen solutions like that before. Our current system, while not perfect, handles things pretty well. We're not really in a crisis mode regarding inventory.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9467916781671523,
+    "metadata": {}
+  },
+  {
+    "event_id": "feb89355-cccc-4b82-89c6-30b99518bbc5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:19:06.916324+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand your current system is functional. However, many of our clients found they were leaving significant money on the table due to inefficiencies they didn't even realize they had until they saw the predictive insights our system offers.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.936916215364414,
+    "metadata": {}
+  },
+  {
+    "event_id": "421858a8-dd02-4e29-b88d-3b8b33f3fb2a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:19:09.916324+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Well, 'leaving money on the table' is always a concern, but our focus right now is on expanding into new markets, not optimizing existing processes that are 'good enough'. We simply don't have the bandwidth.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9469313160501323,
+    "metadata": {}
+  },
+  {
+    "event_id": "4aea083d-06c6-48de-a333-8c6f1323dd09",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:19:12.916324+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "What if improving inventory efficiency could actually free up capital and resources that you could then reallocate to your market expansion efforts? Our average client sees a 15% reduction in carrying costs within the first year.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8733972233894325,
+    "metadata": {}
+  },
+  {
+    "event_id": "fec650fd-5cab-4095-83a0-933476f8e380",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:19:16.916324+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, freeing up capital does sound appealing, but it still feels like a 'nice to have' rather than a 'must have' right now. Send me some brief stats on that 15% reduction, and I'll review it when I have a spare moment.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9716633241226154,
+    "metadata": {}
+  },
+  {
+    "event_id": "a24228f4-4760-4d4e-b613-4685bf3b1b60",
+    "event_type": "SESSION_END",
+    "session_id": "07cbf1ad-8b43-4b97-bb96-ee6c9be9251a",
+    "tenant_id": "cd61223c-ced2-4450-8a2c-d656c3251f9f",
+    "timestamp_utc": "2026-06-28T22:19:21.916324+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

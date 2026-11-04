@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "6911ea29-296b-4605-a417-03e014bf5406",
+    "event_type": "SESSION_START",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:24.156914+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_75",
+      "crm_opportunity_id": "opp_75"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "1750e723-aab9-4783-b3e5-2243ef9a9c1c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:27.156914+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon [Buyer Name], thanks for the time. We've developed OptiTrack, a fleet management solution, specifically to help companies like yours at [Company Name] optimize routes and reduce fuel costs. Your recent growth means your fleet must be expanding rapidly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9650966983169545,
+    "metadata": {}
+  },
+  {
+    "event_id": "80bab3b8-226b-481e-af0c-50b38e416af9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:31.156914+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, we're growing, that's true. But we already have GPS trackers in all our vehicles. My dispatch team has a pretty good handle on things. What exactly does OptiTrack do that our current system isn't already covering?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9196852559279489,
+    "metadata": {}
+  },
+  {
+    "event_id": "16eb3213-0b83-4cbc-a85a-3fd5f20abeed",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:36.156914+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question. While GPS tracking provides location data, OptiTrack goes much further. It uses advanced algorithms to dynamically optimize routes in real-time based on traffic, weather, and delivery schedules, often reducing fuel consumption by 15-20%. It also offers predictive maintenance alerts and driver behavior monitoring to extend vehicle lifespan and improve safety.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8617527169744583,
+    "metadata": {}
+  },
+  {
+    "event_id": "8981688a-ebae-40fa-8915-d05b25f5ff13",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:40.156914+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Fifteen to twenty percent on fuel? That sounds... optimistic. My drivers know the roads better than any algorithm. And 'driver behavior monitoring' \u2013 that just sounds like big brother. We try to foster trust with our team, not constantly spy on them. That could cause morale issues.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9047978041020515,
+    "metadata": {}
+  },
+  {
+    "event_id": "bd7d7392-3f02-4792-8f9d-332994a216fa",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:45.156914+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand your concern about driver perception. OptiTrack's driver behavior module is designed to be a coaching tool, not a punitive one. It identifies areas for improvement like harsh braking or rapid acceleration, which not only saves fuel but also reduces wear and tear and improves safety. Many companies frame it as a safety and efficiency initiative, leading to lower insurance premiums and fewer accidents. As for the routing, it complements your drivers' local knowledge by providing optimal starting points and real-time adjustments for unexpected variables. We've seen drivers adopt it quickly once they experience the reduced stress and improved efficiency.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9637803163697842,
+    "metadata": {}
+  },
+  {
+    "event_id": "64d5fe7e-866b-4221-adbf-336853e50c50",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:49.156914+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, reduced stress, eh? My guys are pretty stressed already. What's the setup like? Will it require new hardware in all 100 of our trucks, or does it integrate with our existing GPS units?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8902539797315249,
+    "metadata": {}
+  },
+  {
+    "event_id": "24ffe666-d04d-47a4-b2f0-fe2e329c9234",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:53.156914+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For many common GPS units, OptiTrack can integrate directly, leveraging your existing hardware investment. If you have some of the older models, we might recommend a small, cost-effective upgrade. The integration process is typically smooth, and our team handles most of the heavy lifting. We can even run a small pilot program on a subset of your fleet to demonstrate the fuel savings and driver acceptance before a full rollout. Would you be open to a 2-week pilot?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.903228994665699,
+    "metadata": {}
+  },
+  {
+    "event_id": "411e3efb-b8df-4229-8c65-5542f2457ac5",
+    "event_type": "SESSION_END",
+    "session_id": "49e226a1-2cd8-495b-bbdc-8094cadfb65b",
+    "tenant_id": "5c9b8641-ada4-46d3-8c7a-7e2afd023b0a",
+    "timestamp_utc": "2026-06-28T22:17:58.156914+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

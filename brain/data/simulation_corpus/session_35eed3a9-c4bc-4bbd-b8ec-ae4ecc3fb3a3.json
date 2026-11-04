@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "5635b468-e4f1-4960-b457-dc7e7b707da3",
+    "event_type": "SESSION_START",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:24.153945+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_72",
+      "crm_opportunity_id": "opp_72"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "028d773a-33c5-44b5-bc8d-c2509ac89b5d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:28.153945+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning [Buyer Name], thanks for joining. We've been talking about how our platform, Insightify, can help your sales team at [Company Name] better predict churn and identify upsell opportunities. I'm excited to show you a tailored demo today based on our earlier conversations.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8953198499812609,
+    "metadata": {}
+  },
+  {
+    "event_id": "294b5e6a-f2f2-472c-80e7-18d717803089",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:32.153945+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Morning. Yeah, I remember our chat. Look, I'm just going to be blunt. We had a really tough quarter, and the budget for new tools is practically frozen. Unless this is going to be significantly cheaper than our current patchwork of spreadsheets and half-baked solutions, it's a non-starter right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8784906543143239,
+    "metadata": {}
+  },
+  {
+    "event_id": "56d18e26-ab8d-45dc-a62e-d8865aec5352",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:37.153945+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand budget constraints, especially after a challenging quarter. What I'd like to demonstrate today isn't just a cost, but an investment with clear ROI. Insightify often pays for itself within six months by reducing churn by up to 15% and increasing upsell revenue by 20%. Our pricing model is tiered, and we can discuss options that align with your current financial situation, perhaps starting with a smaller module.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8663703900429103,
+    "metadata": {}
+  },
+  {
+    "event_id": "643cbef1-4cba-4f4a-9bbc-a3b920261df9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:40.153945+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Fifteen percent churn reduction? That's a big claim. Everyone promises that. And a smaller module still means a new vendor, new contracts, and frankly, more headache. We just spent months implementing a new CRM, and the team is exhausted with new systems.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.963092860107699,
+    "metadata": {}
+  },
+  {
+    "event_id": "5266bde4-557b-47ca-a94c-ac46da732c33",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:42.153945+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you on system fatigue. The beauty of Insightify is that it integrates seamlessly with your existing CRM, enriching the data rather than replacing it. It's designed to be an extension, not a revolution. The churn reduction isn't just a claim; we base it on predictive analytics that give your team actionable insights, not just more data. Could I quickly show you how those insights are presented, so you can see the immediate value without a full system overhaul?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8578529582895689,
+    "metadata": {}
+  },
+  {
+    "event_id": "b88f9779-66f4-4643-beda-8f3159a20c38",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:44.153945+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Fine. Show me the insights part. But if it's complicated, or if it looks like something we could build in Tableau ourselves with enough elbow grease, then we're back to square one on budget and effort.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.89618655390636,
+    "metadata": {}
+  },
+  {
+    "event_id": "51d3a200-d114-46f4-a433-9d57ceeed645",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:46.153945+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Excellent. I'll focus specifically on the predictive churn dashboard and how it highlights at-risk accounts with specific recommendations. It's designed to be immediately actionable, far beyond what static dashboards can offer. Let's dive in.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9393487847654234,
+    "metadata": {}
+  },
+  {
+    "event_id": "32262f92-07c6-4286-9eeb-3e7a21a568b0",
+    "event_type": "SESSION_END",
+    "session_id": "35eed3a9-c4bc-4bbd-b8ec-ae4ecc3fb3a3",
+    "tenant_id": "2408fafd-da62-4f13-acd8-b76e144363bf",
+    "timestamp_utc": "2026-06-28T22:17:51.153945+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "0ecfcf25-aaf4-4b79-8422-4fe4c2814602",
+    "event_type": "SESSION_START",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:24.161327+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_79",
+      "crm_opportunity_id": "opp_79"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "38da8a20-1117-40e0-8908-f029276feb8f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:27.161327+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], thanks for the call. We're here to talk about Clarity Analytics, our new platform for deep customer behavior insights, and how it can help your marketing team at [Company Name] personalize campaigns more effectively.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9554257054758424,
+    "metadata": {}
+  },
+  {
+    "event_id": "156c7332-8925-4a5e-be4f-bd0737c03a3f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:30.161327+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi. Honestly, I'm pretty skeptical. We've been down the 'deep insights' road before. We bought a very expensive analytics suite last year, and it just spits out a ton of dashboards that nobody actually looks at. It's too complex, and our team doesn't have time to become data scientists.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8958487356877595,
+    "metadata": {}
+  },
+  {
+    "event_id": "a96b217f-16df-41fc-bc87-a5aebcead59f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:33.161327+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand that frustration. Many analytics tools overload users with data. Clarity Analytics takes a different approach. We focus on prescriptive insights. Instead of just showing you *what* happened, we tell you *why* it happened and *what to do next*. Our platform uses AI to automatically identify segments, predict conversion likelihood, and even suggest specific campaign actions, significantly reducing the need for manual analysis.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9045000164415014,
+    "metadata": {}
+  },
+  {
+    "event_id": "1cde638a-fb5f-455f-a886-3a03a884d7bb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:36.161327+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Prescriptive insights, huh? So it just tells my team what emails to send? That sounds a bit too much like a black box. My marketers are creative, they're not just order-takers for an algorithm. And what if its suggestions are completely off-base for our specific brand voice?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9426369563183309,
+    "metadata": {}
+  },
+  {
+    "event_id": "0f4b5ff9-7c37-446e-914f-1048b8dc0b3f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:38.161327+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's not about replacing creativity; it's about empowering it with highly targeted direction. The platform identifies the most impactful actions, leaving your team free to craft the creative. For example, it might identify a segment of users who respond well to video content but are currently receiving text-only emails. The system would suggest creating a video campaign for that specific segment. You maintain full control over the content and messaging, ensuring brand consistency. It's about efficiency and effectiveness.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9707737131950437,
+    "metadata": {}
+  },
+  {
+    "event_id": "c699df7b-01bc-4c84-8824-60f973d64372",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:43.161327+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, well, we already have a CDP, a marketing automation platform, and our CRM. Does Clarity require us to integrate with all of them? Because getting those systems to talk to each other was a huge project, and I'm not doing that again.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8908516484075754,
+    "metadata": {}
+  },
+  {
+    "event_id": "c04ba62b-6913-4246-a7f1-43e911dd9a58",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:45.161327+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "You bring up a crucial point. Clarity Analytics is built with robust API-first architecture, designed for seamless integration with existing CDPs, CRMs, and marketing automation platforms. We act as an intelligence layer on top of your current stack, pulling data in and pushing actionable insights out, without requiring you to rip and replace. Our integration team handles most of the heavy lifting. We can show you how that works directly with your specific tech stack in a follow-up session. Would that be helpful?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9614010225205702,
+    "metadata": {}
+  },
+  {
+    "event_id": "7adc2bd2-3d2b-4b46-95c4-28e22b4261f0",
+    "event_type": "SESSION_END",
+    "session_id": "21418e41-d922-4526-9311-49f18b6962a2",
+    "tenant_id": "4751e9c5-8762-42c8-a12a-c99178c39579",
+    "timestamp_utc": "2026-06-28T22:17:50.161327+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "backend/main.py": "17895b6fd3e0935fa3172daa7667455025bdda93a8d19a2e31fdd51da85903a9",
+  "backend/routers/auth.py": "9cceb673de1128a6003a87a14790cd81b9d95a7e451c3ef77bcdb5c6d25352cc",
+  "backend/routers/brain_local.py": "639328d5a5bb0c6f0e11fcca247663258cc8515188d6ad27ac5cf43730a8871b",
+  "frontend/src/context/AuthContext.jsx": "3f1bff67b637760da74018e0e3640f50e3f46475ddd4c3d4f4b149f6558870bc",
+  "frontend/src/context/LocalAuthProvider.jsx": "a5ce4b552ad5985627faf6eb9820790ac32e686f64c527238d20b834a6df3639",
+  "frontend/src/lib/supabase.js": "a68928a4bd5ea4f6740b2ef71b80b52ab2de37d5634370a58fac1f8b06b2204c",
+  "frontend/src/pages/AuthPage.jsx": "779af4f9ce439197b6c5fd0f57303d1d57645a1693c0b76caf13d3ab0869d7c9",
+  "frontend/src/App.jsx": "a8e763ec99861b93220fd51444be1e0ad24471e8fa39d423f0f26891df2f1a46",
+  "frontend/src/pages/BrainWorkspace.jsx": "302bbc6f9f5cbd53b2b7d71b7b4c4b651ed32d1919fcf4968cefcb7abe1ce52f",
+  "frontend/src/pages/BrainWorkspace.css": "9be987f0995d658b5b3cb983043808bcbc9dbd2b42953c26f403c259b0885b34",
+  "backend/services/websocket_service.py": "8f856b90bc183f0c4885b991e5bceaf298269fb826a3418511342cd1a0e38b1c",
+  "backend/services/brain_client.py": "6b7932d53d88a68e301b614fbe658e14c1ac0820869280ad4376791f244f908e",
+  "frontend/src/pages/LocalAuthPage.jsx": "4955fe4f9cbaa1858f9738f82f048190606c1a8807977155cc73f45614ac72bc",
+  "frontend/index.html": "ce621f1b95fb8a4baffc594a6f74c22f838a253f12e219fc36c8f938bb520bfd",
+  "frontend/src/audio/audioStreamClient.js": "c2b78695c3feb0caf7ff58d91c2fafdd58dfc45a393651955e3d0fdf44e4118a",
+  "frontend/src/hooks/useRealtimeCopilot.js": "21ab58ef0083c090c72677b0126272d6e3191e1f1336d1720e7ae6f7ca00905a",
+  "backend/services/call_context_engine.py": "249422e1c833f15fbc5ee9624dae1ed3eb8819394e4fea2de2291110eeed811f",
+  "backend/services/vad_engine.py": "367579e396b145678cb08a800d4a940395bf83567c935e4a1169563b375b65b9",
+  "backend/services/pearl/providers/tts.py": "2acca1a7e2e3f3c2d6bbb77ef709e074e6db18f48ea39ae33d9c2092c0bf1a28"
+}

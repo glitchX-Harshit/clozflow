@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "ac0d63ab-04fe-4618-9a72-1dd76baa121b",
+    "event_type": "SESSION_START",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:12:54.288985+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_16",
+      "crm_opportunity_id": "opp_16"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "81acc695-3547-4061-b6e4-c781f0441f68",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:12:59.288985+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, Michael. We've been working with several companies in the financial services sector, helping them automate their compliance reporting.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.884279606320774,
+    "metadata": {}
+  },
+  {
+    "event_id": "d19ec3ab-1874-47be-9cfd-9f3aab4b5c0d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:13:01.288985+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Compliance reporting... yeah, it's a nightmare. But we're pretty entrenched with our current vendor for regulatory tech. They've been with us for years, through several audits. It's a big lift to switch.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8806425192923997,
+    "metadata": {}
+  },
+  {
+    "event_id": "883c8d9d-7407-4bbc-b54b-07e6c2923a72",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:13:05.288985+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I respect that long-standing relationship, Michael. Our solution often complements existing systems, rather than replacing them entirely. We specialize in real-time data ingestion and automated report generation, which can save hundreds of man-hours per quarter.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9840811078315781,
+    "metadata": {}
+  },
+  {
+    "event_id": "0ee1e866-bf99-4718-9a43-05eb647e6929",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:13:07.288985+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hundreds of man-hours? That's a bold claim. Our current system works, albeit slowly. What's the cost of implementation? Because that's usually where these 'savings' disappear.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8522042935916128,
+    "metadata": {}
+  },
+  {
+    "event_id": "137341fa-1b65-446a-9052-8b5b23def960",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:13:09.288985+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Implementation is typically smooth, as we have pre-built connectors for most major financial data sources. We estimate a 4-6 week deployment for a standard setup, with our team managing most of the technical heavy lifting.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9541650298168868,
+    "metadata": {}
+  },
+  {
+    "event_id": "157062c4-f275-488d-ba9e-73652f32206d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:13:11.288985+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "4-6 weeks? That's almost two months. We're heading into our busiest audit season right now. There's no way my team has bandwidth for that.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9710263322844535,
+    "metadata": {}
+  },
+  {
+    "event_id": "80418cff-5041-4a34-845a-291ab6d3ab54",
+    "event_type": "SESSION_END",
+    "session_id": "91a27fba-dc1e-43a7-82d0-197ac5c22b6d",
+    "tenant_id": "bbadcdac-7970-4175-8adc-4fba0400cc72",
+    "timestamp_utc": "2026-06-28T22:13:16.288985+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

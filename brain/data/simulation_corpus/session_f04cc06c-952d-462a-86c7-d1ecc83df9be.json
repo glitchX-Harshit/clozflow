@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "f47d752f-4090-40dc-abec-1877d373749f",
+    "event_type": "SESSION_START",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:29.294608+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_116",
+      "crm_opportunity_id": "opp_116"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "734eb40f-94e4-4456-8276-840d7d594227",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:32.294608+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, [Buyer Name]. Thanks for connecting. My name is [Salesperson Name] from [Our Product Name]. We specialize in helping engineering teams detect and resolve software vulnerabilities faster. How are you currently managing security in your CI/CD pipeline?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.930497675366234,
+    "metadata": {}
+  },
+  {
+    "event_id": "b073b0a6-2ab3-4713-9a6b-2de575031e9a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:37.294608+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We're using [Competitor Product A] for static analysis and [Competitor Product B] for dynamic. It's a pretty robust setup, honestly. Why would I even look at something else?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9373417334903678,
+    "metadata": {}
+  },
+  {
+    "event_id": "56e66ff8-e9bb-45a4-8133-bf98984a844b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:40.294608+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a strong foundation. Both are reputable tools. What we often find, even with robust setups, is a disconnect between different tools, leading to alert fatigue or missed critical vulnerabilities. Are you experiencing any gaps in coverage or an overwhelming number of false positives that slow down your developers?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9343557178744114,
+    "metadata": {}
+  },
+  {
+    "event_id": "117a80cd-df7e-42e5-ae55-12fb7ba5c5da",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:42.294608+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Alert fatigue is a real thing, yeah. But we've got our own custom scripts to filter out a lot of the noise. And our developers are pretty good at triaging. I'm not sure another tool would solve that, it might just add more noise.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8628836522588642,
+    "metadata": {}
+  },
+  {
+    "event_id": "711b1b62-76a8-4497-b853-66c6c58ad0ed",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:47.294608+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate that you've built custom solutions. What if I told you [Our Product Name] offers intelligent correlation across multiple scan types, drastically reducing false positives and providing actionable insights tailored to your specific codebase? It's designed to complement, not replace, existing tools.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.91244984191107,
+    "metadata": {}
+  },
+  {
+    "event_id": "0453ab1c-eaba-437f-99e1-fb726cb2b792",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:49.294608+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Complement? So, another tool to integrate and manage? We barely have time to keep our current toolchain updated. And 'intelligent correlation' sounds like marketing fluff unless you can show me how it works with our proprietary frameworks.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9406476485860241,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ec14616-af6a-4306-a069-512863822ab6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:53.294608+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair point. We have extensive API capabilities and integrations with most major dev tools. I'd be happy to set up a technical deep-dive with one of our engineers who could discuss your specific frameworks and show you exactly how our correlation engine functions. How does next Tuesday look?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9190578877917785,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d5bcc71-9223-4351-9764-afcc1451583f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:19:57.294608+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Next Tuesday? Ugh. I'm swamped. Look, just send me a white paper, something technical. If it actually addresses our custom stuff, maybe I'll reconsider. But I'm skeptical.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8999692910323155,
+    "metadata": {}
+  },
+  {
+    "event_id": "8840e06d-eb3c-424c-9232-b8a49a359e5c",
+    "event_type": "SESSION_END",
+    "session_id": "f04cc06c-952d-462a-86c7-d1ecc83df9be",
+    "tenant_id": "e17de80c-bc23-4ee7-a56d-4e83c987672a",
+    "timestamp_utc": "2026-06-28T22:20:02.294608+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

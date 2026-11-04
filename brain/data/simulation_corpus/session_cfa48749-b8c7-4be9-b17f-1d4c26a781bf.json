@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "fcda02fb-4545-4259-9c8c-91cc29e09cc0",
+    "event_type": "SESSION_START",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:29.922204+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_10",
+      "crm_opportunity_id": "opp_10"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "94ad2957-be79-4778-86fe-3ea76f274864",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:33.922204+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, Steve. I'm calling about how our product lifecycle management software can help shorten your development cycles.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9484730355275032,
+    "metadata": {}
+  },
+  {
+    "event_id": "d45737f4-5fcd-43f9-818b-e56820350e89",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:38.922204+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Development cycles? They're long, yes, but that's just the nature of our industry. There's so much testing, so many approvals. I don't think a software can magically fix that.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9623527389794466,
+    "metadata": {}
+  },
+  {
+    "event_id": "6123128b-382e-430c-8973-c4ff75ce1b64",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:42.922204+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I agree, it's not magic, Steve, but our PLM solution centralizes all design, engineering, and manufacturing data, automating change orders and approval workflows. This reduces errors and bottlenecks, leading to average time-to-market reductions of 10-15% for our clients.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8570958810543123,
+    "metadata": {}
+  },
+  {
+    "event_id": "4d594647-d288-42c5-98ab-bb7a684f95e3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:46.922204+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Centralized data, automated workflows... We've got engineers in three different countries. Our CAD files alone are massive. How is one platform going to handle that without massive lag or synchronization issues? We tried something similar years ago, and it was a disaster.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9621162571053288,
+    "metadata": {}
+  },
+  {
+    "event_id": "81dc641b-732b-4f50-afe4-a9f4a58b8ac5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:48.922204+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very valid concern given your distributed team. Our platform is cloud-native, designed for global collaboration with robust data replication and version control, ensuring everyone works on the latest information without performance bottlenecks. We've learned from past industry challenges.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.892345598382098,
+    "metadata": {}
+  },
+  {
+    "event_id": "bd0c9c50-9ee2-40ba-b1c2-44b1c7e7dabf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:53.922204+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cloud-native, okay. But what about the cost? I can already hear our CFO saying no. This sounds like an enterprise-level investment, and frankly, we just approved a new ERP system. The budget for new software is practically zero.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9807046307784055,
+    "metadata": {}
+  },
+  {
+    "event_id": "6b9851df-5103-4bdd-9bf9-719a94437d05",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:12:56.922204+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the budget constraints, Steve. However, the return on investment from faster time-to-market and reduced rework often justifies the expense very quickly. We could explore a pilot project focused on one critical product line to demonstrate ROI without a full enterprise commitment. Would that be an option worth exploring further?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9166392682498314,
+    "metadata": {}
+  },
+  {
+    "event_id": "4f0f0830-38d4-47af-91d8-1049bf42f61d",
+    "event_type": "SESSION_END",
+    "session_id": "cfa48749-b8c7-4be9-b17f-1d4c26a781bf",
+    "tenant_id": "9501e919-acfc-4567-9f7d-fffd76498eb1",
+    "timestamp_utc": "2026-06-28T22:13:01.922204+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

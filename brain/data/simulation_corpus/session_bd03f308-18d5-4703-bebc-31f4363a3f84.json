@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "e7ea1d4d-1352-4625-8fe9-c372e5888759",
+    "event_type": "SESSION_START",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:29.920750+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_8",
+      "crm_opportunity_id": "opp_8"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "8add0635-d381-4600-8c81-0c92ef23a814",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:33.920750+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Tom, thanks for connecting. I'm calling about our new platform that helps automate customer onboarding and compliance checks for financial institutions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9684620815244736,
+    "metadata": {}
+  },
+  {
+    "event_id": "6890536a-9380-41a9-a52e-8eb405e9fc40",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:35.920750+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automate onboarding? We have processes for that. They're heavily regulated, very specific. Are you sure your 'platform' can handle the complexity of FINRA and SEC requirements?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8565841345648375,
+    "metadata": {}
+  },
+  {
+    "event_id": "c24df7bf-b2a1-48a2-bb23-b79fb91e6c05",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:38.920750+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, Tom. Our solution is built from the ground up with compliance in mind. It includes configurable workflows to meet specific regulatory frameworks, audit trails, and integrates with leading KYC/AML databases. It's designed to reduce manual errors and accelerate onboarding cycles while ensuring full compliance.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9155575755389836,
+    "metadata": {}
+  },
+  {
+    "event_id": "aaaf509b-09c5-413e-a2ce-297303ad2b27",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:40.920750+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Reduce errors, accelerate cycles... that's what everyone says. But what about exceptions? We get weird cases all the time, edge cases that a simple automated system would just flag and freeze. We can't afford to lose a customer over an automated bot.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8541288418035626,
+    "metadata": {}
+  },
+  {
+    "event_id": "b2551e85-57a1-4535-afd7-ce57d585d807",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:42.920750+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a critical point, Tom. Our system is designed with human oversight. It flags exceptions for review by your team, providing all the necessary data for a quick, informed decision. It's about intelligent automation, not blind automation. It streamlines the 80% and highlights the 20% that needs human expertise.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9687256695982459,
+    "metadata": {}
+  },
+  {
+    "event_id": "e95d16cb-6db8-4bed-b733-efe7f3a267f3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:47.920750+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, okay. I get that. But we're about to enter our busiest quarter. Any new system right now would be a massive disruption. It's just not the right time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9607906762015319,
+    "metadata": {}
+  },
+  {
+    "event_id": "dae858df-3c8d-470f-af11-7bd2da790ef5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:49.920750+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand the timing challenge. Perhaps we could look at a smaller, pilot implementation that targets a less critical segment, allowing you to see the value without major disruption. Or, we could schedule a deeper dive for when your peak season subsides. What timeframe would be better?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8514075112530726,
+    "metadata": {}
+  },
+  {
+    "event_id": "bc0115a6-b0f5-4efa-b348-e9091129b58e",
+    "event_type": "SESSION_END",
+    "session_id": "bd03f308-18d5-4703-bebc-31f4363a3f84",
+    "tenant_id": "e87cbee6-1549-47ca-9160-d39635235418",
+    "timestamp_utc": "2026-06-28T22:12:54.920750+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,18 @@
+# Local/free-tier profile: one reasoning request per final buyer turn.
+# The full ten-engine reference profile remains configs/engines.yaml.
+engines:
+  - engine_id: perception.concrete
+    engine_type: PERCEPTION
+    priority: 1
+    latency_budget_ms: 100
+    class_path: clozflow_brain.engines.compact.TextPerceptionEngine
+  - engine_id: copilot.compact
+    engine_type: RECOMMENDATION
+    priority: 2
+    latency_budget_ms: 1000
+    class_path: clozflow_brain.engines.compact.CompactReasoningEngine
+  - engine_id: reflection.concrete
+    engine_type: REFLECTION
+    priority: 5
+    latency_budget_ms: 30000
+    class_path: clozflow_brain.engines.reflection.ReflectionEngine

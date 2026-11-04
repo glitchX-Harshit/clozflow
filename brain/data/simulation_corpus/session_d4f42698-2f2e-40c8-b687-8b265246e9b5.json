@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "5d6474f1-1754-41bf-ab96-f49571ce3157",
+    "event_type": "SESSION_START",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:16:42.146692+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_66",
+      "crm_opportunity_id": "opp_66"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "69f9de01-1720-460b-b14d-89b2e6fc7add",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:16:46.146692+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining. We spoke last week about your challenges with data silos across your marketing and sales teams. Our platform helps unify that data to provide a 360-degree view of your customer.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9431984986641095,
+    "metadata": {}
+  },
+  {
+    "event_id": "49b88157-4817-4f3a-a203-2257745b1949",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:16:48.146692+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Uh-huh. Look, I've got my head of marketing, [Marketing Head Name], and my head of sales, [Sales Head Name], on this call. They're the ones who really need to hear this. I'm just here to observe.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9867461496560221,
+    "metadata": {}
+  },
+  {
+    "event_id": "20a5239b-fc79-4352-9cdf-e494cdac4b53",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:16:52.146692+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Excellent! Thanks for bringing them in. [Marketing Head Name], [Sales Head Name], lovely to meet you both. My goal today is to quickly demonstrate how [Product Name] can bridge the gap between your teams, ensuring everyone has access to the most up-to-date customer insights.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.941386974568918,
+    "metadata": {}
+  },
+  {
+    "event_id": "686323ee-0f8a-47e9-b985-3ab3aaa8feb6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:16:54.146692+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Wait, before you start, can you just clarify what exactly 'data silos' means in this context? I'm not sure we all have the same definition.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8691962204067587,
+    "metadata": {}
+  },
+  {
+    "event_id": "4b9c3575-c00a-4419-936a-fc7763b307ab",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:16:57.146692+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. By 'data silos,' I mean when your customer data resides in separate, disconnected systems\u2014like marketing automation, CRM, and customer support\u2014making it difficult for different teams to get a complete, real-time view of a customer's journey and interactions. Our platform integrates with those systems.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9671119657484019,
+    "metadata": {}
+  },
+  {
+    "event_id": "17a839cb-4452-4ad5-a81c-c1dd6646e81a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:17:02.146692+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, got it. So it's basically a super-CRM, then?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.916363056733648,
+    "metadata": {}
+  },
+  {
+    "event_id": "cbceb342-2303-4a97-b5aa-03bfc8c013f0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:17:06.146692+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more than a CRM. It's an intelligent orchestration layer that sits *on top* of your existing CRM and other tools, providing actionable insights and automated workflows, rather than just storing data.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9361580973478398,
+    "metadata": {}
+  },
+  {
+    "event_id": "62bc7cbc-885d-4be6-9f01-52e76c7cb81f",
+    "event_type": "SESSION_END",
+    "session_id": "d4f42698-2f2e-40c8-b687-8b265246e9b5",
+    "tenant_id": "b97440a4-35fd-466a-b5c1-db39fec9612f",
+    "timestamp_utc": "2026-06-28T22:17:11.146692+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

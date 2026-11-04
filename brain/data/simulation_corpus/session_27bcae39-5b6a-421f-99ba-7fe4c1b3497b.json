@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "9f1a9251-9d7a-46f5-b618-7250acfa7878",
+    "event_type": "SESSION_START",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:29.916307+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_3",
+      "crm_opportunity_id": "opp_3"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ae1b3154-8fe6-4c7e-a4c6-cb864a24bfdf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:31.916307+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi John, thanks for your time. I'm calling about how we can help optimize your inventory management, especially with the recent supply chain disruptions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9185270208883082,
+    "metadata": {}
+  },
+  {
+    "event_id": "3559f28d-b246-4f23-b9aa-c6075dceaa5f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:34.916307+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Inventory management? We've got a system. It works. What's wrong with what we have?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9291177323373498,
+    "metadata": {}
+  },
+  {
+    "event_id": "1cbb7132-aa4b-4a05-8c51-1a6b773c2598",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:37.916307+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Well, our platform goes beyond basic tracking. It uses predictive analytics to forecast demand, automatically reorder based on lead times, and can even suggest optimal warehousing locations to reduce shipping costs. Many of our clients report a 15-20% reduction in carrying costs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9096007067539672,
+    "metadata": {}
+  },
+  {
+    "event_id": "bc56c514-4783-46c2-b2c0-48405c23ad78",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:41.916307+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive analytics, huh? Sounds like a lot of fancy words. Does it actually work, or is it just another expensive software promising the moon? We tried a similar thing a few years back, and it was a nightmare to implement.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.862843898445596,
+    "metadata": {}
+  },
+  {
+    "event_id": "730d1605-1ab9-43a6-af95-db4369f8c41f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:45.916307+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand your skepticism, John. Our implementation process is very hands-on, and we assign a dedicated success manager to ensure a smooth transition. We also have several case studies demonstrating clear ROI, even for companies with complex existing systems. Would you be open to a short discovery call to see if our approach addresses your specific concerns?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8952853043120639,
+    "metadata": {}
+  },
+  {
+    "event_id": "25c71238-f188-4510-8895-aae691dfa3a0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:49.916307+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Discovery call... look, I'm just leaving for lunch. Send me a one-pager. If it looks promising, maybe I'll reach out.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8951916800279767,
+    "metadata": {}
+  },
+  {
+    "event_id": "d65cbe8d-e8fb-4338-9917-f1d28bf6c391",
+    "event_type": "SESSION_END",
+    "session_id": "27bcae39-5b6a-421f-99ba-7fe4c1b3497b",
+    "tenant_id": "c338dbef-2bff-407a-900d-7dc596ed377d",
+    "timestamp_utc": "2026-06-28T22:12:54.916307+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

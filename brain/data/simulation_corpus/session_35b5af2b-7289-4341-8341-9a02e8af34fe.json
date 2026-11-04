@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "5e12438a-9d32-458a-b0f7-69bdd32d5313",
+    "event_type": "SESSION_START",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:00.576368+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_124",
+      "crm_opportunity_id": "opp_124"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ec4c23a-aee6-4604-ab34-78788e15fb69",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:03.576368+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Thanks for joining, Sarah. I wanted to discuss how our customer success platform could enhance your client retention strategies.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8852385878681742,
+    "metadata": {}
+  },
+  {
+    "event_id": "284f768a-b282-43fc-bbd2-ad2f7ef88519",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:08.576368+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Honestly, we're pretty happy with Gainsight. We've been using it for years, and our team is fully onboarded. It does what we need it to do.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9554180600636915,
+    "metadata": {}
+  },
+  {
+    "event_id": "b4f2840f-cf14-4cfd-85e0-9a7a932f06b8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:12.576368+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Gainsight is a solid platform. However, our analytics engine provides predictive churn indicators with 90% accuracy, allowing proactive intervention, which is significantly higher than industry averages.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9437602076897971,
+    "metadata": {}
+  },
+  {
+    "event_id": "d23e7776-181d-4ec6-9afe-7f569882c511",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:16.576368+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive analytics, everyone claims that. Gainsight also has churn scores. I'm not sure a slight increase in accuracy would justify the monumental effort of migrating all our data and retraining a team.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9020420895659202,
+    "metadata": {}
+  },
+  {
+    "event_id": "3cf1dbf6-bb67-46be-b044-d254baa9c3b2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:21.576368+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the migration concern. We've actually built seamless integration tools that can port your existing data in days, not weeks. Plus, our intuitive UI significantly reduces training time, often to just a few hours of guided walkthroughs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8728503720666375,
+    "metadata": {}
+  },
+  {
+    "event_id": "7dd539b7-bac0-4e88-8fc0-00ed46739766",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:23.576368+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Days, huh? That sounds optimistic. Look, I'm not saying it's bad, but the friction of switching is a huge deterrent. We're not actively looking to replace Gainsight right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9142415949861561,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d683df3-89b7-4912-88c6-1d9cee78bce2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:26.576368+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you. What if I could show you a quick, personalized demo focused solely on how our predictive insights could have saved one of your recent churned accounts? No migration talk, just pure value.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9555872348889259,
+    "metadata": {}
+  },
+  {
+    "event_id": "6cdf3fd4-634c-4283-b3d2-81595753e885",
+    "event_type": "SESSION_END",
+    "session_id": "35b5af2b-7289-4341-8341-9a02e8af34fe",
+    "tenant_id": "b1ecb361-c2e6-4be0-b0c0-248febebc4af",
+    "timestamp_utc": "2026-06-28T22:20:31.576368+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "76fab9ed-5c2f-4435-9627-ac59de654167",
+    "event_type": "SESSION_START",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:15.113093+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_42",
+      "crm_opportunity_id": "opp_42"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "f7323f1c-7365-495c-8492-f0ede6ba8262",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:20.113093+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Sarah. Thanks for taking the time. I wanted to quickly follow up on our previous chat about optimizing your sales enablement content. What are the biggest challenges your team is facing with content management right now?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9391619143977945,
+    "metadata": {}
+  },
+  {
+    "event_id": "c09b77dd-bd3e-47b2-9773-b9a04fe48d34",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:23.113093+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Content management? Honestly, we're doing alright. We have Google Drive for storage and a decent naming convention. It's not perfect, but it works.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.877528069333372,
+    "metadata": {}
+  },
+  {
+    "event_id": "1f970378-0be5-40b5-86fd-f4ffcdd7b3ce",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:25.113093+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear that. Many teams find a basic storage solution sufficient. However, are you finding your sales reps consistently using the *latest* versions of materials, or are they struggling to find the most effective content for specific buyer stages?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9015899371757303,
+    "metadata": {}
+  },
+  {
+    "event_id": "3a924f96-37bb-4938-a028-1062304dea79",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:29.113093+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sometimes. I mean, we send out updates, but I can't force them to use it. And everyone thinks their own content is best, right? It's just part of sales.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9377661516135832,
+    "metadata": {}
+  },
+  {
+    "event_id": "d0bf0e76-f0e6-4a73-9bef-6674328cca86",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:31.113093+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It certainly can be. Our platform helps by integrating directly into their workflow, suggesting the highest-performing content based on the CRM opportunity stage and buyer persona. It virtually eliminates the 'hunting and pecking' for relevant materials.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8651034473101397,
+    "metadata": {}
+  },
+  {
+    "event_id": "e609bae0-00e1-4fac-9ab6-0ec4c4023b37",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:35.113093+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, it's like a smarter search engine? I don't know, we're really trying to avoid adding *another* tool to our tech stack. We've got too many already.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8721204984835634,
+    "metadata": {}
+  },
+  {
+    "event_id": "d35e50e2-e8da-4f3e-92b3-442eb3b2156a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:38.113093+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand the 'tool fatigue.' Think of it less as 'another tool' and more as an intelligence layer that makes your existing content and CRM *more effective*. It's designed to reduce friction, not add it.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.95938978814613,
+    "metadata": {}
+  },
+  {
+    "event_id": "bd93909c-9260-494b-8d4e-5c3b93db3906",
+    "event_type": "SESSION_END",
+    "session_id": "0f9c5e77-7e5f-4a92-827d-8355edaa5795",
+    "tenant_id": "ed5fa35f-3ea9-4724-b1c2-88cef4666909",
+    "timestamp_utc": "2026-06-28T22:15:43.113093+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

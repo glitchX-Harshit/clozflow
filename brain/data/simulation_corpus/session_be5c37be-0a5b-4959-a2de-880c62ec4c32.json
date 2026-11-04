@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "cc144fab-0ce5-4d29-8ee4-b1efb2d19b5b",
+    "event_type": "SESSION_START",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:14.895961+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_55",
+      "crm_opportunity_id": "opp_55"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "f27e9007-5016-40ab-b72c-ed6fa267eeb4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:16.895961+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Mr. Thompson, I'm calling from SecureCloud. We offer advanced cybersecurity solutions that provide 24/7 threat detection and response, specifically for hybrid cloud environments.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9837629575922326,
+    "metadata": {}
+  },
+  {
+    "event_id": "6999715e-15fc-4c85-86af-b17783934af7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:19.895961+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "SecureCloud, huh? We already have SentinelOne and a pretty robust in-house team. We haven't had any major breaches in years, knock on wood. So, what makes you different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8684737899258835,
+    "metadata": {}
+  },
+  {
+    "event_id": "40129ff3-ffd1-4161-9e87-eb01796e5394",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:22.895961+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's excellent to hear. Many of our clients come to us because while their existing solutions are strong, they often lack full visibility across both on-premise and multiple cloud providers. We consolidate that visibility and provide automated response playbooks.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9215326211835022,
+    "metadata": {}
+  },
+  {
+    "event_id": "c35ae4e6-1250-4433-afcc-afb60e7608b7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:25.895961+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automated response? That sounds like a recipe for disaster. One false positive, and suddenly my production servers are offline. We prefer human oversight for critical incidents.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8608310479130017,
+    "metadata": {}
+  },
+  {
+    "event_id": "23f9d321-1b5c-48a1-a9d2-1bc563ad3a63",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:28.895961+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I agree completely. Our automation isn't about blind action. It's about providing recommended actions and initial containment steps, significantly reducing mean time to response. Human oversight remains paramount, but our system gives your team a head start, not a replacement.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8671848938874103,
+    "metadata": {}
+  },
+  {
+    "event_id": "f587e56e-abfd-4f91-bccc-eb6f21658667",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:30.895961+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that sounds a little better. But what about cost? Cybersecurity budgets are always a tight squeeze. We just renewed our contracts.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8563530023982272,
+    "metadata": {}
+  },
+  {
+    "event_id": "d91a0424-a437-442f-ad73-3d5622487da7",
+    "event_type": "SESSION_END",
+    "session_id": "be5c37be-0a5b-4959-a2de-880c62ec4c32",
+    "tenant_id": "e7a49721-45ee-45d1-b3a4-57ac79af4d7d",
+    "timestamp_utc": "2026-06-28T22:16:35.895961+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

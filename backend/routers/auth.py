@@ -88,31 +88,8 @@ def verify_token_string(token: str, db: Session) -> Optional[User]:
         except (jwt.PyJWTError, ValueError):
             pass
 
-    # 3. Supabase Auth JWT Bridge (for development & Supabase Auth sessions)
-    # Validates token expiration, checks Supabase token claims, and resolves the synced user
-    try:
-        payload = jwt.decode(token, options={"verify_signature": False})
-        
-        # Enforce expiration check: expired tokens are strictly rejected
-        exp = payload.get("exp")
-        if exp and datetime.fromtimestamp(exp) < datetime.utcnow():
-            return None
-
-        # Verify it is a valid Supabase token with an email claim
-        email = payload.get("email")
-        if email:
-            user = db.query(User).filter(User.email == email).first()
-            if not user:
-                user = User(email=email, password_hash="supabase_synced")
-                db.add(user)
-                db.commit()
-                db.refresh(user)
-            if user:
-                return user
-    except Exception:
-        pass
-
     return None
+
 
 
 class UserCreate(BaseModel):
@@ -160,6 +137,10 @@ def get_current_user(
 
 @router.post("/register", response_model=Token)
 def register(user: UserCreate, db: Session = Depends(get_db)):
+    if not 8 <= len(user.password.encode("utf-8")) <= 72:
+        raise HTTPException(422, "Password must be between 8 and 72 UTF-8 bytes")
+    if "@" not in user.email or len(user.email) > 254:
+        raise HTTPException(422, "Enter a valid email address")
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")

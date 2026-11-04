@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "1a11931c-da33-4799-8932-321a42f4e285",
+    "event_type": "SESSION_START",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:17:52.981628+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_90",
+      "crm_opportunity_id": "opp_90"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "629a3e13-8adb-4c56-90dd-52bf0fe2e050",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:17:55.981628+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for your time today. I'm excited to show you how our project management software can help your engineering teams deliver faster and more efficiently.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9008529196749487,
+    "metadata": {}
+  },
+  {
+    "event_id": "9c28e788-0e36-4648-ab26-0fe9b7064252",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:17:59.981628+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello. Project management software. We're using Jira already, and frankly, my engineers hate it. It's clunky, takes too much time to update, and nobody feels like it actually helps them.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9887555521646785,
+    "metadata": {}
+  },
+  {
+    "event_id": "6cddb5c1-7d31-4aa8-b2d9-a09e23d0f187",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:02.981628+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear that a lot about Jira, especially from engineering teams. Our platform is designed specifically for technical teams, focusing on ease of use, automated updates, and visual workflows that actually help engineers stay in their flow state.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8599879036811974,
+    "metadata": {}
+  },
+  {
+    "event_id": "454cc6d3-94eb-429e-ae9d-d08642ee1d77",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:04.981628+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automated updates? How does that even work without requiring more manual input somewhere else? And 'visual workflows' often means more clicks and more confusion in our experience.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9012668926594524,
+    "metadata": {}
+  },
+  {
+    "event_id": "4c812329-ae72-4c67-83de-2b0d62fdb6cc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:09.981628+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It integrates directly with your code repositories, automatically updating task statuses based on commits and pull requests. The visual workflows are highly customizable and designed to reduce, not increase, cognitive load.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8640901654912521,
+    "metadata": {}
+  },
+  {
+    "event_id": "ade7506c-cac7-4a2b-b337-64f1557fc01c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:14.981628+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Look, I'm already fighting a battle to get them to just use Jira correctly. Introducing *another* tool, even if it's 'better,' feels like asking for a mutiny. The organizational change management would be a nightmare.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9468654108997977,
+    "metadata": {}
+  },
+  {
+    "event_id": "0d5c8e78-3133-445d-b1a3-f18aaa632e18",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:18.981628+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that internal resistance is a major hurdle. We offer structured pilots with a small team to demonstrate the benefits without a full-scale rollout, minimizing risk and proving value first.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9285942921715936,
+    "metadata": {}
+  },
+  {
+    "event_id": "8a044d66-4075-48e1-829f-a3d89df93875",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:20.981628+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'm not saying it's a bad product, but the timing is just terrible. My teams are already stretched thin. Maybe next year if things calm down. Send me a summary email, but don't expect a quick reply.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8877077321135295,
+    "metadata": {}
+  },
+  {
+    "event_id": "b901474f-2a2c-46a2-b27a-f8422352abdc",
+    "event_type": "SESSION_END",
+    "session_id": "72be1ce7-3550-4594-9a0a-2cca6bcd64a8",
+    "tenant_id": "9e344d1b-3eff-4ca1-ad00-f448f291353d",
+    "timestamp_utc": "2026-06-28T22:18:25.981628+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

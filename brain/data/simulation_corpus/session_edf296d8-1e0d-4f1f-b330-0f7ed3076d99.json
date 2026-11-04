@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "b9deb9b8-19fe-4f2f-a11b-8369109a15a8",
+    "event_type": "SESSION_START",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:16:42.148118+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_68",
+      "crm_opportunity_id": "opp_68"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "16c4d51a-599d-4796-b0e2-c608e955705a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:16:47.148118+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. I'm calling because I noticed your career page mentions expanding your engineering team. We help companies like yours streamline their developer onboarding and internal knowledge sharing.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8734848034062302,
+    "metadata": {}
+  },
+  {
+    "event_id": "9e697d4a-ccc4-4e95-a39f-43cf79123ed6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:16:51.148118+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Thanks, but we're pretty good on that front. Our senior devs built an internal wiki, and we have a mentorship program. It's all working just fine.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9034048739794045,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7d5460c-b5f5-49d3-8553-af3454b76ee9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:16:56.148118+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fantastic that you've built an internal solution. Many companies start there. However, as teams scale, maintaining those wikis and ensuring all knowledge is accessible and up-to-date can become a full-time job. Our platform automates much of that, keeping your engineers focused on building.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9424360294744748,
+    "metadata": {}
+  },
+  {
+    "event_id": "496d07ba-c984-4044-93fc-2588f89189dd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:17:00.148118+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automates what, exactly? Our wiki is on Confluence, it's pretty standard. And our internal tools are, well, internal. I doubt your system can just plug into all of them.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9779681411671954,
+    "metadata": {}
+  },
+  {
+    "event_id": "5fb7337d-bacf-4a48-bd62-f1f85b00a0d8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:17:02.148118+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our solution integrates with common tools like Confluence, GitHub, and Slack, pulling relevant information and organizing it into a searchable, AI-powered knowledge base that updates automatically. It acts as an intelligent layer on top of your existing ecosystem. It's about reducing the friction of knowledge discovery.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9367969866452425,
+    "metadata": {}
+  },
+  {
+    "event_id": "6784bf9d-ba67-41aa-b6fc-1017102c2dc6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:17:06.148118+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Knowledge discovery? We have search. What's wrong with search? This just sounds like another tool for people to forget to update.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9128244022959013,
+    "metadata": {}
+  },
+  {
+    "event_id": "455173c1-824f-42c4-9124-9754c08887b0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:17:09.148118+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more proactive than standard search. It can surface relevant documentation based on a developer's current task or context, and even suggest experts. It minimizes the 'tap on shoulder' interruptions. Could I send you a 3-minute video showing the developer experience?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8690472228376627,
+    "metadata": {}
+  },
+  {
+    "event_id": "bb18b76d-39e1-4420-bbd9-d2cf4b50e9c8",
+    "event_type": "SESSION_END",
+    "session_id": "edf296d8-1e0d-4f1f-b330-0f7ed3076d99",
+    "tenant_id": "bf9bdb59-5a9b-43f5-9b23-5315cda10716",
+    "timestamp_utc": "2026-06-28T22:17:14.148118+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

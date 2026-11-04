@@ -1,0 +1,68 @@
+brain:
+  name: clozflow-enterprise-brain
+  ccbs_version: "1.0"
+  environment: local
+  max_concurrent_per_tenant: 500
+
+api:
+  base_path: /v1
+  auth:
+    mode: jwt_rs256
+    token_ttl_seconds: 3600
+  rate_limits:
+    session_starts_per_hour: 100
+    events_per_minute: 10000
+
+kernel:
+  priority_levels: 5
+  heartbeat_interval_seconds: 15
+  graceful_degradation: true
+  enforce_world_model_mutation_boundary: true
+
+event_bus:
+  implementation: kafka
+  kafka:
+    bootstrap_servers: localhost:9092
+    enable_idempotence: true
+  topics:
+    cognitive_events:
+      name: cognitive.events
+      partitions: 12
+      retention_hours: 24
+    cognitive_recommendations:
+      name: cognitive.recommendations
+      partitions: 6
+      retention_hours: 2
+    cognitive_learning:
+      name: cognitive.learning
+      partitions: 3
+      retention_days: 30
+
+world_model:
+  hot_store: redis_json
+  redis:
+    url: redis://:local-dev-only@localhost:6379/0
+    key_prefix: clozflow:wm
+  checkpoint_store: postgresql
+  checkpoint_interval_seconds: 60
+
+persistence:
+  implementation: postgresql
+  postgresql:
+    url: postgresql+psycopg://clozflow:local-dev-only@localhost:5432/clozflow_brain
+  local_sqlite:
+    path: data/brain.sqlite
+
+observability:
+  provider: opentelemetry
+  required_signals:
+    - brain_events_total
+    - brain_engine_duration_ms
+    - brain_recommendation_latency_ms
+    - brain_world_model_belief_count
+    - brain_active_sessions
+    - brain_llm_tokens_total
+    - brain_llm_errors_total
+    - brain_wm_mutation_apply_ms
+    - brain_recommendations_delivered
+    - brain_recommendations_acknowledged

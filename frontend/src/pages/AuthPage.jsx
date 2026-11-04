@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import LocalAuthPage from './LocalAuthPage';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
@@ -17,10 +18,11 @@ const AuthPage = () => {
         if (location.state?.view) setView(location.state.view);
     }, [location.state]);
 
+    if (import.meta.env.VITE_AUTH_MODE === 'local') return <LocalAuthPage />;
     const handleSuccess = () => navigate('/dashboard');
 
     // ── OAuth callback route: /auth/callback ──────────────────────────────────
-    if (location.pathname === '/auth/callback') {
+    if (location.pathname === '/auth/callback' && supabase) {
         return <OAuthCallback onDone={() => navigate('/dashboard')} />;
     }
 

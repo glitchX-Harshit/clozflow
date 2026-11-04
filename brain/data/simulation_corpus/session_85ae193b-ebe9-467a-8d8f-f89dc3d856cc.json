@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "bcbcdfd1-ce52-45a9-9c93-08b4269d5891",
+    "event_type": "SESSION_START",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:14.898377+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_59",
+      "crm_opportunity_id": "opp_59"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "624ea455-28e0-4916-b708-22876b13caa6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:19.898377+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Mr. Chen, I'm calling from EchoMetrics. We provide a customer feedback platform that uses natural language processing to identify sentiment and key trends from all your customer interactions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8796391450786536,
+    "metadata": {}
+  },
+  {
+    "event_id": "76545d98-f0bb-47bb-ae40-0fbd4b2d27ff",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:21.898377+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Customer feedback? We use SurveyMonkey for our NPS scores, and our support team logs customer issues. We seem to get by just fine.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9174755710516816,
+    "metadata": {}
+  },
+  {
+    "event_id": "4c7e63eb-84e8-4e21-a0e2-fb6085998061",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:23.898377+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a good start. However, SurveyMonkey captures explicit feedback. Our platform analyzes all your unstructured data \u2013 support tickets, chat logs, social media mentions \u2013 to give you a holistic, real-time understanding of what customers truly feel, often uncovering issues before they hit NPS.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.948596377051309,
+    "metadata": {}
+  },
+  {
+    "event_id": "5da4d634-217b-4704-929d-0ccd5e123140",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:27.898377+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, you're telling me I need to pay for something to tell me what my support team already tells me? I get weekly reports from them. I don't need a fancy AI to tell me our customers are upset about the login page.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.878548852287577,
+    "metadata": {}
+  },
+  {
+    "event_id": "97135cd8-2c21-4a7d-9baa-dd8d8116b1b6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:30.898377+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It goes beyond just individual issues. Our system aggregates thousands of data points to spot emerging trends, prioritize product features, and even predict churn risk. It's about proactive intelligence, not just reactive reporting.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9757099932392379,
+    "metadata": {}
+  },
+  {
+    "event_id": "56c36f37-65b7-4963-bfc4-5d3d9e1fcf87",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:34.898377+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Interesting. But how easy is it to integrate with our existing CRM and support tools? Because if it's a huge IT project, I'm out.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.926086197807988,
+    "metadata": {}
+  },
+  {
+    "event_id": "ede2b55e-8ec5-4933-af09-04348898dabb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:36.898377+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We have out-of-the-box integrations with most major CRMs and support platforms, typically requiring minimal IT involvement. We can usually get you up and running with initial insights within a week.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9317011999082674,
+    "metadata": {}
+  },
+  {
+    "event_id": "dc6bc0fa-e010-4666-93f1-2d4aa4a1004e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:38.898377+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A week? That's better than I thought. But my budget for new software this quarter is zero. We just splurged on a new marketing automation suite. Maybe next fiscal year.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8974751621928254,
+    "metadata": {}
+  },
+  {
+    "event_id": "498a22c7-0855-404d-8ed4-d65a65ceac41",
+    "event_type": "SESSION_END",
+    "session_id": "85ae193b-ebe9-467a-8d8f-f89dc3d856cc",
+    "tenant_id": "2bcbcaa6-c16a-4744-b377-cb21e1ad9986",
+    "timestamp_utc": "2026-06-28T22:16:43.898377+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

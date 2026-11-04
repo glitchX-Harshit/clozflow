@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "9a8c2bdb-e7ab-482c-997a-d1623da73394",
+    "event_type": "SESSION_START",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:17:52.974623+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_82",
+      "crm_opportunity_id": "opp_82"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ac9ce9eb-67d8-4744-90bb-75d03bceeabb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:17:57.974623+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining today. As we discussed, I wanted to show you how our platform helps streamline your client onboarding process.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.928038581291116,
+    "metadata": {}
+  },
+  {
+    "event_id": "78976b26-b786-4911-9e11-70e6e8762992",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:18:01.974623+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, look, I only have about 10 minutes max. My next meeting starts promptly. So, what's the elevator pitch here? We're using spreadsheets, and it's... fine.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9264618335984435,
+    "metadata": {}
+  },
+  {
+    "event_id": "e67e1288-7b0f-486b-9c53-fde49ed79e02",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:18:03.974623+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, I'll be concise. Our platform automates document collection, signature workflows, and integrates directly with your CRM, cutting onboarding time by up to 50% and reducing errors significantly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9067183194397618,
+    "metadata": {}
+  },
+  {
+    "event_id": "b25a7d14-2efa-447c-bbbc-c1ffa689d426",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:18:07.974623+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Fifty percent, really? Sounds like a lot of setup. And what about security? We handle sensitive client data.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9890079943097844,
+    "metadata": {}
+  },
+  {
+    "event_id": "ebebd2b0-6279-4844-9367-de0d794d64b8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:18:09.974623+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Setup is surprisingly quick, often less than two weeks, and we're fully SOC 2 Type II compliant with end-to-end encryption. Would you be open to a quick 5-minute demo next week to see it in action?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8598600638995523,
+    "metadata": {}
+  },
+  {
+    "event_id": "504e7123-a22f-43eb-a066-40976e250593",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:18:11.974623+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Maybe. Send me an email with the high-level overview and a couple of those security docs. I'll get back to you if I find a slot.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8999082670121111,
+    "metadata": {}
+  },
+  {
+    "event_id": "7a10b648-3fd6-4edb-80c5-5803ed56fe74",
+    "event_type": "SESSION_END",
+    "session_id": "4c140e8e-a900-4698-a08e-2470ff06f186",
+    "tenant_id": "12d672e9-d67f-4f05-a04b-7cb979744845",
+    "timestamp_utc": "2026-06-28T22:18:16.974623+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

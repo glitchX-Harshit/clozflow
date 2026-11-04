@@ -18,7 +18,7 @@ export const useAudioStream = (wsUrl) => {
                 return resolve();
             }
 
-            wsRef.current = new WebSocket(wsUrl);
+            wsRef.current = new WebSocket(wsUrl, ['clozflow', 'clozflow-auth.' + localStorage.getItem('token')]);
 
             wsRef.current.onopen = () => {
                 console.log('✅ Audio WebSocket Connected');

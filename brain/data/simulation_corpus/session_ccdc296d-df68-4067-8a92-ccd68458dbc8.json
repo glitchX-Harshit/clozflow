@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "786a9737-3f48-46ca-9513-dbb0b6af6c0a",
+    "event_type": "SESSION_START",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:12.125148+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_31",
+      "crm_opportunity_id": "opp_31"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "746ca608-b29b-4ec8-9bd0-62929ec0f359",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:17.125148+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks so much for joining. I know you're busy, so I'd like to quickly outline what we'll cover today and then dive into how [Product Name] can streamline your project workflows.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9619267931519057,
+    "metadata": {}
+  },
+  {
+    "event_id": "d5b6f87d-bf0b-4213-8b8e-9a0b020db5c8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:19.125148+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, I only have about 10 minutes before I have to jump on another call. Can we just cut to the chase? What exactly does your software do?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9128914549977379,
+    "metadata": {}
+  },
+  {
+    "event_id": "6ba7c62c-aa39-43ff-81de-d2e0fdb44e57",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:22.125148+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. In essence, [Product Name] centralizes all your project communication, asset management, and task tracking, integrating seamlessly with your existing tools to eliminate information silos and boost team productivity by up to 25%.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9002275967793651,
+    "metadata": {}
+  },
+  {
+    "event_id": "d7b67335-ef8e-4fed-b14e-7865737ca73c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:26.125148+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So it's another project management tool? We just onboarded Asana last quarter. Is this essentially an add-on or a replacement?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9550713835304442,
+    "metadata": {}
+  },
+  {
+    "event_id": "3b5331b5-9199-45c9-8c2f-96e13752228e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:29.125148+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Great question. While it shares some functionality, [Product Name] focuses uniquely on AI-driven insights for proactive risk detection and resource allocation, which Asana doesn't offer. It acts more as an intelligent overlay that optimizes your existing tools rather than replaces them entirely.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8550657981339995,
+    "metadata": {}
+  },
+  {
+    "event_id": "22c8fa62-67f3-4b80-9bde-878d336d151b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:31.125148+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, sounds complicated to integrate with our custom setup. And what's the typical price range for a team of, say, 50 users?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8624433006887942,
+    "metadata": {}
+  },
+  {
+    "event_id": "c7d44a8a-bae2-4728-8965-bb21d7038949",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:33.125148+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Integration is surprisingly straightforward, and we have dedicated support for that. Regarding pricing, it's tiered, but for 50 users, you'd be looking at our Pro plan. I can send you a detailed breakdown, but perhaps a quick 5-minute visual demo of the AI insights would clarify its value first?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9477764928021047,
+    "metadata": {}
+  },
+  {
+    "event_id": "05d2188e-5665-47fd-af84-23065e2158a5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:38.125148+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Look, I really have to go now. Just email me the bullet points on what makes it different from Asana, a brief on the integration process, and a ballpark figure for the Pro plan. I'll review it later.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.987776434663104,
+    "metadata": {}
+  },
+  {
+    "event_id": "698d736b-6af9-4a6b-9778-79f0dddc430c",
+    "event_type": "SESSION_END",
+    "session_id": "ccdc296d-df68-4067-8a92-ccd68458dbc8",
+    "tenant_id": "3dc8e0c1-b497-4ec5-a63b-b5c3361a4ef1",
+    "timestamp_utc": "2026-06-28T22:14:43.125148+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

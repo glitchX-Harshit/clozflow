@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClozFlow Brain — Live Recommendation Delivery Panel</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0d0b18 0%, #150f30 100%);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(147, 51, 234, 0.4);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #a855f7;
+      --primary-glow: rgba(168, 85, 247, 0.5);
+      --accent-objection: #f43f5e;
+      --accent-strategy: #3b82f6;
+      --accent-alert: #eab308;
+      --accent-question: #14b8a6;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      background: rgba(13, 11, 24, 0.5);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 2rem;
+      height: 2rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+      border-radius: 0.5rem;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: linear-gradient(to right, #fff, #c084fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .status-dot {
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 8px #ef4444;
+      transition: all 0.3s ease;
+    }
+
+    .status-dot.connected {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .status-dot.connecting {
+      background: var(--accent-alert);
+      box-shadow: 0 0 8px var(--accent-alert);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      flex: 1;
+      height: calc(100vh - 73px);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--card-border);
+      padding: 2rem;
+      background: rgba(13, 11, 24, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .content-area {
+      padding: 2rem;
+      display: grid;
+      grid-template-rows: 250px 1fr;
+      gap: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .section-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    input, textarea, select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .metrics-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .metric-value {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+      align-content: start;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .rec-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .rec-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 8px 30px rgba(168, 85, 247, 0.15);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .rec-card.expiring {
+      animation: fadeOut 0.5s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: scale(0.95); height: 0; padding: 0; margin: 0; border: none; }
+    }
+
+    .rec-badge {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2rem;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-objection { background: rgba(244, 63, 94, 0.15); color: var(--accent-objection); border: 1px solid rgba(244, 63, 94, 0.3); }
+    .badge-strategy { background: rgba(59, 130, 246, 0.15); color: var(--accent-strategy); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-alert { background: rgba(234, 179, 8, 0.15); color: var(--accent-alert); border: 1px solid rgba(234, 179, 8, 0.3); }
+    .badge-question { background: rgba(20, 184, 166, 0.15); color: var(--accent-question); border: 1px solid rgba(20, 184, 166, 0.3); }
+
+    .rec-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .rec-body {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #e5e7eb;
+      background: rgba(255,255,255,0.02);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      border-left: 3px solid var(--primary);
+    }
+
+    .rec-rationale {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .rec-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .ttl-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, #6366f1 100%);
+      width: 100%;
+      transform-origin: left;
+    }
+
+    .console-panel {
+      background: rgba(13, 11, 24, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .console-header {
+      background: rgba(255,255,255,0.03);
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .console-log {
+      flex: 1;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #10b981;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      background: #090710;
+    }
+
+    .log-line {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .log-ts {
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+
+    .log-type {
+      font-weight: bold;
+    }
+
+    .log-type.recommendation { color: var(--primary); }
+    .log-type.heartbeat { color: var(--text-muted); }
+    .log-type.expiry { color: var(--accent-alert); }
+    .log-type.system { color: #3b82f6; }
+    .log-type.error { color: #f43f5e; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-muted);
+      height: 100%;
+      min-height: 250px;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Theme Toggle Styles */
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.2rem;
+      height: 2.2rem;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary);
+    }
+
+    body.light-theme {
+      --bg-gradient: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(0, 0, 0, 0.08);
+      --card-hover-border: rgba(147, 51, 234, 0.5);
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.15);
+    }
+
+    body.light-theme header {
+      background: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    body.light-theme .brand-title {
+      background: linear-gradient(to right, #1f2937, #6d28d9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.light-theme .sidebar {
+      background: rgba(255, 255, 255, 0.5);
+      border-right: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    body.light-theme input,
+    body.light-theme textarea,
+    body.light-theme select {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: #1f2937;
+    }
+
+    body.light-theme input:focus,
+    body.light-theme textarea:focus,
+    body.light-theme select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
+    }
+
+    body.light-theme .btn-secondary {
+      background: #f3f4f6;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: #1f2937;
+    }
+
+    body.light-theme .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    body.light-theme .metric-row {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .metric-value {
+      color: #1f2937;
+    }
+
+    body.light-theme .rec-card {
+      background: #ffffff;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .rec-body {
+      background: #f9fafb;
+      border-left: 3px solid var(--primary);
+      color: #1f2937;
+    }
+
+    body.light-theme .console-panel {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    body.light-theme .console-header {
+      background: #f3f4f6;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      color: #4b5563;
+    }
+
+    body.light-theme .console-log {
+      background: #fafafa;
+      color: #059669;
+    }
+
+    body.light-theme .theme-toggle-btn {
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #4b5563;
+    }
+
+    body.light-theme .theme-toggle-btn:hover {
+      background: rgba(0, 0, 0, 0.06);
+    }
+
+    body.light-theme .connection-status {
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #1f2937;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-logo"></div>
+      <div class="brand-title">ClozFlow Brain</div>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light/Dark Mode">☀️</button>
+      <div class="connection-status" id="connection-container">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text">Disconnected</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <aside class="sidebar">
+      <div class="section-title">Session Configuration</div>
+      <div class="form-group">
+        <label for="session-id-input">Session UUID</label>
+        <input type="text" id="session-id-input" value="" readonly style="background: rgba(0,0,0,0.1); cursor: not-allowed;">
+        <button class="btn btn-secondary" onclick="createSession()">Create New Session</button>
+      </div>
+      <button class="btn" id="connect-btn" onclick="toggleConnection()">Connect Stream</button>
+
+      <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 0.5rem 0;">
+
+      <div class="section-title">Real-Time Ingestion Simulator</div>
+      <div class="form-group">
+        <label for="fragment-role">Speaker Role</label>
+        <select id="fragment-role">
+          <option value="BUYER">Buyer (Customer)</option>
+          <option value="SALESPERSON">Seller (Agent)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="transcript-input">Speech Segment</label>
+        <textarea id="transcript-input" rows="4" placeholder="Type customer dialogue or agent statements here..."></textarea>
+      </div>
+      <button class="btn" id="send-event-btn" onclick="sendTranscriptEvent()">Ingest Segment</button>
+
+      <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 0.5rem 0;">
+
+      <div class="section-title">Observability Stats</div>
+      <div class="metrics-panel">
+        <div class="metric-row">
+          <span>Heartbeats Received</span>
+          <span class="metric-value" id="stat-heartbeats">0</span>
+        </div>
+        <div class="metric-row">
+          <span>Delivered Recs</span>
+          <span class="metric-value" id="stat-recs">0</span>
+        </div>
+        <div class="metric-row">
+          <span>Active Rec Cards</span>
+          <span class="metric-value" id="stat-cards">0</span>
+        </div>
+        <div class="metric-row">
+          <span>Latency (P95 Estimate)</span>
+          <span class="metric-value" id="stat-latency">--</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content-area">
+      <div class="console-panel">
+        <div class="console-header">
+          <span>Live WebSocket Frame Console</span>
+          <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="clearConsole()">Clear</button>
+        </div>
+        <div class="console-log" id="console-log">
+          <div class="log-line">
+            <span class="log-ts">[00:00:00]</span>
+            <span class="log-type system">SYSTEM:</span>
+            <span>Console initialized. Awaiting connection.</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Delivered Recommendations</div>
+        <div class="recommendations-grid" id="recs-grid">
+          <div class="empty-state" id="empty-state">
+            <span class="empty-icon">💡</span>
+            <p>Connect WebSocket and send transcript events to see live suggestions.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let socket = null;
+    let heartbeats = 0;
+    let deliveredRecCount = 0;
+    let latencies = [];
+
+    // Pre-populate input with a new session on load
+    window.onload = () => {
+      createSession();
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        document.getElementById('theme-toggle-btn').innerText = '🌙';
+      }
+    };
+
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('theme-toggle-btn');
+      if (body.classList.contains('light-theme')) {
+        body.classList.remove('light-theme');
+        themeBtn.innerText = '☀️';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        body.classList.add('light-theme');
+        themeBtn.innerText = '🌙';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    async function createSession() {
+      try {
+        const response = await fetch('/v1/sessions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tenant_id: "00000000-0000-0000-0000-000000000000",
+            salesperson_id: "spk-1",
+            metadata: { "source": "reference_ui" }
+          })
+        });
+        if (response.ok) {
+          const session = await response.json();
+          document.getElementById('session-id-input').value = session.session_id;
+          logToConsole('system', `Created new session: ${session.session_id}`);
+        } else {
+          logToConsole('error', `Failed to create session.`);
+        }
+      } catch (err) {
+        logToConsole('error', `Network error creating session: ${err.message}`);
+      }
+    }
+
+    function toggleConnection() {
+      if (socket && socket.readyState !== WebSocket.CLOSED) {
+        disconnectStream();
+      } else {
+        connectStream();
+      }
+    }
+
+    function connectStream() {
+      const sessionId = document.getElementById('session-id-input').value.trim();
+      if (!sessionId) {
+        alert("Please enter or generate a valid session ID.");
+        return;
+      }
+
+      const statusDot = document.getElementById('status-dot');
+      const statusText = document.getElementById('status-text');
+      const connectBtn = document.getElementById('connect-btn');
+
+      statusDot.className = 'status-dot connecting';
+      statusText.innerText = 'Connecting';
+      connectBtn.innerText = 'Disconnect Stream';
+
+      // Build websocket URL dynamically
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const host = window.location.host;
+      const url = `${protocol}//${host}/v1/sessions/${sessionId}/recommendations/stream`;
+
+      logToConsole('system', `Connecting to WebSocket: ${url}`);
+
+      socket = new WebSocket(url);
+
+      socket.onopen = () => {
+        statusDot.className = 'status-dot connected';
+        statusText.innerText = 'Connected';
+        logToConsole('system', 'Connection established.');
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const frame = JSON.parse(event.data);
+          handleWebSocketFrame(frame);
+        } catch (e) {
+          logToConsole('error', `Failed to parse message frame: ${event.data}`);
+        }
+      };
+
+      socket.onclose = (event) => {
+        statusDot.className = 'status-dot';
+        statusText.innerText = 'Disconnected';
+        connectBtn.innerText = 'Connect Stream';
+        logToConsole('system', `Connection closed. Code: ${event.code}, Reason: ${event.reason || 'None'}`);
+        cleanupRecommendations();
+      };
+
+      socket.onerror = (error) => {
+        logToConsole('error', `WebSocket encountered an error.`);
+      };
+    }
+
+    function disconnectStream() {
+      if (socket) {
+        socket.close();
+      }
+    }
+
+    function handleWebSocketFrame(frame) {
+      const ts = new Date().toLocaleTimeString();
+
+      if (frame.msg_type === 'HEARTBEAT') {
+        heartbeats++;
+        document.getElementById('stat-heartbeats').innerText = heartbeats;
+        logToConsole('heartbeat', 'HEARTBEAT received. Sending PONG.');
+        socket.send(JSON.stringify({ msg_type: "PONG" }));
+      } else if (frame.msg_type === 'RECOMMENDATION') {
+        deliveredRecCount++;
+        document.getElementById('stat-recs').innerText = deliveredRecCount;
+        const rec = frame.payload;
+        logToConsole('recommendation', `RECOMMENDATION [${rec.type}] received: "${escapeHtml(rec.content.headline)}"`);
+        renderRecommendationCard(rec);
+
+        // Latency tracking
+        const createdTime = new Date(frame.server_ts);
+        const rtt = Date.now() - createdTime.getTime();
+        if (rtt > 0) {
+          latencies.push(rtt);
+          updateLatencyMetrics();
+        }
+      } else if (frame.msg_type === 'RECOMMENDATION_EXPIRED') {
+        const expiredId = frame.payload.rec_id;
+        logToConsole('expiry', `RECOMMENDATION EXPIRED signal for ID: ${expiredId}`);
+        animateCardExpiry(expiredId);
+      }
+    }
+
+    function updateLatencyMetrics() {
+      if (latencies.length === 0) return;
+      // Sort to compute percentile
+      const sorted = [...latencies].sort((a, b) => a - b);
+      const p95Index = Math.ceil(sorted.length * 0.95) - 1;
+      const p95 = sorted[p95Index];
+      document.getElementById('stat-latency').innerText = `${p95} ms`;
+    }
+
+    function renderRecommendationCard(rec) {
+      const grid = document.getElementById('recs-grid');
+      const emptyState = document.getElementById('empty-state');
+      if (emptyState) emptyState.remove();
+
+      // Check if card already exists
+      if (document.getElementById(`card-${rec.rec_id}`)) return;
+
+      const card = document.createElement('div');
+      card.id = `card-${rec.rec_id}`;
+      card.className = 'rec-card';
+
+      let typeClass = 'badge-strategy';
+      if (rec.rec_type === 'OBJECTION_HANDLE') typeClass = 'badge-objection';
+      if (rec.rec_type === 'ALERT') typeClass = 'badge-alert';
+      if (rec.rec_type === 'QUESTION') typeClass = 'badge-question';
+
+      card.innerHTML = `
+        <span class="rec-badge ${typeClass}">${escapeHtml(rec.rec_type)}</span>
+        <div class="rec-title">${escapeHtml(rec.content.headline)}</div>
+        <div class="rec-body">${escapeHtml(rec.content.body)}</div>
+        <div class="rec-rationale"><em>Rationale:</em> ${escapeHtml(rec.content.rationale)}</div>
+        <div class="rec-footer">
+          <span>Confidence: ${(rec.confidence * 100).toFixed(0)}%</span>
+        </div>
+        <div class="ttl-bar" id="ttl-${rec.rec_id}"></div>
+      `;
+
+      grid.prepend(card);
+      updateActiveCardCount();
+
+      // Visual progress countdown matching TTL
+      const ttlMs = rec.display_ttl_ms || 10000;
+      const ttlBar = document.getElementById(`ttl-${rec.rec_id}`);
+
+      let start = Date.now();
+      const interval = setInterval(() => {
+        let elapsed = Date.now() - start;
+        let percentage = Math.max(0, 100 - (elapsed / ttlMs * 100));
+        ttlBar.style.transform = `scaleX(${percentage / 100})`;
+        if (elapsed >= ttlMs) {
+          clearInterval(interval);
+        }
+      }, 50);
+
+      card.dataset.intervalId = interval;
+    }
+
+    function animateCardExpiry(recId) {
+      const card = document.getElementById(`card-${recId}`);
+      if (card) {
+        if (card.dataset.intervalId) {
+          clearInterval(Number(card.dataset.intervalId));
+        }
+        card.classList.add('expiring');
+        setTimeout(() => {
+          card.remove();
+          updateActiveCardCount();
+          checkGridEmpty();
+        }, 500);
+      }
+    }
+
+    function cleanupRecommendations() {
+      const grid = document.getElementById('recs-grid');
+      // Clear timers
+      document.querySelectorAll('.rec-card').forEach(card => {
+        if (card.dataset.intervalId) {
+          clearInterval(Number(card.dataset.intervalId));
+        }
+      });
+      grid.innerHTML = `
+        <div class="empty-state" id="empty-state">
+          <span class="empty-icon">💡</span>
+          <p>WebSocket disconnected. Connect to resume streaming.</p>
+        </div>
+      `;
+      updateActiveCardCount();
+    }
+
+    function checkGridEmpty() {
+      const grid = document.getElementById('recs-grid');
+      if (grid.children.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state" id="empty-state">
+            <span class="empty-icon">💡</span>
+            <p>Awaiting new recommendations...</p>
+          </div>
+        `;
+      }
+    }
+
+    function updateActiveCardCount() {
+      const activeCount = document.querySelectorAll('.rec-card').length;
+      document.getElementById('stat-cards').innerText = activeCount;
+    }
+
+    async function sendTranscriptEvent() {
+      const sessionId = document.getElementById('session-id-input').value.trim();
+      const role = document.getElementById('fragment-role').value;
+      const body = document.getElementById('transcript-input').value.trim();
+
+      if (!sessionId || !body) {
+        alert("Session ID and Transcript text are required.");
+        return;
+      }
+
+      const sendBtn = document.getElementById('send-event-btn');
+      sendBtn.innerText = 'Sending...';
+      sendBtn.disabled = true;
+
+      // Event payload matching CognitiveEvent contract
+      const eventPayload = {
+        event_id: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        }),
+        event_type: "TRANSCRIPT_SEGMENT",
+        session_id: sessionId,
+        tenant_id: "00000000-0000-0000-0000-000000000000",
+        timestamp_utc: new Date().toISOString(),
+        sequence_num: 1,
+        source: "reference_ui",
+        priority: 1,
+        ttl_ms: 200,
+        confidence: 1.0,
+        payload: {
+          text: body,
+          speaker_id: "spk-1",
+          speaker_role: role,
+          start_ms: 0,
+          end_ms: 1000,
+          is_final: true,
+          language: "en-US"
+        }
+      };
+
+      try {
+        const response = await fetch(`/v1/sessions/${sessionId}/events`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventPayload)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.status === 'degraded') {
+            const failed = (result.engines || []).filter(e => e.status !== 'SUCCESS').map(e => e.engine_id).join(', ');
+            logToConsole('error', `Analysis incomplete: ${failed}. Check the model connection and engine dashboard.`);
+          } else {
+            logToConsole('system', `Analysis complete. Cycle ID: ${result.cycle_id}`);
+          }
+        } else {
+          const errText = await response.text();
+          logToConsole('error', `Failed to ingest: ${errText}`);
+        }
+      } catch (err) {
+        logToConsole('error', `Network error during ingestion: ${err.message}`);
+      } finally {
+        sendBtn.innerText = 'Ingest Segment';
+        sendBtn.disabled = false;
+      }
+    }
+
+    function escapeHtml(value) {
+      const element = document.createElement('span');
+      element.textContent = String(value ?? '');
+      return element.innerHTML;
+    }
+
+    function logToConsole(type, msg) {
+      const consoleLog = document.getElementById('console-log');
+      const ts = new Date().toLocaleTimeString();
+
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.innerHTML = `
+        <span class="log-ts">[${ts}]</span>
+        <span class="log-type ${type}">${type.toUpperCase()}:</span>
+        <span>${escapeHtml(msg)}</span>
+      `;
+
+      consoleLog.appendChild(line);
+      while (consoleLog.children.length > 500) consoleLog.firstElementChild.remove();
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function clearConsole() {
+      document.getElementById('console-log').innerHTML = '';
+    }
+  </script>
+</body>
+</html>

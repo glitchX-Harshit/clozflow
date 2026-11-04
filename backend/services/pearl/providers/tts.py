@@ -5,6 +5,7 @@ import base64
 import httpx
 from typing import AsyncGenerator
 import websockets
+from websockets.protocol import State
 
 from .elevenlabs_provider import _get_tts_client, ElevenLabsTTSProvider as OldElevenLabsProvider
 
@@ -156,13 +157,13 @@ class SarvamTTSProvider(TTSProvider):
             return
             
         async with self._lock:
-            if self.ws and not getattr(self.ws, 'closed', False):
+            if self.ws and self.ws.state is State.OPEN:
                 return
             url = "wss://api.sarvam.ai/text-to-speech/ws?model=bulbul:v4-flash&send_completion_event=true"
             headers = {"api-subscription-key": self.api_key}
             
             try:
-                self.ws = await websockets.connect(url, extra_headers=headers)
+                self.ws = await websockets.connect(url, additional_headers=headers)
             except Exception as e:
                 print(f"[SarvamTTS] Connection failed: {e}")
                 self.ws = None
@@ -356,7 +357,7 @@ class SarvamTTSProvider(TTSProvider):
         if not text:
             return
             
-        if not self.ws or getattr(self.ws, 'closed', False):
+        if not self.ws or self.ws.state is not State.OPEN:
             print(f"[SarvamTTS] Connecting fresh WebSocket to send text...")
             await self.connect()
             await self.configure(

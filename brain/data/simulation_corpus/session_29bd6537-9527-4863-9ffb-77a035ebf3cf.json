@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "5f4fcb30-05a1-4a01-8e45-57d43bac6e5f",
+    "event_type": "SESSION_START",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:00.575164+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_123",
+      "crm_opportunity_id": "opp_123"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "fdff95e8-f34e-4a24-97a1-ecbd6964e75a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:02.575164+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, as you saw in the demo, our unified project management suite streamlines communication and task tracking across all your teams, significantly reducing miscommunication.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8628539180528534,
+    "metadata": {}
+  },
+  {
+    "event_id": "fcaa123f-422e-4e7b-8f1b-5d81e5fb3bf3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:04.575164+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It looks really comprehensive, I'll give you that. But we're a startup, and our current tool, while clunky, is free. The pricing you mentioned earlier, even for the basic package, is a pretty big jump for us right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8580582989581861,
+    "metadata": {}
+  },
+  {
+    "event_id": "af932245-7147-490c-a18f-f19100907db7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:09.575164+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand budget constraints are critical for startups. However, the cost of inefficiencies, missed deadlines, and lost productivity due to disjointed tools often outweighs the initial investment. We project an ROI within six months through time savings alone.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8571109585944633,
+    "metadata": {}
+  },
+  {
+    "event_id": "9db15281-3812-4001-90c9-fe2d9ede7bfb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:11.575164+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "ROI is great on paper, but cash flow is king. We just don't have that kind of wiggle room right now. We'd have to justify it internally to an investor, and that's a hard sell for 'reducing clunkiness'.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.941174290645252,
+    "metadata": {}
+  },
+  {
+    "event_id": "a01b1fe7-dbbe-4dd8-b4c7-53d5d53a3518",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:15.575164+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "What if we started with a pilot program for a core team, perhaps at a reduced rate for the first three months, so you can demonstrate tangible results internally before a full rollout? We could even help you craft that internal proposal.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9163917782408866,
+    "metadata": {}
+  },
+  {
+    "event_id": "dc13c98a-24eb-4ac3-8284-a4a136af4d50",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:19.575164+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, a pilot might be something we could look at. It's still money we weren't planning on, but it's less of a commitment. Send me details on that, with clear success metrics for a pilot.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9529991626691385,
+    "metadata": {}
+  },
+  {
+    "event_id": "d54a7a38-b32a-4a57-96f5-01431f190e9b",
+    "event_type": "SESSION_END",
+    "session_id": "29bd6537-9527-4863-9ffb-77a035ebf3cf",
+    "tenant_id": "0c5cb4b2-ea30-43e2-9056-642dcb85d42e",
+    "timestamp_utc": "2026-06-28T22:20:24.575164+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

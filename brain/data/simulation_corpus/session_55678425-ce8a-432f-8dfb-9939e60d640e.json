@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "ca363960-b39d-4fb6-ba46-fb516b7c0160",
+    "event_type": "SESSION_START",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:23.834466+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_100",
+      "crm_opportunity_id": "opp_100"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ba9f2d3e-fc75-45f4-a82a-67d6fa066bab",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:26.834466+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Chris. I wanted to touch base regarding your inquiry about our customer support automation platform.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8917465760051894,
+    "metadata": {}
+  },
+  {
+    "event_id": "da31083b-3cb7-40be-9669-d04df34e2330",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:29.834466+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, I filled out that form months ago. We've actually been looking at a few options since then. What's the main selling point here?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9675899856068999,
+    "metadata": {}
+  },
+  {
+    "event_id": "493b4886-91dc-451d-80c6-ac714ff5a082",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:34.834466+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform integrates seamlessly with your existing helpdesk, automating responses to common queries, deflecting tickets, and providing agents with AI-powered suggestions, leading to faster resolution times and higher customer satisfaction.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9414182178366255,
+    "metadata": {}
+  },
+  {
+    "event_id": "ecad748e-9312-4d35-b55f-e1177583fc8b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:38.834466+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI-powered suggestions? Sounds like a glorified chatbot. We've tried those. Our customers hate them, they just want to talk to a human.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8959485257193316,
+    "metadata": {}
+  },
+  {
+    "event_id": "3898b6be-d090-4ef2-8569-253e31036a13",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:42.834466+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that concern. Our approach is different: it's about empowering your agents, not replacing them. The AI handles repetitive tasks, freeing up your team to focus on complex, high-value interactions, improving both agent morale and customer experience.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.88997397338358,
+    "metadata": {}
+  },
+  {
+    "event_id": "2005f189-fe51-466b-aecc-a96ce57be017",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:46.834466+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Empowering agents... or making them redundant. My team is worried about their jobs. How does this impact headcount?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8838814005227142,
+    "metadata": {}
+  },
+  {
+    "event_id": "eb3b6739-b1c0-4521-9e9c-09806f760cb4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:49.834466+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It typically allows existing teams to handle a much larger volume of inquiries without needing to hire more staff, or it frees them to work on more strategic initiatives. It's about efficiency, not elimination.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9651998155287203,
+    "metadata": {}
+  },
+  {
+    "event_id": "0ea37427-1d55-4a39-bb1a-37968a7921d5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:53.834466+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Efficiency usually means fewer people in our world. I need to run this past my HR department. Can you send me something that explains the 'no headcount reduction' angle clearly?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 30000,
+      "end_ms": 31500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9640626765216505,
+    "metadata": {}
+  },
+  {
+    "event_id": "7946e481-e979-467e-8087-35e9717ba69a",
+    "event_type": "SESSION_END",
+    "session_id": "55678425-ce8a-432f-8dfb-9939e60d640e",
+    "tenant_id": "ad62e519-e24d-4843-b844-77182fe992d9",
+    "timestamp_utc": "2026-06-28T22:18:58.834466+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

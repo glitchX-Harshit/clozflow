@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "7fb4e0ff-b3ca-49f2-99d9-aa4a1d6903e1",
+    "event_type": "SESSION_START",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:29.915200+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_2",
+      "crm_opportunity_id": "opp_2"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "f64ab953-2e8d-4a30-9e14-61aa66dc7cbe",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:34.915200+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Sarah. Thanks for taking my call. I wanted to quickly follow up on our email exchange about improving your team's project visibility.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8604878572206475,
+    "metadata": {}
+  },
+  {
+    "event_id": "e0fbf13e-540f-434d-97fe-25262ccac363",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:37.915200+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, hey Mark. Yeah, I read the email. Look, we already use Asana for project management. It's not perfect, but everyone's used to it. Why would we need another tool?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9057658109879367,
+    "metadata": {}
+  },
+  {
+    "event_id": "3a6049ef-00e5-4e69-acf1-33aec6c6640e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:39.915200+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair question, Sarah. While Asana is great for task tracking, many of our clients find it lacks the integrated resource allocation and long-term strategic planning features that are critical for larger, cross-departmental projects. We often integrate with tools like Asana, rather than replace them.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9213373503662206,
+    "metadata": {}
+  },
+  {
+    "event_id": "5c4a3256-9d86-4c2e-a9aa-d0597d71d009",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:42.915200+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Resource allocation? We kind of just... figure that out. People know who's busy. And strategic planning is usually done in our quarterly offsites. I'm just not seeing the immediate pain point this would solve for us.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.969472928506089,
+    "metadata": {}
+  },
+  {
+    "event_id": "af4de1c2-9fa3-4547-8ff1-5ddfbf7e8574",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:46.915200+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you. The value often becomes clearest when teams hit bottlenecks due to unclear resource loads or when project delays impact strategic goals. Could I show you a quick 5-minute demo of how our platform specifically visualizes team capacity and project timelines to prevent those issues?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9829119281022478,
+    "metadata": {}
+  },
+  {
+    "event_id": "4d14b5dd-5e37-4386-a74c-6681b23a2cb0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:50.915200+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Uh, maybe another time. I'm swamped with year-end reporting. Just send me a case study or something. I'll read it when I can.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9550668172224678,
+    "metadata": {}
+  },
+  {
+    "event_id": "ed1ac36c-91ce-4cf0-b745-c30fba03ff32",
+    "event_type": "SESSION_END",
+    "session_id": "89ff041b-e602-490a-9e4e-05861eb14862",
+    "tenant_id": "544db18d-a0b0-4fac-820d-dd719ce51782",
+    "timestamp_utc": "2026-06-28T22:12:55.915200+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

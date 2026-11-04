@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "18aa63ed-e044-489b-90b5-b05186a6608c",
+    "event_type": "SESSION_START",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:29.293286+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_114",
+      "crm_opportunity_id": "opp_114"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "322b4631-2905-4e9a-9277-4eeacf9d7832",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:32.293286+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for taking the time to chat. We focus on helping HR teams automate their onboarding process, making it smoother for new hires and less administrative work for your team. What does your current onboarding look like?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8799537694438104,
+    "metadata": {}
+  },
+  {
+    "event_id": "97890078-d1a4-49a6-ac08-4415c8d47c05",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:37.293286+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's, well, it's pretty standard. Lots of paperwork, some online forms. We get it done. I'm not entirely clear on what your software actually *does* differently.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9191357480776645,
+    "metadata": {}
+  },
+  {
+    "event_id": "22ae011f-3a70-4ba2-9c4f-d570febe4944",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:39.293286+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Great question! Many companies handle it similarly. What we do is consolidate all those disparate steps\u2014from offer letter signing and background checks to IT provisioning and benefits enrollment\u2014into one intuitive, automated workflow. Think of it as a single portal for everything a new hire needs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9873655219671673,
+    "metadata": {}
+  },
+  {
+    "event_id": "8012ac55-d2b6-4364-b595-587e0310ee44",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:43.293286+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A portal? So it's just like, a fancy checklist? We have a checklist. And our HRIS already handles some of that. I'm not seeing the value proposition here.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9134845997111771,
+    "metadata": {}
+  },
+  {
+    "event_id": "015c2563-3d10-48c9-a40e-4362069bae74",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:45.293286+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's much more than a checklist. Our platform integrates directly with your existing HRIS, pulling and pushing data to eliminate manual entry. It also offers personalized pathways for different roles, automated reminders, and analytics on completion rates. Are you currently experiencing any bottlenecks or negative feedback during the onboarding process?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8810345645948829,
+    "metadata": {}
+  },
+  {
+    "event_id": "2e88f287-d704-4b4f-aa0b-0d79df0a07b9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:48.293286+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Bottlenecks? Not really. It takes time, sure, but that's just how it is. We haven't had any major complaints. I'm just not sure we need another system to manage. It sounds complicated.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9085367256169128,
+    "metadata": {}
+  },
+  {
+    "event_id": "6c401b81-74f1-466c-a293-08a5e8c4771c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:53.293286+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear your concern about complexity. The goal, actually, is to *reduce* complexity by centralizing everything. Would you be open to a quick 15-minute demo to see how user-friendly the interface actually is, rather than just hearing me describe it?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9230298584911739,
+    "metadata": {}
+  },
+  {
+    "event_id": "56b612e4-67b3-4eeb-92e4-26f048369e46",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:19:55.293286+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A demo? Ugh, fine. But I'm warning you, my boss is really against bringing on any new tech right now unless it's an absolute game-changer. So make it quick and to the point.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9725807052645457,
+    "metadata": {}
+  },
+  {
+    "event_id": "0c2a385f-252b-4f10-8a01-12ccb76dcea6",
+    "event_type": "SESSION_END",
+    "session_id": "e78b3d63-9663-4057-8c23-0bcd6131196c",
+    "tenant_id": "4c2282fd-73ad-4ecc-be8b-f437bed4c9fd",
+    "timestamp_utc": "2026-06-28T22:20:00.293286+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

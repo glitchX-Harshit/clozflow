@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "6b029aa5-9ad8-4789-9c93-82a552fabf73",
+    "event_type": "SESSION_START",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:18:54.912721+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_105",
+      "crm_opportunity_id": "opp_105"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ca23a6c0-9b4c-47b1-b033-f73468280f57",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:18:57.912721+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform, [Product Name], centralizes all your customer feedback, making it actionable for product and support teams. It uses natural language processing to categorize sentiment and identify emerging trends.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9582374820182329,
+    "metadata": {}
+  },
+  {
+    "event_id": "f239d463-ae04-40a5-a97c-7eae14a5af6f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:18:59.912721+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So... it's like a fancy inbox for complaints? We already use Zendesk and have our own tagging system.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9382882710304118,
+    "metadata": {}
+  },
+  {
+    "event_id": "9c25cf2f-d399-4b73-8ad3-b0315344ad94",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:19:01.912721+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It goes much further than that. Imagine automatically identifying that 15% of your users are struggling with a specific feature after an update, across all channels \u2013 social media, support tickets, app reviews \u2013 without manually sifting through data.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9190232117338232,
+    "metadata": {}
+  },
+  {
+    "event_id": "0228c3dc-bb57-48c6-b343-3f1aea29386c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:19:05.912721+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, I'm still not entirely clear. How is that different from just searching keywords in Zendesk reports? It sounds like we'd be paying for something we can already do, just...faster?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9772629255433604,
+    "metadata": {}
+  },
+  {
+    "event_id": "7714e357-f170-4c67-bb3b-6f7f96adf32e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:19:08.912721+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's about scale and depth. Our AI correlates disparate feedback points and surfaces insights you'd miss, identifying patterns and quantifying impact, enabling proactive fixes, not just reactive responses. It connects directly to your Zendesk too.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9832659399312621,
+    "metadata": {}
+  },
+  {
+    "event_id": "c35a0c39-0f2a-4862-aaf4-832e99142529",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:19:11.912721+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, I get the 'faster' part now, but the 'insights you'd miss' sounds a bit vague. Can you give me a really concrete example of an insight we'd miss with our current setup?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9477419789403858,
+    "metadata": {}
+  },
+  {
+    "event_id": "d232988f-149a-44e3-9061-36107b9cf354",
+    "event_type": "SESSION_END",
+    "session_id": "77db9543-d13b-48f4-8caf-e1519d72413b",
+    "tenant_id": "98865ba5-c8fa-4f8a-843b-8e6d51ab0496",
+    "timestamp_utc": "2026-06-28T22:19:16.912721+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

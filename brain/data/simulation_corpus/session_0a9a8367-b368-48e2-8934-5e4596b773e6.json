@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "a0e3cdea-09b0-47ab-a0a7-44d44a24f43f",
+    "event_type": "SESSION_START",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:18:54.910368+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_103",
+      "crm_opportunity_id": "opp_103"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "237fd0a6-eccd-4b4c-9c17-031def9556a4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:18:58.910368+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, [Buyer Name], with our predictive analytics, you can anticipate customer churn before it even happens, allowing you to proactively engage and retain your most valuable clients.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9763036133042834,
+    "metadata": {}
+  },
+  {
+    "event_id": "5abccc20-1634-49c7-9e34-dc2c800514d3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:19:03.910368+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That sounds powerful, but also... expensive. We're a growing startup, so budget is always a big consideration for us.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9214566257365846,
+    "metadata": {}
+  },
+  {
+    "event_id": "8bc17ea2-ce72-4316-a90c-921a2551a7b6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:19:05.910368+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. While it's a premium solution, the ROI on customer retention is substantial. Our tiered pricing model is designed to scale with your business, so you only pay for what you need.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8662316458131847,
+    "metadata": {}
+  },
+  {
+    "event_id": "1e845344-9864-47a2-96a8-af9b12ca4dc2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:19:07.910368+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Still, 'tiered' often means the entry-level doesn't offer enough, and the next tier is out of reach. What's the ballpark for a small team like ours, say, 5,000 active users?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8997489398864644,
+    "metadata": {}
+  },
+  {
+    "event_id": "fa7511ee-dd86-4eaf-9d84-ac77daf99720",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:19:11.910368+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For that user count, our Growth plan starts around $1,500 a month, which includes core churn prediction and engagement tools. We also offer a pilot program so you can see the impact firsthand.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.966597985659609,
+    "metadata": {}
+  },
+  {
+    "event_id": "3e22a2fc-c32b-4b55-98aa-d8172b626632",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:19:15.910368+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, $1,500 is still a big jump for us right now. I'd need to see a very clear, short-term ROI to justify that to our CFO. Can you send me some case studies with comparable companies?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9340320431371023,
+    "metadata": {}
+  },
+  {
+    "event_id": "46288d26-ecf3-4a32-986b-6b6ff7913f91",
+    "event_type": "SESSION_END",
+    "session_id": "0a9a8367-b368-48e2-8934-5e4596b773e6",
+    "tenant_id": "89678abe-bf87-4cea-a5a2-341ecafdd8cd",
+    "timestamp_utc": "2026-06-28T22:19:20.910368+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

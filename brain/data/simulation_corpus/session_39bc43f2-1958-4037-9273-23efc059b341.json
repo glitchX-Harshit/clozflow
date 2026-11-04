@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "478b3985-397d-4f0e-8f5d-5bcff9821d87",
+    "event_type": "SESSION_START",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:16:42.145186+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_64",
+      "crm_opportunity_id": "opp_64"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "bd261c4f-57c7-4602-8578-bfe0bc6b2ef6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:16:44.145186+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], good to connect. I saw your company recently expanded into new markets, and that often comes with increased demand for localized content. Our solution, [Product Name], helps automate that process significantly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9746187058056349,
+    "metadata": {}
+  },
+  {
+    "event_id": "100cd93b-207c-4b4e-99ac-91e85868cfbd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:16:49.145186+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Localized content, yeah, it's a headache. But honestly, we have an agency for that. They've been with us for years, they know our brand inside and out. I'm really not looking to upset that relationship.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8669619141045256,
+    "metadata": {}
+  },
+  {
+    "event_id": "862ec549-383c-4092-8ab7-decc64a0827c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:16:53.145186+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely respect existing partnerships. Our platform isn't designed to replace your agency, but rather to empower them. It can automate the repetitive, high-volume translation tasks, freeing up your agency to focus on the more nuanced, creative localization that requires human expertise.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9232082513292883,
+    "metadata": {}
+  },
+  {
+    "event_id": "269c8e8a-eab1-4a8c-a9c7-51e9d821637c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:16:55.145186+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, AI translation? We've tried those tools. They're never good enough. The brand voice gets lost, the cultural context is wrong. It ends up being more work to fix it than if we just did it manually.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9213318518206831,
+    "metadata": {}
+  },
+  {
+    "event_id": "f37f34a9-4ad3-4fe3-b060-8c276049020b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:16:57.145186+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you, and you're right, raw machine translation often falls short. What makes [Product Name] different is its adaptive learning engine, which learns your specific brand voice and terminology over time, and integrates human review checkpoints. It's a hybrid approach. Could I show you a quick case study of a similar company that saw great results by combining their agency with our tech?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9431766742144934,
+    "metadata": {}
+  },
+  {
+    "event_id": "b2f37686-d437-4164-adef-967aff503a7d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:17:00.145186+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Adaptive learning... I don't know. My team is already overwhelmed with their current workload. Adding a new system, even a 'helpful' one, might just break them.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9212289475733032,
+    "metadata": {}
+  },
+  {
+    "event_id": "a2f7e6dd-fd7c-415b-8b2f-8230b8a01e88",
+    "event_type": "SESSION_END",
+    "session_id": "39bc43f2-1958-4037-9273-23efc059b341",
+    "tenant_id": "963c84c3-d4ef-41b8-8151-b78d38f3a3fc",
+    "timestamp_utc": "2026-06-28T22:17:05.145186+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

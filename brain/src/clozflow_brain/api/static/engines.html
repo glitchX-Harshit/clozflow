@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clozflow Brain - Engine Telemetry</title>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Tailwind CSS (via CDN for development) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        'primary-focus': '#4f46e5',
+                        'base-100': '#ffffff',
+                        'base-200': '#f3f4f6',
+                        'base-300': '#e5e7eb',
+                        'base-content': '#1f2937',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .trace-log::-webkit-scrollbar {
+            width: 4px;
+        }
+        .trace-log::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        [data-theme="dark"] .trace-log::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-base-200 text-base-content min-h-screen" x-data="engineTelemetry()">
+
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-sm px-4 py-3 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-4">
+            <h1 class="text-xl font-bold">🧠 Clozflow Brain Telemetry</h1>
+            <span class="badge" :class="connected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'" x-text="connected ? 'Connected' : 'Disconnected'"></span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <input type="text" x-model="sessionId" placeholder="Session ID" class="input input-sm border rounded px-2 py-1 bg-base-200">
+            <button @click="connect()" class="px-3 py-1 bg-primary text-white rounded hover:bg-primary-focus transition-colors">Connect</button>
+            <button @click="toggleTheme()" class="btn btn-sm btn-ghost p-2 rounded hover:bg-base-200">
+                <svg x-show="theme === 'light'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg x-show="theme === 'dark'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-6">
+        <!-- Stats Summary -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-base-100 p-4 rounded-lg shadow-sm border border-base-300">
+                <div class="text-sm text-gray-500">Total Executions</div>
+                <div class="text-2xl font-bold" x-text="totalExecutions">0</div>
+            </div>
+            <div class="bg-base-100 p-4 rounded-lg shadow-sm border border-base-300">
+                <div class="text-sm text-gray-500">Avg Latency (ms)</div>
+                <div class="text-2xl font-bold" x-text="avgLatency">0</div>
+            </div>
+            <div class="bg-base-100 p-4 rounded-lg shadow-sm border border-base-300">
+                <div class="text-sm text-gray-500">Avg Confidence</div>
+                <div class="text-2xl font-bold" x-text="(avgConfidence * 100).toFixed(1) + '%'">0%</div>
+            </div>
+            <div class="bg-base-100 p-4 rounded-lg shadow-sm border border-base-300">
+                <div class="text-sm text-gray-500">Total Errors</div>
+                <div class="text-2xl font-bold text-red-500" x-text="totalErrors">0</div>
+            </div>
+        </div>
+
+        <!-- Engines Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <template x-for="engine in engineNames" :key="engine">
+                <div class="bg-base-100 rounded-lg shadow-sm border border-base-300 overflow-hidden flex flex-col h-[500px]">
+                    <div class="bg-base-200 px-4 py-2 border-b border-base-300 flex justify-between items-center">
+                        <h3 class="font-bold text-sm" x-text="engine"></h3>
+                        <div class="flex space-x-2 text-xs">
+                            <span :class="engines[engine].status === 'SUCCESS' ? 'text-green-600' : (engines[engine].status === 'ERROR' ? 'text-red-600' : 'text-gray-500')" x-text="engines[engine].status"></span>
+                            <span class="text-gray-500" x-text="engines[engine].latency + 'ms'"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-hidden flex flex-col">
+                        <!-- Chart Section -->
+                        <div class="h-1/2 p-2 border-b border-base-300">
+                            <canvas :id="'chart-' + engine"></canvas>
+                        </div>
+                        
+                        <!-- Trace Log Section -->
+                        <div class="h-1/2 p-2 bg-gray-50 dark:bg-gray-900 overflow-y-auto trace-log font-mono text-xs">
+                            <template x-for="trace in engines[engine].traces">
+                                <div class="mb-1 pb-1 border-b border-gray-200 dark:border-gray-800 break-words">
+                                    <span class="text-gray-400" x-text="new Date(trace.time).toLocaleTimeString()"></span>
+                                    <span :class="trace.type === 'error' ? 'text-red-500' : 'text-blue-500 dark:text-blue-400'" x-text="trace.msg"></span>
+                                </div>
+                            </template>
+                            <div x-show="engines[engine].traces.length === 0" class="text-gray-400 italic text-center mt-4">No traces yet...</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('engineTelemetry', () => ({
+                theme: 'light',
+                sessionId: '123e4567-e89b-12d3-a456-426614174000', // Default simulation ID
+                ws: null,
+                connected: false,
+                
+                // Stats
+                totalExecutions: 0,
+                totalLatency: 0,
+                totalConfidence: 0,
+                totalErrors: 0,
+                
+                get avgLatency() {
+                    return this.totalExecutions ? Math.round(this.totalLatency / this.totalExecutions) : 0;
+                },
+                get avgConfidence() {
+                    return this.totalExecutions ? this.totalConfidence / this.totalExecutions : 0;
+                },
+
+                // Engine data store
+                engineNames: ['copilot.compact', 'perception.concrete', 'understanding.concrete', 'interpretation.concrete', 'prediction.concrete', 'evaluation.concrete', 'planning.concrete', 'decision.concrete', 'verification.concrete', 'recommendation.concrete', 'reflection.concrete'],
+                engines: {},
+                charts: {},
+
+                init() {
+                    // Initialize theme
+                    this.theme = localStorage.getItem('theme') || 'light';
+                    document.documentElement.setAttribute('data-theme', this.theme);
+                    
+                    // Initialize engine data structures
+                    this.engineNames.forEach(name => {
+                        this.engines[name] = {
+                            status: 'IDLE',
+                            latency: 0,
+                            confidence: 0,
+                            traces: [],
+                            history: { labels: [], latencyData: [], confidenceData: [] }
+                        };
+                    });
+                    
+                    // Initialize charts after Alpine is ready
+                    this.$nextTick(() => {
+                        this.initCharts();
+                    });
+                },
+
+                toggleTheme() {
+                    this.theme = this.theme === 'light' ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', this.theme);
+                    localStorage.setItem('theme', this.theme);
+                    this.updateChartTheme();
+                },
+
+                initCharts() {
+                    Chart.defaults.color = this.theme === 'dark' ? '#9ca3af' : '#4b5563';
+                    Chart.defaults.font.family = 'ui-sans-serif, system-ui, sans-serif';
+                    
+                    this.engineNames.forEach(name => {
+                        const ctx = document.getElementById('chart-' + name);
+                        if (!ctx) return;
+                        
+                        this.charts[name] = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: [],
+                                datasets: [
+                                    {
+                                        label: 'Latency (ms)',
+                                        data: [],
+                                        borderColor: '#6366f1',
+                                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                        borderWidth: 2,
+                                        yAxisID: 'y',
+                                        tension: 0.3,
+                                        fill: true
+                                    },
+                                    {
+                                        label: 'Confidence',
+                                        data: [],
+                                        borderColor: '#10b981',
+                                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                        borderWidth: 2,
+                                        yAxisID: 'y1',
+                                        tension: 0.3
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                animation: { duration: 300 },
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: { mode: 'index', intersect: false }
+                                },
+                                scales: {
+                                    x: { display: false },
+                                    y: { 
+                                        type: 'linear', 
+                                        display: true, 
+                                        position: 'left',
+                                        title: { display: true, text: 'ms', font: {size: 10} },
+                                        suggestedMin: 0
+                                    },
+                                    y1: { 
+                                        type: 'linear', 
+                                        display: true, 
+                                        position: 'right',
+                                        min: 0, max: 1,
+                                        grid: { drawOnChartArea: false }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                },
+
+                updateChartTheme() {
+                    const textColor = this.theme === 'dark' ? '#9ca3af' : '#4b5563';
+                    Chart.defaults.color = textColor;
+                    Object.values(this.charts).forEach(chart => {
+                        if (chart.options.scales.y) chart.options.scales.y.ticks.color = textColor;
+                        if (chart.options.scales.y1) chart.options.scales.y1.ticks.color = textColor;
+                        chart.update('none');
+                    });
+                },
+
+                connect() {
+                    if (this.ws) {
+                        this.ws.close();
+                    }
+                    
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    // For local development, assume port 8000 if not specified
+                    const host = window.location.host || 'localhost:8000';
+                    const wsUrl = `${protocol}//${host}/v1/sessions/${this.sessionId}/telemetry/stream`;
+                    
+                    this.ws = new WebSocket(wsUrl);
+                    
+                    this.ws.onopen = () => {
+                        this.connected = true;
+                        console.log('Connected to telemetry stream');
+                    };
+                    
+                    this.ws.onclose = () => {
+                        this.connected = false;
+                        console.log('Disconnected from telemetry stream');
+                    };
+                    
+                    this.ws.onerror = (error) => {
+                        console.error('WebSocket Error:', error);
+                        this.connected = false;
+                    };
+                    
+                    this.ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            
+                            // Handle heartbeats
+                            if (data.msg_type === 'HEARTBEAT') {
+                                this.ws.send(JSON.stringify({ msg_type: 'PONG' }));
+                                return;
+                            }
+                            
+                            // Process telemetry event
+                            if (data.event_type === 'ENGINE_TELEMETRY' && data.payload) {
+                                this.processTelemetry(data.payload);
+                            }
+                        } catch (e) {
+                            console.error("Error parsing websocket message:", e);
+                        }
+                    };
+                },
+                
+                processTelemetry(payload) {
+                    const engineName = payload.engine_id;
+                    if (!this.engines[engineName]) return;
+                    
+                    const engine = this.engines[engineName];
+                    
+                    // Update global stats
+                    this.totalExecutions++;
+                    this.totalLatency += payload.duration_ms;
+                    this.totalConfidence += payload.confidence;
+                    if (payload.status === 'ERROR') this.totalErrors++;
+                    
+                    // Update engine state
+                    engine.status = payload.status;
+                    engine.latency = payload.duration_ms;
+                    engine.confidence = payload.confidence;
+                    
+                    // Add trace log
+                    const traceMsg = `[${payload.status}] Output: ${JSON.stringify(payload.artifacts || payload.output_events || {}).substring(0, 100)}...`;
+                    engine.traces.unshift({
+                        time: new Date(),
+                        type: payload.status === 'ERROR' ? 'error' : 'info',
+                        msg: traceMsg
+                    });
+                    
+                    // Keep only last 50 traces
+                    if (engine.traces.length > 50) engine.traces.pop();
+                    
+                    // Update chart
+                    const chart = this.charts[engineName];
+                    if (chart) {
+                        const now = new Date().toLocaleTimeString();
+                        
+                        chart.data.labels.push(now);
+                        chart.data.datasets[0].data.push(payload.duration_ms);
+                        chart.data.datasets[1].data.push(payload.confidence);
+                        
+                        // Keep last 20 points
+                        if (chart.data.labels.length > 20) {
+                            chart.data.labels.shift();
+                            chart.data.datasets[0].data.shift();
+                            chart.data.datasets[1].data.shift();
+                        }
+                        
+                        chart.update('none'); // Update without full animation for performance
+                    }
+                }
+            }));
+        });
+    </script>
+</body>
+</html>

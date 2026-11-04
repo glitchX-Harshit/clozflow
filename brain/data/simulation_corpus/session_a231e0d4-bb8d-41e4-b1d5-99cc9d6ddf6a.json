@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "6d2b1831-7026-425f-b75b-a3272e836428",
+    "event_type": "SESSION_START",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:16:42.147412+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_67",
+      "crm_opportunity_id": "opp_67"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "1f1be53e-8da7-45c4-9987-958b422e6322",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:16:44.147412+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], great to connect again. I recall you mentioned your team spends a significant amount of time manually validating leads. Our solution automates that process, improving lead quality and saving valuable sales team hours.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8663206218919837,
+    "metadata": {}
+  },
+  {
+    "event_id": "8a55fbdd-235b-434b-85a5-ecab47a98ee1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:16:47.147412+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, lead validation is a pain. But we actually just signed a new contract with [Competitor Name] a few months ago. We're locked in for another year and a half, so there's really nothing you can do for us right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8817711542515982,
+    "metadata": {}
+  },
+  {
+    "event_id": "f0d0c633-1bb0-4d14-86bf-6c94f387fb4e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:16:50.147412+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate your transparency. Many of our clients have come to us even while under contract with a competitor, often using us in parallel for a specific niche, or exploring options for when their contract is up. Could I still share a quick overview of how we're different, so you have it for future reference?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9596859608063808,
+    "metadata": {}
+  },
+  {
+    "event_id": "e54de4be-6846-4641-81f5-3829404601c9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:16:54.147412+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Different how? Everyone says they're different. What's your magic trick? Because [Competitor Name] promised us the moon and we're still cleaning up junk leads.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8557420152450838,
+    "metadata": {}
+  },
+  {
+    "event_id": "2726d18e-ee66-46fd-b9a3-8b8e4f9f4c88",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:16:59.147412+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform leverages a proprietary AI model that analyzes over 50 data points for each lead, going beyond simple firmographic checks to assess intent and engagement signals. This results in significantly higher accuracy and a lower false-positive rate. I could quickly show you a side-by-side comparison with [Competitor Name] in a 10-minute session.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9754925526434468,
+    "metadata": {}
+  },
+  {
+    "event_id": "258131c5-d716-4a6b-b2fe-a38f21636ab5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:17:02.147412+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A comparison, huh? I guess I have 10 minutes next Tuesday. But don't expect miracles. I'm a tough sell after our last vendor experience.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9266627685380378,
+    "metadata": {}
+  },
+  {
+    "event_id": "180f0721-4996-43dc-8b69-fc0108d917dd",
+    "event_type": "SESSION_END",
+    "session_id": "a231e0d4-bb8d-41e4-b1d5-99cc9d6ddf6a",
+    "tenant_id": "3cc3a10e-0409-470a-8f9a-7cf358c008d5",
+    "timestamp_utc": "2026-06-28T22:17:07.147412+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

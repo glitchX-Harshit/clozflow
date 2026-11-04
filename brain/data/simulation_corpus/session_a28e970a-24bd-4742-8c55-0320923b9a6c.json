@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "2d86848f-5cae-474d-831d-ad7575771ca7",
+    "event_type": "SESSION_START",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:18:54.917073+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_111",
+      "crm_opportunity_id": "opp_111"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "dcf1e99e-bf2f-437d-951a-733bd45fe78e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:18:56.917073+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our advanced cybersecurity threat detection platform proactively identifies and neutralizes threats before they impact your systems, minimizing downtime and protecting sensitive data.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9694304579383689,
+    "metadata": {}
+  },
+  {
+    "event_id": "da55b257-b5a8-480e-bdd3-184ecbd97899",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:18:59.917073+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That sounds great on paper, but how quickly would we actually see a return on this investment? Security is a cost center for us, and I need to justify every dollar.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9357166574656985,
+    "metadata": {}
+  },
+  {
+    "event_id": "04014693-10f1-4fd1-b228-b3245f1acd22",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:19:03.917073+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a critical question. Our clients typically see immediate benefits in reduced incident response times and fewer successful breaches. For quantifiable ROI, we often project savings based on preventing just one major incident, which can run into millions for data recovery and reputational damage.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8741737665357189,
+    "metadata": {}
+  },
+  {
+    "event_id": "3e380e90-05bd-4ed8-86f7-7709fda76ad3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:19:05.917073+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sure, but 'preventing an incident' is hard to put a number on. I need something more concrete. What about reduction in manual effort for our security team, or compliance cost savings?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9026010515450481,
+    "metadata": {}
+  },
+  {
+    "event_id": "7521dfd7-9d7d-4560-8990-4ccb34227233",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:19:09.917073+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. On average, our platform reduces manual alert triaging by 40%, freeing up analysts for higher-value tasks. For compliance, our automated reporting features can shave off hundreds of hours during audits. We can build a customized ROI model for your specific environment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.923539144560625,
+    "metadata": {}
+  },
+  {
+    "event_id": "01c134e4-cb98-43a0-99ff-58f149d31bd1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:19:11.917073+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A customized ROI model sounds like the right approach. Can you send over the data points you'd need from us to build that out? I'll review it with my team.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.921522075993959,
+    "metadata": {}
+  },
+  {
+    "event_id": "7c93fbb2-4b4f-43aa-85d8-28430d5e16b2",
+    "event_type": "SESSION_END",
+    "session_id": "a28e970a-24bd-4742-8c55-0320923b9a6c",
+    "tenant_id": "a068fc9e-7289-4e62-932a-b4cf4e4f681b",
+    "timestamp_utc": "2026-06-28T22:19:16.917073+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "b7eacfd7-7cc1-4a51-a2e3-1e6cea67f1eb",
+    "event_type": "SESSION_START",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:29.297175+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_118",
+      "crm_opportunity_id": "opp_118"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "e3aa7d5b-8603-473d-ae20-2a8cb0fce5e4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:34.297175+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for making time. We help e-commerce brands personalize their customer experience to drive repeat purchases. What's your current strategy for customer retention?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9741286155077856,
+    "metadata": {}
+  },
+  {
+    "event_id": "4853a9b3-6e25-43d3-84e9-7be8db6a8189",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:39.297175+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello. Uh, customer retention. We send out email newsletters, run some loyalty programs. Basic stuff. What are you offering that's so different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9784154914000402,
+    "metadata": {}
+  },
+  {
+    "event_id": "619dc28a-bfb7-4528-afea-1eee317948f0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:41.297175+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We go beyond basic. Our platform uses AI to analyze individual customer behavior and dynamically recommend products, content, and offers across all touchpoints \u2013 website, email, app. Are you struggling to move beyond generic segmentation and offer truly personalized experiences at scale?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9469268189129122,
+    "metadata": {}
+  },
+  {
+    "event_id": "935e79e9-448a-4bec-98c4-6857594f741e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:43.297175+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Personalization, everyone talks about personalization. It's just a buzzword. Our customers seem happy enough with our current offers. And our team is already stretched thin. I don't need another complex tool to manage.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9511098472620684,
+    "metadata": {}
+  },
+  {
+    "event_id": "7d064f6d-716d-4b02-a7a1-910c59f46006",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:48.297175+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that personalization can seem like a buzzword, but the data consistently shows a significant uplift in conversion and retention when executed well. Our platform is designed to be user-friendly, automating much of the complexity. What's your current customer lifetime value, and how do you feel about its growth trajectory?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.985770259872843,
+    "metadata": {}
+  },
+  {
+    "event_id": "581c3923-831c-41c1-8d10-c92684eca407",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:52.297175+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "CLTV is, uh, solid. It could always be better, I suppose. But honestly, I'm more worried about acquiring new customers right now. Retention feels like a 'nice to have' rather than a 'must have' in this market.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8857750543179658,
+    "metadata": {}
+  },
+  {
+    "event_id": "7b9078ac-2b5a-4008-8d76-f5952acfa01c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:56.297175+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you. Acquisition is critical. But what if increasing your CLTV by just 10% could free up significant marketing budget for acquisition, making your efforts more sustainable? We've seen clients achieve much higher with our solution.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8529462059307595,
+    "metadata": {}
+  },
+  {
+    "event_id": "ac6f14f9-b131-4cb9-a160-5c1f830be667",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:19:58.297175+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Ten percent, huh? That sounds like a big promise. Look, I've got another meeting in two minutes. Just send me some of those case studies, especially ones from companies our size. And no follow-up calls next week, please. I'll read it when I get a chance.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8967347879851844,
+    "metadata": {}
+  },
+  {
+    "event_id": "813bfa03-fb9c-4c49-bddc-ebbf04e6d2b7",
+    "event_type": "SESSION_END",
+    "session_id": "bfc5646b-ecd8-4130-a1ba-e20b098b8948",
+    "tenant_id": "26132723-6522-46e6-845f-080988e2547a",
+    "timestamp_utc": "2026-06-28T22:20:03.297175+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

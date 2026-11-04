@@ -12,11 +12,11 @@ Audio Flow:
 import asyncio
 import time
 import numpy as np
-import torch
 from enum import Enum
 from typing import Optional
 
 try:
+    import torch
     from silero_vad import load_silero_vad
     SILERO_AVAILABLE = True
 except ImportError:

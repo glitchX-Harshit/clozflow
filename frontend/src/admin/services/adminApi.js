@@ -5,7 +5,7 @@
 
 const API_BASE = typeof window !== 'undefined' && typeof window.APP_API_BASE === 'string'
   ? window.APP_API_BASE
-  : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
+  : (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8100' : '');
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');

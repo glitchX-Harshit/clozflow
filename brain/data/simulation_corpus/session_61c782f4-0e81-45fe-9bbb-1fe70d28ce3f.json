@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "583e89d5-32c6-4200-8544-d6e2d8f42cf6",
+    "event_type": "SESSION_START",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:15.116803+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_45",
+      "crm_opportunity_id": "opp_45"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "196776ba-dc7a-4bce-aed7-c419e0d3156a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:18.116803+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi David, thanks for the time today. My goal is to show you how our automated compliance monitoring can save your legal team hundreds of hours. What's your biggest pain point with compliance reporting currently?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8533749641161451,
+    "metadata": {}
+  },
+  {
+    "event_id": "8be9014f-7431-46ac-b787-2221a196e061",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:22.116803+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Pain point? Everything. It's manual, prone to error, and takes forever. We spend weeks gathering data for audits. But honestly, I'm skeptical. Every vendor promises 'automation' but it usually means 'more work for us to set it up'.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8591999717645651,
+    "metadata": {}
+  },
+  {
+    "event_id": "a175140b-bf3b-4cfa-8410-3172d1c1a166",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:24.116803+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that skepticism. Our platform connects directly to your existing data sources \u2013 cloud infrastructure, HR systems, financial tools \u2013 and continuously monitors for policy violations or non-compliance risks, generating audit-ready reports automatically.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.857786626140088,
+    "metadata": {}
+  },
+  {
+    "event_id": "1d2205fc-5b9f-4a0f-a926-04f0f51ec47f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:27.116803+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Wait, connects directly? How secure is that? We're talking about incredibly sensitive data here. What are your security protocols? Are you SOC 2 compliant? ISO 27001?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9852614792882275,
+    "metadata": {}
+  },
+  {
+    "event_id": "da542688-59d7-42ae-b2b3-baf80c5dfaad",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:32.116803+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Excellent question, David. We are indeed SOC 2 Type II and ISO 27001 certified. All data is encrypted both in transit and at rest, and we adhere to the strictest industry standards for data privacy and security. We can provide you with our full security whitepaper.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9221206041390216,
+    "metadata": {}
+  },
+  {
+    "event_id": "49da3fb0-e991-4aad-962b-40736da7a198",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:36.116803+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's good to hear. But still, the implementation sounds like a nightmare for our IT team. They're already stretched thin just keeping the lights on. I can't ask them for another massive integration project.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.977375750532987,
+    "metadata": {}
+  },
+  {
+    "event_id": "a7ea1e3b-cb05-4b5c-99d0-50b951faa747",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:39.116803+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The implementation is designed to be low-code/no-code for most standard integrations. Our customer success team handles the heavy lifting, and we provide dedicated support. Most clients see their first automated reports within a month, not months or years.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9046132164011874,
+    "metadata": {}
+  },
+  {
+    "event_id": "4da051e3-64d5-44b5-8d2d-deccbfa056d7",
+    "event_type": "SESSION_END",
+    "session_id": "61c782f4-0e81-45fe-9bbb-1fe70d28ce3f",
+    "tenant_id": "ae286c6a-30c4-43ba-bd8c-b80a59843500",
+    "timestamp_utc": "2026-06-28T22:15:44.116803+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

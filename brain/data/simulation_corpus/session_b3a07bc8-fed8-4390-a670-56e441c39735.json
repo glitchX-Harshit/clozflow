@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "64c43ded-adb3-4cf4-820c-5c2a26208326",
+    "event_type": "SESSION_START",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:29.295872+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_117",
+      "crm_opportunity_id": "opp_117"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "6e8f7df8-e60d-4781-be94-1a45eaa31212",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:32.295872+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], thanks for joining. I'm [Salesperson Name] from [Our Product Name]. We help sales teams improve their forecasting accuracy and pipeline management. What's your biggest challenge in sales operations right now?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8778769078206828,
+    "metadata": {}
+  },
+  {
+    "event_id": "be796339-141d-4fbe-a5c1-c439919fc83d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:36.295872+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, hi. Well, everything's a challenge, isn't it? Forecasting is always a mess, but that's just how it is. Salespeople are notoriously bad at predictions.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8713875309431497,
+    "metadata": {}
+  },
+  {
+    "event_id": "18dfacc9-58ed-4bd2-8a34-d910228f8815",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:38.295872+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common sentiment! But what if you could significantly reduce that mess and gain more reliable predictions? Our AI-driven platform analyzes historical data and rep activity to provide a much more accurate forecast than manual methods. How much time does your team currently spend manually updating CRM fields for forecast calls?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9487575570281727,
+    "metadata": {}
+  },
+  {
+    "event_id": "dff6809b-698f-4611-88cb-02319c362dff",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:40.295872+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Too much. It's a huge pain. But I've seen these 'AI-driven' tools before. They promise the moon and deliver... well, not the moon. And then my reps just see it as more busywork.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9517463710278035,
+    "metadata": {}
+  },
+  {
+    "event_id": "1448e58d-77f1-4046-a8b1-cd45b4f4248d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:42.295872+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the skepticism. We've built our platform with rep adoption in mind, integrating seamlessly into their existing workflow and minimizing manual input. The goal is to make *their* lives easier by highlighting what deals need attention. What's the financial impact of a missed forecast for your organization?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8564315179418286,
+    "metadata": {}
+  },
+  {
+    "event_id": "95fa31de-5fc1-41be-8582-5ab47b347cdd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:47.295872+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Impact? Oh, it's huge. Missed targets, re-forecasting, scrambling. My CEO gets pretty annoyed. But implementing new tech is a whole other beast. The last thing I need is a project that eats up six months and then fails to deliver.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8643949138739864,
+    "metadata": {}
+  },
+  {
+    "event_id": "775c3209-b365-4362-8229-8309cfeb4678",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:51.295872+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We pride ourselves on quick time-to-value. Our average implementation is under 3 weeks. Would you be open to a 20-minute demonstration where I can show you exactly how it integrates with your existing CRM and how intuitive it is for reps to use?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9230476434030901,
+    "metadata": {}
+  },
+  {
+    "event_id": "1a6e2cfb-c4aa-4aeb-ab25-0c1b967ee5bc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:19:55.295872+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Twenty minutes? I guess. But if it feels like another complicated tool, I'm cutting you off. And I need to know the price upfront. No surprises.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.891636688193932,
+    "metadata": {}
+  },
+  {
+    "event_id": "069da89c-a1a7-47ca-a8eb-6029ac4c3e9c",
+    "event_type": "SESSION_END",
+    "session_id": "b3a07bc8-fed8-4390-a670-56e441c39735",
+    "tenant_id": "e05ca605-fb78-4ae9-9a22-f3685526749a",
+    "timestamp_utc": "2026-06-28T22:20:00.295872+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

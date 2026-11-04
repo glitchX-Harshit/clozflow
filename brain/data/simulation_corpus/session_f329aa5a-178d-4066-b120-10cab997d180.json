@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "d703de61-b6e6-4960-8c38-8124cf0e1f63",
+    "event_type": "SESSION_START",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:29.918769+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_6",
+      "crm_opportunity_id": "opp_6"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c70ab06d-a41b-4b59-9f61-ddce9cedf26b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:32.918769+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Michael, thanks for taking my call. I understand you're the head of IT at Quantum Corp, and I wanted to discuss how our cybersecurity platform can provide deeper threat detection.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9559757949575582,
+    "metadata": {}
+  },
+  {
+    "event_id": "d0370ca1-ddb7-474c-8ca3-d56d63ffedb4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:36.918769+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Threat detection? We've got firewalls, antivirus, endpoint protection, SIEM. We spent a fortune last year upgrading everything. Are you saying it's not enough?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9017095993188369,
+    "metadata": {}
+  },
+  {
+    "event_id": "6a55960e-9964-4819-a8f8-ca3f78ec141c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:38.918769+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Michael, your existing stack is certainly foundational. Our platform offers advanced behavioral analytics and AI-driven anomaly detection that often catches zero-day threats and sophisticated insider attacks that traditional perimeter defenses might miss. It's about augmenting, not replacing, your current investments.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9718905321496424,
+    "metadata": {}
+  },
+  {
+    "event_id": "dfe3ea6a-312f-4612-8933-6096ad29f4e1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:43.918769+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Augmenting. So, more agents? More dashboards? My team is already drowning in alerts. We don't need another pane of glass to stare at, especially if it's just going to generate more noise.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9451713594626893,
+    "metadata": {}
+  },
+  {
+    "event_id": "f9180da8-775a-481a-aef1-fb8dd8856b66",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:47.918769+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely agree. The goal isn't more noise, but smarter insights. Our system prioritizes alerts based on true risk, often correlating events across your existing tools to provide a single, actionable incident view. It's designed to reduce alert fatigue, not add to it.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9357772092507175,
+    "metadata": {}
+  },
+  {
+    "event_id": "22d6920a-e799-4eba-a9d4-56fb9c90b76d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:52.918769+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Reduce alert fatigue... that sounds good in theory. But we have a policy. No new cloud services unless absolutely necessary, and no new agents on our critical infrastructure without a serious ROI. What's the ROI here?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8880256670688231,
+    "metadata": {}
+  },
+  {
+    "event_id": "84450e52-bf19-4b55-a091-6f5120c5d81d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:12:56.918769+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The ROI typically comes from preventing costly breaches, reducing investigation times, and ultimately strengthening your overall security posture. We can even provide a tailored ROI analysis. Would you be open to a technical deep-dive with one of our engineers to explore how it fits your environment?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9815105129408525,
+    "metadata": {}
+  },
+  {
+    "event_id": "00776afa-4fb4-4faa-9443-99abe06928f2",
+    "event_type": "SESSION_END",
+    "session_id": "f329aa5a-178d-4066-b120-10cab997d180",
+    "tenant_id": "401cf1b6-bdd8-41e9-8a13-0e01627ab102",
+    "timestamp_utc": "2026-06-28T22:13:01.918769+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "84c9ffff-8992-49ca-81c8-a6bad4151a00",
+    "event_type": "SESSION_START",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:23.835136+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_101",
+      "crm_opportunity_id": "opp_101"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "0583fffb-765e-4c87-96b7-e21a9c919a15",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:26.835136+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Nicole, thanks for taking the call. I'm calling about our new talent acquisition platform \u2013 it's designed to help companies like yours attract and hire top talent faster.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8642609733534126,
+    "metadata": {}
+  },
+  {
+    "event_id": "873aa66c-ad98-4f1f-aea8-b76d01b296bb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:30.835136+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Attract talent faster? We're drowning in applications we can't properly screen. 'Faster' isn't really our problem, it's 'better quality' candidates and less manual work.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9004712215295666,
+    "metadata": {}
+  },
+  {
+    "event_id": "26263add-ad0c-4f4d-9d86-4b4ef4d8ae67",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:33.835136+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's exactly where we excel, Nicole. Our AI-driven screening identifies the best-fit candidates from your applicant pool, reducing manual review time by up to 70% and ensuring you focus only on the most qualified individuals.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8716101839383288,
+    "metadata": {}
+  },
+  {
+    "event_id": "da4b3bc2-70ad-4c85-bf53-5acb505d6028",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:35.835136+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI screening... how does it know what 'best-fit' means for us? Does it just filter by keywords? Because that can miss great diverse candidates.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9206461500388522,
+    "metadata": {}
+  },
+  {
+    "event_id": "cc2a93f3-58ab-4a10-aec7-8b718f12d9e3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:39.835136+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It goes much deeper than keywords. Our AI learns from your past successful hires and job descriptions, identifying nuanced skills and experiences. It's also designed with bias detection features to promote fairness and diversity in your hiring.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.943826137193762,
+    "metadata": {}
+  },
+  {
+    "event_id": "7cc1ccfe-a36d-4cc2-97f4-6670ae3f0b0d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:43.835136+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Bias detection? Okay, that's interesting. But how much does this cost? Because we just renewed our contract with our current ATS, and budget is TIGHT for new HR tech this year.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8800170965203504,
+    "metadata": {}
+  },
+  {
+    "event_id": "0d3a2c0a-5557-4ff8-ab2d-781ccb3a79f0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:45.835136+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand budget constraints. Our platform can integrate with your existing ATS, acting as an enhancement rather than a full replacement, which can often be more cost-effective. We have flexible pricing tiers starting at X.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8850183184451935,
+    "metadata": {}
+  },
+  {
+    "event_id": "b01457ee-7074-486c-96c5-9112e5e77190",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:47.835136+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Flexible pricing... I'll need hard numbers. And if it's an 'enhancement,' does that mean it's just another login for my recruiters to manage? Because they're already complaining about having too many systems.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9061810664412104,
+    "metadata": {}
+  },
+  {
+    "event_id": "10cb5f1f-b8e5-4c29-b46a-cbee7a95f00c",
+    "event_type": "SESSION_END",
+    "session_id": "bd4addf2-70c9-4949-a4e8-5f6c3ab345a0",
+    "tenant_id": "bb4c37ce-2a63-43ab-b4e9-58d99bb62cb7",
+    "timestamp_utc": "2026-06-28T22:18:52.835136+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

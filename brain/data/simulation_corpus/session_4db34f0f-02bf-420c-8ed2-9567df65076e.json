@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "b23266d5-e136-4bf0-9aa3-85a4f4e6dcab",
+    "event_type": "SESSION_START",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:00.581271+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_129",
+      "crm_opportunity_id": "opp_129"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "617b67d9-b579-4d89-b3ee-0e92ab1594ab",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:04.581271+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, that's how our new compliance management solution can automate your audit trails and regulatory reporting, drastically reducing manual effort and risk.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8859519120515343,
+    "metadata": {}
+  },
+  {
+    "event_id": "2f7c738b-29fd-474b-a3cd-3f8569e6b375",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:08.581271+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It looks incredibly powerful, and I can see the value. But getting something like this approved here? It's going to be an uphill battle. We'd need sign-off from Legal, Risk, Operations, and then Finance, all of whom have their own priorities and concerns.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.908438454967429,
+    "metadata": {}
+  },
+  {
+    "event_id": "7f50f9d7-c39f-4fb7-8614-cbd1ece4d635",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:13.581271+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common challenge in large organizations, and we're well-equipped to help. We can provide you with detailed ROI reports, security documentation, and even co-present to key stakeholders to address their specific questions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9483950631915216,
+    "metadata": {}
+  },
+  {
+    "event_id": "95336269-b753-46d5-abfe-1b2545ed613e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:17.581271+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Even with that, we just finished a major ERP rollout last quarter, and everyone's suffering from 'change fatigue'. Introducing another big system, even a good one, would face massive internal resistance. It's just bad timing.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9569165515135777,
+    "metadata": {}
+  },
+  {
+    "event_id": "589bf857-3fb4-4cd8-be99-747fa7293f68",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:20.581271+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand the concern about change fatigue. What if we started with a smaller, focused pilot project? Perhaps for one department or a specific regulatory requirement, to demonstrate quick, tangible wins without a full-scale deployment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9087819535384544,
+    "metadata": {}
+  },
+  {
+    "event_id": "74a1c55d-ea01-4729-8b7f-2bada7276271",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:23.581271+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A pilot... maybe. It might be easier to get a single department to agree. But even then, I'd need a rock-solid case for *that* department, and clear metrics. And no hidden costs later.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9544780792034921,
+    "metadata": {}
+  },
+  {
+    "event_id": "b0c565b5-16a4-4a40-8d67-7308c6e9653f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:25.581271+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. We can tailor a pilot proposal specifically for your chosen department, outlining clear objectives, success metrics, and a transparent pricing structure with no surprises. Let's identify the department with the most pressing need.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8709535065453697,
+    "metadata": {}
+  },
+  {
+    "event_id": "baf24251-ba3f-4be7-8e8d-1b4edc48a0d8",
+    "event_type": "SESSION_END",
+    "session_id": "4db34f0f-02bf-420c-8ed2-9567df65076e",
+    "tenant_id": "2d84bf5c-fbe8-4fe1-b816-1b9206b2ccf0",
+    "timestamp_utc": "2026-06-28T22:20:30.581271+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

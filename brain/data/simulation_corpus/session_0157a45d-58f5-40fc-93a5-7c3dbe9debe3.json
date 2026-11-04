@@ -1,0 +1,255 @@
+[
+  {
+    "event_id": "1a3d81c0-8f36-43db-b697-f4be7ce0703d",
+    "event_type": "SESSION_START",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:15.120699+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_50",
+      "crm_opportunity_id": "opp_50"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "becee254-7379-4fb0-8281-713e91aae66a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:19.120699+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Kevin, thanks for taking my call. I reached out because I believe our AI-powered content generation tool could significantly speed up your marketing team's output. How long does it typically take your team to draft a new blog post or social media campaign?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9177278173636256,
+    "metadata": {}
+  },
+  {
+    "event_id": "43f9d3cd-047c-4d90-9b0d-586280dc5706",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:23.120699+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, content generation. That's always a bottleneck. Weeks, sometimes. But AI... I don't know. We tried some free AI tools and the output was garbage. It sounds like a lot of work to edit robotic text.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9629447580440323,
+    "metadata": {}
+  },
+  {
+    "event_id": "b6873375-3a6b-48a5-9407-055882b55523",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:28.120699+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear that. Many generic AI tools lack context. Our platform is different because it's trained specifically on marketing best practices and your brand's existing content. It generates drafts that are 80-90% ready, saving your team hours of initial writing time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9515336673969066,
+    "metadata": {}
+  },
+  {
+    "event_id": "56cdd286-6b8c-476f-9e0e-112d9b5d6f95",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:31.120699+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "80-90% ready? That's a bold claim. Every AI vendor says that. What about originality? We need unique, engaging content, not recycled phrases or stuff that Google will flag as AI-generated.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9673485484526259,
+    "metadata": {}
+  },
+  {
+    "event_id": "09775b85-6726-41bb-adb8-f110778e50a3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:35.120699+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our advanced algorithms ensure originality and avoid plagiarism. We prioritize creativity and natural language, focusing on generating unique angles based on your input. It's designed to be a creative assistant, not a copy-paste machine.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8610580569101595,
+    "metadata": {}
+  },
+  {
+    "event_id": "dcdb4b32-8a93-4c36-9031-270949506de8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:38.120699+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, I'm still not convinced. What about SEO? Does it understand keywords and search intent, or is it just writing pretty words that won't rank?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8733157111832681,
+    "metadata": {}
+  },
+  {
+    "event_id": "0f69dd98-1f1e-4424-a7cd-5e108c27e780",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:42.120699+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It absolutely incorporates SEO best practices. You can input target keywords, and it will optimize the content for search intent, including headings, meta descriptions, and keyword density, helping your content rank higher.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8785570005435761,
+    "metadata": {}
+  },
+  {
+    "event_id": "0e8a631b-e82a-475b-8f46-68f6d359d1f2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:44.120699+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Alright, alright. I guess it sounds a *little* better than the free tools. But I'm just exploring right now. We have a freeze on new software purchases for the rest of the quarter. Circle back with me in January.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8529425158870795,
+    "metadata": {}
+  },
+  {
+    "event_id": "2dca39f1-82ce-474f-ac96-7f6b741e2db8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:46.120699+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood, Kevin. I'll make a note to connect in January. In the meantime, would you be open to a quick 15-minute demo to see it in action? No pressure to buy, just to see if it truly is a fit for when your freeze lifts.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 31000,
+      "end_ms": 32500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9444627454992518,
+    "metadata": {}
+  },
+  {
+    "event_id": "89258bc2-c652-4b9d-80f1-b52a4a1b7056",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:49.120699+00:00",
+    "sequence_num": 10,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Ugh, fine. But it has to be really quick. I'm slammed. Send me an invite for next week.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 34000,
+      "end_ms": 35500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8649740546804012,
+    "metadata": {}
+  },
+  {
+    "event_id": "23eb76f7-3ef2-4715-942a-bfcde257e7f3",
+    "event_type": "SESSION_END",
+    "session_id": "0157a45d-58f5-40fc-93a5-7c3dbe9debe3",
+    "tenant_id": "bfff3592-93cc-40e9-8320-0b96f69c1229",
+    "timestamp_utc": "2026-06-28T22:15:54.120699+00:00",
+    "sequence_num": 11,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

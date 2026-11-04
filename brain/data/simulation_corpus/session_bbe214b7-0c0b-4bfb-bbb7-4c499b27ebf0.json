@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "fec478c4-d0cf-40fe-bec0-071fb405210d",
+    "event_type": "SESSION_START",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:23.833813+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_99",
+      "crm_opportunity_id": "opp_99"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "5387a606-25bf-49f2-8768-7b8ca97d9733",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:26.833813+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Emily, thanks for taking my call. I understand you're looking into solutions for better data security and compliance.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9835228383376461,
+    "metadata": {}
+  },
+  {
+    "event_id": "dcf4eafc-abd9-405e-ab15-9a50853dd900",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:31.833813+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, that's a perpetual headache. What makes your solution different from the dozen other security tools that bombard my inbox daily?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.889134231127319,
+    "metadata": {}
+  },
+  {
+    "event_id": "1370226d-a2e3-4df4-9688-31448a9b5563",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:36.833813+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform offers a unique combination of proactive threat detection, automated policy enforcement, and real-time compliance reporting across your entire cloud infrastructure, specifically designed for modern SaaS environments.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9278296840291708,
+    "metadata": {}
+  },
+  {
+    "event_id": "0d3e5f07-06b3-4891-9554-0e5141ff0d50",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:40.833813+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cloud infrastructure. So, like AWS and Azure? We're a hybrid environment, with a lot of on-prem legacy stuff. Does it even cover that?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9306537295185524,
+    "metadata": {}
+  },
+  {
+    "event_id": "cfadc1a9-07b7-4e11-bd3a-804107748c87",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:42.833813+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. While our core strength is cloud, we offer modules and connectors to extend our security and compliance monitoring to on-premise servers and databases, providing a unified view.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8711257992047025,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d295a15-a8ec-425a-a9e1-3f6d03e071a9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:47.833813+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Unified view... so less tools to log into? That's appealing. But what's the learning curve like? My team is already stretched thin managing our current stack.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8618423339918115,
+    "metadata": {}
+  },
+  {
+    "event_id": "49800b45-dae3-4826-8d99-38be046b68f7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:49.833813+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's designed to be intuitive for security professionals. We provide extensive training and a dedicated customer success manager to ensure your team is proficient quickly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9182801157017522,
+    "metadata": {}
+  },
+  {
+    "event_id": "58f4d68a-b9d0-467b-a72c-1dc1ccac8a81",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:54.833813+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that sounds like a lot of commitment. And I'm guessing this unified view comes with a hefty price tag, doesn't it?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 31000,
+      "end_ms": 32500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9615275766961473,
+    "metadata": {}
+  },
+  {
+    "event_id": "7ae664ae-8ed2-4c30-9160-0bcf9d086101",
+    "event_type": "SESSION_END",
+    "session_id": "bbe214b7-0c0b-4bfb-bbb7-4c499b27ebf0",
+    "tenant_id": "178358fe-c7ec-47ad-80a3-0e5c7776feaa",
+    "timestamp_utc": "2026-06-28T22:18:59.833813+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

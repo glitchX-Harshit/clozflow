@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "9205077b-f61b-435f-a24b-e65ca2d56f63",
+    "event_type": "SESSION_START",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:14.897111+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_57",
+      "crm_opportunity_id": "opp_57"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c9f2ddea-66b1-4523-8b46-e5c15c3c0144",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:17.897111+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, Michael. I'm calling from TalentLink. We provide an automated solution for sourcing and screening passive candidates, cutting recruitment time by up to 50%.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8645127810090036,
+    "metadata": {}
+  },
+  {
+    "event_id": "9c4d8e8c-f19a-416f-9f0c-6487973b6db6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:22.897111+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automated sourcing? I don't know about that. Our recruiters pride themselves on their personal touch. I worry automation would just make us seem impersonal, like a bot.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9802984298859793,
+    "metadata": {}
+  },
+  {
+    "event_id": "f3600aa0-858b-449d-8c79-c7ad365ea9bd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:26.897111+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely agree that the personal touch is vital. Our platform handles the initial, time-consuming parts like identifying qualified individuals and even crafting personalized outreach based on their profiles. This frees your recruiters to focus on building deeper relationships with the truly interested candidates.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9062777945790975,
+    "metadata": {}
+  },
+  {
+    "event_id": "6b2a3076-e616-4455-bc3e-3f2cd3cc55da",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:31.897111+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. So it's not replacing them, but making them... more efficient? I suppose that makes sense. But what about the quality? Our current team has a good eye for fit, not just keywords.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9382981199755663,
+    "metadata": {}
+  },
+  {
+    "event_id": "b94f2588-a880-4204-b37f-f19bdd714ca8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:35.897111+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our AI is trained on successful candidate profiles from your industry, looking beyond keywords to skills, experience trajectories, and even cultural markers. We can demonstrate how our matching algorithm works during a short call.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9716691969492408,
+    "metadata": {}
+  },
+  {
+    "event_id": "d9ef8fc6-0091-4754-b954-8acf2f382f18",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:38.897111+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, okay. I'm a little pressed for time right now. Can you send me a one-pager? No long white papers, just the highlights. If it looks promising, I'll circle back.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8897208351498921,
+    "metadata": {}
+  },
+  {
+    "event_id": "001a9c41-7c82-4b38-9e74-6bdb4b97d830",
+    "event_type": "SESSION_END",
+    "session_id": "7dcc735e-8267-4cad-bf73-5cd63e3fa143",
+    "tenant_id": "1b18843e-b06f-48a0-acbb-051c7edb588d",
+    "timestamp_utc": "2026-06-28T22:16:43.897111+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

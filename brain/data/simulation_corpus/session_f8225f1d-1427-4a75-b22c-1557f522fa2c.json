@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "d09706c7-b505-416b-a958-4b6f4a5ec650",
+    "event_type": "SESSION_START",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:15.115714+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_44",
+      "crm_opportunity_id": "opp_44"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "6156206c-21a8-4194-b36c-43c5da414ce3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:20.115714+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Jane, thanks for making the time. I understand you're exploring options to improve your internal communications and knowledge sharing. What's currently proving to be the biggest bottleneck for your team?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9815450814996264,
+    "metadata": {}
+  },
+  {
+    "event_id": "77fb12c0-b3da-4dbd-9450-9c116bd249eb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:23.115714+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The biggest bottleneck? Probably just information getting lost. We use Slack, email, a shared drive... everything is everywhere. People can't find what they need, and redundant questions eat up a lot of time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8902520542348568,
+    "metadata": {}
+  },
+  {
+    "event_id": "11c0e116-545f-4220-8889-5ab5ade40751",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:27.115714+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very common challenge. Our platform provides a centralized, searchable knowledge hub, allowing teams to create, organize, and quickly find all company information \u2013 from HR policies to project documentation. It integrates with your existing tools.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9483089875257129,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d0cd371-2025-4a49-81ff-6920e5869b79",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:29.115714+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, so it's like an internal Wikipedia? We tried something like that a few years ago, and nobody used it. It became outdated almost immediately. What makes yours different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8802289405147874,
+    "metadata": {}
+  },
+  {
+    "event_id": "68d26e1b-d828-4f57-8b92-0ec816a106d7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:31.115714+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a valid concern. Our system has built-in AI that identifies outdated content and prompts owners for review, ensuring accuracy. Plus, gamification and smart search algorithms encourage adoption and make finding information incredibly intuitive.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.873926975701852,
+    "metadata": {}
+  },
+  {
+    "event_id": "97201785-7fa2-44b7-9eab-ff705322e75b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:36.115714+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI and gamification... sounds fancy. What's the price point for something like that? We're a non-profit, so budgets are extremely tight.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.981354641738348,
+    "metadata": {}
+  },
+  {
+    "event_id": "1471a6bb-19bf-47fb-a2e0-f636025c182e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:40.115714+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We do offer special non-profit pricing, Jane. For a team of your size, it would typically range from $200-$400 per month, depending on the tier. We also have a dedicated customer success manager to ensure high adoption rates.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9325800225579586,
+    "metadata": {}
+  },
+  {
+    "event_id": "3c5a1915-9a35-4fb1-b252-52fe387c3bd2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:44.115714+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, two to four hundred still feels like a lot for something that might just sit there unused. I'm not sure I can justify that right now without seeing some serious ROI specifically for a non-profit.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9130579365176742,
+    "metadata": {}
+  },
+  {
+    "event_id": "391dbee1-3c14-4b55-a87f-51460e53950d",
+    "event_type": "SESSION_END",
+    "session_id": "f8225f1d-1427-4a75-b22c-1557f522fa2c",
+    "tenant_id": "ba084ae8-54f8-48eb-9629-268a0aa49b52",
+    "timestamp_utc": "2026-06-28T22:15:49.115714+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

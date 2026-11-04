@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "f65b40b6-0ce6-41ad-889f-6d118a262fe6",
+    "event_type": "SESSION_START",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:30.800368+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_25",
+      "crm_opportunity_id": "opp_25"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "02e0e481-2858-4f47-a39e-72137d956d05",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:34.800368+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], thanks for joining. Today, I want to show you how [Product Name], our employee engagement platform, can significantly reduce turnover and boost team morale.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9186958387189155,
+    "metadata": {}
+  },
+  {
+    "event_id": "6156bedb-d825-443e-a7da-6195c6566ccf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:38.800368+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Reduce turnover? Everyone says that. We do annual surveys, we have an anonymous suggestion box, we even brought in a meditation coach last quarter. How exactly is your platform going to be different, and how much is it going to cost?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8805621376214918,
+    "metadata": {}
+  },
+  {
+    "event_id": "e0733c9a-ecfb-487b-9d73-69248a88bc87",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:40.800368+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Those are great initiatives. [Product Name] provides continuous, real-time feedback mechanisms, not just annual snapshots. It uses sentiment analysis and predictive analytics to identify 'at-risk' employees before they even start looking for new roles.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9772635778653868,
+    "metadata": {}
+  },
+  {
+    "event_id": "2b315fb5-bc1a-43fa-af63-8acc6389fc8b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:42.800368+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sentiment analysis? So, you're spying on our internal comms? That sounds a bit Big Brother-ish, and honestly, our employees would probably revolt.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9739866112344939,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d7a492c-7c7e-44d2-9ed9-482afa74834f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:47.800368+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Not at all. The platform integrates with anonymized, voluntary feedback channels and aggregates data at a team level, never individual. The focus is on identifying systemic issues and providing actionable insights for HR and managers to improve the workplace culture.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9398625288038893,
+    "metadata": {}
+  },
+  {
+    "event_id": "8893df58-0bc8-495b-80b3-993d05e89fe0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:50.800368+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's slightly less creepy. But still, 'actionable insights' sounds vague. What's the tangible benefit? Are we talking about saving millions, or just a marginal improvement that won't even cover the platform's cost?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8894924572121117,
+    "metadata": {}
+  },
+  {
+    "event_id": "b5b620d8-ddb7-4d0a-a65a-7e4dca9a21cb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:53.800368+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Typically, our clients see a 15-20% reduction in voluntary turnover within the first year, translating to significant savings in recruitment and training costs. We can provide a detailed ROI calculator based on your specific HR metrics.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9180100675469076,
+    "metadata": {}
+  },
+  {
+    "event_id": "89f391da-669f-4b9a-a0e5-2819c9f6d23d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:13:57.800368+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'd need to see some very conservative numbers on that, and I'd have to run it past legal. This is a sensitive area.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9251500712733489,
+    "metadata": {}
+  },
+  {
+    "event_id": "42a0ba9a-52f5-47a0-85a5-71a3bd2934e2",
+    "event_type": "SESSION_END",
+    "session_id": "ff31fcba-59fa-4289-9440-37f143c29a58",
+    "tenant_id": "471dcb58-526f-40f8-857c-a5ddce6d44b1",
+    "timestamp_utc": "2026-06-28T22:14:02.800368+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

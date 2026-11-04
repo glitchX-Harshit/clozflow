@@ -1,0 +1,145 @@
+[
+  {
+    "event_id": "c84ccaf8-9fb3-47f5-8291-6924ca277e09",
+    "event_type": "SESSION_START",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:29.913925+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_1",
+      "crm_opportunity_id": "opp_1"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "f8ea3d46-36c8-4602-8776-a2849f6d1ae5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:34.913925+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Alex, thanks for joining today. I know your time is valuable, so I'll jump right in. We help marketing teams like yours streamline campaign creation and analytics, typically seeing a 30% reduction in manual tasks.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9323653440484303,
+    "metadata": {}
+  },
+  {
+    "event_id": "a9a322c2-2537-4645-9fab-316a244471e2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:39.913925+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, look, I only have about 7 minutes before my next hard stop. Can you just tell me the price range right now? We're evaluating a few options, and I don't want to waste your time or mine if it's way out of our budget.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.883678755770507,
+    "metadata": {}
+  },
+  {
+    "event_id": "51e6969d-cc9e-45c9-9fef-d647b7f346aa",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:43.913925+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, I appreciate that directness. Our pricing is modular, starting around $2,500 a month for our core package, scaling up based on features and user count. Does that ballpark sound within what you're considering?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9749809518961066,
+    "metadata": {}
+  },
+  {
+    "event_id": "ccf8371c-b03e-470a-869a-78d95471aa97",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:48.913925+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, okay. That's a bit higher than what we allocated for this quarter. We just onboarded a new CRM, so funds are a bit tight. Send me some info, but honestly, it's probably a non-starter at that price point right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9334901703450502,
+    "metadata": {}
+  },
+  {
+    "event_id": "f43704df-f549-4e0e-9035-5e3592112502",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:52.913925+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand. I'll definitely send over a detailed breakdown. Perhaps there's a smaller entry point or a phased approach we could discuss that aligns better with your current budget. Would you be open to a quick follow-up next week to explore that?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8988543670561776,
+    "metadata": {}
+  },
+  {
+    "event_id": "7d3b1f53-2147-4c86-a94f-31f240d15418",
+    "event_type": "SESSION_END",
+    "session_id": "70caa6bd-2e9a-45da-97ca-0113efa7be88",
+    "tenant_id": "c80bed5b-65ce-4d68-9c92-d537700f6d25",
+    "timestamp_utc": "2026-06-28T22:12:57.913925+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

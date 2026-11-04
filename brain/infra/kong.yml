@@ -1,0 +1,23 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: clozflow-brain-api
+    url: http://api:8000
+    routes:
+      - name: api-v1-routes
+        paths:
+          - /v1
+        plugins:
+          - name: jwt
+            config:
+              run_on_preflight: true
+              uri_param_names:
+                - jwt
+              claims_to_verify:
+                - exp
+          - name: rate-limiting
+            config:
+              minute: 10000
+              policy: local
+              limit_by: ip

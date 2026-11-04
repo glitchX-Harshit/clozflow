@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "cb808a9a-0f6d-410e-98c8-7bb09a9e8c37",
+    "event_type": "SESSION_START",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:23.829237+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_93",
+      "crm_opportunity_id": "opp_93"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "0eb90281-bb47-425b-9965-80d137fc95d9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:27.829237+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Maya! Thanks for connecting. I'm excited to show you how our platform helps sales teams automate their lead qualification.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8686053574050419,
+    "metadata": {}
+  },
+  {
+    "event_id": "8e3e1af7-0d2d-4113-8e4d-6ad4589bf2a9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:29.829237+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Lead qualification? We already use HubSpot for that. What makes you different, or better, than what we're already paying for?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9571589663205398,
+    "metadata": {}
+  },
+  {
+    "event_id": "1242025a-383c-4159-b025-1f821ec06619",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:33.829237+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question, Maya. While HubSpot has strong CRM capabilities, our platform specializes in predictive lead scoring using AI, allowing you to prioritize leads with a much higher conversion probability, often before they even engage directly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9164324753330509,
+    "metadata": {}
+  },
+  {
+    "event_id": "75a0d4a2-64c8-4bdc-b461-1654cc78d2d0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:37.829237+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive AI... sounds like a buzzword. Does it actually work, or is it just a fancy algorithm telling us what we already know?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8940855724024807,
+    "metadata": {}
+  },
+  {
+    "event_id": "6db00954-ec90-4fca-a2eb-2e2d642d658f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:42.829237+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's definitely more than a buzzword! Our AI analyzes over 50 data points for each lead, identifying patterns that human eyes often miss. We've seen clients reduce unqualified leads by up to 40%.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9818051640092516,
+    "metadata": {}
+  },
+  {
+    "event_id": "723bb755-97fe-4ecb-a668-4969af554716",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:44.829237+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Forty percent, huh? And what's the integration like with HubSpot? Because if it's a headache to set up, my team will just ignore it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9686236783391131,
+    "metadata": {}
+  },
+  {
+    "event_id": "927c8f7a-46e1-40c1-aa06-95de749fec6e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:49.829237+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our integration is seamless, designed to pull and push data automatically. It's a quick setup process, usually less than an hour, and we provide full support.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.863462271213847,
+    "metadata": {}
+  },
+  {
+    "event_id": "4c779b3b-427f-400a-b06f-eca454880025",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:54.829237+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's slightly less intimidating. But I'm still skeptical. Can you send me some detailed case studies, specifically from companies in our industry, with actual ROI figures?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 31000,
+      "end_ms": 32500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.864104118145052,
+    "metadata": {}
+  },
+  {
+    "event_id": "a5c197d8-decc-4a8f-9518-a26ff92d9b4c",
+    "event_type": "SESSION_END",
+    "session_id": "f8df9601-71ea-4087-a25b-c61e3dc00a58",
+    "tenant_id": "7fe24f4f-5014-4cae-9031-47aeafcf4479",
+    "timestamp_utc": "2026-06-28T22:18:59.829237+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

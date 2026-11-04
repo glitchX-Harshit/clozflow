@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "0cbe670a-474d-4b3d-a6a6-1023dbee091e",
+    "event_type": "SESSION_START",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:18:54.913329+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_106",
+      "crm_opportunity_id": "opp_106"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "1eefaadd-c92d-451e-b272-bfa459cfd358",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:18:56.913329+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "And the real magic of our new dashboard is its ability to pull real-time data from all your disparate systems into one unified view, giving you a 360-degree look at your operations.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.883778035945719,
+    "metadata": {}
+  },
+  {
+    "event_id": "59c78f86-6663-4c73-afff-b9476fe24974",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:19:00.913329+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sorry, one second, I just got an urgent message from my boss. Can you hold on for literally 30 seconds?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8681656833904157,
+    "metadata": {}
+  },
+  {
+    "event_id": "332069fe-febd-43f8-939c-2a2979ae1089",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:19:03.913329+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No problem at all, take your time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9855421346650857,
+    "metadata": {}
+  },
+  {
+    "event_id": "1c55f4c7-dbed-40d6-85f3-15416e146d4d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:19:07.913329+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "*muffled talking in background* Okay, I'm back. Apologies. My boss needed something immediately. What were you just saying about the 360-degree view?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8534238668628799,
+    "metadata": {}
+  },
+  {
+    "event_id": "5c1df865-8a3b-46de-882d-39fdb0ec572e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:19:10.913329+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No worries! I was explaining how our dashboard integrates with all your systems \u2013 CRM, ERP, marketing automation \u2013 to provide a holistic, real-time operational overview. It eliminates the need for manual data consolidation.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9696295635594181,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d797e56-55d7-4e60-832a-c85870893705",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:19:14.913329+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right, right. So, it's like... a super BI tool? We already have Power BI, which is pretty good for reporting.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.924617729703075,
+    "metadata": {}
+  },
+  {
+    "event_id": "2014df3a-18f0-461d-be13-24856eb9bafd",
+    "event_type": "SESSION_END",
+    "session_id": "5f4855b9-6753-48c4-9461-61a0673137e7",
+    "tenant_id": "c8396093-59c0-4b8c-8bbe-4b4f0227de4a",
+    "timestamp_utc": "2026-06-28T22:19:19.913329+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

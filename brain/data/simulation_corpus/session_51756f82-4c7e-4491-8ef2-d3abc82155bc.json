@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "a35dd531-7e30-4116-9be3-420fd8b681a8",
+    "event_type": "SESSION_START",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:29.300289+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_121",
+      "crm_opportunity_id": "opp_121"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "7a1e6096-84f1-4fec-ac63-4f9e314e75a9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:33.300289+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. Thanks for taking the call. My name is [Salesperson Name] from [Our Product Name]. We help businesses centralize and secure their company documents and knowledge base. What's your biggest pain point with document management today?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9477932956950449,
+    "metadata": {}
+  },
+  {
+    "event_id": "be53d62b-5272-4440-b854-2caa5afd98de",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:38.300289+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Morning. We use Google Drive for most things, SharePoint for some. It's a bit of a mess, honestly. Stuff gets lost, access is tricky. But everyone's used to it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8783033214300937,
+    "metadata": {}
+  },
+  {
+    "event_id": "32df54d7-e7f9-4128-bc6e-4e7de8872a9e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:40.300289+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That sounds like a common challenge, especially with multiple platforms. What we often find is that the 'familiarity' comes at the cost of productivity and security. Are you dealing with version control issues or concerns about who has access to sensitive documents?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9846498747480616,
+    "metadata": {}
+  },
+  {
+    "event_id": "82968c44-b644-4b92-b303-1f56d6edb3e5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:43.300289+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, definitely version control. We waste so much time trying to figure out which is the latest. And security, sure, it's always a concern. But we already pay for Google Workspace and Microsoft 365. I don't want another subscription.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9503995122201943,
+    "metadata": {}
+  },
+  {
+    "event_id": "f0e9cd27-183b-43e9-a418-131b27e06e11",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:46.300289+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the desire to consolidate subscriptions. Our platform isn't about adding another tool, but rather about providing a centralized, intelligent layer *on top* of your existing storage, enhancing search, versioning, and access control without forcing a migration. How much time do employees typically spend searching for documents each week?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8872030363303721,
+    "metadata": {}
+  },
+  {
+    "event_id": "cac67c4c-fdd8-48fc-8689-b354a3a5a47c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:48.300289+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Search? Too long. Probably hours, collectively. But our IT team is really stretched. They'll never approve another integration or system rollout. It just won't happen.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9000774544553103,
+    "metadata": {}
+  },
+  {
+    "event_id": "bda919f2-30d0-4810-bda2-30ba0c277557",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:51.300289+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear your concern about IT's workload. Our solution is designed for minimal IT involvement post-setup, and the integration process is straightforward. What if I could show you how centralizing knowledge could save hundreds of employee hours annually, paying for itself many times over?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8616250182864558,
+    "metadata": {}
+  },
+  {
+    "event_id": "6d0b80c1-de8b-40f6-b532-7f4786a75e96",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:53.300289+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hundreds of hours? That's a big claim. I'd need to see some hard numbers, specific to our company, to even bring it up to IT. And frankly, I'm just not sure it's a priority right now with everything else going on.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9295677325966903,
+    "metadata": {}
+  },
+  {
+    "event_id": "5a881162-8c9a-4d3a-b6d5-c361a6d83f2c",
+    "event_type": "SESSION_END",
+    "session_id": "51756f82-4c7e-4491-8ef2-d3abc82155bc",
+    "tenant_id": "aa963050-27aa-49ca-91bb-c60200ef6a92",
+    "timestamp_utc": "2026-06-28T22:19:58.300289+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

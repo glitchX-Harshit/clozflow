@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "2faaf1b3-3ca7-4768-a0ff-65056ba86135",
+    "event_type": "SESSION_START",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:30.797690+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_22",
+      "crm_opportunity_id": "opp_22"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "dacef86b-0e2a-40e3-99ac-bd7c9a73f92e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:32.797690+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. Thanks for taking this call. As we discussed, [Product Name] is an AI-powered analytics platform designed to give you real-time insights into your customer behavior.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9020594154987597,
+    "metadata": {}
+  },
+  {
+    "event_id": "02fda882-3673-45ff-b185-754c077252d4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:37.797690+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right. So, what's the typical implementation time? We're looking for something that can hit the ground running, not another six-month project.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9133157435085675,
+    "metadata": {}
+  },
+  {
+    "event_id": "bb283164-1c3c-43a5-bae0-5ab87e10f994",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:42.797690+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our average implementation is actually just 3-4 weeks. We focus on rapid deployment to get you value fast. Our clients typically see measurable ROI within the first quarter.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8572890563669995,
+    "metadata": {}
+  },
+  {
+    "event_id": "8966b4db-ef61-4f86-a719-e7348810634e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:45.797690+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Three weeks, that's better. But let's talk about the elephant in the room. What's the price tag on something like this? Our budget for new tech this year is exceptionally tight.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9272922507156696,
+    "metadata": {}
+  },
+  {
+    "event_id": "dc972f13-5391-463e-85e7-2739a30d355c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:50.797690+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you. Pricing for [Product Name] is tiered based on your usage and features required, starting at $X per month. However, when you consider the cost savings from reduced churn and optimized marketing spend, it often pays for itself quickly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9126177142200771,
+    "metadata": {}
+  },
+  {
+    "event_id": "141ba38b-1f05-4071-a1ee-b42c0d3d51bf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:53.797690+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "X dollars a month? For us, that's a significant investment, especially when we're trying to cut costs. We're currently managing with a few open-source tools that are... well, free.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.975226754720898,
+    "metadata": {}
+  },
+  {
+    "event_id": "c9d4523e-870c-4975-8a5b-4c8da409fe0b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:55.797690+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "And open-source tools are great for certain things. But are they giving you predictive capabilities, real-time anomaly detection, and a unified view of your data without significant internal development resources? The cost of *not* having those insights can be much higher.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8511860343948037,
+    "metadata": {}
+  },
+  {
+    "event_id": "952ee45e-5d0d-4c4d-9aeb-0d9ecae50b4c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:13:59.797690+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Maybe, maybe not. It's a tough sell internally right now. Could you send me a detailed breakdown of the ROI, specifically for a company of our size and industry? I'd need some solid numbers to even get this past my director.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9276118024391453,
+    "metadata": {}
+  },
+  {
+    "event_id": "85359f90-2bf7-4b39-8be0-68bf4ed503aa",
+    "event_type": "SESSION_END",
+    "session_id": "ca6895d3-9008-4863-bd0f-70c6c1d958d7",
+    "tenant_id": "68dfb765-0382-42fe-9543-200828c20278",
+    "timestamp_utc": "2026-06-28T22:14:04.797690+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

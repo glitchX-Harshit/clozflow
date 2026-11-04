@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "6480c770-6e58-49d4-bbec-3ddf510b941b",
+    "event_type": "SESSION_START",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:16:42.145937+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_65",
+      "crm_opportunity_id": "opp_65"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "215d2f7e-757c-4c12-ac53-ecf3806aeefd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:16:44.145937+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hey [Buyer Name], hope you're having a productive week. I'm calling because I noticed your competitor, [Competitor Name], just announced a significant reduction in their customer support response times, and I know that's something you've been working on.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9776751746697069,
+    "metadata": {}
+  },
+  {
+    "event_id": "9a1b076a-8df4-45a8-8446-50b2ec27fbd0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:16:48.145937+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, really? They did? Good for them, I guess. We're doing fine. Our metrics are improving. Maybe not as fast as I'd like, but we're getting there with our current tools.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8968419443841217,
+    "metadata": {}
+  },
+  {
+    "event_id": "05126044-3256-4839-a815-da85b59e3c27",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:16:53.145937+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's great to hear your metrics are improving. What if I told you there's a way to accelerate that improvement even further, and potentially leapfrog your competitors? Our AI-powered support automation can shave minutes off every interaction, without sacrificing personalization.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9016120610848288,
+    "metadata": {}
+  },
+  {
+    "event_id": "288307f8-22e1-4ba9-8e4d-d3662916dc46",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:16:56.145937+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Leapfrog? Sounds like a sales pitch to me. 'AI-powered support automation' just means chatbots, right? Our customers hate chatbots. They just want to talk to a human.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9869777808124414,
+    "metadata": {}
+  },
+  {
+    "event_id": "3ead4b17-1ad0-4d9e-8d20-76548a1fd1e7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:16:59.145937+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common misconception. While we do offer intelligent chatbots for routine queries, our platform also empowers human agents by instantly surfacing relevant knowledge base articles and customer history, significantly reducing handle times and improving first-contact resolution. It's about augmenting your agents, not replacing them.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.923513067602469,
+    "metadata": {}
+  },
+  {
+    "event_id": "d8a63cce-596f-4811-a447-b9771d13b119",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:17:01.145937+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. So it's not just a fancy FAQ bot? How much training does it take for the agents to use it? Because we're already stretched thin.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9453766920680271,
+    "metadata": {}
+  },
+  {
+    "event_id": "d3dc2a4d-55fa-48c9-a492-e62dc5179cb3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:17:05.145937+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The agent-facing interface is incredibly intuitive, designed for minimal training. Most teams are up and running within a week. Could I send you a short video showing the agent experience?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9765774166347289,
+    "metadata": {}
+  },
+  {
+    "event_id": "2323f931-06e1-4170-9d07-5d3e2ae90594",
+    "event_type": "SESSION_END",
+    "session_id": "157d0327-308c-4615-a9e5-5abea1e92545",
+    "tenant_id": "1efb6c33-bf1d-4966-a5b3-00222d5c53bc",
+    "timestamp_utc": "2026-06-28T22:17:10.145937+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

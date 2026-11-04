@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "88978e99-641b-400a-8fd4-01d354c2e389",
+    "event_type": "SESSION_START",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:12:54.285885+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_12",
+      "crm_opportunity_id": "opp_12"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "eea954c0-3d07-4e97-a7c7-aa3665571ee9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:12:59.285885+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Sarah. Following up on our chat about optimizing your customer support workflow. Our solution significantly reduces ticket resolution times.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9429450406346307,
+    "metadata": {}
+  },
+  {
+    "event_id": "667669c7-505a-4636-bfe0-5b7f47115524",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:03.285885+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right, good morning. I've looked at the demo video you sent. It looks... complex. How much training is involved for our agents?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9042605890217545,
+    "metadata": {}
+  },
+  {
+    "event_id": "f48e1939-aad4-4e5b-ba8f-ac77a0d26563",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:07.285885+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's designed to be intuitive, Sarah. Most teams are up and running within a week. We provide comprehensive training and a dedicated account manager for the first 90 days.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9432576927383801,
+    "metadata": {}
+  },
+  {
+    "event_id": "397f9337-ecc2-4143-9f9a-3d2eda747bc8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:09.285885+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A week? That's still a week of lost productivity. And a dedicated account manager usually means a premium price tag. Honestly, we're trying to cut costs, not add new subscriptions right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9896941969621527,
+    "metadata": {}
+  },
+  {
+    "event_id": "14960508-5e7f-4e47-b86e-7eb9ae159f4e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:13.285885+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand budget is a concern. Many of our clients see an ROI within 3-6 months due to reduced operational costs and improved customer satisfaction, which directly impacts churn. Could I walk you through a quick ROI calculator specific to your team size?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9701573811725166,
+    "metadata": {}
+  },
+  {
+    "event_id": "3cb03da0-93ef-439d-a71f-e227d4f79f26",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:15.285885+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "ROI calculator... I appreciate that, but our finance department is notoriously slow. What's the ballpark figure for a team of 50 agents? Just give me a range.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8993321702323953,
+    "metadata": {}
+  },
+  {
+    "event_id": "b87985f0-2d7d-47fd-bf6e-3e29e37b110a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:17.285885+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For a team of 50, our standard package would typically range from $X to $Y per month, depending on the specific add-ons you choose, with volume discounts available.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9557382723359893,
+    "metadata": {}
+  },
+  {
+    "event_id": "132a41e8-c1a9-40f0-b24e-1e29d3e00826",
+    "event_type": "SESSION_END",
+    "session_id": "62748e2c-37df-4b8a-8d81-752c8318391f",
+    "tenant_id": "5e1c0439-db5d-4e1d-9adb-559e29f36208",
+    "timestamp_utc": "2026-06-28T22:13:22.285885+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

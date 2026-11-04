@@ -19,6 +19,7 @@ import WebPreload from './components/WebPreload';
 
 const ThreeBackground = React.lazy(() => import('./components/ThreeBackground'));
 const AuthPage = React.lazy(() => import('./pages/AuthPage'));
+const BrainWorkspace = React.lazy(() => import('./pages/BrainWorkspace'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const CallBriefing = React.lazy(() => import('./pages/CallBriefing'));
 const LiveCall = React.lazy(() => import('./pages/LiveCall'));
@@ -187,6 +188,7 @@ function App() {
                         <Route path="/auth"          element={<Suspense fallback={null}><AuthPage /></Suspense>} />
                         <Route path="/auth/callback" element={<Suspense fallback={null}><AuthPage /></Suspense>} />
                         {/* Protected routes */}
+                        <Route path="/brain" element={<ProtectedRoute><Suspense fallback={null}><BrainWorkspace /></Suspense></ProtectedRoute>} />
                         <Route path="/dashboard" element={
                             <ProtectedRoute><Suspense fallback={null}><Dashboard /></Suspense></ProtectedRoute>
                         } />

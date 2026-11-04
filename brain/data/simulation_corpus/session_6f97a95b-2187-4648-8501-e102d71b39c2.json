@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "3ce0c30d-27e0-4364-ba67-71103b94f54a",
+    "event_type": "SESSION_START",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:23.831783+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_96",
+      "crm_opportunity_id": "opp_96"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "214a0e59-c622-401a-90b0-be1d8d75f1b3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:26.831783+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, David! I wanted to follow up on your interest in our project management solution. We believe it could significantly improve your team's collaboration.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8569779733799466,
+    "metadata": {}
+  },
+  {
+    "event_id": "cde1b1c8-09bc-4ff7-8811-5967d2402d66",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:31.831783+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Project management, huh? We're using Jira. It's clunky, but everyone knows it. Why would we switch?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.886656969242922,
+    "metadata": {}
+  },
+  {
+    "event_id": "aaf7f54b-7cc2-4c8c-a1bc-72dd54196c5e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:34.831783+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Jira is powerful, but often overkill for non-dev teams. Our solution offers a more intuitive interface, real-time collaboration on documents, and seamless communication channels, all designed for cross-functional teams to work together efficiently, not just track tickets.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9581451090156304,
+    "metadata": {}
+  },
+  {
+    "event_id": "3fdb1bb7-c922-44c4-81eb-4a3f28e2801a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:36.831783+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Intuitive? My team hates learning new software. The last time we tried to implement something new, it was a disaster. Nobody used it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9741959225201954,
+    "metadata": {}
+  },
+  {
+    "event_id": "283f82ca-c9dd-40ba-aac6-6f9284c63b59",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:40.831783+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We've focused heavily on user experience, David. On average, teams are up and running within a day. We also offer comprehensive onboarding and training to ensure smooth adoption.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.850137179965339,
+    "metadata": {}
+  },
+  {
+    "event_id": "8cbd3b0a-2a01-4428-8525-28c42e2e5c7d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:43.831783+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A day? That's still a day of lost productivity. And what about the cost? Is it per user? Because our team fluctuates.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8548802087388881,
+    "metadata": {}
+  },
+  {
+    "event_id": "0e275e85-47a5-42d8-9573-f4cd19895aae",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:48.831783+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's a flat fee per team, with unlimited users, making it very predictable. We believe the efficiency gains would quickly offset any initial learning curve.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8654366675639519,
+    "metadata": {}
+  },
+  {
+    "event_id": "4d6de816-099e-4bab-975c-53c8a49dc016",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:52.831783+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Flat fee per team. That's a bit different. Can you just email me a breakdown of features and the pricing tiers? I'll review it later.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9810796173940692,
+    "metadata": {}
+  },
+  {
+    "event_id": "e2128f66-ad74-40fa-9870-7d5e40fd1a04",
+    "event_type": "SESSION_END",
+    "session_id": "6f97a95b-2187-4648-8501-e102d71b39c2",
+    "tenant_id": "adf4ce62-0e5a-4781-aaef-ecf0e632b536",
+    "timestamp_utc": "2026-06-28T22:18:57.831783+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

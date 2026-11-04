@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "3260878d-1e9e-4269-9513-492d58099183",
+    "event_type": "SESSION_START",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:15.119060+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_48",
+      "crm_opportunity_id": "opp_48"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "d389db44-7274-41ad-b843-385e517c5b80",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:19.119060+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Maria, thanks for connecting. I wanted to discuss how our procurement optimization platform can help reduce your indirect spend. What's your current process for managing supplier contracts and onboarding?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9456490179221062,
+    "metadata": {}
+  },
+  {
+    "event_id": "138c84d8-5429-4bc4-be3e-09cbc34dd127",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:23.119060+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Supplier contracts... (interrupts) Look, we're pretty good at negotiating. Our procurement team is sharp. I'm not sure we need 'optimization' as much as just better visibility. We have too many rogue purchases happening.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9683348356148684,
+    "metadata": {}
+  },
+  {
+    "event_id": "2a6880c2-1b00-4f43-94c1-b3f074f9109b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:28.119060+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand. That's precisely where our platform shines. It centralizes all supplier data, contracts, and spend, giving you a single source of truth. It also automates the requisition process, ensuring all purchases go through approved channels.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8891161814182342,
+    "metadata": {}
+  },
+  {
+    "event_id": "21da34fb-f151-4a70-ba0f-24cf41fa014a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:31.119060+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automated requisitions? So, it forces people to fill out more forms? My teams already complain about bureaucracy. I can't introduce something that adds more steps.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9504723025481233,
+    "metadata": {}
+  },
+  {
+    "event_id": "32ab3a9e-d4cf-492b-9fac-eb812764b4d8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:36.119060+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "On the contrary, Maria, it simplifies the process. It's an intuitive, guided experience that auto-populates information, enforces policy rules in real-time, and routes approvals digitally. It actually reduces friction and saves time compared to manual processes.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9594841942123874,
+    "metadata": {}
+  },
+  {
+    "event_id": "b07311cc-99df-40c0-a389-2f43afc5196c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:38.119060+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. I'm still not sold on the 'simplicity' part. And what about integration with our ERP? We're on SAP, and that's usually a nightmare to connect anything new to.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8673701535083371,
+    "metadata": {}
+  },
+  {
+    "event_id": "84a30d42-3339-4410-b369-0bb5e5ba54ea",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:41.119060+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We have a robust, pre-built integration module for SAP and other major ERPs. It's designed to be plug-and-play, minimizing custom development work. We've done hundreds of SAP integrations successfully.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8829372271724794,
+    "metadata": {}
+  },
+  {
+    "event_id": "5cadee52-a904-4b56-aa29-9987ced39eac",
+    "event_type": "SESSION_END",
+    "session_id": "bb582f30-b4e6-4f5a-b905-3174793cca28",
+    "tenant_id": "3cfc72f3-a53f-4784-963b-46bc13031a99",
+    "timestamp_utc": "2026-06-28T22:15:46.119060+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

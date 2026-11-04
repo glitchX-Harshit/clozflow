@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "f83573cc-95b2-405a-88ba-6b788e6984c2",
+    "event_type": "SESSION_START",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:14.899084+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_60",
+      "crm_opportunity_id": "opp_60"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "08462433-1587-4d86-abc7-e7c4c1ce8074",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:17.899084+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Angela, I'm reaching out from OptiFlow. We've developed an innovative workflow automation tool specifically for finance departments, helping them cut down on manual data entry and reconciliation errors.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9111059036480994,
+    "metadata": {}
+  },
+  {
+    "event_id": "20d382e0-002d-4346-b17e-8057888bf502",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:19.899084+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Workflow automation? We already have a couple of RPA bots running, and honestly, our team is pretty lean. Everyone wears multiple hats, and adding new software means more training time we don't have.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9480906504334455,
+    "metadata": {}
+  },
+  {
+    "event_id": "9b62ea12-603a-470a-ac5a-a4e21aae7807",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:22.899084+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the time constraint. Our solution is designed to be incredibly intuitive, minimizing the learning curve. And it complements existing RPA, focusing on decision-making processes and data validation that often fall outside standard bot capabilities.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.966915953105158,
+    "metadata": {}
+  },
+  {
+    "event_id": "655529bf-1664-4d3a-a18a-49c849eab92e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:24.899084+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So it's not another bot? Is it like a project management tool, then? Because we've already tried a few of those, and they always end up being shelfware.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8945680327676645,
+    "metadata": {}
+  },
+  {
+    "event_id": "f6fd0170-f7d0-407c-95cf-0970d7ba328d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:26.899084+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's different. Think of it as an intelligent assistant that guides complex financial approvals, flags discrepancies in real-time, and ensures compliance, all while integrating seamlessly with your ERP. It ensures tasks are done right, every time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9021097932941708,
+    "metadata": {}
+  },
+  {
+    "event_id": "f44c9c75-bd32-442b-b81c-d6dd4c80bfcf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:29.899084+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right, okay. Sounds fancy. But if it's so 'intelligent,' what's the risk of it making a mistake with our financial data? My CFO would have my head.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8981900504185114,
+    "metadata": {}
+  },
+  {
+    "event_id": "cd0b8bee-34b1-41af-8013-ca15fc872c58",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:31.899084+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a critical concern, and our platform incorporates multiple layers of validation and audit trails. Every step is transparent and auditable, ensuring data integrity while reducing human error, not introducing new ones.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9758122883042044,
+    "metadata": {}
+  },
+  {
+    "event_id": "8d5d97ae-1225-4503-80fa-38e96740a11b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:34.899084+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. I'm still not convinced. We're good. But if you have a whitepaper that specifically addresses integration with SAP and outlines error handling, I'll take a look. Otherwise, I'm just too busy.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9469657572176261,
+    "metadata": {}
+  },
+  {
+    "event_id": "4df0ba78-db79-4c3f-ba22-b200cf1561d3",
+    "event_type": "SESSION_END",
+    "session_id": "bf21c91b-757e-46ff-963d-781e2552cb3c",
+    "tenant_id": "55227ad9-b8b8-4f71-887a-ac16fa379553",
+    "timestamp_utc": "2026-06-28T22:16:39.899084+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

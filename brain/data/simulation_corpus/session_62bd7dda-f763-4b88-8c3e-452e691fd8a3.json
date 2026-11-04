@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "87200298-52cd-4971-8c9b-09bb024560fd",
+    "event_type": "SESSION_START",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:18:54.914625+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_108",
+      "crm_opportunity_id": "opp_108"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "35a67c59-8206-4467-a1ea-85c0ea6abbf5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:18:56.914625+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "With our AI-powered content generation, your team can produce high-quality blog posts, social media updates, and email copy in a fraction of the time, freeing them up for more strategic tasks.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.958961570836987,
+    "metadata": {}
+  },
+  {
+    "event_id": "9e7df535-c1d2-43c3-b568-fc4a08cedb0d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:18:59.914625+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's an interesting proposition, but I'm not the sole decision-maker for something like this. My head of content and the marketing director would need to be involved, and they're notoriously hard to get on a call.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9387387577405345,
+    "metadata": {}
+  },
+  {
+    "event_id": "afdd08ff-2670-4bd3-90fe-454d432a3a71",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:19:01.914625+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. Perhaps a tailored 15-minute overview that highlights the specific benefits for content managers and marketing leaders could make it easier to get their attention? I can even prepare a quick deck focusing on their specific pain points.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8750248772949579,
+    "metadata": {}
+  },
+  {
+    "event_id": "023b8523-4589-4616-805d-2a874a9cc6fc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:19:04.914625+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A 15-minute overview might work, but it would have to be incredibly concise and show immediate, tangible value. They get pitched all the time, and a lot of these AI tools promise the world but deliver a basic article spinner.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.959557682386651,
+    "metadata": {}
+  },
+  {
+    "event_id": "945032af-57b8-4bc8-a5a3-ad613396a753",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:19:06.914625+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood. My goal is to demonstrate our differentiation. I can focus on our brand voice customization and the unique ability to integrate SEO best practices directly into the content generation process, which they'd certainly appreciate.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8570021601520948,
+    "metadata": {}
+  },
+  {
+    "event_id": "c9256551-b9d4-4bc1-b315-86fcb4fa0cd0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:19:08.914625+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that might be enough to pique their interest. Send me some dates for a 15-minute slot next week, and I'll see if I can coordinate with them.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.883671689522739,
+    "metadata": {}
+  },
+  {
+    "event_id": "cf5b8726-ff67-4a81-b7be-5630649459e6",
+    "event_type": "SESSION_END",
+    "session_id": "62bd7dda-f763-4b88-8c3e-452e691fd8a3",
+    "tenant_id": "26dce29f-9214-4cad-ad15-f81432b9c391",
+    "timestamp_utc": "2026-06-28T22:19:13.914625+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

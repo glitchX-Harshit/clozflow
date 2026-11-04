@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "1985b7e6-f0db-4e82-b609-4054be6bb525",
+    "event_type": "SESSION_START",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:00.578668+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_127",
+      "crm_opportunity_id": "opp_127"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "138f615c-2f5b-462c-84e5-7e6fec390aee",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:02.578668+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform, Velocity, helps sales teams predict deal closure probability with over 95% accuracy, allowing for more precise forecasting and resource allocation.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9833848999726397,
+    "metadata": {}
+  },
+  {
+    "event_id": "8a6d2b2e-06a0-49f6-b2ec-039e36a71514",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:05.578668+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "95% accuracy? That's a bold claim. Every sales tool I've ever looked at promises better forecasting, and then it's just another fancy dashboard that's wrong half the time. What makes you different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9028017287193487,
+    "metadata": {}
+  },
+  {
+    "event_id": "907f8dd3-5680-486f-b067-d6078eb58929",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:09.578668+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate the skepticism. Our accuracy comes from analyzing over 100 data points per deal, including historical win rates, sentiment analysis of communications, and competitive landscape. We've published white papers and have case studies to back this up.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9670188660934432,
+    "metadata": {}
+  },
+  {
+    "event_id": "4fa4f83c-64ff-4484-b27f-5f22c05b2e23",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:14.578668+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "White papers and case studies are always polished, aren't they? I'm more interested in the real-world pitfalls. What about implementation? My team hates learning new systems.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9896425589568485,
+    "metadata": {}
+  },
+  {
+    "event_id": "31d2c60f-4fbc-494d-923b-d1097e959ca0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:17.578668+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair point. We've designed Velocity to integrate seamlessly with your existing CRM and require minimal onboarding. We provide dedicated success managers to guide your team through the first 90 days, ensuring adoption and addressing any challenges.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8802902336503772,
+    "metadata": {}
+  },
+  {
+    "event_id": "9ea77b33-8426-40d6-931e-ec244e60681d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:20.578668+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, it's not going to be another expensive tool collecting dust after six months? We've been burned before.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9504484633682625,
+    "metadata": {}
+  },
+  {
+    "event_id": "cf1c794c-69d1-4084-9a31-5422badaa3f5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:22.578668+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our primary goal is your team's success. We track adoption metrics closely and proactively intervene if we see usage drop off. We guarantee a measurable impact on your forecasting accuracy within the first quarter or your money back.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9716052802373948,
+    "metadata": {}
+  },
+  {
+    "event_id": "ac8ada00-f73a-4f93-a49b-cc32da9a295d",
+    "event_type": "SESSION_END",
+    "session_id": "fb6ca899-d075-4c9b-98b7-e342de4af3ba",
+    "tenant_id": "6811e8ef-30c4-4e7c-ab1c-78b58553f248",
+    "timestamp_utc": "2026-06-28T22:20:27.578668+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "a9ea7fb0-7776-47e0-b123-cb187d30bf6a",
+    "event_type": "SESSION_START",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:24.158487+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_77",
+      "crm_opportunity_id": "opp_77"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "36088479-3f73-46b7-865a-b7df0f096f70",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:26.158487+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining. We're excited to show you how our platform, TalentFlow, can help your HR team at [Company Name] automate recruitment and improve candidate experience.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.981499033202059,
+    "metadata": {}
+  },
+  {
+    "event_id": "a81b67eb-fa07-424e-9446-c876e7bf5111",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:29.158487+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Thanks. Look, I'm just going to be very direct. We've been burned by recruitment software before. We spent a fortune on that last ATS, and it's clunky, hard to use, and frankly, my recruiters hate it. What makes TalentFlow any different from the dozen other 'next-gen' solutions out there?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9821358507370804,
+    "metadata": {}
+  },
+  {
+    "event_id": "d02185ce-60fe-4700-bb30-d783cf46825e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:33.158487+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a completely valid point, and I appreciate your directness. Many ATS platforms are built primarily for compliance and record-keeping, not for the human element of recruiting. TalentFlow differentiates itself by focusing equally on recruiter efficiency and candidate experience. We use AI-powered candidate matching and communication automation to reduce time-to-hire by 30% and improve candidate satisfaction scores by 20%, ensuring you attract and retain top talent.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8521945639794402,
+    "metadata": {}
+  },
+  {
+    "event_id": "23b2cd49-f5ad-4ba7-9f96-71c057ad6885",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:36.158487+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI-powered matching... so it just scans keywords and tells me who's a fit? We already get thousands of applications. My team needs to know who the *best* fit is, not just 'a' fit. And communication automation sounds like more generic emails that candidates just ignore.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9623617517362026,
+    "metadata": {}
+  },
+  {
+    "event_id": "407c84ee-15fe-4224-8110-b1b04e1b93a9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:41.158487+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's far more sophisticated than keyword matching. TalentFlow analyzes a multitude of data points\u2014skills, experience, even cultural fit indicators\u2014to provide a ranked list of top candidates, significantly reducing screening time. And our communication automation isn't generic; it uses dynamic templates that personalize messages based on the candidate's stage, role, and even previous interactions, ensuring a consistent and engaging experience. This frees up your recruiters to focus on building relationships with truly qualified individuals.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9517869991427644,
+    "metadata": {}
+  },
+  {
+    "event_id": "24f12158-511a-4b81-ac11-6ff32280d0e2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:43.158487+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, so it sounds like it's trying to do a lot. What about our existing HRIS? Does it talk to Workday? Because if it's another siloed system, my team will absolutely revolt. We can't have data in three different places.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9853632550229552,
+    "metadata": {}
+  },
+  {
+    "event_id": "1a5d5593-4c35-434e-8476-b9bcd4270357",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:45.158487+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Excellent question. TalentFlow has deep, bidirectional integrations with major HRIS platforms like Workday. We ensure seamless data flow from application to hire, eliminating manual data entry and ensuring a single source of truth. We can even automate offer letter generation and new hire onboarding directly through the integration. Would you like to see a quick demonstration of our Workday integration specifically?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9379429257262676,
+    "metadata": {}
+  },
+  {
+    "event_id": "091ff516-bcf5-4ca7-8518-f26ebc7f539c",
+    "event_type": "SESSION_END",
+    "session_id": "242e849a-b4b2-4747-a5b0-0a62b62466dd",
+    "tenant_id": "47624a35-2992-4415-ba7e-44d3e0dd167b",
+    "timestamp_utc": "2026-06-28T22:17:50.158487+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

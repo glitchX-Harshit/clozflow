@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "f3732cf4-ccd5-43cd-86aa-4147cc8cd640",
+    "event_type": "SESSION_START",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:23.833144+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_98",
+      "crm_opportunity_id": "opp_98"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c9eb4d37-14ef-4153-86ae-fc595d1d3c00",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:28.833144+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Michael, great to meet you. I wanted to discuss how our platform can help you optimize your logistics and supply chain operations.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8950677475692643,
+    "metadata": {}
+  },
+  {
+    "event_id": "d09d61ab-d41b-4149-b549-6572e4eff69c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:32.833144+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Logistics optimization... we have a pretty established system with a few different vendors. It's not perfect, but it works. What problem are you solving that's worth disrupting that?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8542239305239842,
+    "metadata": {}
+  },
+  {
+    "event_id": "0b5aae41-4525-475d-a0b0-b8ccc584743a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:37.833144+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Many companies find their 'established system' has hidden inefficiencies. We provide real-time visibility across all your vendors, predictive analytics for demand forecasting, and automated route optimization to significantly reduce fuel costs and delivery times.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.937414527486661,
+    "metadata": {}
+  },
+  {
+    "event_id": "07ced1af-39a8-46cc-bb51-f2e5ea85f699",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:41.833144+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Real-time visibility sounds nice, but integrating with all our existing vendors sounds like a nightmare. They're all on different systems. Our IT department would have a fit.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9183662888225368,
+    "metadata": {}
+  },
+  {
+    "event_id": "8fc04c43-1aaa-4d0b-bce9-1bf48903734f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:44.833144+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We specialize in complex integrations, Michael. Our platform has pre-built connectors for most major logistics software and an open API for custom solutions, making the process smoother than you might expect.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9542912341213682,
+    "metadata": {}
+  },
+  {
+    "event_id": "e6202239-5d02-4e92-a48b-8c885e722bd7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:48.833144+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Smoother, but still a project. And what's the typical implementation timeline? We can't afford months of downtime or migration issues.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8838036343137249,
+    "metadata": {}
+  },
+  {
+    "event_id": "0e1c69b2-f808-43a0-bf89-cff3c3693801",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:53.833144+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For a setup like yours, we typically see full implementation within 6-8 weeks, with minimal disruption to your daily operations. Our dedicated support team manages the entire process.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 30000,
+      "end_ms": 31500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9008688985662272,
+    "metadata": {}
+  },
+  {
+    "event_id": "5741311b-9ce9-4ee9-bd2a-99951cf7acad",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:18:56.833144+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Six to eight weeks... that's a quarter of a year. I'm not sure we can commit to that kind of project right now. We're in peak season.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 33000,
+      "end_ms": 34500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8688054550927243,
+    "metadata": {}
+  },
+  {
+    "event_id": "8b93d421-5ebd-43e3-895a-e4a25f34d790",
+    "event_type": "SESSION_END",
+    "session_id": "759af5e8-99b9-4e5f-a922-d6b3fcd1e60a",
+    "tenant_id": "e973a78c-629e-490f-a49c-1c6f0b0b3336",
+    "timestamp_utc": "2026-06-28T22:19:01.833144+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

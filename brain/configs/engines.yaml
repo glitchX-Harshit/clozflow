@@ -1,0 +1,112 @@
+engines:
+  - engine_id: perception.concrete
+    engine_type: PERCEPTION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+      - SPEAKER_CHANGE
+      - SILENCE_DETECTED
+    output_types: []
+    latency_budget_ms: 100
+    priority: 1
+    class_path: clozflow_brain.engines.perception.PerceptionEngine
+    capabilities: [perception]
+
+  - engine_id: understanding.concrete
+    engine_type: UNDERSTANDING
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 120
+    priority: 1
+    class_path: clozflow_brain.engines.understanding.UnderstandingEngine
+    capabilities: [understanding]
+
+  - engine_id: interpretation.concrete
+    engine_type: INTERPRETATION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 300
+    priority: 2
+    class_path: clozflow_brain.engines.interpretation.InterpretationEngine
+    capabilities: [interpretation]
+
+  - engine_id: prediction.concrete
+    engine_type: PREDICTION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 500
+    priority: 3
+    class_path: clozflow_brain.engines.prediction.PredictionEngine
+    capabilities: [prediction]
+
+  - engine_id: evaluation.concrete
+    engine_type: EVALUATION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 400
+    priority: 3
+    class_path: clozflow_brain.engines.evaluation.EvaluationEngine
+    capabilities: [evaluation]
+
+  - engine_id: planning.concrete
+    engine_type: PLANNING
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 300
+    priority: 3
+    class_path: clozflow_brain.engines.planning.PlanningEngine
+    capabilities: [planning]
+
+  - engine_id: decision.concrete
+    engine_type: DECISION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 150
+    priority: 3
+    class_path: clozflow_brain.engines.decision.DecisionEngine
+    capabilities: [decision]
+
+  - engine_id: verification.concrete
+    engine_type: VERIFICATION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 100
+    priority: 2
+    class_path: clozflow_brain.engines.verification.VerificationEngine
+    capabilities: [verification]
+
+  - engine_id: recommendation.concrete
+    engine_type: RECOMMENDATION
+    version: 0.1.0
+    input_types:
+      - TRANSCRIPT_SEGMENT
+    output_types: []
+    latency_budget_ms: 750
+    priority: 2
+    class_path: clozflow_brain.engines.recommendation.RecommendationEngine
+    capabilities: [recommendation]
+
+  - engine_id: reflection.concrete
+    engine_type: REFLECTION
+    version: 0.1.0
+    input_types:
+      - SESSION_END
+    output_types: []
+    latency_budget_ms: 30000
+    priority: 5
+    class_path: clozflow_brain.engines.reflection.ReflectionEngine
+    capabilities: [reflection]

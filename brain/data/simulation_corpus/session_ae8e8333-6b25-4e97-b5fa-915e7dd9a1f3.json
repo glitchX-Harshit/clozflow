@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "381cebc9-1817-4e64-82b5-51caa34e8a05",
+    "event_type": "SESSION_START",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:17:52.975877+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_83",
+      "crm_opportunity_id": "opp_83"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "39a1d054-b448-4988-896a-6c29592f1743",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:17:56.975877+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning [Buyer Name], thanks for taking the time. I'm excited to walk you through how our analytics platform can transform your marketing campaign ROI.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9879142225467396,
+    "metadata": {}
+  },
+  {
+    "event_id": "4465bbf9-2ee9-4789-9541-b61e97750cb8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:00.975877+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Morning. So, another analytics tool? We already have Google Analytics and a few others. What makes yours different, and more importantly, worth the extra cost?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9155080844832312,
+    "metadata": {}
+  },
+  {
+    "event_id": "e925a902-58e3-4fc4-811c-4b077c7bc125",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:05.975877+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair question. Unlike standard tools, we provide predictive insights, telling you *which* campaigns will perform best before you even launch them, optimizing your budget proactively. We also unify all your data sources into one actionable dashboard.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8644112478821915,
+    "metadata": {}
+  },
+  {
+    "event_id": "3006fd1d-cace-4202-99b7-ede59e7ccd57",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:09.975877+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive, huh? Sounds fancy, but my team is already swamped just trying to interpret the data we *do* have. This isn't going to be another complex system we barely use, is it?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9370924869650269,
+    "metadata": {}
+  },
+  {
+    "event_id": "eaf875e3-e982-4583-a915-b52635ccf71f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:11.975877+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Not at all. Our interface is designed for simplicity, and we offer dedicated onboarding and support. The goal is to make insights *easier* to get, not harder. We also integrate with all your existing tools.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9137506599064918,
+    "metadata": {}
+  },
+  {
+    "event_id": "8ce370e0-9709-4f95-b92e-fb5e598cc1c5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:13.975877+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. And what's the typical price point for a mid-size company like ours? I need to get a sense of the budget impact before diving deeper.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9036305501194948,
+    "metadata": {}
+  },
+  {
+    "event_id": "a3363d76-18ca-4ff9-9a74-277eff3708e1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:18.975877+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our pricing is tiered, but for a company of your size, it generally starts around $X,XXX per month, depending on data volume and specific features. We can tailor it to your needs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9560669136617178,
+    "metadata": {}
+  },
+  {
+    "event_id": "b16dca24-1c09-4d73-98d1-32aa3a4a7f0f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:20.975877+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yikes. That's a bit higher than I anticipated. I'll need to run that by finance. Thanks for the info, I appreciate it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8913352374975723,
+    "metadata": {}
+  },
+  {
+    "event_id": "69bc0ad7-9f51-4ff0-99c7-03785fb1eb4d",
+    "event_type": "SESSION_END",
+    "session_id": "ae8e8333-6b25-4e97-b5fa-915e7dd9a1f3",
+    "tenant_id": "0b013786-2760-4431-a011-479de65cd5b7",
+    "timestamp_utc": "2026-06-28T22:18:25.975877+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

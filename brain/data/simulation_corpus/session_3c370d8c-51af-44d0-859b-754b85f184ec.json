@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "097baf91-6a42-4bc7-85ea-38f351390619",
+    "event_type": "SESSION_START",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:16:42.144554+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_63",
+      "crm_opportunity_id": "opp_63"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "da489137-49af-4bdd-b79c-3ae701ac712e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:16:45.144554+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], following up on our last conversation. You mentioned your team was looking for a better way to track cross-departmental tasks. Our platform, [Product Name], excels at providing that unified view.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8652998405008908,
+    "metadata": {}
+  },
+  {
+    "event_id": "d86c359a-e960-48bc-9ba1-19ffc05ac6cc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:16:50.144554+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Unified view, huh? We've tried like five different tools in the last three years. Jira, Asana, Trello, some custom thing... people just use what they want anyway. What makes yours different from just another project management tool?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9224742561066227,
+    "metadata": {}
+  },
+  {
+    "event_id": "89ff7944-8a72-4e9f-98a2-737a1f4d17cc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:16:52.144554+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common challenge. [Product Name] isn't just another PM tool; it's designed to *integrate* and pull data from those existing tools, creating a single source of truth without forcing everyone to switch platforms. It's an aggregation and visualization layer.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8558106424619483,
+    "metadata": {}
+  },
+  {
+    "event_id": "8e35f5bd-c279-4824-a891-d6cb1fa7c928",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:16:54.144554+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So it's like a dashboard? We have a dashboard. Our BI team built one. It's slow and nobody uses it, but it exists.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8918746882204756,
+    "metadata": {}
+  },
+  {
+    "event_id": "73100c70-add0-40db-a85d-4092e10e47b7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:16:56.144554+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's much more dynamic than a static BI dashboard. Our platform offers real-time updates, customizable alerts, and predictive analytics on task completion and dependencies, which empowers better decision-making. Would you be open to seeing a 15-minute tailored demo?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9555293704257598,
+    "metadata": {}
+  },
+  {
+    "event_id": "0185b487-fe10-47a7-b65a-9881d84fb040",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:17:01.144554+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Another demo. Everyone wants to demo their tool. I'm not sure if my team even wants *another* tool. Can you send me a one-pager? Just the absolute basics.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9606971110857317,
+    "metadata": {}
+  },
+  {
+    "event_id": "e09af043-8d9b-4b70-bddc-ad2f3797fef0",
+    "event_type": "SESSION_END",
+    "session_id": "3c370d8c-51af-44d0-859b-754b85f184ec",
+    "tenant_id": "559dd64d-e1ed-4873-96b2-3112be7efd50",
+    "timestamp_utc": "2026-06-28T22:17:06.144554+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

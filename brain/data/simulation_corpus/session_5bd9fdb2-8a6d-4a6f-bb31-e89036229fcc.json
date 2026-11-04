@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "d2099079-c2d6-4fec-941c-eac1cfcba5fb",
+    "event_type": "SESSION_START",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:12:54.286744+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_13",
+      "crm_opportunity_id": "opp_13"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "64f88cd1-2562-4247-8fb1-dd5761911ad1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:12:56.286744+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi David, thanks for joining. I wanted to show you how our platform helps sales teams predict churn and identify upsell opportunities more effectively.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9686831808419318,
+    "metadata": {}
+  },
+  {
+    "event_id": "18181bcc-5fdc-44e3-ab53-f5a196feb40d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:12:59.286744+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Churn prediction, huh? We've tried a few tools for that in the past, and they always ended up being more noise than signal. What makes yours different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8515456967864136,
+    "metadata": {}
+  },
+  {
+    "event_id": "0087a204-1800-4f5a-963d-08f87916ecee",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:13:02.286744+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a valid concern, David. Our predictive models are built on a unique blend of behavioral data, support interactions, and product usage patterns, not just historical churn rates. This provides a much more accurate and actionable signal.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.861978832446034,
+    "metadata": {}
+  },
+  {
+    "event_id": "bdc1f675-f878-4486-95fc-dbfa934d114f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:13:05.286744+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Behavioral data? So you're telling me you can tell when a customer is about to leave just by how they click around? That sounds a bit Big Brother-ish, and frankly, a bit far-fetched.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.978507221165306,
+    "metadata": {}
+  },
+  {
+    "event_id": "7a6b0ffb-d72a-4892-bbbb-b6a59e5f7518",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:13:08.286744+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more about identifying patterns of disengagement \u2013 declining feature usage, ignored notifications, an increase in 'how-to' support tickets \u2013 which are strong indicators of potential churn. All data is anonymized and aggregated for insights.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9536556385023384,
+    "metadata": {}
+  },
+  {
+    "event_id": "fd656a5f-bdbe-4133-ae13-19f4f42d167a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:13:10.286744+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Anonymized, sure. But still, our sales reps are already overwhelmed with dashboards and 'insights.' Is this just another dashboard they'll ignore?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8934258487459251,
+    "metadata": {}
+  },
+  {
+    "event_id": "f7e005d9-25ab-4207-a24d-ec9fa068e13c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:13:14.286744+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Not at all. We integrate directly into their existing CRM, pushing actionable alerts and recommended next steps directly into their workflow, minimizing context switching.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9696970015918354,
+    "metadata": {}
+  },
+  {
+    "event_id": "9f6b6a5a-84aa-4c9d-a28e-b5c995ccb8d1",
+    "event_type": "SESSION_END",
+    "session_id": "5bd9fdb2-8a6d-4a6f-bb31-e89036229fcc",
+    "tenant_id": "6c29ad6c-58be-4923-b9c7-229dc42f5034",
+    "timestamp_utc": "2026-06-28T22:13:19.286744+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

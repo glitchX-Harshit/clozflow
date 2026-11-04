@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "1a5d9524-ed22-43fc-b71a-1b0a46e8cea1",
+    "event_type": "SESSION_START",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:30.801711+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_26",
+      "crm_opportunity_id": "opp_26"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "3bd01611-cba5-43fa-89c2-5663bc3a8155",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:32.801711+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. I'm excited to share how [Product Name], our data governance solution, can help you maintain compliance and ensure data quality across your organization.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9212386727552083,
+    "metadata": {}
+  },
+  {
+    "event_id": "891e4760-520f-41ed-87e9-cb1d17260edd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:35.801711+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Compliance and data quality are definitely on our radar, but we've got a lot of legacy systems. How well does your solution integrate with older, custom-built databases and our on-premise data warehouse?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8692905766007568,
+    "metadata": {}
+  },
+  {
+    "event_id": "d57d5212-e71f-4fc6-9266-99103f3db9e3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:40.801711+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very common scenario. [Product Name] is built with a flexible API architecture and offers a wide range of connectors, including custom adapters for unique legacy systems. We've successfully integrated with many complex environments.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9724916272036164,
+    "metadata": {}
+  },
+  {
+    "event_id": "f5b2b423-7ae1-4dd0-9818-68a8d0bfb431",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:44.801711+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A wide range, sure. But our data warehouse is running on a very specific version of Oracle from 2008, and our CRM is heavily customized. Previous vendors have promised seamless integration and then balked when they saw our actual stack.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8518014842062671,
+    "metadata": {}
+  },
+  {
+    "event_id": "c0f992f2-33cf-4d39-9889-515835321f65",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:49.801711+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate your candor. We understand that 'standard' integration often isn't enough. We have a dedicated professional services team that specializes in bespoke integrations. Would you be open to a brief technical deep-dive with one of our solutions architects?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8948609471339131,
+    "metadata": {}
+  },
+  {
+    "event_id": "b07cdeca-6e55-4dae-a49d-274cb13a0267",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:54.801711+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A technical deep-dive? I'd need to loop in my head of IT for that, and he's notorious for shooting down anything that looks like a major integration project. It's a huge hurdle for us.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9691432026285042,
+    "metadata": {}
+  },
+  {
+    "event_id": "db7a45f7-d7c0-42a1-830f-83528742ff3a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:13:57.801711+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely get that. Perhaps we could start with a discovery call where our architect can simply answer any high-level questions your IT lead might have, without committing to a full deep-dive. It's an opportunity to address concerns early.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8906470153510689,
+    "metadata": {}
+  },
+  {
+    "event_id": "0d7d7233-4393-4e8b-ab5b-7f3d9c3e32ad",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:14:02.801711+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I could probably get him on the phone for 15 minutes, but you'd need to be very concise. He's not patient with sales pitches.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 32000,
+      "end_ms": 33500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8540082061261712,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ca1f4f6-83a0-49a5-9944-a385c35fd712",
+    "event_type": "SESSION_END",
+    "session_id": "3a37b186-9e31-4b0a-817b-61f49322df1e",
+    "tenant_id": "e5eadd15-8859-4b57-ba5a-73cf645d460b",
+    "timestamp_utc": "2026-06-28T22:14:07.801711+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

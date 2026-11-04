@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "a8091dde-9af2-45ee-894a-49573bdf4143",
+    "event_type": "SESSION_START",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:16:42.141831+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_61",
+      "crm_opportunity_id": "opp_61"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7109b88-27aa-4003-ba26-83d398afc58b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:16:46.141831+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for making time today. I know we only have 20 minutes, so I want to quickly show you how our platform helps teams like yours cut project overruns by up to 15%.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9702222212128594,
+    "metadata": {}
+  },
+  {
+    "event_id": "e472d4d6-91e7-4ee0-bc1f-670bc7dfd476",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:16:51.141831+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, I appreciate it, but honestly, I'm swamped. We just launched a big initiative and I'm not sure we have the bandwidth for anything new right now. What's the absolute shortest version of this?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8784049130880734,
+    "metadata": {}
+  },
+  {
+    "event_id": "c5faed99-5104-4b4c-9b28-4e742c8a5266",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:16:53.141831+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood, and I'll be brief. Our AI-driven insights identify potential bottlenecks and resource conflicts *before* they impact your timeline, directly integrating with your existing project management tools. It's about proactive prevention, not adding more work.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8966062184070354,
+    "metadata": {}
+  },
+  {
+    "event_id": "8cf6446c-5be1-41f8-826e-0ebfbaa3fcde",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:16:57.141831+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Proactive prevention, huh? We already have a project manager whose job it is to do that. How is this different from just having a good PM?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9781570336646114,
+    "metadata": {}
+  },
+  {
+    "event_id": "2ef2a75c-683e-4ab8-b038-3aa58f3af59b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:17:01.141831+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It augments your PM, providing data-backed predictions that human intuition alone can't always catch. Think of it as a supercharger for their existing efforts. Could I quickly share a 2-minute demo video after this, to show you it in action?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9756816378996256,
+    "metadata": {}
+  },
+  {
+    "event_id": "b9db5ccb-385d-4ae6-89af-006cbd511617",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:17:05.141831+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A video? Ugh. Send me the link. No promises I'll watch it before next month, though. My priority is getting this launch stable.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9193165248896293,
+    "metadata": {}
+  },
+  {
+    "event_id": "035ea6ca-45bf-4e04-a0c7-4e512721063a",
+    "event_type": "SESSION_END",
+    "session_id": "25e34bb8-e974-4164-8f40-972f9c5a0cd7",
+    "tenant_id": "a4e6b644-2ee0-4df7-9f23-481ed87d25de",
+    "timestamp_utc": "2026-06-28T22:17:10.141831+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

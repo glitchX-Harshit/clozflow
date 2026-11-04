@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "ba31d187-6ac9-404a-92b2-6bc8c9dbe791",
+    "event_type": "SESSION_START",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:17:52.979366+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_87",
+      "crm_opportunity_id": "opp_87"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "a07c043f-a96d-45d6-9ce3-88d0abab1529",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:17:54.979366+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon [Buyer Name], I appreciate you making time. Our product, Clarity CRM, is designed to give you a 360-degree view of your customer interactions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8500472551831151,
+    "metadata": {}
+  },
+  {
+    "event_id": "63b0ebd7-4fcd-4892-b6b2-5c5b7b4f8747",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:17:57.979366+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "360-degree view, got it. We're actually pretty happy with Salesforce. It's expensive, but everyone knows it. Why would we switch?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9346228885493838,
+    "metadata": {}
+  },
+  {
+    "event_id": "7f021d7d-94e1-419c-8993-1eb7c2f45f1e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:01.979366+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fair. Salesforce is a strong platform. Many of our clients come to us because while Salesforce is powerful, it can be overly complex and expensive for their specific needs. Clarity offers a more intuitive interface, a lower total cost of ownership, and highly customizable reporting specific to mid-market companies.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8791112261935413,
+    "metadata": {}
+  },
+  {
+    "event_id": "d357765c-aba5-4033-8b49-f5e674c884cd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:04.979366+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Lower cost is always good to hear. But what about all our historical data? Migrating that sounds like a nightmare, and honestly, the thought of retraining 50 reps is enough to make me just stick with what we have.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.970610268274601,
+    "metadata": {}
+  },
+  {
+    "event_id": "02a1d5b9-91e3-442f-8f2f-e66e3ecaa5ca",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:09.979366+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We have a dedicated data migration team that handles the entire process, ensuring data integrity and minimal downtime. And for training, we offer tailored sessions and ongoing support, often getting teams fully proficient within a couple of weeks, not months.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9005190482597928,
+    "metadata": {}
+  },
+  {
+    "event_id": "564b0117-dc06-4233-804a-8e071a6334d0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:13.979366+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Weeks, huh? I'd need to see some proof of that. And my boss is really keen on sticking with a 'known' vendor. It's a tough sell internally for something new.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8799195172573393,
+    "metadata": {}
+  },
+  {
+    "event_id": "d878a467-5340-4fc0-8be1-fa57a8074717",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:18.979366+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand internal politics can be challenging. We have several case studies from companies that successfully transitioned from Salesforce and saw significant improvements. Perhaps a brief demo focused on the ease of use and reporting would help you present the case internally?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8616487778874964,
+    "metadata": {}
+  },
+  {
+    "event_id": "6dcc9030-6983-4c3a-9571-cabadbc465f4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:23.979366+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Maybe. Send me some comparison sheets \u2013 Salesforce vs. yours \u2013 specifically on features and cost. I need concrete numbers to even start the conversation here.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 31000,
+      "end_ms": 32500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9401009139529667,
+    "metadata": {}
+  },
+  {
+    "event_id": "e48e923b-fb3d-4a99-8b4b-eaeff40f9d33",
+    "event_type": "SESSION_END",
+    "session_id": "b5876dd7-7900-4c89-8fd5-9c36cc27ab85",
+    "tenant_id": "817a6d0e-8dc0-4a1c-a6ae-2e282e58ed60",
+    "timestamp_utc": "2026-06-28T22:18:28.979366+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

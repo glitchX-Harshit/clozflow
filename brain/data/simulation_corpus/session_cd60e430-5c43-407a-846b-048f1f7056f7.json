@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "8def38e2-bcfa-494e-9573-14bc0d608476",
+    "event_type": "SESSION_START",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:29.290428+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_112",
+      "crm_opportunity_id": "opp_112"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "e57ee79e-24a7-413d-bfdb-d823d83e136e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:32.290428+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining today. Appreciate you taking the time. My goal is just to understand a bit about your current workflow and see if [Our Product Name] might be a good fit.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.988856656129462,
+    "metadata": {}
+  },
+  {
+    "event_id": "3f4e04cf-6d53-4563-b48d-dedd7bc528e7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:36.290428+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, look, I only have about 10 minutes. My next call is right after this. Can you just tell me what it does and what the cost is?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8809744414328209,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7b924a7-51e2-43cd-8d9c-c63f2a08aefe",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:39.290428+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, I can give you the high-level. [Our Product Name] is an AI-powered content creation and optimization platform designed to significantly reduce the time marketers spend on first drafts and improve SEO performance. But to give you a meaningful price, I need to understand your current challenges.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9621998921946409,
+    "metadata": {}
+  },
+  {
+    "event_id": "e755f033-35e3-41ef-9e6a-e3f589ec4e7c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:43.290428+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We're using a few different tools for content, honestly. And we have a team of writers. It seems to work. What makes yours so different that we'd switch?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.959110636390973,
+    "metadata": {}
+  },
+  {
+    "event_id": "7e795c60-a808-40ea-af40-23d291014506",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:46.290428+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question. Many teams do use a mix. Our unique selling proposition is the integrated workflow from ideation to optimization, all powered by our proprietary AI engine that learns from your brand's voice. Are you currently struggling with content velocity or maintaining consistent brand messaging across different creators?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9196114805248974,
+    "metadata": {}
+  },
+  {
+    "event_id": "8e7cf51a-1de2-4c69-ac45-3bc9df50a70e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:48.290428+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Honestly, not really. We have a style guide. And velocity, well, we could always do more, but who couldn't? Look, I really need to jump. Can you just send me a brochure or something? I'll review it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9496889753212148,
+    "metadata": {}
+  },
+  {
+    "event_id": "77b48298-bf78-40b8-99b6-d9b0064af670",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:53.290428+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Of course, I can send you over some relevant resources. Would it be helpful if I included a short video demonstration showcasing the AI content generation features?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9475909720896828,
+    "metadata": {}
+  },
+  {
+    "event_id": "404398ed-e36e-407c-8ba5-37bf570c6c35",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:19:56.290428+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, sure, send it. But no pushy follow-up calls, okay? I'll reach out if it's interesting.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9723789808222216,
+    "metadata": {}
+  },
+  {
+    "event_id": "99333d59-8853-44d2-8144-937b75cbd3a0",
+    "event_type": "SESSION_END",
+    "session_id": "cd60e430-5c43-407a-846b-048f1f7056f7",
+    "tenant_id": "f52bb3a6-fa74-44a6-9475-7256c7143a65",
+    "timestamp_utc": "2026-06-28T22:20:01.290428+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

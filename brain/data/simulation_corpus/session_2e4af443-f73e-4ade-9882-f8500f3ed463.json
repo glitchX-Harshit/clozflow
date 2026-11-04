@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "b6039960-5c7e-4040-afae-bdfb6feff71f",
+    "event_type": "SESSION_START",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:29.293964+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_115",
+      "crm_opportunity_id": "opp_115"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "06008b0b-5eb7-4732-9f01-0727615512a8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:32.293964+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hey [Buyer Name], thanks for jumping on. We help marketing agencies like yours scale their client reporting and analytics without needing to hire more data analysts. How are you currently handling client performance reports?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8604881752526428,
+    "metadata": {}
+  },
+  {
+    "event_id": "f3004901-f847-467f-addf-f1a7731447fc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:36.293964+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, hi. We've got a system. Pretty standard stuff, we pull data from various sources, put it in spreadsheets, then make presentations. It's fine.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9317377455791622,
+    "metadata": {}
+  },
+  {
+    "event_id": "ae51bec4-fe7e-4500-86e0-d5804d625718",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:38.293964+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I see. Many agencies start that way. What we often hear is that as client numbers grow, those manual processes become incredibly time-consuming and prone to errors. Are you finding your team spending too much time on data aggregation instead of strategic analysis?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9272242108822708,
+    "metadata": {}
+  },
+  {
+    "event_id": "a2c850f2-9ce6-45c7-8b76-f93671f2f663",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:41.293964+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Well, yeah, it takes time. But it's part of the job. It's how we ensure accuracy. I'm not sure I trust some automated thing to get it right, or to present it how we need it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.936673166559787,
+    "metadata": {}
+  },
+  {
+    "event_id": "e9ca93e0-5dab-423c-9374-5b6d70f0fe0b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:46.293964+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand your concern about accuracy and customization. Our platform allows for complete white-labeling and flexible dashboard creation, ensuring reports match your brand and specific client needs. The automation aspect simply pulls and harmonizes data in real-time, freeing your team for strategic insights. What's the biggest headache your team faces with reporting right now?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9896653366551119,
+    "metadata": {}
+  },
+  {
+    "event_id": "0739f9e3-f536-4eb4-9c3a-48afb384c4da",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:51.293964+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Headache? The biggest headache is probably trying to get all the data sources to play nice. But honestly, we've just learned to live with it. It's the cost of doing business.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9106558808760195,
+    "metadata": {}
+  },
+  {
+    "event_id": "99a0286b-275e-473d-94b2-4224e36fb698",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:55.293964+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "What if you could eliminate that headache, dramatically reduce report generation time, and have more capacity to take on new clients without increasing headcount? How much value would that bring to your agency?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9297541628144763,
+    "metadata": {}
+  },
+  {
+    "event_id": "062559d9-282b-42ff-9360-16cb7fd560a5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:19:57.293964+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I mean, it sounds good on paper. But our leadership is really conservative about new software. It took us six months to get approval for our last tool. I just don't see this getting through.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8519740767561554,
+    "metadata": {}
+  },
+  {
+    "event_id": "2b127a20-fb39-4287-b381-87f3e72992d4",
+    "event_type": "SESSION_END",
+    "session_id": "2e4af443-f73e-4ade-9882-f8500f3ed463",
+    "tenant_id": "76aa2cbf-e6e4-488a-a54f-fc293624ed54",
+    "timestamp_utc": "2026-06-28T22:20:02.293964+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

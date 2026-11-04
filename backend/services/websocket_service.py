@@ -3,7 +3,8 @@ import asyncio
 from typing import Any, Optional
 from fastapi import WebSocket, WebSocketDisconnect
 from services.transcript_manager import TranscriptManager
-from services.sales_ai_engine import SalesAIEngine
+import os
+from services.brain_client import BrainClient
 from services.gemini_stream import GeminiStream
 from services.vad_engine import SileroVADEngine, VADEvent, SILERO_AVAILABLE
 from services.turn_detector import TurnDetector
@@ -18,7 +19,8 @@ class ConnectionManager:
         self.active_connections: list[WebSocket] = []
         self.transcript_manager = TranscriptManager()
         self.gemini_sessions: dict[WebSocket, Any] = {}
-        self.ai_engines: dict[WebSocket, SalesAIEngine] = {}
+        self.ai_engines: dict[WebSocket, Any] = {}
+        self._brain_close_tasks: set[asyncio.Task] = set()
         from services.call_context_engine import call_context_engine
         self.call_context_engine = call_context_engine
         self.session_data: dict[WebSocket, dict] = {} # context_id -> {transcripts, insights, user_id}
@@ -38,14 +40,24 @@ class ConnectionManager:
         self._speculative_ai: dict[WebSocket, tuple[asyncio.Task, str]] = {}
 
     async def connect(self, websocket: WebSocket, context_id: str | None = None):
-        await websocket.accept()
+        protocols = getattr(websocket, 'headers', {}).get('sec-websocket-protocol', '').split(',')
+        if 'clozflow' in [value.strip() for value in protocols]:
+            await websocket.accept(subprotocol='clozflow')
+        else:
+            await websocket.accept()
         self.active_connections.append(websocket)
         
         call_context = None
         if context_id:
             call_context = self.call_context_engine.get_context(context_id)
+            if call_context:
+                call_context = {**call_context, '_context_id': context_id}
             
-        self.ai_engines[websocket] = SalesAIEngine(call_context=call_context)
+        if os.getenv("CLOZFLOW_COPILOT_ENGINE", "legacy").lower() == "brain":
+            self.ai_engines[websocket] = BrainClient(call_context=call_context)
+        else:
+            from services.sales_ai_engine import SalesAIEngine
+            self.ai_engines[websocket] = SalesAIEngine(call_context=call_context)
         
         if context_id and call_context:
             self.session_data[websocket] = {
@@ -86,8 +98,11 @@ class ConnectionManager:
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
 
-        if websocket in self.ai_engines:
-            del self.ai_engines[websocket]
+        ai_engine = self.ai_engines.pop(websocket, None)
+        if ai_engine and getattr(ai_engine, "is_brain_client", False):
+            task = asyncio.create_task(self._close_brain(ai_engine, finalize=False))
+            self._brain_close_tasks.add(task)
+            task.add_done_callback(self._brain_close_tasks.discard)
 
         print("❌ Client disconnected.")
 
@@ -117,6 +132,36 @@ class ConnectionManager:
 
         # Note: Gemini session is closed in handle_audio_stream's finally block (async)
         self.gemini_sessions.pop(websocket, None)
+
+    async def _close_brain(self, engine, *, finalize=True):
+        try:
+            await engine.close(finalize=finalize)
+        except Exception:
+            print("Brain session closure failed; check the local Brain service.")
+
+    async def shutdown(self):
+        for websocket in list(self.active_connections):
+            self.disconnect(websocket)
+        if self._brain_close_tasks:
+            await asyncio.gather(*list(self._brain_close_tasks), return_exceptions=True)
+
+    async def handle_live_message(self, message: dict, websocket: WebSocket):
+        """Receive completed transcripts from the main application (no audio)."""
+        if isinstance(message, dict) and message.get('type') == 'end_session':
+            engine = self.ai_engines.get(websocket)
+            if engine and getattr(engine, 'is_brain_client', False):
+                await self._close_brain(engine)
+                await websocket.send_text(json.dumps({'type': 'session_ended', 'brain_session_id': engine.session_id}))
+            return
+        if not isinstance(message, dict) or message.get("type") != "transcriptUpdate" or not message.get("is_final", True):
+            return
+        text = message.get("text")
+        if not isinstance(text, str) or not text.strip() or len(text) > 16000:
+            return
+        speaker = str(message.get("speaker", "prospect")).lower()
+        if speaker not in {"prospect", "buyer", "rep", "salesperson", "unknown"}:
+            speaker = "unknown"
+        await self._process_completed_turn(text, websocket, speaker=speaker)
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
         try:
@@ -159,7 +204,7 @@ class ConnectionManager:
                 if TurnDetector._has_endpoint(current_text) or TurnDetector._is_question(current_text):
                     existing_task, existing_text = self._speculative_ai.get(websocket, (None, ""))
                     # Only kick off a new task if the text changed
-                    if current_text != existing_text:
+                    if current_text != existing_text and not getattr(self.ai_engines.get(websocket), "is_brain_client", False):
                         if existing_task and not existing_task.done():
                             existing_task.cancel()
                         
@@ -171,11 +216,11 @@ class ConnectionManager:
 
             if speech_final:
                 td.on_speech_final()
-        else:
-            # ── Legacy path: timer-based debounce (fallback) ──
+        elif is_final and text.strip():
+            # Only finalized STT text enters the turn buffer.
             await self._legacy_handle_transcript(speaker, text, websocket)
 
-    async def _process_completed_turn(self, text: str, websocket: WebSocket):
+    async def _process_completed_turn(self, text: str, websocket: WebSocket, speaker: str = "prospect"):
         """
         Called by TurnDetector when a turn is complete.
         This replaces the old flush_after_delay() — no more asyncio.sleep(2.5)!
@@ -195,7 +240,7 @@ class ConnectionManager:
         # Store transcript in session
         if websocket in self.session_data:
             self.session_data[websocket]["transcripts"].append({
-                "speaker": "prospect",
+                "speaker": speaker,
                 "text": final_text,
                 "timestamp": datetime.utcnow().isoformat()
             })
@@ -203,7 +248,7 @@ class ConnectionManager:
         # Send clean transcript to frontend
         await self.send_personal_message(json.dumps({
             "type": "transcriptUpdate",
-            "speaker": "prospect",
+            "speaker": speaker,
             "text": final_text
         }), websocket)
 
@@ -220,11 +265,11 @@ class ConnectionManager:
                     try:
                         analysis = await spec_task
                     except asyncio.CancelledError:
-                        analysis = await ai_engine.analyze("prospect", final_text)
+                        analysis = await ai_engine.analyze(speaker, final_text)
                 else:
                     if spec_task and not spec_task.done():
                         spec_task.cancel()
-                    analysis = await ai_engine.analyze("prospect", final_text)
+                    analysis = await ai_engine.analyze(speaker, final_text)
 
                 # ── Latency: mark AI complete and log breakdown ──
                 latency_breakdown = None
@@ -358,6 +403,9 @@ class ConnectionManager:
                     text_data = message["text"]
                     print(f"📥 received text command: {text_data}")
                     if "close_stream" in text_data:
+                        engine = self.ai_engines.get(websocket)
+                        if engine and getattr(engine, 'is_brain_client', False):
+                            await self._close_brain(engine)
                         break  # Stop loop cleanly
 
         except WebSocketDisconnect:

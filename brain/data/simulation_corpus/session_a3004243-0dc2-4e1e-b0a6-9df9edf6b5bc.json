@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "e71208bd-3c29-41fd-8279-6956f7618414",
+    "event_type": "SESSION_START",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:17:52.978095+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_86",
+      "crm_opportunity_id": "opp_86"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "23551118-8582-48fb-84b9-f940095709a9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:17:54.978095+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for connecting. I'm here to show you how our AI-powered customer support solution can reduce your response times and improve customer satisfaction.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8683222750974935,
+    "metadata": {}
+  },
+  {
+    "event_id": "d880c450-c30e-4068-a372-cc64b31aba84",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:17:58.978095+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI customer support... so, like, chatbots? We tried a chatbot once, and it just frustrated our customers. It couldn't handle anything complex.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9056209140871876,
+    "metadata": {}
+  },
+  {
+    "event_id": "bb36f0df-048c-4a33-9334-51b91b933a63",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:00.978095+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand your past experience. Our solution goes beyond basic chatbots. It's an intelligent assistant that can resolve up to 70% of common queries automatically, and for complex issues, it seamlessly routes to the right agent with full context.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9144965933013528,
+    "metadata": {}
+  },
+  {
+    "event_id": "1189cf9a-68c5-45ba-859c-8a1534329cc9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:04.978095+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Seventy percent? That sounds high. And 'full context' is always the promise, but never the reality. My agents spend half their time asking customers to repeat themselves.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9861397505792875,
+    "metadata": {}
+  },
+  {
+    "event_id": "f44404e9-3c75-4ed4-9cce-cd1070dc5293",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:08.978095+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'd love to show you specific examples from similar companies where we've achieved those numbers. Our AI learns from your actual historical data, making it highly accurate and relevant to your specific customer queries.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9373366038392951,
+    "metadata": {}
+  },
+  {
+    "event_id": "5216850c-0954-4790-b5cc-e79bdd751b62",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:11.978095+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, but we're a small team. Implementing something like this sounds like a massive undertaking that we just don't have the internal resources for.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8890493646620121,
+    "metadata": {}
+  },
+  {
+    "event_id": "199bd206-c1d7-4a8f-ba3c-3c1318ee0503",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:13.978095+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We provide a comprehensive implementation team to get you set up quickly, and our solution is designed to scale with your team, not add to their workload. It actually frees them up to focus on higher-value interactions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8577361652785337,
+    "metadata": {}
+  },
+  {
+    "event_id": "ecf620fb-a825-489a-80d9-4c32c8c07fe6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:16.978095+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Alright, I'm still a bit fuzzy on the 'how' for our specific business. Can you send me a quick breakdown of the implementation timeline and what kind of internal resources we'd *really* need?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9371011386918399,
+    "metadata": {}
+  },
+  {
+    "event_id": "865586be-e5a1-4017-bdbf-3d453e0bdddb",
+    "event_type": "SESSION_END",
+    "session_id": "a3004243-0dc2-4e1e-b0a6-9df9edf6b5bc",
+    "tenant_id": "1d1b9467-7e0d-478f-9ae6-beadefc43637",
+    "timestamp_utc": "2026-06-28T22:18:21.978095+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

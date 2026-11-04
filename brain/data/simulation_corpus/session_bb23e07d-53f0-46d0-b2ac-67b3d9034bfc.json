@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "b4cd2d4c-bcc0-47c4-b427-7ea8aee3585b",
+    "event_type": "SESSION_START",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:23.831128+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_95",
+      "crm_opportunity_id": "opp_95"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c608938b-fb02-4ba1-8597-ea43d28ed950",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:26.831128+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Sarah, thanks for joining. I'm excited to demonstrate our new employee feedback platform, designed to boost engagement and retention.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.862565943376118,
+    "metadata": {}
+  },
+  {
+    "event_id": "b791b71b-aabb-48e1-922f-80e9e36358d1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:30.831128+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Employee feedback... we just finished an engagement survey three months ago. Isn't that enough?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9271943184351006,
+    "metadata": {}
+  },
+  {
+    "event_id": "cfb1cf3c-11cc-406f-925e-7604a1f3d7e1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:34.831128+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great start, Sarah! However, traditional annual or semi-annual surveys often miss real-time sentiment. Our platform enables continuous, anonymous feedback loops and pulse surveys, giving you actionable insights throughout the year.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9077651594110218,
+    "metadata": {}
+  },
+  {
+    "event_id": "efe9dbc7-c8d3-46cb-b4df-a691ce619b13",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:36.831128+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Continuous feedback? My employees are already drowning in emails and meetings. I can't imagine they'd want *another* tool to provide feedback. They'll just ignore it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9406126030510149,
+    "metadata": {}
+  },
+  {
+    "event_id": "ee3b667f-4f7b-44cd-bfd6-4a495524012c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:38.831128+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We've designed it to be incredibly lightweight and integrated into existing workflows, like Slack or Teams, making it effortless to share quick thoughts. Plus, the anonymity encourages honest responses.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.901631235835361,
+    "metadata": {}
+  },
+  {
+    "event_id": "53fbb45c-ca74-4baa-8543-12a305e4d2e3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:42.831128+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Effortless still means 'another thing to do.' And honestly, our HR team is small. We don't have the bandwidth to constantly monitor another dashboard of feedback.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9162830690339466,
+    "metadata": {}
+  },
+  {
+    "event_id": "83324b69-47d4-4e42-ba3d-3e18783e58b2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:44.831128+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the concern. Our platform actually simplifies the analysis with AI-powered sentiment analysis and trend reporting, highlighting key areas needing attention, rather than requiring constant monitoring.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9439747901170326,
+    "metadata": {}
+  },
+  {
+    "event_id": "edaf472f-c51d-4710-a53c-ad953e6c76c5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:47.831128+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI... sentiment analysis... this sounds like a lot of bells and whistles for something our current HRIS might already offer in a stripped-down version. Can you send me a comparison sheet?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9138666231170234,
+    "metadata": {}
+  },
+  {
+    "event_id": "052ee932-8d7f-4408-a8e9-becbc8b22b89",
+    "event_type": "SESSION_END",
+    "session_id": "bb23e07d-53f0-46d0-b2ac-67b3d9034bfc",
+    "tenant_id": "18e67ffd-f11d-4c75-bb5c-d8af4271c628",
+    "timestamp_utc": "2026-06-28T22:18:52.831128+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

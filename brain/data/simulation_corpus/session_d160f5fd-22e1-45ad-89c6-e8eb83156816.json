@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "46342846-b74d-494f-af5b-0ee2716986e0",
+    "event_type": "SESSION_START",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:18:54.908464+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_102",
+      "crm_opportunity_id": "opp_102"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "3017139d-10a0-4866-afee-52ccb337419f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:18:57.908464+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining the call today. I know you're busy, so I want to quickly cover how our platform helps streamline marketing workflows and then open it up for your questions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9412369845515753,
+    "metadata": {}
+  },
+  {
+    "event_id": "e1a07975-0abe-475a-8119-7e802031d647",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:19:01.908464+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, about that. I actually only have about 10 minutes before my next meeting starts. Can we make this quick?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9063402242604439,
+    "metadata": {}
+  },
+  {
+    "event_id": "0172bd29-35d0-45a8-afda-15631ba66da4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:19:06.908464+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, I appreciate you making the time. I'll jump straight to the core benefits: significant time savings on content approvals and better campaign tracking. Our clients typically see a 30% reduction in approval cycles.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9265141744056081,
+    "metadata": {}
+  },
+  {
+    "event_id": "0b0a01dd-5cf8-453d-a64c-b5b38e4694bd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:19:11.908464+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "30%? Hmm. My team's biggest bottleneck is actually creative generation, not approvals. We've got a pretty tight process there already.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9551842193951543,
+    "metadata": {}
+  },
+  {
+    "event_id": "2bcab969-fbb6-433d-b3eb-1e0486109b86",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:19:15.908464+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand. While we excel in approvals, our robust asset management and collaborative tools also dramatically speed up the initial creative briefing and iteration stages. It ensures everyone is working from the latest version, reducing rework.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9887635115237867,
+    "metadata": {}
+  },
+  {
+    "event_id": "18c41c8b-66fd-4600-b186-32c15177a3f5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:19:18.908464+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's interesting. I'm almost out of time now, but can you send me a one-pager on how it helps with creative iterations specifically? Just the highlights.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8542024113554538,
+    "metadata": {}
+  },
+  {
+    "event_id": "f7f2d7d7-b7cf-4c11-b05e-3e9ee28f41be",
+    "event_type": "SESSION_END",
+    "session_id": "d160f5fd-22e1-45ad-89c6-e8eb83156816",
+    "tenant_id": "a3d5be15-6017-4843-990d-12051537987e",
+    "timestamp_utc": "2026-06-28T22:19:23.908464+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

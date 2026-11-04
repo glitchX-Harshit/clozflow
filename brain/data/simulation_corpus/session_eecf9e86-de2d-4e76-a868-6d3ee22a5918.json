@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "0c29ed22-37a2-40f8-8606-16623ceaf2cf",
+    "event_type": "SESSION_START",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:12:54.288355+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_15",
+      "crm_opportunity_id": "opp_15"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "4da2db1a-e519-42c4-a83a-6ac15f693a4c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:12:56.288355+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Jessica, thanks for the time. I'm excited to show you how our platform simplifies internal communications and knowledge sharing for remote teams.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8652032845720677,
+    "metadata": {}
+  },
+  {
+    "event_id": "a21c6ef6-e424-4020-af2b-01c306f951e7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:00.288355+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, internal comms is a mess for us. We're using Slack, Confluence, email... it's all over the place. So, you're another one of those 'all-in-one' solutions?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8911405223956983,
+    "metadata": {}
+  },
+  {
+    "event_id": "603e1295-a4f8-4530-a51a-664254dbc236",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:02.288355+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We aim to be the central hub, Jessica. We integrate with those tools, pulling information into a unified, searchable knowledge base and providing a single source of truth for your employees, reducing information overload.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9859434911397189,
+    "metadata": {}
+  },
+  {
+    "event_id": "2a90d6e0-d1d3-4cf0-b4ab-98594bba1d39",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:04.288355+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A single source of truth... that sounds great in theory. But we tried something similar last year and nobody used it. People just reverted to their old habits. How do you ensure adoption?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8586479136441929,
+    "metadata": {}
+  },
+  {
+    "event_id": "6daefd85-dfbf-4096-a921-7e1daac0b827",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:08.288355+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a critical point, and our platform is designed with adoption in mind. We have gamification features, personalized onboarding flows, and an intuitive UI that mirrors consumer apps, making it easy and even enjoyable to use.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9148512686827499,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d5f03e6-fd78-4006-ae56-6311d8af371a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:10.288355+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Gamification? We're a serious B2B company, not a gaming studio. My engineers will roll their eyes at gamification. I need something practical, not bells and whistles.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8550269505796058,
+    "metadata": {}
+  },
+  {
+    "event_id": "dbc99bd0-46b4-4a6d-964b-d3f23a082f90",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:14.288355+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood. The gamification is optional, but the core practicality lies in its search capabilities and cross-platform syncing, drastically cutting down on 'where is that document?' type questions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9450733472329054,
+    "metadata": {}
+  },
+  {
+    "event_id": "73f6c6e4-d24b-4268-ae30-18a6601b9a87",
+    "event_type": "SESSION_END",
+    "session_id": "eecf9e86-de2d-4e76-a868-6d3ee22a5918",
+    "tenant_id": "d3f93215-6ff3-40d3-a722-80730dae4fa2",
+    "timestamp_utc": "2026-06-28T22:13:19.288355+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

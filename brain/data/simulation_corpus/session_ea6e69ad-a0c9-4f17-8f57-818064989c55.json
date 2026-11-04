@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "ab5b032e-98ee-4b7c-a9b4-55676e797d98",
+    "event_type": "SESSION_START",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:12.132712+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_38",
+      "crm_opportunity_id": "opp_38"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "976f653a-f2f4-4054-8b5e-a032a063ab72",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:15.132712+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], I'm keen to discuss how [Product Name] can help your team automate your repetitive data entry and reporting, freeing up significant time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9867656506015537,
+    "metadata": {}
+  },
+  {
+    "event_id": "e0c08a3a-3964-4c83-b068-f7a6860783ef",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:17.132712+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "My boss actually thinks we just need to hire more administrative staff, not more software. He's very old school about 'human touch' and avoiding AI.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9478362208802813,
+    "metadata": {}
+  },
+  {
+    "event_id": "54641e46-421c-4673-b9da-e4c6fee30c53",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:19.132712+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common perspective. However, [Product Name] isn't about replacing people; it's about empowering them. By automating mundane tasks, your existing team can focus on higher-value activities that truly require human insight, leading to better job satisfaction and less burnout.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9858444608829082,
+    "metadata": {}
+  },
+  {
+    "event_id": "eb7d1013-9ef4-4782-9016-a4700dd631ab",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:21.132712+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "He's also worried about data security with cloud solutions. We had a breach scare last year, and he's paranoid about sensitive company information being off-site.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.862388825988826,
+    "metadata": {}
+  },
+  {
+    "event_id": "8e4046d8-7640-4534-9979-190858787bd2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:25.132712+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Security is paramount. [Product Name] is SOC 2 Type 2 compliant, adheres to GDPR and CCPA, and employs end-to-end encryption. We also offer private cloud options if on-premise data storage is a strict requirement for your organization.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9450292395427898,
+    "metadata": {}
+  },
+  {
+    "event_id": "51281328-e6c7-4cea-92d4-d84d9f1c39d8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:27.132712+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Even if I convince him on those points, what about the learning curve for our team? They're already overwhelmed with existing workloads; they don't need another complex system to master.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9621887453728469,
+    "metadata": {}
+  },
+  {
+    "event_id": "6d8ac24c-2fd1-4792-9b81-6f2568bc8a30",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:29.132712+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We've prioritized intuitive design. Users can typically get started within an hour, and we provide comprehensive onboarding, training webinars, and 24/7 support to ensure everyone feels confident and productive from day one.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9455540036733838,
+    "metadata": {}
+  },
+  {
+    "event_id": "cc69ce89-5055-4f57-991a-e4d4c51f6257",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:32.132712+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. I'll need some solid arguments and materials to present to him. Can you put together a summary deck focused on the ROI of automation versus hiring, and specific details about your security protocols and certifications?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8961152277062849,
+    "metadata": {}
+  },
+  {
+    "event_id": "965f8da7-3c55-4ddc-b4e0-e195c55d598b",
+    "event_type": "SESSION_END",
+    "session_id": "ea6e69ad-a0c9-4f17-8f57-818064989c55",
+    "tenant_id": "8e3e5cb1-5770-4678-9d63-3f97b7babb7c",
+    "timestamp_utc": "2026-06-28T22:14:37.132712+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

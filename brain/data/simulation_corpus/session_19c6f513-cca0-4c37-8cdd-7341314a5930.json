@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "779e4400-c162-494b-bec1-91c709d44ae9",
+    "event_type": "SESSION_START",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:14.893465+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_52",
+      "crm_opportunity_id": "opp_52"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "825a0b23-8ec2-4909-9a57-f8a2a23534ce",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:17.893465+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning Sarah, I'm calling from Apex Solutions. We specialize in AI-driven project management tools designed specifically for marketing agencies like yours.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9236273585731825,
+    "metadata": {}
+  },
+  {
+    "event_id": "4d27dd7b-eed4-4505-bccd-d02055f710b1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:20.893465+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI-driven project management, huh? What exactly does that even mean? We use Asana, and it works fine. Are you just another glorified task tracker?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8779968918498909,
+    "metadata": {}
+  },
+  {
+    "event_id": "06544c40-a996-4108-bca7-68d48d738070",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:25.893465+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question. While we do track tasks, our AI proactively identifies potential bottlenecks, suggests resource reallocations, and even drafts initial project briefs based on historical data. It goes beyond simple tracking.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9434060108104924,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7a31d62-6f87-41f9-86fa-bcc0ef9c0529",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:30.893465+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, I don't know. My team is already pretty overwhelmed with new tools. Introducing something new just adds to the headache, and frankly, I'm not sure I trust an AI to 'draft briefs.' That sounds like more work for me to double-check.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8580115077967946,
+    "metadata": {}
+  },
+  {
+    "event_id": "980eb92c-a573-441a-87d3-fbf4f8fe2eb9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:33.893465+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the concern about tool fatigue. Our goal is to reduce the headache, not add to it. Perhaps we could schedule a quick 15-minute call where I can show you how it integrates with existing tools and how the AI suggestions are designed to be a starting point, not a final draft?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9727865887042548,
+    "metadata": {}
+  },
+  {
+    "event_id": "e556d88b-8626-4633-92d8-0bf6920e872d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:36.893465+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Maybe. Send me an email with some more info first. I'll take a look if I have time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9319031427810074,
+    "metadata": {}
+  },
+  {
+    "event_id": "11252f9a-9af9-486e-a3c1-9cb205918a84",
+    "event_type": "SESSION_END",
+    "session_id": "19c6f513-cca0-4c37-8cdd-7341314a5930",
+    "tenant_id": "83129e97-016f-4ac5-9b60-584c2ccc480a",
+    "timestamp_utc": "2026-06-28T22:16:41.893465+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

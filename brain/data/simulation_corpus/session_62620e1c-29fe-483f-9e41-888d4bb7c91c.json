@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "4ece5878-5dfc-437d-b46f-9625d03aff54",
+    "event_type": "SESSION_START",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:30.796573+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_21",
+      "crm_opportunity_id": "opp_21"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "d3504277-a856-4046-b27b-9505b6e6f0b5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:35.796573+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks so much for making time today. I know you're busy, so I want to jump right in and show you how [Product Name] can streamline your marketing campaigns.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9190249430133848,
+    "metadata": {}
+  },
+  {
+    "event_id": "f3cd35ae-125a-420f-9cf1-3f5d8082c413",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:40.796573+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, I appreciate that. I've only got about 15 minutes before my next meeting, so let's keep it tight. What's the elevator pitch?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8784306162921406,
+    "metadata": {}
+  },
+  {
+    "event_id": "a48f8624-0f4e-426d-a54e-452a13390a4a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:45.796573+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. [Product Name] helps marketing teams automate content creation, personalize customer journeys at scale, and gain deeper ROI insights, all from one platform. Our clients typically see a 30% reduction in content production time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8606564447037013,
+    "metadata": {}
+  },
+  {
+    "event_id": "257fa644-0ae8-46ff-9b8d-e427a10e8ff0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:47.796573+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Content production time, huh? We use a few different tools for that already. Is this just another fancy content calendar, or does it actually *do* the writing?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9189843970550031,
+    "metadata": {}
+  },
+  {
+    "event_id": "1cd837f6-5c73-4ef3-bf74-d4c0b34d51b5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:50.796573+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It goes much further than a calendar. We use AI to assist with generating draft copy, optimizing for SEO, and even A/B testing variations automatically. Think of it as a creative co-pilot, not just a scheduler.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9019137315452525,
+    "metadata": {}
+  },
+  {
+    "event_id": "415e868e-f630-47de-ad53-a98707d55610",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:54.796573+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, interesting. My team's pretty set in their ways with our current tools, and frankly, integrating another platform sounds like a headache we don't need right now. We're already swamped.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8812082224538587,
+    "metadata": {}
+  },
+  {
+    "event_id": "f5b5d08d-1079-4c18-949b-64f1bd5badcd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:13:59.796573+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand that concern. That's why we've focused on seamless integration with popular CRMs and project management tools you might already use, making setup surprisingly quick. Would you be open to a quick 5-minute demo next week to see that in action?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8888747279294094,
+    "metadata": {}
+  },
+  {
+    "event_id": "5556cd65-8179-436d-95b5-a5087404b36e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:14:04.796573+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Five minutes? For next week? I guess I could squeeze that in if it's truly that quick. Send me some slots for Tuesday morning.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 34000,
+      "end_ms": 35500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8520840183771943,
+    "metadata": {}
+  },
+  {
+    "event_id": "fb65bd10-f579-4d12-be4f-8b0d535a9b4b",
+    "event_type": "SESSION_END",
+    "session_id": "62620e1c-29fe-483f-9e41-888d4bb7c91c",
+    "tenant_id": "88a705bf-df05-463b-9315-83388950cc5d",
+    "timestamp_utc": "2026-06-28T22:14:09.796573+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

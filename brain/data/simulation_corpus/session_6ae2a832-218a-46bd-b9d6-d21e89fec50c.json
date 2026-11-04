@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "aa699a52-efd2-4b32-b0e9-352b4c761fa4",
+    "event_type": "SESSION_START",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:17:52.982295+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_91",
+      "crm_opportunity_id": "opp_91"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c6fa5dba-fce2-40bc-8c79-8ca2fe6070b2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:17:57.982295+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for connecting. I wanted to discuss how our sales enablement platform can empower your sales reps and boost their productivity.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9049820296153536,
+    "metadata": {}
+  },
+  {
+    "event_id": "b1d0e58d-b1d9-485a-8ee7-f96270daaa30",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:17:59.982295+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hey. Sales enablement, got it. We've invested heavily in training and have a decent CRM. What more could a platform offer that would move the needle for us?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8923222089561653,
+    "metadata": {}
+  },
+  {
+    "event_id": "7ec06a8d-d19c-426d-ac36-929faa5071f7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:04.982295+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Many organizations find that even with great training, reps still struggle to find the right content at the right time, or personalize at scale. Our platform centralizes all sales collateral, provides AI-driven content recommendations, and offers dynamic playbooks for every stage of the sales cycle.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8824696791607306,
+    "metadata": {}
+  },
+  {
+    "event_id": "34a5b089-44c0-4e10-90e3-f1c096a8900c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:08.982295+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI-driven recommendations... that sounds like a lot of data input and maintenance on our end. My marketing team is already struggling to keep our current content organized.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9425176707191809,
+    "metadata": {}
+  },
+  {
+    "event_id": "6b0b2869-af70-4a9b-99ab-1e0bc1065c7a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:12.982295+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Actually, it's designed to reduce that burden. Our platform uses your existing content and CRM data to learn. The AI proactively suggests relevant materials, freeing up both sales and marketing to focus on strategy.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9884097209966525,
+    "metadata": {}
+  },
+  {
+    "event_id": "f32fe657-86f6-408c-a7e1-7ee3f4679ec8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:17.982295+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "And the cost? I need to be blunt, our budget was slashed this quarter. Unless this has an incredibly fast ROI, it's a non-starter right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9408185457043613,
+    "metadata": {}
+  },
+  {
+    "event_id": "dd33f852-a8db-4050-88b8-e5b594336528",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:20.982295+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We often see ROI within the first three months through increased win rates and reduced sales cycle times. We offer flexible pricing tiers to fit various budgets, and I can provide a personalized ROI calculation based on your specific metrics.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9821604328499258,
+    "metadata": {}
+  },
+  {
+    "event_id": "382634a6-ca2e-44a8-a803-e9f1aff501bd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:25.982295+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'll need to see that calculation in detail. And I'm still concerned about the overhead for my marketing team. This feels like another tool we'd buy and then struggle to fully adopt. Send me the ROI projections and some customer testimonials.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 33000,
+      "end_ms": 34500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9154711276570683,
+    "metadata": {}
+  },
+  {
+    "event_id": "5c72ee2b-f377-4999-9b7a-f02f5055e9a7",
+    "event_type": "SESSION_END",
+    "session_id": "6ae2a832-218a-46bd-b9d6-d21e89fec50c",
+    "tenant_id": "4e737ae5-2a60-45a6-891f-f3c3b85af906",
+    "timestamp_utc": "2026-06-28T22:18:30.982295+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

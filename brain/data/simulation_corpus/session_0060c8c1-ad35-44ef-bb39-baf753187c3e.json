@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "2806eac6-1eeb-4091-a848-0f795e1ed728",
+    "event_type": "SESSION_START",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:12.131985+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_37",
+      "crm_opportunity_id": "opp_37"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "a71ad111-5a5f-4ecd-9a10-1114518fadea",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:16.131985+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning [Buyer Name]. Our B2B SaaS, [Product Name], aims to automate routine IT helpdesk tickets by up to 60%, freeing your team to focus on strategic initiatives.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.904504396202375,
+    "metadata": {}
+  },
+  {
+    "event_id": "3adc14c7-6971-4559-a1d1-0a5ac9cb7d0e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:20.131985+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, everyone promises that. We've been burned by 'AI solutions' that ended up being more work to set up and maintain than they were worth. It usually just pushes the problem around.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.958073393242642,
+    "metadata": {}
+  },
+  {
+    "event_id": "3b16ac99-0aee-4216-a9a8-c35a8c67b5eb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:24.131985+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear your skepticism, and it's unfortunately common with early-stage AI. Our approach is different because we leverage a continuously learning knowledge base and natural language processing that truly understands context, not just keywords. We focus on 'zero-touch' resolution where possible.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8790145185616126,
+    "metadata": {}
+  },
+  {
+    "event_id": "906948b1-d1ac-4693-92da-5bb31723a283",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:28.131985+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, you're saying this is 'idiot-proof' and will magically integrate with our ancient ticketing system and all our legacy applications? Come on, be realistic.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9368917874926448,
+    "metadata": {}
+  },
+  {
+    "event_id": "6e25a19f-262a-408a-887b-1fc9de9a00f3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:33.131985+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's certainly not magic, but our robust API and pre-built connectors allow for seamless integration with most common ticketing systems, including older ones. We also provide comprehensive documentation and support to ensure a smooth setup, even with legacy infrastructure, focusing on practical automation first.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8572635184852824,
+    "metadata": {}
+  },
+  {
+    "event_id": "edc35235-d72a-4028-879e-86e78998fb17",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:37.131985+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Look, I'm just tired of endless setup fees and then being nickel-and-dimed for every small feature or integration. What's the true total cost of ownership here, without any hidden surprises?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8914153028141771,
+    "metadata": {}
+  },
+  {
+    "event_id": "ca25db1c-f39e-47ae-ad31-54ce988df80a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:39.131985+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair concern. Our pricing model is transparent and all-inclusive. Our enterprise plan, for example, includes unlimited integrations, all AI features, and premium support, with no hidden fees. We believe in predictable budgeting for our clients.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9193491601790761,
+    "metadata": {}
+  },
+  {
+    "event_id": "36fdc3d0-e422-4e85-90c5-2546823d5a2a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:42.131985+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Alright, that's a refreshing change if true. But I'll believe it when I see it. Send me the full pricing structure, including implementation costs, and a trial agreement. We'll need to stress-test this.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 30000,
+      "end_ms": 31500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9694324036895333,
+    "metadata": {}
+  },
+  {
+    "event_id": "9b1c8b37-ec3f-4907-9511-777947327440",
+    "event_type": "SESSION_END",
+    "session_id": "0060c8c1-ad35-44ef-bb39-baf753187c3e",
+    "tenant_id": "f70e83e5-b1fa-4daf-9e76-ccfd85e644b9",
+    "timestamp_utc": "2026-06-28T22:14:47.131985+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

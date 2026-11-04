@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "3516fbdc-8b13-4e5a-933b-d65209324721",
+    "event_type": "SESSION_START",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:23.830435+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_94",
+      "crm_opportunity_id": "opp_94"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "4643fa10-79d1-4744-933c-8a64784ae370",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:25.830435+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Mark, great to finally connect! I wanted to walk you through how our new analytics dashboard can give your marketing team unprecedented insights.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8842264844379785,
+    "metadata": {}
+  },
+  {
+    "event_id": "db3cf21b-fddb-4e49-a679-c1b572ecfa36",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:30.830435+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Analytics... we have Google Analytics, Hotjar, Amplitude... are you just another dashboard telling me the same things in a different color?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8510971554246365,
+    "metadata": {}
+  },
+  {
+    "event_id": "8a61c2d0-2fa1-4842-9715-c14b373d8606",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:32.830435+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Not at all, Mark. While those are excellent tools, our platform consolidates data from all your disparate marketing channels \u2013 social, email, ads, CRM \u2013 into one single source of truth, offering cross-channel attribution modeling that's incredibly difficult to achieve manually.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.983236727990428,
+    "metadata": {}
+  },
+  {
+    "event_id": "67d84ea4-46b7-4388-8eff-051e57ec3ccb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:35.830435+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cross-channel attribution... so it tells me if my Facebook ad led to an email signup and then a purchase? Sounds complicated. And expensive, I bet.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.863679234952006,
+    "metadata": {}
+  },
+  {
+    "event_id": "50c8ac2d-7e83-4908-b0ef-ecdf29f0cb64",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:38.830435+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It simplifies complexity, actually, by automating those connections. As for expense, our pricing is competitive and based on your data volume and required integrations, offering a clear ROI.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8560156407607029,
+    "metadata": {}
+  },
+  {
+    "event_id": "0d2748a6-1324-4477-ba94-2a1f7f5b4848",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:42.830435+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Competitive is a vague term. What's the range? Because if it's over X, it's a non-starter. My budget is already allocated for the year.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9678285208113496,
+    "metadata": {}
+  },
+  {
+    "event_id": "c23b8683-ca75-4971-9a8d-ad662fa01d9a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:44.830435+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our standard plan typically starts around $800 a month for up to 5 integrations and 500k data points. We can customize further from there.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9272508460556433,
+    "metadata": {}
+  },
+  {
+    "event_id": "56c83579-d9d9-4eea-8b6d-07c78c685a1e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:47.830435+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Eight hundred a month? For *another* analytics tool? I appreciate your time, but I just don't see the value justifying that right now. We're spread thin.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8559666381375095,
+    "metadata": {}
+  },
+  {
+    "event_id": "327487dc-7bf5-41a8-9cc0-4f1514b639bc",
+    "event_type": "SESSION_END",
+    "session_id": "488f4b29-9641-403b-8e8d-06464dafc2ca",
+    "tenant_id": "5ffe024b-4960-452f-aceb-51456c5567b9",
+    "timestamp_utc": "2026-06-28T22:18:52.830435+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

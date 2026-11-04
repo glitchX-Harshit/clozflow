@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "6f90cfd3-7567-41e3-be63-f650621cbb3b",
+    "event_type": "SESSION_START",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:24.152570+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_71",
+      "crm_opportunity_id": "opp_71"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "b046de8a-f0bc-4ded-b4dd-54780f2db394",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:28.152570+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for making the time today. I know your team at [Company Name] has been exploring solutions for improving your customer onboarding process. Our platform, OnboardPro, specializes in automating and personalizing that exact journey. Can I show you a quick overview?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9650209076482209,
+    "metadata": {}
+  },
+  {
+    "event_id": "a418a6fb-2ab6-4986-8315-78bd4092e7e5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:30.152570+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, I appreciate it, but honestly, I've only got about 10 minutes before my next meeting. We've looked at a few things, and frankly, I'm not convinced anything out there truly fits our unique needs without a massive custom dev effort. So, make it quick.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9670301777118815,
+    "metadata": {}
+  },
+  {
+    "event_id": "2dd2133f-8009-495b-ba2e-88a5dbdf0bbc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:33.152570+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, I'll be concise. OnboardPro is designed for flexibility, not just automation. We offer a drag-and-drop interface that allows your non-technical teams to build complex workflows and integrate with your existing CRM and marketing tools without a single line of code. We often see customers reduce their onboarding time by 40% within the first quarter.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9714907693293148,
+    "metadata": {}
+  },
+  {
+    "event_id": "1fc383eb-a8c1-444c-8b98-71ae5292176c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:35.152570+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Forty percent? That sounds... ambitious. And 'no code' always sounds great on paper until you hit a wall with a specific integration. What about our custom-built legacy system for product usage tracking? Will your 'drag-and-drop' talk to that?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9147613633993272,
+    "metadata": {}
+  },
+  {
+    "event_id": "e12a6b0a-1238-48f3-b9aa-ab4625b5ab68",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:40.152570+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair question. For legacy systems, we have robust API capabilities that our solutions engineers can help you map. It's not always pure drag-and-drop for every single edge case, but the core workflows are, and we offer dedicated support for those more complex integrations. Perhaps a quick 5-minute demo focusing on integration capabilities would be beneficial? Just to show you how that mapping works in practice?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9098428641453444,
+    "metadata": {}
+  },
+  {
+    "event_id": "6aa48ce0-5c87-4a69-b1ac-b2219e202c64",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:44.152570+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Look, I really don't have time for another demo right now. Send me some documentation on your API and integration frameworks. I'll pass it to my tech lead. If they say it's feasible, we can talk next week. No promises, though.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9769605458341795,
+    "metadata": {}
+  },
+  {
+    "event_id": "e55c8f26-f41c-4dd7-9bee-4d20c46c7042",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:49.152570+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood. I'll send that over immediately, along with a case study of a client with a similar legacy setup. I'll follow up early next week to see if your tech lead had any initial thoughts. Does Tuesday work for a quick check-in call, say 10 AM your time?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9271444012488481,
+    "metadata": {}
+  },
+  {
+    "event_id": "0f62f661-c719-49a2-aa80-5b69e902d7f8",
+    "event_type": "SESSION_END",
+    "session_id": "548c9e2b-edc1-4462-979d-59ef3b5eb4dd",
+    "tenant_id": "16f408f6-9bf0-4eb9-8949-751596ca2b4d",
+    "timestamp_utc": "2026-06-28T22:17:54.152570+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ClozFlow Brain Test UI</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #17202a;
+      }
+      body {
+        margin: 0;
+      }
+      main {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      header,
+      footer {
+        padding: 14px 18px;
+        background: #ffffff;
+        border-bottom: 1px solid #dde2e8;
+      }
+      footer {
+        border-top: 1px solid #dde2e8;
+        border-bottom: 0;
+      }
+      #conversation {
+        padding: 18px;
+        overflow: auto;
+        display: grid;
+        align-content: start;
+        gap: 10px;
+      }
+      .message {
+        max-width: 760px;
+        padding: 10px 12px;
+        border: 1px solid #cfd7e2;
+        border-radius: 8px;
+        background: #ffffff;
+        white-space: pre-wrap;
+      }
+      .user {
+        justify-self: end;
+        background: #e8f0fe;
+      }
+      .brain {
+        justify-self: start;
+      }
+      form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+      }
+      textarea {
+        min-height: 72px;
+        resize: vertical;
+        padding: 10px;
+        border: 1px solid #b8c2cc;
+        border-radius: 8px;
+        font: inherit;
+      }
+      button {
+        min-width: 96px;
+        border: 0;
+        border-radius: 8px;
+        background: #1b5fbf;
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:disabled {
+        background: #8da9cf;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <strong>ClozFlow Brain Test UI</strong>
+      </header>
+      <section id="conversation" aria-live="polite"></section>
+      <footer>
+        <form id="composer">
+          <textarea id="input" placeholder="Send transcript text to the Brain API"></textarea>
+          <button id="send" type="submit">Send</button>
+        </form>
+      </footer>
+    </main>
+    <script>
+      const apiBase = localStorage.getItem("clozflowBrainApiBase") || "http://localhost:8000/v1";
+      const tenantId = crypto.randomUUID();
+      let sessionId = null;
+      let sequenceNum = 0;
+      const conversation = document.querySelector("#conversation");
+      const form = document.querySelector("#composer");
+      const input = document.querySelector("#input");
+      const send = document.querySelector("#send");
+
+      function appendMessage(kind, text) {
+        const node = document.createElement("div");
+        node.className = `message ${kind}`;
+        node.textContent = text;
+        conversation.appendChild(node);
+        conversation.scrollTop = conversation.scrollHeight;
+      }
+
+      async function ensureSession() {
+        if (sessionId) return sessionId;
+        const res = await fetch(`${apiBase}/sessions`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            tenant_id: tenantId,
+            salesperson_id: "local-test",
+            crm_opportunity_id: "local-opportunity",
+            metadata: { source: "reference-ui" }
+          })
+        });
+        if (!res.ok) throw new Error(`Session start failed: ${res.status}`);
+        const session = await res.json();
+        sessionId = session.session_id;
+        connectStream();
+        return sessionId;
+      }
+
+      function connectStream() {
+        const wsBase = apiBase.replace(/^http/, "ws");
+        const ws = new WebSocket(`${wsBase}/sessions/${sessionId}/recommendations/stream`);
+        ws.onmessage = (event) => {
+          const envelope = JSON.parse(event.data);
+          if (envelope.msg_type === "HEARTBEAT") {
+            ws.send(JSON.stringify({ msg_type: "HEARTBEAT_ACK", client_ts: new Date().toISOString() }));
+            return;
+          }
+          if (envelope.msg_type === "RECOMMENDATION" && envelope.payload) {
+            appendMessage("brain", `${envelope.payload.content.headline}\n${envelope.payload.content.body}`);
+          }
+        };
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        appendMessage("user", text);
+        input.value = "";
+        send.disabled = true;
+        try {
+          const id = await ensureSession();
+          sequenceNum += 1;
+          await fetch(`${apiBase}/sessions/${id}/events`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              event_type: "TRANSCRIPT_SEGMENT",
+              session_id: id,
+              tenant_id: tenantId,
+              sequence_num: sequenceNum,
+              source: "reference-ui",
+              priority: 1,
+              ttl_ms: 200,
+              confidence: 1,
+              payload: {
+                text,
+                speaker_id: "SPEAKER_0",
+                speaker_role: "BUYER",
+                start_ms: 0,
+                end_ms: 0,
+                is_final: true,
+                language: "en-US"
+              }
+            })
+          });
+        } catch (error) {
+          appendMessage("brain", String(error));
+        } finally {
+          send.disabled = false;
+          input.focus();
+        }
+      });
+    </script>
+  </body>
+</html>

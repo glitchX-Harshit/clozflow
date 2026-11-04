@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "9b73b2e2-7708-4c57-90fd-56ebd16c8f7e",
+    "event_type": "SESSION_START",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:16:42.143396+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_62",
+      "crm_opportunity_id": "opp_62"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "df2b5627-7872-42ef-bd88-d0c9cecb9867",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:16:45.143396+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. Thanks for taking the call. We spoke briefly last month about how [Product Name] could streamline your customer onboarding process. Has anything changed on that front?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9228882773139576,
+    "metadata": {}
+  },
+  {
+    "event_id": "30455c15-b444-4211-8c3a-f6cd7f6eacc1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:16:48.143396+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Honestly, not really. We're still struggling, but leadership just put a freeze on all new software expenditures. Budget is tighter than ever this quarter.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9166923104457606,
+    "metadata": {}
+  },
+  {
+    "event_id": "f53d3dc0-a9bf-4372-92d5-b068bea090a2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:16:51.143396+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand budget constraints. Many of our clients actually see a significant ROI within the first six months, often covering the cost of the platform through reduced churn and increased efficiency. Would you be open to a quick chat about potential cost savings?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9484430284985091,
+    "metadata": {}
+  },
+  {
+    "event_id": "c24b1909-65f3-449e-b698-c037379ffc15",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:16:54.143396+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cost savings sound great in theory, but every new tool has an implementation cost, training, maintenance... it all adds up. I've been burned before by 'ROI' that never materialized.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9639151730145448,
+    "metadata": {}
+  },
+  {
+    "event_id": "f909017e-ec13-4f8a-a603-bb1ec8d8727d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:16:57.143396+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair point. Our implementation is designed to be low-impact, often taking just a few days, not weeks or months. And we offer a dedicated success manager to ensure rapid adoption and value realization. Could I walk you through a quick calculation specific to your team's size?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8918239917334289,
+    "metadata": {}
+  },
+  {
+    "event_id": "85ba388b-9806-4424-975a-59153a39453b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:17:01.143396+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I don't know. Maybe a quick email with the 'calculation' is better. I don't have time for another meeting right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9282199712025303,
+    "metadata": {}
+  },
+  {
+    "event_id": "2430deb4-ba71-47cf-a0e6-749c865b5db8",
+    "event_type": "SESSION_END",
+    "session_id": "87793913-a41c-45c4-be9f-f5b51a2b90ec",
+    "tenant_id": "e45e28bb-1406-4db5-9c73-59bf5fbbfc84",
+    "timestamp_utc": "2026-06-28T22:17:06.143396+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

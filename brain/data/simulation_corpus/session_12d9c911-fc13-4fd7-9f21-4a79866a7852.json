@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "e0d3649c-21fa-4b65-a7d5-85b65ca299de",
+    "event_type": "SESSION_START",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:14.894495+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_53",
+      "crm_opportunity_id": "opp_53"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ccd77bdf-33d0-46f7-9d43-854ca35422aa",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:17.894495+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Mark, thanks for connecting. I'm calling about our new compliance automation platform, which helps businesses like yours navigate complex regulatory landscapes with ease.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9232518494175659,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d3dd484-2d5f-4acc-b37a-cb06b7e294e8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:22.894495+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Compliance? Uh, we already have a whole department for that. And frankly, they're pretty particular about their existing systems. I doubt they'd want to change.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9148732821078827,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ad36e1c-118f-4f31-a474-06cbdd3a5c41",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:24.894495+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. Our platform isn't designed to replace your team, but rather to empower them by automating the tedious, manual checks and generating audit-ready reports in minutes instead of days. It frees them up for higher-value strategic work.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8672111079216953,
+    "metadata": {}
+  },
+  {
+    "event_id": "2b452f24-4641-4dfa-9f3f-2b2a497ce670",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:26.894495+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Look, I appreciate the pitch, but our compliance lead, Brenda, is extremely traditional. She's been doing things the same way for twenty years. Getting her to adopt new software is like pulling teeth. We tried a new document management system last year, and it was a disaster.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9538710608658393,
+    "metadata": {}
+  },
+  {
+    "event_id": "3ca430f5-d2c9-4239-a3fc-f932574e14fd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:28.894495+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fair. Perhaps a brief, high-level overview might show her how it can complement her current processes without a full overhaul? We often start by demonstrating how it can specifically help with one pain point, like GDPR reporting.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8798743168716421,
+    "metadata": {}
+  },
+  {
+    "event_id": "f49c68d3-ebfd-4e7b-a04e-05ff24248c32",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:30.894495+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I don't know. Maybe you can send me some case studies about companies with 'traditional' teams? If Brenda sees something compelling, I'll pass it along.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9657936478167094,
+    "metadata": {}
+  },
+  {
+    "event_id": "92dc8c17-70cf-4e53-a350-94ee9408cd81",
+    "event_type": "SESSION_END",
+    "session_id": "12d9c911-fc13-4fd7-9f21-4a79866a7852",
+    "tenant_id": "2e876f80-9e4a-44d2-89d8-ae82a099b48e",
+    "timestamp_utc": "2026-06-28T22:16:35.894495+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

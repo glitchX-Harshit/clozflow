@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "66fb0c62-0b65-480a-b96f-c0de6c31444d",
+    "event_type": "SESSION_START",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:12:54.291551+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_19",
+      "crm_opportunity_id": "opp_19"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "d8b36f1b-3343-4df7-a1db-0b0af209c73b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:12:59.291551+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Emily. Thanks for connecting. I wanted to share how our robust project management platform helps engineering teams maintain agile velocity.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8661345973700942,
+    "metadata": {}
+  },
+  {
+    "event_id": "a2f89391-2547-41c3-b618-6b557bcf9d24",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:13:03.291551+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Project management? We use Jira. And honestly, it's painful enough. I'm not sure my team can handle learning yet another PM tool right now. We just got everyone on the same page with Jira's new interface.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.946154834777225,
+    "metadata": {}
+  },
+  {
+    "event_id": "8704307b-febd-448b-b969-2fc61fffda40",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:13:08.291551+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you, Emily. Jira is powerful, but often complex. Our platform focuses on intuitive sprint planning, dependency tracking, and automated reporting, all designed to integrate with Jira, not replace it, smoothing out some of those pain points.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8759959456619022,
+    "metadata": {}
+  },
+  {
+    "event_id": "6c14ecd8-51ec-4387-970d-463203961190",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:13:13.291551+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Integrate with Jira? So, it's an add-on? That usually means more licenses, more upkeep, and another point of failure. What's the actual benefit over just digging deeper into Jira's own features?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9311989674014448,
+    "metadata": {}
+  },
+  {
+    "event_id": "7915509f-85d7-4c6f-8498-710d6dba79d6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:13:16.291551+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our strength lies in visualizing cross-team dependencies and providing predictive insights into potential roadblocks that Jira's native features often miss. This prevents costly delays and resource bottlenecks before they impact your delivery.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9086786703425881,
+    "metadata": {}
+  },
+  {
+    "event_id": "06ec50c4-ceaa-4f57-b743-9339c5b3e33d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:13:18.291551+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive insights... Okay. But my VP of Engineering is very particular about data residency. Where is your data stored, and what are your compliance certifications?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8791329380552441,
+    "metadata": {}
+  },
+  {
+    "event_id": "289891ea-31bf-4852-81e1-1f341d2d503d",
+    "event_type": "SESSION_END",
+    "session_id": "fec0ee5c-ded7-492a-be4b-85dbd372fb11",
+    "tenant_id": "af5a9111-cda3-41d1-8d3d-f2daf2dc324d",
+    "timestamp_utc": "2026-06-28T22:13:23.291551+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

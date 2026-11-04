@@ -7,12 +7,13 @@ from datetime import datetime, timedelta
 # Add parent directory to sys.path to allow importing sibling modules like 'rag'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 from database import engine, Base
-from routers import auth, calls
+from routers import auth, calls, brain_local
 from routers import user as user_router
 from routers import leads as leads_router
 from routers import outreach as outreach_router
@@ -50,7 +51,10 @@ async def lifespan(app):
     from services.vad_engine import SileroVADEngine
     await SileroVADEngine.warmup()
     
-    yield
+    try:
+        yield
+    finally:
+        await websocket_manager.shutdown()
 
 app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
 
@@ -75,6 +79,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(brain_local.router)
 app.include_router(auth.router)
 app.include_router(auth.router, prefix="/api")
 app.include_router(calls.router)
@@ -147,16 +152,16 @@ async def get_call_context(context_id: str, current_user: User = Depends(get_cur
 
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket_manager.connect(websocket)
+async def websocket_endpoint(websocket: WebSocket, context_id: str = None, token: str = None):
+    if not await authorize_call_socket(websocket, context_id, token):
+        return
+    await websocket_manager.connect(websocket, context_id=context_id)
     try:
         while True:
-            # Legacy text-based endpoint fallback
             data = await websocket.receive_text()
             try:
                 message_data = json.loads(data)
-                if hasattr(websocket_manager, 'handle_live_message'):
-                    await websocket_manager.handle_live_message(message_data, websocket)
+                await websocket_manager.handle_live_message(message_data, websocket)
             except json.JSONDecodeError:
                 pass
     except WebSocketDisconnect:
@@ -164,15 +169,31 @@ async def websocket_endpoint(websocket: WebSocket):
     finally:
         websocket_manager.disconnect(websocket)
 
+
+async def authorize_call_socket(websocket, context_id, token):
+    from database import SessionLocal
+    from routers.auth import verify_token_string
+    origin = websocket.headers.get('origin')
+    if origin and origin not in allowed_origins:
+        await websocket.close(code=1008)
+        return False
+    bearer = websocket.headers.get('authorization', '')
+    credential = bearer[7:] if bearer.startswith('Bearer ') else token
+    if not credential:
+        credential = next((item.strip()[14:] for item in websocket.headers.get('sec-websocket-protocol', '').split(',')
+                           if item.strip().startswith('clozflow-auth.')), None)
+    with SessionLocal() as db:
+        user = verify_token_string(credential, db)
+        context = call_context_engine.get_context(context_id) if context_id else None
+        if not user or not context or context.get('user_id') != user.id:
+            await websocket.close(code=1008)
+            return False
+    return True
+
 @app.websocket("/ws/audio")
 async def websocket_audio_endpoint(websocket: WebSocket, context_id: str = None, token: str = None):
-    print(f"🔌 WebSocket connection attempt to /ws/audio (context_id: {context_id})")
-    if context_id:
-        context = call_context_engine.get_context(context_id)
-        if not context:
-            print(f"❌ Rejected WebSocket /ws/audio: Invalid context_id {context_id}")
-            await websocket.close(code=1008)
-            return
+    if not await authorize_call_socket(websocket, context_id, token):
+        return
 
     await websocket_manager.connect(websocket, context_id=context_id)
     print("✅ WebSocket connected to /ws/audio")

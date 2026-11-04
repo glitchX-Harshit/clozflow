@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "9ff48810-bcca-4302-91d6-19e9cfc2bc22",
+    "event_type": "SESSION_START",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:12:54.290892+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_18",
+      "crm_opportunity_id": "opp_18"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "53a48335-6f9b-4e42-a22a-7ed5228b0eec",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:12:57.290892+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Ben, thanks for taking the call. I was hoping to chat about how our AI-powered coding assistant can speed up your development cycles.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9446720467615201,
+    "metadata": {}
+  },
+  {
+    "event_id": "71d2365c-1ebe-4f2a-90cc-8b615ea36243",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:01.290892+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI coding? Oh boy. Look, we've had some bad experiences with 'assistants' that just generate boilerplate code we have to spend more time fixing than writing. Is this actually different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.912717007882557,
+    "metadata": {}
+  },
+  {
+    "event_id": "10eca7a0-7e2b-49e1-9f2c-6e7d5dfea7a1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:04.290892+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that skepticism, Ben. Our assistant is trained on your specific codebase and coding standards, meaning it generates highly relevant and compliant suggestions, reducing refactoring time significantly.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8569529252209942,
+    "metadata": {}
+  },
+  {
+    "event_id": "11479ec4-76a7-4e63-89fa-a2db0bbf7e64",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:09.290892+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Trained on our codebase? So, we'd have to grant you access to all our proprietary code? That's a non-starter for our security team. Absolutely not.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8625013029867133,
+    "metadata": {}
+  },
+  {
+    "event_id": "bedf5a7c-bb5e-482e-bd4b-dfd8e45dbf56",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:14.290892+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair concern. We offer on-premise deployment options or a secure private cloud instance where your data never leaves your control, ensuring full compliance with your security protocols.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9631357917699854,
+    "metadata": {}
+  },
+  {
+    "event_id": "adf4ea6b-a0a7-4fc5-b920-df236a268d1f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:18.290892+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "On-prem? Now we're talking about managing more infrastructure? We're trying to move *away* from that. This sounds like a lot of hassle for a tool that might just annoy my developers.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8521587067365674,
+    "metadata": {}
+  },
+  {
+    "event_id": "fc3b1133-cdc4-415b-842f-28445ed06571",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:21.290892+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The on-prem option is for maximum security. For ease, our private cloud setup is managed entirely by us, with a dedicated instance for your data, requiring minimal effort from your side.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8545518759832302,
+    "metadata": {}
+  },
+  {
+    "event_id": "faf1f87b-2141-4417-9582-eedce92a0b7a",
+    "event_type": "SESSION_END",
+    "session_id": "0071674a-4da3-468b-b7d1-d68613a33f5a",
+    "tenant_id": "ad475523-8f34-4085-b32b-d36018459cf9",
+    "timestamp_utc": "2026-06-28T22:13:26.290892+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

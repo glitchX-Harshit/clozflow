@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "070fee09-8dd5-4afe-8684-b15c5ed05982",
+    "event_type": "SESSION_START",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:12:54.287445+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_14",
+      "crm_opportunity_id": "opp_14"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "aa080e63-78f7-4a59-80ef-052e05984c8a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:12:57.287445+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Mark, appreciate you taking the call. We've been helping companies like yours significantly reduce their cloud infrastructure costs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9787995580156104,
+    "metadata": {}
+  },
+  {
+    "event_id": "7fd7c1c5-306b-45c1-a3fe-77b9e83dde43",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:12:59.287445+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cloud costs, yeah, it's a constant headache. But we're pretty tied into AWS, and honestly, our team has built a lot of custom scripts around their native tools. I don't see how anything else could beat that.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8947754818139421,
+    "metadata": {}
+  },
+  {
+    "event_id": "3d569ff3-7c27-4cf5-bbd0-60bada250629",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:13:03.287445+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that deep integration, Mark. Our platform doesn't aim to replace your AWS tools; rather, it acts as an intelligent layer on top, identifying unused resources, optimizing instance types, and predicting spend spikes before they happen. We typically find 20-30% savings even with optimized setups.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8838406421516232,
+    "metadata": {}
+  },
+  {
+    "event_id": "a9c7b976-7fc6-453a-8778-b7f6113cc8ad",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:13:05.287445+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "20-30%? That's a bold claim. We have an entire FinOps team dedicated to this. Are you saying your software is smarter than actual people?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9406413396772766,
+    "metadata": {}
+  },
+  {
+    "event_id": "50d8ff2f-035a-426c-a64a-dcdc078cba98",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:13:07.287445+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's about augmentation, not replacement. Our AI can process data points and identify patterns across thousands of resources far faster and more consistently than manual review, freeing your FinOps team for higher-level strategic work.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8725149934449921,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d9492ba-47c3-44df-b31b-cbb85bee4deb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:13:09.287445+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. And what about security? Introducing another third-party into our AWS environment always raises red flags for our compliance team. How do you handle that?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9783822947399512,
+    "metadata": {}
+  },
+  {
+    "event_id": "f7e33528-48f2-48cc-be9c-524af5710303",
+    "event_type": "SESSION_END",
+    "session_id": "02b76d76-f1bc-4261-a94f-50c3e104d03a",
+    "tenant_id": "02dfb977-2972-4e15-94fe-87a7af3c7d67",
+    "timestamp_utc": "2026-06-28T22:13:14.287445+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

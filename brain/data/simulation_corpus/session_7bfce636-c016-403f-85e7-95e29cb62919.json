@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "2ed3cfc4-9b92-404f-bcac-ea73eb7008e8",
+    "event_type": "SESSION_START",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:15.118306+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_47",
+      "crm_opportunity_id": "opp_47"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "dcd8fa5f-b631-470c-b4b9-300614ff373d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:20.118306+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, Chris. Thanks for jumping on. Our platform helps companies like yours streamline their employee onboarding and training. What's currently the biggest headache in getting new hires up to speed?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8885590086749704,
+    "metadata": {}
+  },
+  {
+    "event_id": "04b4ad83-f84c-49e2-b575-ec15d506ab25",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:23.118306+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, onboarding is a nightmare. It's inconsistent, takes too long, and half the time new hires are just thrown into the deep end. We're bleeding money in lost productivity. But we're also really resistant to implementing *yet another* HR system.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9159171637832737,
+    "metadata": {}
+  },
+  {
+    "event_id": "17545817-db2b-43f0-9195-71fc576c2df3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:27.118306+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you on system fatigue. Our solution focuses specifically on creating structured, personalized learning paths for new hires, automating task assignments, and tracking progress, all while integrating with your existing HRIS.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9004385222947657,
+    "metadata": {}
+  },
+  {
+    "event_id": "8388764e-ed79-4a88-8e10-02d2f935844d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:32.118306+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Personalized paths? So it's like a fancy LMS? We have an LMS, but it's clunky and nobody uses it for onboarding because it's too much work to set up each time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9649683421426123,
+    "metadata": {}
+  },
+  {
+    "event_id": "81e6615b-e140-454a-9d1e-c03fa67134bf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:37.118306+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more dynamic than a traditional LMS. Our AI personalizes content delivery based on the new hire's role and existing knowledge, and the automation handles the task assignments and reminders, reducing manual effort for HR and managers significantly. It's designed for ease of setup.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.960029504323032,
+    "metadata": {}
+  },
+  {
+    "event_id": "1074aea7-8e0d-4c12-a5e9-851362d52172",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:41.118306+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI again... Look, I just need something that works and isn't a massive project. How much does this magic cost? I'm worried it's going to be astronomically expensive given all the bells and whistles.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9069165919246202,
+    "metadata": {}
+  },
+  {
+    "event_id": "5926c7d3-853f-4e18-8aaf-60dc6504eb91",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:43.118306+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate you getting straight to the point. Our pricing is tiered, but for a company with your number of new hires per quarter, you'd typically be looking at an investment that's less than the cost of one month of lost productivity from just a few new hires. We're talking roughly $700-$1,200 monthly, which includes full support.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9313856763502367,
+    "metadata": {}
+  },
+  {
+    "event_id": "5d938633-5dcd-4bde-a541-b40638110105",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:46.118306+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Seven hundred to twelve hundred... That's something I'd need to budget for next year. I don't think we have that kind of wiggle room in Q4. Can you send me a proposal for Q1 next year?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 31000,
+      "end_ms": 32500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9307528315807199,
+    "metadata": {}
+  },
+  {
+    "event_id": "255174de-fe6a-4591-b7e5-5674cac343af",
+    "event_type": "SESSION_END",
+    "session_id": "7bfce636-c016-403f-85e7-95e29cb62919",
+    "tenant_id": "d396336e-6cab-4aed-9b41-9fa0a628a2f8",
+    "timestamp_utc": "2026-06-28T22:15:51.118306+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

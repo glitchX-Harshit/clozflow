@@ -8,7 +8,7 @@ export const useRealtimeCopilot = (wsUrl = `${window.APP_WS_BASE}/ws`) => {
     const ws = useRef(null);
 
     useEffect(() => {
-        ws.current = new WebSocket(wsUrl);
+        ws.current = new WebSocket(wsUrl, ['clozflow', 'clozflow-auth.' + localStorage.getItem('token')]);
 
         ws.current.onopen = () => {
             setIsConnected(true);

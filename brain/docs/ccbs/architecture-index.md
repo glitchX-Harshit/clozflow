@@ -1,0 +1,874 @@
+# CCBS Architecture Index
+
+Generated from extracted CCBS Volumes 1-10. The original PDFs remain the authoritative source.
+
+## Volume 01
+
+- Source text: `docs/ccbs/extracted/volume_01.txt`
+- Detected title: CLOZFLOW BRAIN SPECIFICATION (CBS)
+
+### Headings
+- Chapter 1 — Introduction, Vision & First Principles
+- Chapter 1
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Definition of Intelligence
+- 2.3 Intelligence Pipeline
+- 2.4 Intelligence Is State Transformation
+- 2.5 The World Exists Independently
+- 2.6 The Internal World Model
+- 2.7 Reality vs Representation
+- 2.8 Every Belief Has Confidence
+- 2.9 Every Belief Is Revisable
+- 2.10 Intelligence Is Prediction
+- 2.11 Intelligence Is Goal-Oriented
+- 2.12 Intelligence Is Resource-Constrained
+- 2.13 Intelligence Is Hierarchical
+- 2.14 Intelligence Is Continuous
+- 2.15 Intelligence Requires Memory
+- 2.16 Intelligence Requires Attention
+- 2.17 Intelligence Requires Explainability
+- 2.18 Intelligence Is Cooperative
+- 2.19 Intelligence Is Adaptive
+- 2.20 Intelligence Is Not Persuasion at Any Cost
+- 2.21 The First Principle of CBS
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Definition of a Cognitive Operating System
+- 3.3 Why Not a Chatbot?
+- 3.4 Why Not an AI Agent?
+- 3.5 Why a Cognitive Operating System?
+- 3.6 Definition of Continuous Cognition
+- 3.7 Operating System Analogy
+- 3.8 Cognitive Kernel
+- 3.9 Responsibilities of the Cognitive Kernel
+- 3.10 Responsibilities Outside the Kernel
+- 3.11 Cognitive Processes
+- 3.12 Shared World State
+- 3.13 Event-Driven Cognition
+- 3.14 Cognitive Scheduler
+- 3.15 Priority Levels
+- 3.16 Heartbeat Protocol
+- 3.17 Process Lifecycle
+- 3.18 Failure Isolation
+- 3.19 Model Independence
+- 3.20 Infrastructure Separation
+- 3.21 Meta Brain
+- 3.22 Executive Controller
+- 3.23 Cognitive Loop
+- 3.24 Architectural Laws Introduced by this Chapter
+- 3.25 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Overview of the Cognitive Processing Layers
+- 4.4 CPL-1 — Perception
+- 4.5 CPL-2 — Understanding
+- 4.6 CPL-3 — Context Construction
+- 4.7 CPL-4 — Reasoning
+- 4.8 CPL-5 — Prediction
+- 4.9 CPL-6 — Decision
+- 4.10 CPL-7 — Planning
+- 4.11 CPL-8 — Communication
+- 4.12 CPL-9 — Learning
+- 4.13 Layer Independence
+- 4.14 Layer Contracts
+- 4.15 Layer Execution
+- 4.16 Continuous Cognitive Loop
+- 4.17 Architectural Laws Introduced
+- 4.18 Chapter Summary
+- Chapter 5
+- 5.1 Purpose
+- 5.2 Relationship Between Layers and Domains
+- 5.3 Domain Design Principles
+- 5.4 Domain I — Perception Domain
+- 5.5 Domain II — Understanding Domain
+- 5.6 Domain III — World Modeling Domain
+- 5.6.1 The Seven World Models
+- 5.7 Domain IV — Reasoning Domain
+- 5.8 Domain V — Decision Intelligence Domain
+- 5.9 Domain VI — Planning Domain
+
+## Volume 02
+
+- Source text: `docs/ccbs/extracted/volume_02.txt`
+- Detected title: CLOZFLOW COGNITIVE BRAIN SPECIFICATION (CCBS)
+
+### Headings
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Execution Philosophy
+- 1.3 First Principle of Execution
+- 1.4 The Cognitive Execution Cycle (CEC)
+- 1.5 Event-Driven Execution
+- 1.6 The Three Phases of Cognition
+- 1.7 Execution Units
+- 1.8 Event Lifecycle
+- 1.9 World Model Synchronization
+- 1.10 Interruptions
+- 1.11 Parallel Cognition
+- 1.12 Execution Boundaries
+- 1.13 Latency Targets
+- 1.14 Confidence Propagation
+- 1.15 Failure During Execution
+- 1.16 Deterministic Execution
+- 1.17 Execution Telemetry
+- 1.18 Architectural Laws
+- 1.19 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Position in the Architecture
+- 2.4 Supported Input Sources
+- 2.5 Responsibilities
+- 2.6 Responsibilities Explicitly Forbidden
+- 2.7 Internal Components
+- 2.8 Canonical Cognitive Event
+- 2.9 Event States
+- 2.10 Event Integrity
+- 2.11 Event Ordering
+- 2.12 Event Prioritization
+- 2.13 Security
+- 2.14 Failure Handling
+- 2.15 Performance Targets
+- 2.16 Architectural Laws
+- 2.17 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Position in the Architecture
+- 3.4 Responsibilities
+- 3.5 Lifecycle States
+- 3.6 State Definitions
+- 3.7 Session Lifecycle
+- 3.8 Lifecycle Events
+- 3.9 Resource Management
+- 3.10 Failure Recovery
+- 3.11 Lifecycle Constraints
+- 3.12 Lifecycle Telemetry
+- 3.13 Performance Requirements
+- 3.14 Architectural Laws
+- 3.15 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Philosophy
+- 4.3 Position in the Architecture
+- 4.4 Responsibilities
+- 4.5 Cognitive Tasks
+- 4.6 Scheduling Inputs
+- 4.7 Priority Levels
+- 4.8 Scheduling Queues
+- 4.9 Attention Budget
+- 4.10 Preemptive Cognition
+- 4.11 Dependency Graph
+- 4.12 Parallel Scheduling
+- 4.13 Starvation Prevention
+- 4.14 Deadline Management
+- 4.15 Scheduling Telemetry
+- 4.16 Failure Handling
+- 4.17 Architectural Laws
+- 4.18 Chapter Summary
+- Chapter 5
+- 5.1 Purpose
+- 5.2 Design Philosophy
+- 5.3 Definition
+- 5.4 Position in the Architecture
+- 5.5 Components
+- 5.6 Cognitive Task Node
+
+## Volume 03
+
+- Source text: `docs/ccbs/extracted/volume_03.txt`
+- Detected title: CLOZFLOW COGNITIVE BRAIN SPECIFICATION (CCBS)
+
+### Headings
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Fundamental Principle
+- 1.3 Definition
+- 1.4 Design Philosophy
+- 1.5 Sources of Reality
+- 1.6 Cognitive Representation
+- 1.7 Properties of Cognitive Reality
+- 1.8 Reality vs Observation
+- 1.9 Evidence and Confidence
+- 1.10 Multiple Hypotheses
+- 1.11 Reality Evolution
+- 1.12 Cognitive Consistency
+- 1.13 Separation of Concerns
+- 1.14 Lifecycle of a Cognitive Reality Model
+- 1.15 Architectural Laws
+- 1.16 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 First Principle
+- 2.4 The Seven Primitive Ontological Types
+- 2.5 Entity
+- 2.6 Attribute
+- 2.7 Relationship
+- 2.8 State
+- 2.9 Event
+- 2.10 Constraint
+- 2.11 Evidence
+- 2.12 Ontological Hierarchy
+- 2.13 Semantic Rules
+- 2.14 Ontological Integrity
+- 2.15 Extensibility
+- 2.16 Architectural Laws
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 First Principle
+- 3.4 Canonical Reality Domains
+- 3.5 Domain Responsibilities
+- 3.6 Domain Boundaries
+- 3.7 Shared Reality
+- 3.8 Cross-Domain Relationships
+- 3.9 Domain Independence
+- 3.10 Domain Synchronization
+- 3.11 Domain Collaboration
+- 3.12 Domain Evolution
+- 3.13 Domain Queries
+- 3.14 Domain Integrity
+- 3.15 Extensibility
+- 3.16 Architectural Laws
+- 3.17 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Definition
+- 4.4 First Principle
+- 4.5 Canonical Actor Categories
+- 4.6 Actor Identity
+- 4.7 Actor Lifecycle
+- 4.8 Actor Composition
+- 4.9 Actor Classification
+- 4.10 Actor Influence
+- 4.11 Actor Ownership
+- 4.12 Actor Relationships
+- 4.13 Actor Evolution
+- 4.14 Actor Integrity
+- 4.15 Extensibility
+- 4.16 Architectural Laws
+- 4.17 Chapter Summary
+- Chapter 5
+- 5.1 Purpose
+- 5.2 Design Philosophy
+- 5.3 Definition
+- 5.4 First Principle
+- 5.5 Perspective Categories
+- 5.6 Perspective Identity
+- 5.7 Perspective Lifecycle
+- 5.8 Perspective Activation
+- 5.9 Perspective Selection
+
+## Volume 04
+
+- Source text: `docs/ccbs/extracted/volume_04.txt`
+- Detected title: CLOZFLOW COGNITIVE BRAIN SPECIFICATION (CCBS)
+
+### Headings
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Design Philosophy
+- 1.3 Core Principle
+- 1.4 CDC Architecture
+- 1.5 Phase I — Perceive
+- 1.6 Phase II — Understand
+- 1.7 Phase III — Interpret
+- 1.8 Phase IV — Predict
+- 1.9 Phase V — Evaluate
+- 1.10 Phase VI — Plan
+- 1.11 Phase VII — Decide
+- 1.12 Phase VIII — Verify
+- 1.13 Phase IX — Recommend
+- 1.14 Phase X — Reflect
+- 1.15 Iterative Processing
+- 1.16 Integration with Previous Volumes
+- 1.17 Semantic Queries
+- 1.18 Architectural Laws
+- 1.19 Performance Considerations
+- 1.20 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Scope
+- 2.4 Law I — Reality Before Reasoning
+- 2.5 Law II — Evidence Before Belief
+- 2.6 Law III — Uncertainty Before Certainty
+- 2.7 Law IV — Prediction Before Reaction
+- 2.8 Law V — Evaluation Before Decision
+- 2.9 Law VI — Verification Before Recommendation
+- 2.10 Law VII — Explanation Before Trust
+- 2.11 Law VIII — Adaptation Before Repetition
+- 2.12 Law IX — Learning After Action
+- 2.13 Law X — Human Agency
+- 2.14 Relationship to the Cognitive Decision Cycle
+- 2.15 Cross-Volume Integration
+- 2.16 Compliance
+- 2.17 Architectural Laws
+- 2.18 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Core Principle
+- 3.4 Objective Hierarchy
+- 3.5 Level I — Cognitive Integrity
+- 3.6 Level II — Buyer Trust
+- 3.7 Level III — Salesperson Success
+- 3.8 Level IV — Commercial Progress
+- 3.9 Level V — Communication Excellence
+- 3.10 Level VI — Operational Efficiency
+- 3.11 Objective Conflicts
+- 3.12 Objective Evaluation
+- 3.13 Objective Weights
+- 3.14 Cross-Domain Integration
+- 3.15 Integration with the Cognitive Decision Cycle
+- 3.16 Semantic Queries
+- 3.17 Architectural Laws
+- 3.18 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Core Principle
+- 4.4 Constraint Architecture
+- 4.5 Reality Constraints
+- 4.6 Evidence Constraints
+- 4.7 Reasoning Constraints
+- 4.8 Ethical Constraints
+- 4.9 Commercial Constraints
+- 4.10 Operational Constraints
+- 4.11 Human Agency Constraints
+- 4.12 Security Constraints
+- 4.13 Resource Constraints
+- 4.14 Governance Constraints
+- 4.15 Constraint Resolution
+- 4.16 Integration with the Cognitive Decision Cycle
+- 4.17 Constraint Monitoring
+- 4.18 Semantic Queries
+- 4.19 Architectural Laws
+- 4.20 Chapter Summary
+
+## Volume 05
+
+- Source text: `docs/ccbs/extracted/volume_05.txt`
+- Detected title: CLOZFLOW COGNITIVE BRAIN SPECIFICATION (CCBS)
+
+### Headings
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Design Philosophy
+- 1.3 Core Principle
+- 1.4 COS Architecture
+- 1.5 Runtime Kernel
+- 1.6 Execution Scheduler
+- 1.7 Memory Manager
+- 1.8 Resource Manager
+- 1.9 Communication Layer
+- 1.10 Storage Layer
+- 1.11 Security Layer
+- 1.12 Observability Layer
+- 1.13 Lifecycle Manager
+- 1.14 Extension Framework
+- 1.15 Runtime Lifecycle
+- 1.16 Cross-Volume Integration
+- 1.17 Runtime Interfaces
+- 1.18 Architectural Laws
+- 1.19 Performance Characteristics
+- 1.20 Layered System Model
+- 1.21 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Core Principle
+- 2.4 CRK Architecture
+- 2.5 Boot Manager
+- 2.6 Session Manager
+- 2.7 Context Manager
+- 2.8 Execution Controller
+- 2.9 Thread Coordinator
+- 2.10 State Manager
+- 2.11 Resource Broker
+- 2.12 Health Monitor
+- 2.13 Fault Coordinator
+- 2.14 Kernel Repository
+- 2.15 Kernel Lifecycle
+- 2.16 Cross-Volume Integration
+- 2.17 Kernel Interfaces
+- 2.18 Architectural Laws
+- 2.19 Performance Characteristics
+- 2.20 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Core Principle
+- 3.4 CES Architecture
+- 3.5 Priority Manager
+- 3.6 Complexity Estimator
+- 3.7 Dependency Scheduler
+- 3.8 Latency Optimizer
+- 3.9 Execution Queue Manager
+- 3.10 Worker Allocator
+- 3.11 Parallel Coordinator
+- 3.12 Preemption Manager
+- 3.13 Budget Controller
+- 3.14 Scheduling Repository
+- 3.15 Scheduling Lifecycle
+- 3.16 Cross-Volume Integration
+- 3.17 Semantic Queries
+- 3.18 Architectural Laws
+- 3.19 Performance Characteristics
+- 3.20 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Core Principle
+- 4.4 DCP Architecture
+- 4.5 Pipeline Builder
+- 4.6 Node Selector
+- 4.7 Dependency Graph Builder
+- 4.8 Execution Graph Optimizer
+- 4.9 Parallel Planner
+- 4.10 Conditional Branch Manager
+- 4.11 Pipeline Validator
+- 4.12 Runtime Adapter
+- 4.13 Pipeline Compiler
+- 4.14 Pipeline Repository
+- 4.15 Pipeline Lifecycle
+
+## Volume 06
+
+- Source text: `docs/ccbs/extracted/volume_06.txt`
+- Detected title: Volume VI
+
+### Headings
+- Part I — Cognitive Development Foundation
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Design Philosophy
+- 1.3 Core Principle
+- 1.4 CDA Architecture
+- 1.5 Capability Designer
+- 1.6 Reasoning Designer
+- 1.7 Knowledge Designer
+- 1.8 Memory Designer
+- 1.9 Governance Designer
+- 1.10 Behavior Specification
+- 1.11 Implementation Coordinator
+- 1.12 Validation Planner
+- 1.13 Integration Coordinator
+- 1.14 Development Repository
+- 1.15 Cognitive Development Lifecycle
+- 1.16 Cross-Volume Integration
+- 1.17 Semantic Queries
+- 1.18 Architectural Laws
+- 1.19 Performance Characteristics
+- 1.20 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Core Principle
+- 2.4 CCCM Architecture
+- 2.5 Identity
+- 2.6 Objectives
+- 2.7 Reasoning Model
+- 2.8 Knowledge Model
+- 2.9 Memory Model
+- 2.10 Behavior Contract
+- 2.11 Governance Contract
+- 2.12 Observability Contract
+- 2.13 Lifecycle Definition
+- 2.14 Capability Metadata
+- 2.15 Capability Lifecycle
+- 2.16 Cross-Volume Integration
+- 2.17 Semantic Queries
+- 2.18 Architectural Laws
+- 2.19 Performance Characteristics
+- 2.20 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Core Principle
+- 3.4 CDK Architecture
+- 3.5 Capability Generator
+- 3.6 Project Scaffolder
+- 3.7 Contract Generator
+- 3.8 Reasoning Template Engine
+- 3.9 Validation Toolkit
+- 3.10 Testing Toolkit
+- 3.11 Packaging Manager
+- 3.12 Integration Toolkit
+- 3.13 Documentation Generator
+- 3.14 Development Repository
+- 3.15 Development Workflow
+- 3.16 Cross-Volume Integration
+- 3.17 Semantic Queries
+- 3.18 Architectural Laws
+- 3.19 Performance Characteristics
+- 3.20 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Core Principle
+- 4.4 CCCF Architecture
+- 4.5 Composition Planner
+- 4.6 Capability Graph
+- 4.7 Interaction Coordinator
+- 4.8 Context Coordinator
+- 4.9 Memory Coordinator
+- 4.10 Reasoning Coordinator
+- 4.11 Confidence Coordinator
+- 4.12 Governance Coordinator
+- 4.13 Composition Validator
+- 4.14 Composition Repository
+- 4.15 Composition Lifecycle
+
+## Volume 07
+
+- Source text: `docs/ccbs/extracted/volume_07.txt`
+- Detected title: Volume VII
+
+### Headings
+- Part I — Enterprise Integration
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Design Philosophy
+- 1.3 Core Principle
+- 1.4 ECAF Architecture
+- 1.5 Enterprise Cognitive Layer
+- 1.6 Business Capability Coordinator
+- 1.7 Application Integration Gateway
+- 1.8 Knowledge Integration Hub
+- 1.9 Decision Intelligence Manager
+- 1.10 Process Orchestrator
+- 1.11 Human Collaboration Manager
+- 1.12 Governance Coordinator
+- 1.13 Enterprise Observatory
+- 1.14 Architecture Repository
+- 1.15 Enterprise Cognitive Lifecycle
+- 1.16 Enterprise Architectural Layers
+- 1.17 Cross-Volume Integration
+- 1.18 Semantic Queries
+- 1.19 Architectural Laws
+- 1.20 Performance Characteristics
+- 1.21 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Core Principle
+- 2.4 ECIF Architecture
+- 2.5 Enterprise Event Gateway
+- 2.6 Context Aggregator
+- 2.7 Application Connector Manager
+- 2.8 Data Federation Hub
+- 2.9 Business Process Integrator
+- 2.10 Decision Orchestrator
+- 2.11 External Service Gateway
+- 2.12 Identity & Trust Coordinator
+- 2.13 Integration Observatory
+- 2.14 Integration Repository
+- 2.15 Enterprise Cognitive Integration Lifecycle
+- 2.16 Integration Patterns
+- 2.17 Cross-Volume Integration
+- 2.18 Semantic Queries
+- 2.19 Architectural Laws
+- 2.20 Performance Characteristics
+- 2.21 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Core Principle
+- 3.4 ECCF Architecture
+- 3.5 Context Acquisition Manager
+- 3.6 Context Fusion Engine
+- 3.7 Semantic Enrichment Manager
+- 3.8 Temporal Context Coordinator
+- 3.9 Business State Model
+- 3.10 Policy Context Manager
+- 3.11 Human Context Manager
+- 3.12 Context Quality Evaluator
+- 3.13 Context Observatory
+- 3.14 Context Repository
+- 3.15 Enterprise Context Lifecycle
+- 3.16 Enterprise Context Layers
+- 3.17 Cross-Volume Integration
+- 3.18 Semantic Queries
+- 3.19 Architectural Laws
+- 3.20 Performance Characteristics
+- 3.21 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Core Principle
+- 4.4 ECOF Architecture
+- 4.5 Capability Registry
+- 4.6 Capability Discovery Engine
+- 4.7 Capability Composer
+- 4.8 Capability Orchestrator
+- 4.9 Execution Provider Selector
+- 4.10 Dependency Coordinator
+- 4.11 Outcome Verifier
+- 4.12 Capability Governance Manager
+
+## Volume 08
+
+- Source text: `docs/ccbs/extracted/volume_08.txt`
+- Detected title: Volume VIII
+
+### Headings
+- Part I — Cognitive Runtime Engineering
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Design Philosophy
+- 1.3 Core Principle
+- 1.4 Runtime Architecture
+- 1.5 Runtime Session Manager
+- 1.6 Execution Scheduler
+- 1.7 Context Runtime Manager
+- 1.8 Memory Runtime Manager
+- 1.9 Reasoning Runtime Engine
+- 1.10 Resource Coordinator
+- 1.11 Governance Runtime Manager
+- 1.12 Runtime Observatory
+- 1.13 Runtime Repository
+- 1.14 Lifecycle Supervisor
+- 1.15 Runtime Lifecycle
+- 1.16 Runtime Layers
+- 1.17 Cross-Volume Integration
+- 1.18 Semantic Queries
+- 1.19 Architectural Laws
+- 1.20 Performance Characteristics
+- 1.21 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Core Principle
+- 2.4 ECSA Architecture
+- 2.5 Service Registry
+- 2.6 Context Service
+- 2.7 Memory Service
+- 2.8 Knowledge Service
+- 2.9 Reasoning Service
+- 2.10 Planning Service
+- 2.11 Learning Service
+- 2.12 Governance Service
+- 2.13 Service Observatory
+- 2.14 Service Repository
+- 2.15 Cognitive Service Lifecycle
+- 2.16 Cognitive Service Layers
+- 2.17 Cross-Volume Integration
+- 2.18 Semantic Queries
+- 2.19 Architectural Laws
+- 2.20 Performance Characteristics
+- 2.21 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Core Principle
+- 3.4 ECEE Architecture
+- 3.5 Intent Interpreter
+- 3.6 Execution Graph Builder
+- 3.7 Dependency Manager
+- 3.8 Execution Orchestrator
+- 3.9 Adaptive Scheduler
+- 3.10 State Synchronization Manager
+- 3.11 Execution Validation Manager
+- 3.12 Execution Observatory
+- 3.13 Execution Repository
+- 3.14 Execution Supervisor
+- 3.15 Cognitive Execution Lifecycle
+- 3.16 Execution Layers
+- 3.17 Cross-Volume Integration
+- 3.18 Semantic Queries
+- 3.19 Architectural Laws
+- 3.20 Performance Characteristics
+- 3.21 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Core Principle
+- 4.4 ECPE Architecture
+- 4.5 Context Discovery Manager
+- 4.6 Context Assembly Engine
+- 4.7 Semantic Context Resolver
+- 4.8 Context Validation Manager
+- 4.9 Context Enrichment Engine
+- 4.10 Context Propagation Manager
+- 4.11 Context Version Manager
+- 4.12 Context Observatory
+
+## Volume 09
+
+- Source text: `docs/ccbs/extracted/volume_09.txt`
+- Detected title: Volume IX
+
+### Headings
+- Part I — Cognitive Assessment Foundations
+- Chapter 1
+- 1.1 Purpose
+- 1.2 Design Philosophy
+- 1.3 Core Principle
+- 1.4 ECAA Architecture
+- 1.5 Assessment Planning Manager
+- 1.6 Evidence Collection Engine
+- 1.7 Cognitive Evaluation Engine
+- 1.8 Benchmark Manager
+- 1.9 Scoring Engine
+- 1.10 Assessment Governance Manager
+- 1.11 Improvement Recommendation Engine
+- 1.12 Assessment Observatory
+- 1.13 Assessment Repository
+- 1.14 Assessment Supervisor
+- 1.15 Cognitive Assessment Lifecycle
+- 1.16 Assessment Layers
+- 1.17 Cross-Volume Integration
+- 1.18 Semantic Queries
+- 1.19 Architectural Laws
+- 1.20 Assessment Characteristics
+- 1.21 Chapter Summary
+- Chapter 2
+- 2.1 Purpose
+- 2.2 Design Philosophy
+- 2.3 Core Principle
+- 2.4 ECQA Architecture
+- 2.5 Quality Attribute Manager
+- 2.6 Reasoning Quality Engine
+- 2.7 Context Quality Engine
+- 2.8 Memory Quality Engine
+- 2.9 Knowledge Quality Engine
+- 2.10 Learning Quality Engine
+- 2.11 Governance Quality Engine
+- 2.12 Quality Observatory
+- 2.13 Quality Repository
+- 2.14 Quality Supervisor
+- 2.15 Cognitive Quality Lifecycle
+- 2.16 Cognitive Quality Layers
+- 2.17 Cognitive Quality Attributes
+- 2.18 Cross-Volume Integration
+- 2.19 Semantic Queries
+- 2.20 Architectural Laws
+- 2.21 Quality Characteristics
+- 2.22 Chapter Summary
+- Chapter 3
+- 3.1 Purpose
+- 3.2 Design Philosophy
+- 3.3 Core Principle
+- 3.4 ECMA Architecture
+- 3.5 Measurement Planning Manager
+- 3.6 Metric Definition Engine
+- 3.7 Evidence Correlation Engine
+- 3.8 Measurement Computation Engine
+- 3.9 Quality Validation Manager
+- 3.10 Trend Analysis Engine
+- 3.11 Measurement Governance Manager
+- 3.12 Measurement Observatory
+- 3.13 Measurement Repository
+- 3.14 Measurement Supervisor
+- 3.15 Cognitive Measurement Lifecycle
+- 3.16 Cognitive Measurement Layers
+- 3.17 Standard Cognitive Measurements
+- 3.18 Cross-Volume Integration
+- 3.19 Semantic Queries
+- 3.20 Architectural Laws
+- 3.21 Measurement Characteristics
+- 3.22 Chapter Summary
+- Chapter 4
+- 4.1 Purpose
+- 4.2 Design Philosophy
+- 4.3 Core Principle
+- 4.4 ECII Architecture
+- 4.5 Indicator Definition Manager
+- 4.6 Indicator Computation Engine
+- 4.7 Indicator Aggregation Manager
+- 4.8 Executive Dashboard Manager
+- 4.9 Strategic Insight Engine
+- 4.10 Indicator Governance Manager
+
+## Volume 10
+
+- Source text: `docs/ccbs/extracted/volume_10.txt`
+- Detected title: CLOZFLOW COGNITIVE BRAIN SPECIFICATION
+
+### Headings
+- PART I
+- Chapter 1: Cognitive Event Schema
+- 1.1 Event Envelope — Canonical JSON Schema
+- 1.2 EventType Registry
+- 1.3 Payload Schemas (Selected)
+- 1.3.1 TranscriptPayload
+- 1.3.7 ThresholdPayload
+- Chapter 2: World Model & Cognitive Reality Model Schemas
+- 2.1 World Model State Object
+- 2.2 BeliefNode Schema
+- 2.3 Recommendation Output Schema
+- PART II
+- Chapter 3: Brain Session API
+- 3.1 Transport & Authentication
+- 3.2 Session Lifecycle Endpoints
+- 3.3 Event Ingestion Endpoint
+- 3.4 Recommendation Streaming Interface (WebSocket)
+- Chapter 4: Cognitive Engine Interface Contract
+- 4.1 Engine Registration Schema
+- 4.2 Engine Execution Interface
+- 4.3 World Model Mutation Contract
+- PART III
+- Chapter 5: Recommended Technology Stack
+- 5.1 Core Stack Overview
+- 5.2 LLM Integration Specification
+- 0.3 for recommendation generation; 0.0 for classification tasks
+- 5.3 LLM System Prompt Template
+- Chapter 6: Infrastructure Architecture
+- 6.1 Service Topology
+- 6.2 Kubernetes Deployment Specifications
+- 0.5 / 2.0
+- 0.25 / 1.0
+- 1.0 / 4.0
+- 2.0 / 4.0
+- 1.0 / 2.0
+- PART IV
+- Chapter 7: End-to-End Latency Budget
+- 7.1 Target: Speech to Recommendation Display
+- 7.2 Background Engine Latency Budgets
+- 7.3 Confidence Thresholds
+- PART V
+- Chapter 8: Five-Tier Testing Architecture
+- 8.1 Tier Overview
+- 8.2 Engine Contract Test Specification
+- 8.3 Conversation Simulation Framework
+- Chapter 9: Observability & Quality Gates
+- 9.1 Required Telemetry Instrumentation
+- 9.2 Production Quality Gate Checklist
+- PART VI
+- Chapter 10: Phased Build Sequence
+- 1.1 Infrastructure provisioning
+- 1.2 Core schemas & validation
+- 1.3 Kafka topic provisioning
+- 2.1 Session API
+- 2.2 Event API & Bus
+- 2.3 World Model Manager
+- 3.1 Scheduler implementation
+- 4.1 Build engines in dependency order
+- 4.2 Engine validation per engine
+- 5.1 WebSocket stream & UI integration
+- 6.1 RAG pipeline
+- 6.2 Long-term memory
+- 7.1 Full test suite
+- 7.2 Production readiness checklist
+- PART VII
+- Chapter 11: CRM Integration
+- 11.1 Webhook Contract
+- 11.2 Salesforce Specific Implementation
+- Chapter 12: Speech-to-Text Pipeline Implementation
+- 12.1 Deepgram Streaming Integration
+- 12.2 Fallback Strategy
+- PART VIII
+- Chapter 13: Security Controls Specification
+- 13.1 Authentication & Authorisation
+- 13.2 Data Privacy Requirements
+- PART IX
+- Chapter 14: Brain Runtime Configuration
+- 14.1 brain.yaml — Complete Configuration Reference
+- Part II API Contracts; §5 Scheduler; §8.2
+- Part VII §11–12; CRM webhook contract
+

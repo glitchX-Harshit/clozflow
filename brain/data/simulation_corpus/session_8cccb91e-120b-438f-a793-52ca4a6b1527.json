@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "3c84d119-1fe3-4d90-bf83-0484d82c88ab",
+    "event_type": "SESSION_START",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:29.292311+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_113",
+      "crm_opportunity_id": "opp_113"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "5ec160ad-5091-4e5a-901d-f655d97f0280",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:34.292311+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. Thanks for taking the time today. We've been working with a lot of companies in the manufacturing space to streamline their supply chain visibility. What's currently working well for you in that area?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9123966076999543,
+    "metadata": {}
+  },
+  {
+    "event_id": "8f6c1916-6bb3-428d-8c1e-400e3d8b038a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:38.292311+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Morning. Uh, everything's fine, I guess. We've got our existing ERP system. It's old, but it works. What's your pitch, then?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8558705218279598,
+    "metadata": {}
+  },
+  {
+    "event_id": "bc6cb3ae-ff84-4167-b3c5-8943c7b8028f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:40.292311+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "My pitch is more about exploring potential improvements. Many of our clients come to us because their legacy systems lack real-time data, leading to costly delays and miscommunications. Are you currently seeing any challenges with data accuracy or the speed at which you can react to supply chain disruptions?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8507135612058506,
+    "metadata": {}
+  },
+  {
+    "event_id": "6e3aa207-b4cc-4078-8cc3-5eac99476de0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:45.292311+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Well, sometimes there are hiccups, sure. But we just deal with them. It's part of the business. We don't have budget for some fancy new system right now, especially with all the uncertainty.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8894533222975841,
+    "metadata": {}
+  },
+  {
+    "event_id": "379f06cc-2b57-40f1-8452-22c5c77553c6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:49.292311+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand budget concerns, especially in the current climate. What if I could show you how improving your visibility by even 10% could lead to a significant reduction in carrying costs or an increase in on-time deliveries that far outweighs the investment?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9580857710761536,
+    "metadata": {}
+  },
+  {
+    "event_id": "4180da31-e62d-4976-bc53-8a2677b5d8ad",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:54.292311+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, 10%, that's a big claim. And 'significant reduction' is pretty vague. What are we talking, like, six figures? Because if not, it's probably not worth the headache of implementing something new.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9364672310953374,
+    "metadata": {}
+  },
+  {
+    "event_id": "822d8b08-7403-4230-a371-c07e85c7a95e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:19:58.292311+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's exactly why understanding your current metrics is key. If you're open to it, we could schedule a follow-up with one of our solutions architects who could map out a potential ROI based on your specific operational data. No commitment, just an assessment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9562152330400793,
+    "metadata": {}
+  },
+  {
+    "event_id": "0936c0cd-de4e-4d4b-a6cc-61812684c1af",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:20:03.292311+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "An assessment, huh? That sounds like more time than I have. Just email me a case study or two, particularly if you have one for a company our size that *actually* saved six figures. Otherwise, don't bother.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 34000,
+      "end_ms": 35500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9150157966024547,
+    "metadata": {}
+  },
+  {
+    "event_id": "c4eec665-9a1e-4c49-9113-d854e087dc8d",
+    "event_type": "SESSION_END",
+    "session_id": "8cccb91e-120b-438f-a793-52ca4a6b1527",
+    "tenant_id": "416716de-29f1-4b26-9c71-bd8cec9870ff",
+    "timestamp_utc": "2026-06-28T22:20:08.292311+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

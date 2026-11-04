@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "8780c62c-8ae4-40bb-97a3-b66221b67f8c",
+    "event_type": "SESSION_START",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:14.895263+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_54",
+      "crm_opportunity_id": "opp_54"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "efbd0455-7163-4ba2-a090-3a09f236fb6c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:16.895263+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Jessica, my name is Chris from DataSync. We help e-commerce businesses integrate all their disparate data sources into a single, actionable dashboard. Are you currently struggling with a unified view of your customer data?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.906017012034718,
+    "metadata": {}
+  },
+  {
+    "event_id": "b25be343-82f4-4cd6-915f-b2204d310fa9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:18.895263+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, hey Chris. Yeah, 'unified view' is a nice dream, but honestly, we're drowning in data, not the lack of it. We just hired two new data analysts, and they're supposed to be handling all this.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9056921999428112,
+    "metadata": {}
+  },
+  {
+    "event_id": "6b9a2c42-9c2b-4555-a5b2-adafa329250d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:22.895263+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's exactly where we come in. Our platform doesn't just centralize data; it automates the cleansing and transformation, drastically reducing the manual effort for your analysts, allowing them to focus on insights rather than data wrangling.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9214221967071596,
+    "metadata": {}
+  },
+  {
+    "event_id": "420a2913-58da-4caf-9fcb-f516ec0ec91e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:24.895263+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, you're saying your software replaces what my new analysts are doing? Because I just spent a lot of money hiring them, and I'm not looking to make them redundant right away.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.986058955956495,
+    "metadata": {}
+  },
+  {
+    "event_id": "222c94c4-e23c-4b32-9c84-2c35db8ea28b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:27.895263+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Not at all. Think of it as empowering them. Instead of spending 80% of their time preparing data, they can spend 80% of their time extracting valuable insights and driving business strategy. It maximizes your investment in their expertise.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9663127090475607,
+    "metadata": {}
+  },
+  {
+    "event_id": "d7d6c763-1566-4782-96c4-22d1941c9a55",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:32.895263+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, I see your point. But still, another platform to learn... what's the typical implementation time? We're about to enter our peak season.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9528117234473261,
+    "metadata": {}
+  },
+  {
+    "event_id": "8323dec8-1829-4e71-b62a-0ba9f61b53c4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:35.895263+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For e-commerce clients, we typically see initial integrations complete within 2-4 weeks, with minimal disruption. We can even tailor a phased rollout to align with your busy periods.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9521037944802562,
+    "metadata": {}
+  },
+  {
+    "event_id": "01187873-ec53-4c0d-bb99-f8d03e5d088a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:40.895263+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Alright, I'm willing to hear more, but you'll have to convince my head of analytics, David. He's the real gatekeeper for this kind of tech. I'll connect you two.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9246420391528463,
+    "metadata": {}
+  },
+  {
+    "event_id": "51597167-9a6f-4432-9753-1fac51047739",
+    "event_type": "SESSION_END",
+    "session_id": "0b4816f8-2716-49bf-b18b-ca1aafdfab0a",
+    "tenant_id": "6440a84c-3d77-4101-ad28-55ee78d518cc",
+    "timestamp_utc": "2026-06-28T22:16:45.895263+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

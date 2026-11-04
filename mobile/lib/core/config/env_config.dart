@@ -3,17 +3,17 @@ class EnvConfig {
 
   static const String supabaseUrl = String.fromEnvironment(
     'SUPABASE_URL',
-    defaultValue: 'https://qnjqkdiytxqncdmvasax.supabase.co', // Match web app
+    defaultValue: '', // Supply with --dart-define; no project credentials in source
   );
 
   static const String supabaseAnonKey = String.fromEnvironment(
     'SUPABASE_ANON_KEY',
-    defaultValue: 'sb_publishable_zv2BKyu4VeY065wsapbYuQ_12WKm71w', // Match web app
+    defaultValue: '', // Supply with --dart-define; no project credentials in source
   );
 
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:8000',
+    defaultValue: 'http://localhost:8100',
   );
 
   static const String environment = String.fromEnvironment(

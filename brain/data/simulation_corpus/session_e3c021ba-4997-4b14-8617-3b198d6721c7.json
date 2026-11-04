@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "7841542f-a30a-43dc-a125-6e738071ba5e",
+    "event_type": "SESSION_START",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:24.157775+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_76",
+      "crm_opportunity_id": "opp_76"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "a7dc3ee6-995a-49c9-9b2a-e6a8e0b795b1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:26.157775+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining. I'm excited to talk about Nexus CRM and how it can help your sales team at [Company Name] streamline operations and boost productivity.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9852436974525645,
+    "metadata": {}
+  },
+  {
+    "event_id": "9590ca14-6e81-4085-880c-c1426c467da8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:30.157775+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Nexus, right. We're actually pretty happy with Salesforce. It's robust, everyone knows it. We've invested a lot in customization. What could Nexus possibly offer that would make us consider switching? Honestly, it sounds like a nightmare just thinking about migrating all that data.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9213396226060191,
+    "metadata": {}
+  },
+  {
+    "event_id": "447bacaa-a1b8-4132-bbae-03df5707dfea",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:32.157775+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very common initial reaction, and Salesforce is a powerful tool. However, many companies find its complexity can lead to low adoption rates for specific teams, and customization costs can quickly spiral. Nexus CRM specializes in intuitive, AI-driven sales process automation that often results in 30% higher sales rep adoption and 25% faster deal cycles due to its focus on simplicity and actionable insights, rather than just data storage.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8663302305773338,
+    "metadata": {}
+  },
+  {
+    "event_id": "3f3796f3-2847-4b42-93c0-10b986b7a570",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:37.157775+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI-driven... faster deal cycles. Everyone's throwing around AI these days. What does that actually mean for my reps on the ground? Does it just suggest templates? Because we already have those. And faster deal cycles? I think that's more about our sales leadership and training, not the CRM itself.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9599695951648245,
+    "metadata": {}
+  },
+  {
+    "event_id": "c23745f3-b329-4154-b40c-d781c247fc73",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:42.157775+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "You're right, sales leadership is crucial. But Nexus augments that. Our AI actively analyzes deal health, predicts next best actions, auto-populates opportunity fields, and even drafts personalized follow-up emails based on conversation data. It's not just templates; it\u2019s an intelligent co-pilot. This reduces administrative burden, allowing reps to focus on selling, which directly contributes to faster deal cycles. We often see it elevate the performance of even experienced reps.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9668838838504686,
+    "metadata": {}
+  },
+  {
+    "event_id": "8cea6b43-4461-4080-9294-5f046f878d38",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:44.157775+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's a lot to unpack. And the migration issue remains. Even if it's better, the pain of moving from Salesforce to anything else... I'm looking at months of work, data corruption risks, and user revolt. Is it really worth that kind of disruption?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8574235855074285,
+    "metadata": {}
+  },
+  {
+    "event_id": "bab5226b-3b61-4240-a327-79d5b00b3664",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:48.157775+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear your concern about migration. We specialize in making that process as seamless as possible. Our dedicated migration team has a proven methodology for transitioning from Salesforce, ensuring data integrity and minimal downtime. We also offer comprehensive training and change management support to ensure high user adoption. We view it as a strategic investment that quickly pays off by freeing your team from the complexities of an over-engineered system. Perhaps a brief demo of the migration process, alongside a deeper dive into the AI features, could help clarify the value versus the perceived effort?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9201366264178381,
+    "metadata": {}
+  },
+  {
+    "event_id": "cb9b5d9b-741f-4245-a243-5dc819ce00bf",
+    "event_type": "SESSION_END",
+    "session_id": "e3c021ba-4997-4b14-8617-3b198d6721c7",
+    "tenant_id": "db6a83e5-236e-4816-98e2-392b9a713efe",
+    "timestamp_utc": "2026-06-28T22:17:53.157775+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

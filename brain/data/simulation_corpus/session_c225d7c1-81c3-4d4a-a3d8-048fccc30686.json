@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "b56156b9-0d62-4e02-bd8b-a79558e9b343",
+    "event_type": "SESSION_START",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:12:54.290201+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_17",
+      "crm_opportunity_id": "opp_17"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "0f774173-d7c7-439a-ad43-79754350465e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:12:59.290201+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Chloe, thanks for joining. I wanted to discuss how our analytics platform can give you deeper insights into your customer journey.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8980397672072258,
+    "metadata": {}
+  },
+  {
+    "event_id": "d8d78581-a072-4022-8ec1-3c985a6d9de0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:01.290201+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Customer journey, sure. But can it tell me why our conversion rate for abandoned carts dropped 5% last quarter, specifically for mobile users in Europe?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9551466232166074,
+    "metadata": {}
+  },
+  {
+    "event_id": "2cf86cf6-51d7-4c53-8ff5-d570f973319b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:05.290201+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yes, absolutely, Chloe. Our platform allows you to segment your data by device type, geography, and specific user actions to pinpoint exactly where friction points occur in the funnel.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9134662745521855,
+    "metadata": {}
+  },
+  {
+    "event_id": "445f3199-33d2-4dbb-8d7d-a55507043f19",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:09.290201+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, so it's a fancy dashboard. We have Google Analytics, Hotjar, Mixpanel... another tool just means more dashboards to check. My team is already drowning in data, not lacking it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9777186851083616,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d38a8bf-42b4-4f00-9b33-41912d706c02",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:13.290201+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more than just a dashboard. Our platform unifies that data and, crucially, offers proactive anomaly detection. It would have alerted you to that 5% drop on mobile in Europe, often before you even noticed.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.936381021719286,
+    "metadata": {}
+  },
+  {
+    "event_id": "9c673b01-4e35-4c4d-97dd-eee64dd6aee0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:18.290201+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Anomaly detection... interesting. But what about the 'why'? Can it tell me *why* they're dropping off, or just *that* they are?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.956290468437489,
+    "metadata": {}
+  },
+  {
+    "event_id": "95119e78-49d9-4fb3-9b73-43f65ce6d36d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:21.290201+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It surfaces correlation data that points to potential causes, for example, a recent A/B test change or a page load speed issue specific to that segment, guiding you to the root cause.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9896685718615877,
+    "metadata": {}
+  },
+  {
+    "event_id": "b38e3afd-df9f-448d-acbc-554a11bad8a2",
+    "event_type": "SESSION_END",
+    "session_id": "c225d7c1-81c3-4d4a-a3d8-048fccc30686",
+    "tenant_id": "a8f0f2e9-6c43-4760-b359-5a20a904608c",
+    "timestamp_utc": "2026-06-28T22:13:26.290201+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

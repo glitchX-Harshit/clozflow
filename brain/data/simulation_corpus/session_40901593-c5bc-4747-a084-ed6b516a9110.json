@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "1bbc3d72-eb11-4234-9a37-9740cf2d1ba3",
+    "event_type": "SESSION_START",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:00.577105+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_125",
+      "crm_opportunity_id": "opp_125"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "dad3fd34-98b9-4589-92f4-1024eeb7a539",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:05.577105+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform, Synapse, integrates all your disparate data sources into a single, actionable dashboard, helping marketing teams optimize campaign spend.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9828368412125106,
+    "metadata": {}
+  },
+  {
+    "event_id": "2bc56aef-3f6f-4864-a399-8302bdcf72d0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:08.577105+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay... so it's like an analytics tool? We use Google Analytics and Tableau for our reporting. How is this different from just a better visualization layer?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8701102842631202,
+    "metadata": {}
+  },
+  {
+    "event_id": "5f8c8f2b-df8f-440c-8cc9-66f928a17f63",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:10.577105+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question. While GA and Tableau are excellent for reporting, Synapse goes beyond that. It doesn't just show you what happened; it uses machine learning to recommend specific actions to take, like reallocating budget to underperforming channels or identifying audience segments with higher ROI.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8574064114767399,
+    "metadata": {}
+  },
+  {
+    "event_id": "a04c2f94-960c-4b50-abaa-aba554b4dd4f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:12.577105+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, it tells me what to do? That sounds... ambitious. And a little scary. My team already has a strategy. We're just looking for clearer data, not a robot telling us how to run our campaigns.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9003053759329613,
+    "metadata": {}
+  },
+  {
+    "event_id": "b5999213-c20a-4a0a-9489-34a50ee2d317",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:14.577105+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more of an intelligent assistant, Mark. The recommendations are designed to augment your team's expertise, not replace it. Think of it as having an always-on data scientist providing insights you might miss. The final decision is always yours.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8601679082391477,
+    "metadata": {}
+  },
+  {
+    "event_id": "ec0188d7-995c-4e9d-9d64-3bb3dbf20741",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:16.577105+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Okay, I think I'm starting to get it. So, it's less about raw data and more about actionable intelligence that proactively tells me where to focus my budget?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9745634024005858,
+    "metadata": {}
+  },
+  {
+    "event_id": "974bfa47-c6ae-45a4-a73e-f4335d7305a4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:20.577105+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Precisely. It helps you find those hidden pockets of opportunity and prevent wasted spend before it happens.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8589444189078383,
+    "metadata": {}
+  },
+  {
+    "event_id": "d42faa25-5bf7-4f0b-ab5a-514676853d84",
+    "event_type": "SESSION_END",
+    "session_id": "40901593-c5bc-4747-a084-ed6b516a9110",
+    "tenant_id": "866ad6ae-1287-48b9-a365-fc1e003aae0f",
+    "timestamp_utc": "2026-06-28T22:20:25.577105+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

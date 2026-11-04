@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "a9d00928-6b2b-47e3-866f-615f39300c67",
+    "event_type": "SESSION_START",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:30.803177+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_28",
+      "crm_opportunity_id": "opp_28"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "267707ec-1f5d-4ed3-a8b8-2e85f8d17d21",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:34.803177+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, [Buyer Name]. I'm calling from [Company Name]. We help businesses like yours automate their compliance and audit processes with [Product Name].",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9137792210519303,
+    "metadata": {}
+  },
+  {
+    "event_id": "fa0b0e9d-c48b-482b-b57d-34d0da1097b6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:39.803177+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Compliance automation, you say? We're actually pretty good on that front. We just went through our annual audit with flying colors, and we have a dedicated team handling it all. So, I'm not sure we have a pressing need.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8538670471910184,
+    "metadata": {}
+  },
+  {
+    "event_id": "091d964f-0a39-4dea-a01a-69cdeb8d7934",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:41.803177+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fantastic to hear you're in such a strong position. Many of our clients also have robust internal teams, but they still find that [Product Name] helps them reduce the *manual effort* involved by up to 70%, freeing up their experts for more strategic work.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8992205645676249,
+    "metadata": {}
+  },
+  {
+    "event_id": "30aac3d4-c407-4579-a50a-23fb85aae1e1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:43.803177+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Reducing manual effort sounds nice, but my team isn't complaining. They're good at what they do. And frankly, we just on-boarded a new security awareness training platform. We're in a 'no new software' zone for at least the next two quarters.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9479594237821483,
+    "metadata": {}
+  },
+  {
+    "event_id": "0f8a08e9-b881-43a3-a769-b38b380f095a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:48.803177+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the 'software fatigue' completely. This isn't about replacing your team, but empowering them. Perhaps this isn't the right moment for implementation, but is it something that could be on your radar for later in the year, when things settle down?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9156026150399241,
+    "metadata": {}
+  },
+  {
+    "event_id": "61af84aa-fd49-401b-8485-6b252a4e716a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:51.803177+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Maybe, maybe not. It's just not a priority right now. We have bigger fish to fry, honestly. Cyber threats, data breaches... compliance is running smoothly, so it's not where we're investing resources.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9099316535136105,
+    "metadata": {}
+  },
+  {
+    "event_id": "af641e5e-b6fc-48c3-908f-a9d467dcb785",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:53.803177+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood. Would you be open to me sharing a brief case study on how we helped a similar company proactively identify and mitigate a potential compliance gap that could have led to significant fines? It might be useful for future planning.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.857396552802068,
+    "metadata": {}
+  },
+  {
+    "event_id": "047cfd09-2fea-4a7f-9914-3fefac14ab28",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:13:55.803177+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sure, send it over. But don't expect a call back anytime soon.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9478428705214481,
+    "metadata": {}
+  },
+  {
+    "event_id": "bda8e3af-0b70-4f9a-947c-6e8a47f7e598",
+    "event_type": "SESSION_END",
+    "session_id": "a6f1e262-eb4f-46bf-88d5-f35eec893daf",
+    "tenant_id": "ca894ee7-5509-4619-bd6a-3e7bd82c07ae",
+    "timestamp_utc": "2026-06-28T22:14:00.803177+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,255 @@
+[
+  {
+    "event_id": "96fb43af-2d4b-4f2d-b7c1-77dc98746630",
+    "event_type": "SESSION_START",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:12.129504+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_35",
+      "crm_opportunity_id": "opp_35"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "a772e5cb-288d-43b2-8d3a-782fda00d772",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:15.129504+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for making time. Our goal today is to explore how [Product Name] can streamline your internal communications and knowledge sharing. Does that sound like a good agenda?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9345198048511636,
+    "metadata": {}
+  },
+  {
+    "event_id": "3e79f4d8-a301-4709-a220-343a518f3c21",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:18.129504+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sorry, one sec... *muffled voice in background*... Okay, go ahead. My apologies.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.976822778373744,
+    "metadata": {}
+  },
+  {
+    "event_id": "a16110b3-223a-4682-9a3f-81e24511c482",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:22.129504+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No worries at all. [Product Name] essentially creates a centralized, searchable knowledge hub for your entire organization, making it easy for employees to find information quickly and collaborate on documents.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9658389119953368,
+    "metadata": {}
+  },
+  {
+    "event_id": "f5153543-be79-4750-b3c2-bb318699690f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:26.129504+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hold on again, my phone's ringing off the hook. Can you just give me the elevator pitch, quick? I'm having a really hectic day.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9307551067284143,
+    "metadata": {}
+  },
+  {
+    "event_id": "db81ed08-ad6a-40b6-835e-3ece0a8a0d28",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:28.129504+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Of course. [Product Name] is the intelligent intranet solution that cuts down internal email volume by 30% and reduces time spent searching for information by enabling instant access to verified company knowledge, improving decision-making across all teams.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8723908049710072,
+    "metadata": {}
+  },
+  {
+    "event_id": "f576bcda-00a8-4453-b143-7fabfb517a27",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:31.129504+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right, so you're saying this helps with team chat and file sharing, kind of like a souped-up SharePoint? *another interruption, a door opening and closing loudly*",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9788851498773827,
+    "metadata": {}
+  },
+  {
+    "event_id": "ace661a2-f646-4a44-a2ea-2f666f7d5ddd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:36.129504+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It goes beyond standard file sharing, integrating AI to surface relevant information proactively and manage document versions automatically. It's more about actionable knowledge than just storage. It sounds like you're incredibly busy today, would it be better to reschedule?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9742678157247983,
+    "metadata": {}
+  },
+  {
+    "event_id": "d803883b-3b78-419d-a7a6-a82d77c826d9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:39.129504+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No, no, I'm here. Just... it's a crazy day. What's the starting price point for a small-to-medium business with about 100 employees?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9332315180005187,
+    "metadata": {}
+  },
+  {
+    "event_id": "b88ae6c4-98c8-40ea-b90b-b0bf3356a426",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:44.129504+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For 100 employees, our Standard plan starts at $X per user per month. It includes unlimited storage and our core AI search features, designed to scale with your organization's growth.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 32000,
+      "end_ms": 33500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.948243255887748,
+    "metadata": {}
+  },
+  {
+    "event_id": "de3cb5f7-0744-4da6-ae2e-d276384ff414",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:49.129504+00:00",
+    "sequence_num": 10,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Ugh, that's a bit more than I expected. Let's touch base next week. I need to clear my head and actually focus before discussing this further.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 37000,
+      "end_ms": 38500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9515932882930471,
+    "metadata": {}
+  },
+  {
+    "event_id": "b188223b-c326-4f42-b82d-bd1d1a5e5f8f",
+    "event_type": "SESSION_END",
+    "session_id": "7e77ee69-3d41-47fb-a595-f905618a56e1",
+    "tenant_id": "724ba98a-7d8b-419c-94d0-0c438eda003a",
+    "timestamp_utc": "2026-06-28T22:14:54.129504+00:00",
+    "sequence_num": 11,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

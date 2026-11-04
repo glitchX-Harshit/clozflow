@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "4e22468a-3041-4c91-8fc1-86569c49b1ce",
+    "event_type": "SESSION_START",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:24.156056+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_74",
+      "crm_opportunity_id": "opp_74"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "098fdeec-f0c4-43bf-8aee-0a80ac136b20",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:28.156056+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], great to connect today. We're here to discuss how FlexiPay, our automated expense management platform, can simplify things for your finance team at [Company Name].",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9510133140265773,
+    "metadata": {}
+  },
+  {
+    "event_id": "46f9df7d-744c-48e2-a3b1-99220fa570be",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:33.156056+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hey. Yeah, I saw your email. I'm just not sure we need another tool right now. We've got Expensify, and it mostly works. It's not perfect, but people know it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9833892174817993,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d676cf8-406c-4329-a666-cdaa5327337d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:35.156056+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's completely fair. Many companies start with solutions like Expensify. Where FlexiPay truly differentiates itself is in its advanced policy enforcement and real-time reconciliation, which significantly reduces manual review time and prevents out-of-policy spending before it even happens. We often see clients cut their expense processing time by 60%.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8613448095766724,
+    "metadata": {}
+  },
+  {
+    "event_id": "deca8952-655c-4f43-a254-c24c40e7aab3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:40.156056+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sixty percent? That's a huge claim. And honestly, the biggest headache for us isn't the processing, it's getting employees to submit receipts on time. No software can fix that. Are you saying your platform somehow forces them to upload receipts instantly?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9334726458592164,
+    "metadata": {}
+  },
+  {
+    "event_id": "ab804424-d62d-4770-a005-17c0f7bb09bc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:44.156056+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "You've hit on a critical point. While no software can force behavior, FlexiPay makes compliance effortless. It integrates directly with corporate cards and uses AI to automatically match transactions to receipts via email or even text, prompting users immediately for missing details in a user-friendly way. It also allows for real-time policy checks at the point of purchase, declining non-compliant transactions instantly, which is a big driver of that 60% reduction.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9897256486162226,
+    "metadata": {}
+  },
+  {
+    "event_id": "c8092ce7-b97d-4b36-b8ba-76b314052691",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:48.156056+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Declining transactions instantly? That sounds like a recipe for angry employees and a ton of support tickets. We're trying to empower our teams, not restrict them at every turn. What if a legitimate expense gets flagged wrongly?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8687571935712232,
+    "metadata": {}
+  },
+  {
+    "event_id": "9f509292-d8fc-4ce1-a697-c382ab12b6ae",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:52.156056+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's why our policy engine is highly configurable. You set the rules, not us. You can start with soft warnings and escalation paths, or implement hard blocks for egregious violations. And for legitimate but flagged expenses, there's always a clear override process for managers. It's about proactive control, not just reactive rejection. Would it be helpful to see a quick demo of how easy it is to configure these policies?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9079599429860143,
+    "metadata": {}
+  },
+  {
+    "event_id": "9970341d-f837-4e60-a552-642a9be84fa5",
+    "event_type": "SESSION_END",
+    "session_id": "81ff798f-7b03-41da-800b-82f582a2c56a",
+    "tenant_id": "dcaeb762-88de-40c7-bc5c-1fe21fcab676",
+    "timestamp_utc": "2026-06-28T22:17:57.156056+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

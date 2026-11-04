@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "b9f96e10-eb3a-4bd6-87d9-b262f58e7e39",
+    "event_type": "SESSION_START",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:12.131027+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_36",
+      "crm_opportunity_id": "opp_36"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "ecadb615-2ffb-4da2-9c84-5fa3cccfb04a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:16.131027+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], I understand your team currently uses a bespoke solution for tracking customer journey analytics. Could you tell me a bit about what works well with that system?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9259306254492106,
+    "metadata": {}
+  },
+  {
+    "event_id": "6623fb51-8ed4-470b-8dee-f04c049096c8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:20.131027+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We're actually pretty happy with our in-house system. Our developers built it years ago, and it does what we need it to do for the most part.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9726280502296204,
+    "metadata": {}
+  },
+  {
+    "event_id": "8e80698b-3e46-4323-b990-e11223a63a6e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:24.131027+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fantastic to hear you have a custom solution. Many companies do. However, often these systems can require significant ongoing maintenance, or struggle with integrating new data sources. Have you encountered any limitations there?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9855174765937078,
+    "metadata": {}
+  },
+  {
+    "event_id": "93ea28ce-d5c3-4200-b7a8-7d5e1fc95a85",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:27.131027+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Well, it's not perfect, we do have to manually pull data from a few different marketing platforms, and it can be slow when we're trying to analyze huge data sets. But we've invested a lot in customizing it, and the thought of migrating everything is just overwhelming.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9579992308664017,
+    "metadata": {}
+  },
+  {
+    "event_id": "0e446f3a-2995-416c-b814-abd85f504a04",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:32.131027+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "[Product Name] is specifically designed to handle those large data sets and integrates with over 100 marketing and sales platforms out-of-the-box. We also have a dedicated migration team that streamlines data transfer, minimizing disruption and ensuring data integrity.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9808239942542292,
+    "metadata": {}
+  },
+  {
+    "event_id": "adcd9bfc-fd3a-44d5-b672-8186991475d8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:35.131027+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Still, it's a big lift. And training everyone again on a new dashboard. What's the real benefit over just sticking with what we know, even if it has a few quirks?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.973366062487525,
+    "metadata": {}
+  },
+  {
+    "event_id": "adfae8c1-6249-4df9-a2b3-01ce1f76712e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:39.131027+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The real benefit comes from the speed and depth of insights. Our AI-driven analytics can identify customer segments and journey drop-off points in minutes, not days, allowing for immediate campaign optimization. This translates to an average 10-15% uplift in conversion rates for our clients, directly impacting your bottom line.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8526116551567394,
+    "metadata": {}
+  },
+  {
+    "event_id": "98131a64-e27b-48f1-b312-2c476be15aa3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:42.131027+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'd have to see a very compelling ROI to justify that kind of disruption and cost. Can you send me a demo video that specifically addresses multi-platform data integration and your AI's capabilities?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 30000,
+      "end_ms": 31500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8768399934150916,
+    "metadata": {}
+  },
+  {
+    "event_id": "1b708386-456c-43db-a914-78824af248fe",
+    "event_type": "SESSION_END",
+    "session_id": "5d32c91c-8640-4206-aa30-b7634c6db805",
+    "tenant_id": "308798c5-7004-4a85-bacf-727edade379c",
+    "timestamp_utc": "2026-06-28T22:14:47.131027+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

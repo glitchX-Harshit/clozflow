@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "7f0f4042-7b66-48e9-8285-eeafd15f5de3",
+    "event_type": "SESSION_START",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:15.119857+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_49",
+      "crm_opportunity_id": "opp_49"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "18348130-a5da-4043-a0f0-28ce6892d771",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:18.119857+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Daniel, thanks for joining. I wanted to walk you through how our field service management solution can boost your technician efficiency. What's your biggest challenge with dispatching and scheduling right now?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8931626334556741,
+    "metadata": {}
+  },
+  {
+    "event_id": "f851530b-7599-4fa4-97ed-9ea3ae0da393",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:21.119857+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Dispatching is... chaotic. We're still using whiteboards and phone calls. Technicians get lost, parts aren't available, customers complain. It's a mess. But our field team is very set in their ways; they'll resist any new tech.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9171081039833969,
+    "metadata": {}
+  },
+  {
+    "event_id": "5180fd3c-14b1-4b83-9add-517b8f166e93",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:25.119857+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common hurdle, and we've designed our mobile app for extreme ease of use. It provides optimized routes, real-time job updates, and inventory visibility \u2013 all from their smartphone or tablet. It actually makes their job easier, not harder.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9044320853592014,
+    "metadata": {}
+  },
+  {
+    "event_id": "17d18975-b7b5-4707-9ca7-9df0ee2ff2f6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:30.119857+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, but what about connectivity out in the field? Some of our service areas have really spotty cell service. Will this just be another app that freezes or loses data?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9826368593350776,
+    "metadata": {}
+  },
+  {
+    "event_id": "639356ae-ae8b-4d2b-8a79-f82c90307065",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:34.119857+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Great point. Our mobile application has robust offline capabilities. Technicians can complete forms, update job statuses, and access information even without a connection. Everything syncs automatically once they're back online.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9699174925883218,
+    "metadata": {}
+  },
+  {
+    "event_id": "6adf2f53-a5c3-40ee-a44e-ff83cecb8b4d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:38.119857+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Offline capability is good, I guess. But honestly, I'm just gathering information. My boss is the one who makes these decisions, and he's been burned by expensive software that never got adopted before. I don't want to waste your time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.969099542254418,
+    "metadata": {}
+  },
+  {
+    "event_id": "8c967a68-f21c-4409-bbf0-c4c40b9df85a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:42.119857+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. Perhaps we could arrange a brief, high-level overview for your boss, focusing on the ROI and user adoption aspects? We've helped many companies successfully transition their field teams.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8667318470871432,
+    "metadata": {}
+  },
+  {
+    "event_id": "47bd6465-8fd5-4aa7-8260-15e4d30f9f04",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:45.119857+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Maybe. I'll ask him, but don't hold your breath. He's very busy. Just send me some materials I can forward.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 30000,
+      "end_ms": 31500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9413052045907319,
+    "metadata": {}
+  },
+  {
+    "event_id": "817d0f4f-1f68-429f-aed4-96286e4d5be6",
+    "event_type": "SESSION_END",
+    "session_id": "00793a75-647f-469b-99b0-7bb9b84adc0e",
+    "tenant_id": "33330e2c-fb11-421c-9b77-3e860001143d",
+    "timestamp_utc": "2026-06-28T22:15:50.119857+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

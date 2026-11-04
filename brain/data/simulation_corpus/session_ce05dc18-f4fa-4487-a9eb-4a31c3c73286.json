@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "e1606368-c7da-43c8-8c0d-dedf3b544494",
+    "event_type": "SESSION_START",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:12.134857+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_40",
+      "crm_opportunity_id": "opp_40"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "cc78882a-3e63-41c0-8373-97f5ef54940e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:15.134857+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Based on our discussion, [Product Name] can significantly reduce your marketing team's content creation bottlenecks. What are your thoughts on taking the next step, perhaps a detailed demo for your team?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9443664661257638,
+    "metadata": {}
+  },
+  {
+    "event_id": "9be1d9e5-b915-4d9b-8b84-d3b1cffe74c8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:20.134857+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It looks promising, but I really need to talk to a few more vendors before making any decisions. We have a couple of other demos scheduled for next week.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8961710948459588,
+    "metadata": {}
+  },
+  {
+    "event_id": "44bf6dc8-12f3-42dc-8453-168a801d94ca",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:24.134857+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's perfectly fair. To help you in your evaluation, what specific criteria are you prioritizing when comparing solutions? Knowing that might help me tailor our information to your needs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9270067336814789,
+    "metadata": {}
+  },
+  {
+    "event_id": "7218fb39-ebb2-45fb-ab2e-81eece61dc7f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:29.134857+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Mostly ease of use and customer support. We've had bad experiences with unresponsive support and complex interfaces in the past, and it's a huge pain point for our team.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9466766658809247,
+    "metadata": {}
+  },
+  {
+    "event_id": "5a34a05f-c8a9-44f1-9a3a-57640e8ffab8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:32.134857+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. User experience and support are areas we pride ourselves on. We offer 24/7 in-app chat support with a guaranteed 5-minute response time, and our platform consistently receives top marks for usability in G2 reviews. Would a short trial alleviate some of those concerns?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8610782017045717,
+    "metadata": {}
+  },
+  {
+    "event_id": "d1f5f839-ed15-4e44-b2d8-6bfae35dd459",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:35.134857+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, but I'm just not sure if this is the *right* solution for us. It's a big commitment, and I don't want to rush into anything that might cause more headaches down the line. I just need more time to think.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9798410239838912,
+    "metadata": {}
+  },
+  {
+    "event_id": "699a0939-a433-4fb7-a110-62210f3eef30",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:39.134857+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I respect that. To de-risk the decision, we could offer a limited pilot project focused on one specific content type, allowing your team to experience the benefits firsthand with zero commitment. This way, you can truly validate if it's the right fit.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.860359682304027,
+    "metadata": {}
+  },
+  {
+    "event_id": "131689b2-cca0-4ca6-a875-261c63016ce9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:42.134857+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'll think about it. Send me all the materials you have, including any comparisons to your main competitors, and I'll get back to you if I have more questions after I've done my research.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 30000,
+      "end_ms": 31500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9453509181027605,
+    "metadata": {}
+  },
+  {
+    "event_id": "09b76565-5ce0-44ff-aa2a-685f5747375c",
+    "event_type": "SESSION_END",
+    "session_id": "ce05dc18-f4fa-4487-a9eb-4a31c3c73286",
+    "tenant_id": "0f2cc928-223b-4a4f-aa48-47637909c219",
+    "timestamp_utc": "2026-06-28T22:14:47.134857+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

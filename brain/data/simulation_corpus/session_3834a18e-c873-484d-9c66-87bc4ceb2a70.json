@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "5e15f735-0a12-49ee-a840-873f95cd73b8",
+    "event_type": "SESSION_START",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:17:52.980893+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_89",
+      "crm_opportunity_id": "opp_89"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "b23c6614-cdf2-48f1-9aaa-2e423cfdbcd7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:17:56.980893+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], great to connect. I wanted to explore how our employee engagement platform could help reduce turnover in your organization.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9338992399874744,
+    "metadata": {}
+  },
+  {
+    "event_id": "20039243-8a0f-4222-9900-4336b6160f01",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:17:59.980893+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi. Employee engagement, sure. We send out surveys, run town halls, all that good stuff. Our turnover is... typical for our industry. Is this going to be another 'culture hack' tool that promises the moon?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.857000729166234,
+    "metadata": {}
+  },
+  {
+    "event_id": "da452cde-9b8d-4612-b6e2-f08458c54fb3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:01.980893+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I assure you, it's much more than a 'culture hack.' Our platform provides real-time sentiment analysis, identifies flight risks, and suggests data-driven interventions, allowing you to address issues proactively before employees even consider leaving.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9598574060927183,
+    "metadata": {}
+  },
+  {
+    "event_id": "53267e10-33aa-40e4-9d32-6aa968ae347e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:03.980893+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Real-time sentiment? That sounds a bit... Big Brother-ish. How do we ensure employee privacy and trust if we're constantly 'monitoring' them?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9164155897592764,
+    "metadata": {}
+  },
+  {
+    "event_id": "ef637e42-27ed-4957-9b51-afdf95c94c76",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:07.980893+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very important point, and one we take seriously. Our platform is designed with anonymity and privacy built-in. It aggregates data at a departmental or company level, never identifying individual responses, ensuring trust while still providing actionable insights.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8812331286439876,
+    "metadata": {}
+  },
+  {
+    "event_id": "253f9ddd-8954-4562-8d76-80ff40b4d9dd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:10.980893+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. And how much time does it take for HR to actually use and interpret this data? We're a lean team.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9720150521989297,
+    "metadata": {}
+  },
+  {
+    "event_id": "fd56776f-c246-41c3-a577-b5a8bcc583d9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:12.980893+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The dashboards are intuitive, and the AI highlights key areas for action, minimizing analysis time. We also offer dedicated support to help your team leverage the insights effectively.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8907411371903684,
+    "metadata": {}
+  },
+  {
+    "event_id": "c47fd5d2-dafc-4073-abc6-e80514a13f42",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:14.980893+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'm still not sold on the privacy angle, and the budget is extremely tight right now with current hiring initiatives. Let's revisit this in a few quarters, maybe. Thanks for the overview.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9665129271546681,
+    "metadata": {}
+  },
+  {
+    "event_id": "e65e6c99-460a-4cfb-8cf2-f9831d5f690d",
+    "event_type": "SESSION_END",
+    "session_id": "3834a18e-c873-484d-9c66-87bc4ceb2a70",
+    "tenant_id": "f204a2ee-9054-4a28-a424-39ca2066d736",
+    "timestamp_utc": "2026-06-28T22:18:19.980893+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

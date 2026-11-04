@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "1d640437-65ef-497e-8f80-95b5269e17e3",
+    "event_type": "SESSION_START",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:29.919976+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_7",
+      "crm_opportunity_id": "opp_7"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "72ef3eee-0961-4dc7-b08d-230347c55116",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:34.919976+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, Lisa. I'm calling from CloudSolutions. We help businesses optimize their cloud spend and resource allocation.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8638229704820587,
+    "metadata": {}
+  },
+  {
+    "event_id": "87275580-79a4-41b1-91ad-45b3928cac08",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:38.919976+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cloud spend? Yeah, that's a headache. But we're pretty locked into AWS, and our internal team handles optimization. I'm not sure what you could do that they can't.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9317220618339099,
+    "metadata": {}
+  },
+  {
+    "event_id": "e6b97187-89d3-46f4-9149-e6f7a9d5be26",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:43.919976+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Lisa, while your team is doing great work, our platform uses machine learning to identify hidden inefficiencies, unused resources, and rightsizing opportunities that even expert human teams often overlook across complex environments. We typically find 15-25% savings for AWS clients.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9244381807564377,
+    "metadata": {}
+  },
+  {
+    "event_id": "32351e2a-f6a3-40a8-b9c9-9f89216d7dd2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:47.919976+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "15-25%? That's a bold claim. Everyone says they can save us money. We just bought a bunch of Reserved Instances, so I think we're good on that front for a while.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8845598628454471,
+    "metadata": {}
+  },
+  {
+    "event_id": "a2a657e1-fa9f-48d4-946f-d35ca81c88f8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:50.919976+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Reserved Instances are a great start, but our analysis goes deeper, looking at things like underutilized spot instances, orphaned resources, and intelligent scheduling. We don't just find savings; we automate their realization. Could I offer a free, no-obligation cloud assessment? It's a quick read-only analysis that takes about 15 minutes to set up, and you'll get a report showing potential savings specific to your AWS environment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8642249896700388,
+    "metadata": {}
+  },
+  {
+    "event_id": "5c190777-5ba8-48a2-9e08-74d234c5407f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:55.919976+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A free assessment? Hmm. Okay, that sounds less intrusive. But I'll need to run it past my manager. She's very particular about sharing any cloud data, even read-only. We've had issues before.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.981359775993486,
+    "metadata": {}
+  },
+  {
+    "event_id": "e8e3027b-4aff-4d5d-9f3c-9c5f7d7fbc79",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:12:58.919976+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. We can even provide an overview of our security protocols and data handling practices for your manager. Would you be open to me sending over some information she could review, along with details on how to set up that assessment securely?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.926582013946761,
+    "metadata": {}
+  },
+  {
+    "event_id": "b71a7eb4-3095-4ad3-952f-9f38c2b9bc0a",
+    "event_type": "SESSION_END",
+    "session_id": "114ca1f3-4375-4762-9bfb-2b3145fe0081",
+    "tenant_id": "11a1f1eb-4324-491f-8704-86bf00426e42",
+    "timestamp_utc": "2026-06-28T22:13:03.919976+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

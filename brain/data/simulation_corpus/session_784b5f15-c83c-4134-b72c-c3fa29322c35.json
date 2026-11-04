@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "440588a7-d18d-4cdb-9d97-16a5ca7fbcb6",
+    "event_type": "SESSION_START",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:14.897686+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_58",
+      "crm_opportunity_id": "opp_58"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "fb1a5f89-4eb8-4fc4-9390-2768425142d3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:17.897686+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Jane, my name is David. I'm with OpsGenie, and we help manufacturing companies optimize their supply chain logistics using real-time predictive analytics.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8712595094691108,
+    "metadata": {}
+  },
+  {
+    "event_id": "7ddfd943-b193-48a6-bda2-a4114127bf32",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:20.897686+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive analytics for logistics? We already have an ERP system, and our supply chain is fairly stable. We've been doing this for 50 years, so I'm not sure what you could tell us that's new.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8755042092699314,
+    "metadata": {}
+  },
+  {
+    "event_id": "43ccc615-63d8-4392-a082-5cf7fc006091",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:22.897686+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a strong foundation. Our platform integrates with your existing ERP to provide granular insights into potential disruptions \u2013 from weather patterns to geopolitical events \u2013 before they impact your operations, allowing for proactive adjustments.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8891831000027677,
+    "metadata": {}
+  },
+  {
+    "event_id": "91236257-e78b-441b-882e-dc47875ce3d6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:24.897686+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Look, our team is pretty good at anticipating problems. We have contingency plans for everything. And honestly, another piece of software means more training, more data migration... it's just not a priority right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9121172282334383,
+    "metadata": {}
+  },
+  {
+    "event_id": "9f7cc83e-905a-48ef-a1be-de68aba81005",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:26.897686+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand the hesitation with new software. However, we've found that even well-run supply chains can uncover significant cost savings and efficiency gains by leveraging external data points our AI processes. Would you be open to a 15-minute call to see a quick example of a common disruption scenario?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8828761407205159,
+    "metadata": {}
+  },
+  {
+    "event_id": "1c56066a-cc48-4bbb-96d7-3d2eb862bd3e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:29.897686+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'm not sure. We're really focused on scaling production, and anything that distracts from that is a no-go. Email me your best case study, one that really shows hard numbers on savings. If it's compelling, I'll pass it to our operations lead.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8537091482192399,
+    "metadata": {}
+  },
+  {
+    "event_id": "98fd65ed-68f5-43a9-b8a5-4e1b8b2316e7",
+    "event_type": "SESSION_END",
+    "session_id": "784b5f15-c83c-4134-b72c-c3fa29322c35",
+    "tenant_id": "6086c0e0-670b-4e55-a1e0-518729c75f53",
+    "timestamp_utc": "2026-06-28T22:16:34.897686+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

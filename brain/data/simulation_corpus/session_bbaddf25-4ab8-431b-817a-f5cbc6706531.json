@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "2fa6da67-d953-4c8b-a1d5-f96b74d06cfa",
+    "event_type": "SESSION_START",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:30.798639+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_23",
+      "crm_opportunity_id": "opp_23"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "82c37d12-0372-48fa-a148-4b279916c6e8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:32.798639+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, [Buyer Name]. Thanks for taking the time. I wanted to walk you through our new supply chain optimization platform, [Product Name]. It leverages AI to predict demand fluctuations and optimize inventory levels.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8738614133619369,
+    "metadata": {}
+  },
+  {
+    "event_id": "8e8fdc84-5c6d-4f56-851e-97c3abb987d7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:35.798639+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, 'predict demand fluctuations.' We already have an ERP system that does forecasting. How is this different? Is it just a fancier dashboard?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8612322408333598,
+    "metadata": {}
+  },
+  {
+    "event_id": "2e93add2-5a21-4c68-85aa-028f6502fc39",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:40.798639+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a great question. While ERPs do forecasting, [Product Name] uses machine learning to analyze hundreds of external data points \u2013 like weather patterns, social media trends, and geopolitical events \u2013 that traditional ERPs typically miss, providing a much higher accuracy rate.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9062055929190789,
+    "metadata": {}
+  },
+  {
+    "event_id": "747bf862-e036-4a44-b75b-0de9c527a868",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:45.798639+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "External data points... So, it's like a news aggregator combined with our existing inventory data? I'm still a bit fuzzy on how that translates into *optimization*.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9131820859763913,
+    "metadata": {}
+  },
+  {
+    "event_id": "7b87578c-2290-4732-8b42-e6097b3c1e12",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:47.798639+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Think of it this way: instead of just reacting to past sales data, our system proactively suggests ideal reorder points, optimal transportation routes, and even identifies potential supplier risks *before* they become critical. This reduces stockouts and carrying costs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.892673112035086,
+    "metadata": {}
+  },
+  {
+    "event_id": "7d05fa8a-16d6-4ba5-b447-187596cd7a67",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:51.798639+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm, okay, I think I'm starting to get it. So, it basically tells us what to order, when, and from whom, factoring in a lot of external noise. But how reliable are these 'predictions'? What if it's wrong?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8760316788215302,
+    "metadata": {}
+  },
+  {
+    "event_id": "ea2b914e-0649-466c-9d3f-0b40d78819ff",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:53.798639+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our models have a proven accuracy rate of over 90% in our pilot programs. Plus, the system continuously learns and adapts. We can even run a small pilot with your historical data to demonstrate its predictive power before full commitment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9508292656346848,
+    "metadata": {}
+  },
+  {
+    "event_id": "60d611b5-cc83-4d8e-bd81-273b18e7085c",
+    "event_type": "SESSION_END",
+    "session_id": "bbaddf25-4ab8-431b-817a-f5cbc6706531",
+    "tenant_id": "1b1f645b-4415-429f-9ee8-236682c746e6",
+    "timestamp_utc": "2026-06-28T22:13:58.798639+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

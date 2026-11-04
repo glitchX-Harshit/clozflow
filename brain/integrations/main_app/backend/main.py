@@ -1,0 +1,205 @@
+import os
+import sys
+from contextlib import asynccontextmanager
+import asyncio
+from datetime import datetime, timedelta
+
+# Add parent directory to sys.path to allow importing sibling modules like 'rag'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+from database import engine, Base
+from routers import auth, calls, brain_local
+from routers import user as user_router
+from routers import leads as leads_router
+from routers import outreach as outreach_router
+from routers import capsules as capsules_router
+from routers import relay as relay_router
+from routers import pearl as pearl_router
+from routers import intelligence as intelligence_router
+from routers import knowledge as knowledge_router
+from routers import wallet as wallet_router
+from admin.routes import router as admin_router
+from routers.auth import get_current_user
+from models import User
+from fastapi import Depends
+import os
+
+# Initialize Database tables
+Base.metadata.create_all(bind=engine)
+
+# Load environment variables
+load_dotenv()
+
+# Check required provider keys for Pearl
+required_keys = ["ELEVEN_LABS_API_KEY", "EXOTEL_API_KEY", "EXOTEL_ACCOUNT_SID"]
+for key in required_keys:
+    if not os.getenv(key) and not os.getenv(key.replace("_", "")):
+        print(f"WARNING: Pearl dependency {key} is missing from environment.")
+
+# [DEBUG LOG] Check if Gemini key was found in .env
+print("Gemini API key loaded:", bool(os.getenv("GEMINI_API_KEY")))
+
+# ── Lifespan: runs once on startup / shutdown ──
+@asynccontextmanager
+async def lifespan(app):
+    # Startup: pre-load Silero VAD model
+    from services.vad_engine import SileroVADEngine
+    await SileroVADEngine.warmup()
+    
+    try:
+        yield
+    finally:
+        await websocket_manager.shutdown()
+
+app = FastAPI(title="hexagon.ai Backend", description="AI Sales Assistant API", lifespan=lifespan)
+
+# Configure CORS with strict allowed origins
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+if not allowed_origins:
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+        "https://clozflow.com",
+        "https://www.clozflow.com",
+    ]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+app.include_router(brain_local.router)
+app.include_router(auth.router)
+app.include_router(auth.router, prefix="/api")
+app.include_router(calls.router)
+app.include_router(user_router.router)
+app.include_router(leads_router.router)
+app.include_router(outreach_router.router)
+app.include_router(pearl_router.router)
+app.include_router(capsules_router.router)
+app.include_router(relay_router.router)
+app.include_router(intelligence_router.router)
+app.include_router(knowledge_router.router)
+app.include_router(wallet_router.router)
+app.include_router(admin_router)
+
+# Serve uploaded avatars
+os.makedirs("static/avatars", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+
+import json
+from pydantic import BaseModel
+from typing import Optional
+from services.websocket_service import websocket_manager
+from services.call_context_engine import call_context_engine
+
+class CallStartRequest(BaseModel):
+    client_name: str
+    client_industry: str
+    client_role: str
+    product_name: str
+    product_price: Optional[str] = None
+    product_specification: Optional[str] = None
+    call_goal: str
+
+
+@app.get("/")
+async def root():
+    return {"message": "hexagon.ai backend is running."}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+@app.get("/api/copilot/sessions/active")
+async def get_active_copilot_sessions_legacy():
+    """Stub to gracefully handle legacy/uninstalled extension polling."""
+    return []
+
+@app.post("/call/start")
+async def start_call(request: CallStartRequest, current_user: User = Depends(get_current_user)):
+    context_id = call_context_engine.create_context(
+        user_id=current_user.id,
+        client_name=request.client_name,
+        client_industry=request.client_industry,
+        client_role=request.client_role,
+        product_name=request.product_name,
+        product_price=request.product_price or "",
+        product_specification=request.product_specification or "",
+        call_goal=request.call_goal
+    )
+    return {"context_id": context_id, "message": "Call session initialized"}
+
+@app.get("/call/context/{context_id}")
+async def get_call_context(context_id: str, current_user: User = Depends(get_current_user)):
+    context = call_context_engine.get_context(context_id)
+    if not context or context.get("user_id") != current_user.id:
+        raise HTTPException(status_code=404, detail="Call context not found")
+    return {"context": context}
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, context_id: str = None, token: str = None):
+    if not await authorize_call_socket(websocket, context_id, token):
+        return
+    await websocket_manager.connect(websocket, context_id=context_id)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            try:
+                message_data = json.loads(data)
+                await websocket_manager.handle_live_message(message_data, websocket)
+            except json.JSONDecodeError:
+                pass
+    except WebSocketDisconnect:
+        pass
+    finally:
+        websocket_manager.disconnect(websocket)
+
+
+async def authorize_call_socket(websocket, context_id, token):
+    from database import SessionLocal
+    from routers.auth import verify_token_string
+    origin = websocket.headers.get('origin')
+    if origin and origin not in allowed_origins:
+        await websocket.close(code=1008)
+        return False
+    bearer = websocket.headers.get('authorization', '')
+    credential = bearer[7:] if bearer.startswith('Bearer ') else token
+    if not credential:
+        credential = next((item.strip()[14:] for item in websocket.headers.get('sec-websocket-protocol', '').split(',')
+                           if item.strip().startswith('clozflow-auth.')), None)
+    with SessionLocal() as db:
+        user = verify_token_string(credential, db)
+        context = call_context_engine.get_context(context_id) if context_id else None
+        if not user or not context or context.get('user_id') != user.id:
+            await websocket.close(code=1008)
+            return False
+    return True
+
+@app.websocket("/ws/audio")
+async def websocket_audio_endpoint(websocket: WebSocket, context_id: str = None, token: str = None):
+    if not await authorize_call_socket(websocket, context_id, token):
+        return
+
+    await websocket_manager.connect(websocket, context_id=context_id)
+    print("✅ WebSocket connected to /ws/audio")
+    await websocket_manager.handle_audio_stream(websocket)
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

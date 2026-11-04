@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "2b522a8a-d9ba-44d3-81f3-8f7c7dc1e617",
+    "event_type": "SESSION_START",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:30.802540+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_27",
+      "crm_opportunity_id": "opp_27"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "5a8646e1-eb59-4d1c-a3e0-b9df91b02550",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:35.802540+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining today. I'm excited to walk you through [Product Name], our new platform for optimizing field service operations.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9731170741821117,
+    "metadata": {}
+  },
+  {
+    "event_id": "2e4f8770-c61c-4df0-a88b-6dba92e0f162",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:37.802540+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Field service, yeah. Listen, I'm literally just walking into another meeting. My calendar notifications are going crazy. Can we reschedule this? I completely forgot.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9430936952670057,
+    "metadata": {}
+  },
+  {
+    "event_id": "b88d669b-28dd-4ebb-81a9-b09a2fb3105d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:41.802540+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, no problem at all, I completely understand. Just to be respectful of your time, could I perhaps send over a very brief, two-minute video highlighting the key benefits, and then we can find a better time?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9121988716193606,
+    "metadata": {}
+  },
+  {
+    "event_id": "6f16a626-11db-472a-8641-3ebf25fec2ff",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:46.802540+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A two-minute video, sure. Send that over. And send me some times for next week, maybe Wednesday afternoon. This morning is just a nightmare.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8968422838804717,
+    "metadata": {}
+  },
+  {
+    "event_id": "cd0ca1b7-c01e-4bc4-90c0-37c64da68c16",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:50.802540+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Will do! I'll make sure that video gives you a good snapshot of how we help companies reduce dispatch errors by 40% and improve first-time fix rates. I'll send those calendar invites right away.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9782472623941082,
+    "metadata": {}
+  },
+  {
+    "event_id": "bcbbc97f-0ef0-4d49-b349-050b930e34ed",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:52.802540+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, thanks. Gotta run!",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8700655469167866,
+    "metadata": {}
+  },
+  {
+    "event_id": "10769e57-658d-47c0-af8d-9bdc138cc4a0",
+    "event_type": "SESSION_END",
+    "session_id": "64250b9f-d2c3-4fb2-adcd-d6fde2c0e85b",
+    "tenant_id": "7f00cb71-63e3-467c-9923-eee1e3a1002b",
+    "timestamp_utc": "2026-06-28T22:13:57.802540+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

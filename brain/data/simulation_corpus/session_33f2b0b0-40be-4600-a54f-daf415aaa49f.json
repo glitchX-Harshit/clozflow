@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "422bd16f-efb4-47ea-88e0-f34cb01b69ac",
+    "event_type": "SESSION_START",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:15.117592+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_46",
+      "crm_opportunity_id": "opp_46"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "96ab0006-b83e-4ba7-bc8c-4b4279871633",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:18.117592+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Jessica, thanks for taking my call. I reached out because I saw your company is scaling rapidly, and many fast-growing companies struggle with consolidating customer feedback. How are you currently managing that?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.923113121985465,
+    "metadata": {}
+  },
+  {
+    "event_id": "16cd334a-4bdb-4705-8c3a-f7a5ba743138",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:21.117592+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Scaling is... a challenge, yes. Customer feedback comes from everywhere \u2013 support tickets, sales calls, surveys, social media. We're trying to manually collate it, but it's a mess. Honestly, I'm not even sure what a 'consolidated feedback platform' really means.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.87016499604683,
+    "metadata": {}
+  },
+  {
+    "event_id": "1090a187-9f7f-43e5-921a-257780b581c8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:24.117592+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I can clarify that. Our platform acts as a central hub, pulling in feedback from all your sources. It then uses AI to categorize and analyze sentiment, identifying key trends and urgent issues, giving you actionable insights in real-time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.874238802160644,
+    "metadata": {}
+  },
+  {
+    "event_id": "50335468-3847-480c-ac96-000d33d2ad2c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:27.117592+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "So, it reads all our customer emails and tweets? And then tells us if people are happy or mad? I don't know, it sounds a bit creepy. And I'm not sure how much value that really adds over just reading comments ourselves.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9871872427416363,
+    "metadata": {}
+  },
+  {
+    "event_id": "d15384d6-3ad6-4d3f-a6f8-fb09c143da72",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:31.117592+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It processes the text data, yes, but it focuses on identifying themes and aggregating them. Instead of reading thousands of individual comments, you see a dashboard showing, for example, that 'feature X' is consistently mentioned with negative sentiment, or that 'onboarding' is a recurring pain point across multiple channels.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8891975340365615,
+    "metadata": {}
+  },
+  {
+    "event_id": "f432161b-1cee-47a1-afb2-281c743a7290",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:35.117592+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's a bit clearer. But we already have a dedicated customer success team that gathers feedback. Wouldn't this just be duplicating their efforts?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8601022529932909,
+    "metadata": {}
+  },
+  {
+    "event_id": "4ae9805e-223d-4458-a0e5-964c16bdbd47",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:39.117592+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Quite the opposite. It amplifies their efforts. Instead of spending hours manually tagging and summarizing, they can focus on directly engaging with customers and acting on the consolidated insights the platform provides. It makes their work more strategic and less administrative.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8777245965209975,
+    "metadata": {}
+  },
+  {
+    "event_id": "470fd9fc-5246-4d93-9131-124e34b8922d",
+    "event_type": "SESSION_END",
+    "session_id": "33f2b0b0-40be-4600-a54f-daf415aaa49f",
+    "tenant_id": "3bd8efdb-1300-4a96-befe-5d2b126ce153",
+    "timestamp_utc": "2026-06-28T22:15:44.117592+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

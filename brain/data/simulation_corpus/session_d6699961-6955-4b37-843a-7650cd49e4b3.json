@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "541333d6-01c9-465d-aa20-f6297d45b04f",
+    "event_type": "SESSION_START",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:42.148837+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_69",
+      "crm_opportunity_id": "opp_69"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "90717e50-0d26-4b6a-b5a4-25894d6b2fa5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:44.148837+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for the opportunity to chat. I wanted to quickly walk you through how [Product Name] helps organizations manage their growing cloud infrastructure costs and optimize resource allocation.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9617726663993749,
+    "metadata": {}
+  },
+  {
+    "event_id": "0550af6f-ca2b-4891-a44e-eee547ab3362",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:48.148837+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cloud costs, yeah, that's a beast. But honestly, our DevOps team is pretty savvy. They use a bunch of scripts and native cloud provider tools to monitor things. I don't think we need another dashboard.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9585870656147447,
+    "metadata": {}
+  },
+  {
+    "event_id": "dd63311e-85cb-48b9-8ee1-a80683804fd4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:51.148837+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear you. Many teams use native tools, and they're powerful. But typically, they lack the cross-cloud visibility and the deep, predictive analytics that [Product Name] offers. We can identify idle resources or misconfigurations that even advanced scripts might miss, leading to significant savings.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8631312462821681,
+    "metadata": {}
+  },
+  {
+    "event_id": "750f5aa9-36f3-42c7-be6e-1e2304de7121",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:53.148837+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Significant savings? Everyone promises significant savings. Our last vendor said the same thing, and we barely saw a dent. It was mostly just noise.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9834861577110798,
+    "metadata": {}
+  },
+  {
+    "event_id": "563dc6aa-3c65-4e4d-95d7-bf56e2e5bc9c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:55.148837+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's frustrating to hear. Our approach is different because we don't just alert you to issues; we provide actionable recommendations and, with your permission, can even automate certain optimizations. Would you be open to a complimentary cloud cost assessment? We can show you exactly where potential savings lie, with no commitment.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9844147317649871,
+    "metadata": {}
+  },
+  {
+    "event_id": "47b611a0-0703-453a-a266-07743b68daf1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:16:57.148837+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A 'complimentary assessment'? Sounds like a Trojan horse for a sales pitch. How much data do you need for that? My team is really protective of our infrastructure details.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8834093149787172,
+    "metadata": {}
+  },
+  {
+    "event_id": "931d1b04-6b42-4a27-a6b2-3d2d53369688",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:17:02.148837+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's a read-only integration, so we don't make any changes to your environment, and we're SOC 2 Type II compliant. We can anonymize data if needed for the initial assessment. It typically takes less than an hour to set up and provides a clear report in a few days. Would you be comfortable with that?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9529416182684088,
+    "metadata": {}
+  },
+  {
+    "event_id": "3939cb2e-fa25-43d9-8cb7-6cce0eae7af1",
+    "event_type": "SESSION_END",
+    "session_id": "d6699961-6955-4b37-843a-7650cd49e4b3",
+    "tenant_id": "c7d8ca2c-a609-435a-82b1-2c2fbf6a23f8",
+    "timestamp_utc": "2026-06-28T22:17:07.148837+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

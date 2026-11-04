@@ -1,0 +1,2 @@
+-e ./brain[dev,main-app,legacy-comparison]
+-r backend/requirements_full.txt

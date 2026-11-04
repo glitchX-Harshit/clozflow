@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "dfacf0e5-71d3-44ee-942e-28071f0aab00",
+    "event_type": "SESSION_START",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:29.916867+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_4",
+      "crm_opportunity_id": "opp_4"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "04790602-fbf2-4355-8fc5-904c1a6f99e7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:32.916867+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon, Maria. Thanks for joining. We spoke briefly last month about improving your customer support team's response times.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9368524546823773,
+    "metadata": {}
+  },
+  {
+    "event_id": "af510a7b-c250-4f46-9e57-9566a208d704",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:34.916867+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Oh, hi. Yes. I remember. I'm actually on another call, can you make this quick? I've only got a minute.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9674511127978033,
+    "metadata": {}
+  },
+  {
+    "event_id": "4956c35c-3c5d-4991-a3b8-cd1a4935bd8a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:39.916867+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Of course. In a nutshell, our AI-powered tool integrates with your existing helpdesk to automate repetitive queries and provide instant answers, freeing up your agents for more complex issues. We typically see a 20-35% improvement in first-response time.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9606722608857012,
+    "metadata": {}
+  },
+  {
+    "event_id": "55ea6000-d17d-4ada-aa3f-56dd0b445a1f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:43.916867+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI... does that mean it's going to replace my team? Because that's not what we're looking for. We value human interaction.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9799853429654299,
+    "metadata": {}
+  },
+  {
+    "event_id": "fe79d85a-6f7a-48fc-a55b-e7c738a9da1b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:45.916867+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Not at all, Maria. It's designed to augment your team, not replace them. It handles the low-hanging fruit, so your human agents can focus on building stronger customer relationships and solving unique problems. Think of it as a powerful assistant.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8654234931042244,
+    "metadata": {}
+  },
+  {
+    "event_id": "af0820f7-7a14-46bc-a208-dc2836308ba4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:48.916867+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. Okay. That makes a bit more sense. But what about the setup? Is it a huge IT project? Our IT department is already stretched thin.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9694757203515436,
+    "metadata": {}
+  },
+  {
+    "event_id": "0257c8e9-e0ea-4ce3-b07d-71a6329f5676",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:53.916867+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's actually designed for rapid deployment. We can integrate with most popular helpdesk systems in a matter of days, not weeks, with minimal IT involvement. We handle the heavy lifting. Would you be open to a 20-minute demo next week to see exactly how simple it is?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9121623931013404,
+    "metadata": {}
+  },
+  {
+    "event_id": "5ac09fd1-1729-4acb-8bac-0de8f6488257",
+    "event_type": "SESSION_END",
+    "session_id": "9147fd4e-3e60-4207-b771-8612ea5250d6",
+    "tenant_id": "81f75cc6-cbd7-4c2e-ad45-f7f8a158fc8a",
+    "timestamp_utc": "2026-06-28T22:12:58.916867+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "3b66ed0d-2fcf-4145-9e72-1c18c61e440e",
+    "event_type": "SESSION_START",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:00.580025+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_128",
+      "crm_opportunity_id": "opp_128"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "f040c308-c0ca-4cf9-9051-26a54bf6c729",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:04.580025+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our talent acquisition platform automates candidate sourcing and screening, saving recruiters up to 20 hours a week.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8888733594695175,
+    "metadata": {}
+  },
+  {
+    "event_id": "d9aebb20-d902-4db9-be7b-06d62a794ebb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:07.580025+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That sounds great on paper, but our hiring process is extremely specialized. We're in biotech, and we often need to integrate very specific technical assessments and compliance checks. Can your platform really handle that level of customization, or is it a one-size-fits-all solution?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9559796238199945,
+    "metadata": {}
+  },
+  {
+    "event_id": "ac8ab601-c953-40d2-9cd6-f8ddc8953664",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:11.580025+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our platform is highly configurable. While we have robust out-of-the-box features, we offer custom workflow builders and API access to integrate with your proprietary assessment tools and existing HRIS, ensuring your unique compliance needs are met.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9530632299235404,
+    "metadata": {}
+  },
+  {
+    "event_id": "23e4e790-1411-4bfd-97d8-8daaac08ef90",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:16.580025+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "API access, okay, but that means more work for our dev team, which is already swamped. I'm looking for something that just works, with minimal engineering overhead on our side.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9512906338178856,
+    "metadata": {}
+  },
+  {
+    "event_id": "9d68ecc8-94ef-468f-9c89-55b8f2f77cc6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:20.580025+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand. We provide a dedicated implementation team to assist with all integrations, minimizing the burden on your internal IT. Many of our clients have complex requirements, and we've successfully integrated with highly niche systems.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8651882859896122,
+    "metadata": {}
+  },
+  {
+    "event_id": "7d717465-da80-45cc-becd-66910c1f54fe",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:23.580025+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It just sounds like a lot of moving parts. I need something truly seamless for our niche, not another project for our overworked tech staff. Is it truly 'plug and play' for custom assessments, or are we talking about weeks of configuration?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.95033331352391,
+    "metadata": {}
+  },
+  {
+    "event_id": "2652ac84-ae1e-45cf-9597-889fde2d3be2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:28.580025+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For common assessment platforms, it's often a direct integration. For truly proprietary systems, it might involve some initial setup, but our team handles the heavy lifting, often completing complex integrations in days, not weeks. We can even demonstrate a similar biotech integration.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8904737326242165,
+    "metadata": {}
+  },
+  {
+    "event_id": "fb7a5b67-bf61-48e1-a974-e4c64de1176f",
+    "event_type": "SESSION_END",
+    "session_id": "b8357b68-11d0-4727-8304-b745aeb6dd48",
+    "tenant_id": "cf7fa80f-bd89-4890-810d-2449dbedaa09",
+    "timestamp_utc": "2026-06-28T22:20:33.580025+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

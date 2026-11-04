@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "2fa2f0b7-185d-490a-88b8-ee4d20bada46",
+    "event_type": "SESSION_START",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:12:54.292244+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_20",
+      "crm_opportunity_id": "opp_20"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "a5b5c2e7-2552-4776-bbed-152145efa750",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:12:59.292244+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello Chris, thanks for taking a moment. I'm calling about improving your cybersecurity posture, specifically around endpoint detection and response.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9305534800109644,
+    "metadata": {}
+  },
+  {
+    "event_id": "76db178a-06aa-4674-962a-dcc47d78d71a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:03.292244+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Cybersecurity, right. We've got a solution for that. It's from a big, well-known vendor. We went with them for the peace of mind, frankly.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8820643547381446,
+    "metadata": {}
+  },
+  {
+    "event_id": "e1b471ec-c87e-4c6e-b728-7a29ebb7611f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:07.292244+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a common choice, Chris. However, many larger vendors can be slow to adapt to emerging threats. Our AI-driven EDR offers real-time threat hunting and automated remediation, often catching what traditional antivirus misses.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8536173888903805,
+    "metadata": {}
+  },
+  {
+    "event_id": "065e0976-c520-4e34-b777-0ac38018145c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:10.292244+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Real-time threat hunting? Sounds aggressive. Will it constantly flag things and generate a ton of false positives for my IT team to chase down? They're already drowning.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.876377306768862,
+    "metadata": {}
+  },
+  {
+    "event_id": "453498d1-5ece-4776-8a5a-4c692f17f5e3",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:13.292244+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's precisely what we aim to avoid. Our AI uses behavioral analysis to drastically reduce false positives, and for any legitimate threat, it provides automated remediation options, minimizing manual intervention.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.981806283268993,
+    "metadata": {}
+  },
+  {
+    "event_id": "4a4d3f13-4d31-4d03-b351-9fe314b392bd",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:18.292244+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Automated remediation... what if it quarantines something critical? We had an incident last year where an overzealous security tool brought down a production server. That simply cannot happen again.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9534135742502667,
+    "metadata": {}
+  },
+  {
+    "event_id": "a0ccbcc4-a1a1-49af-b490-a154fb3094af",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:20.292244+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our system includes a 'human-in-the-loop' option, allowing your team to approve critical remediations, giving you full control while still leveraging automation for less critical issues.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8951066409338135,
+    "metadata": {}
+  },
+  {
+    "event_id": "d069e4e3-8a5d-4195-8f3e-5b562e1a3c5b",
+    "event_type": "SESSION_END",
+    "session_id": "2565311f-8773-4b14-8656-489f7697b791",
+    "tenant_id": "a6df5e09-c553-4973-acc3-121c3de68af6",
+    "timestamp_utc": "2026-06-28T22:13:25.292244+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "5e5b9ea9-d1df-4334-91b3-4a9d1025bcff",
+    "event_type": "SESSION_START",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:30.803890+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_29",
+      "crm_opportunity_id": "opp_29"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "3348d694-b976-4db7-bb07-25e0da8862a5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:34.803890+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for meeting with me. I'm here to talk about [Product Name], our robust platform for managing internal communications and knowledge sharing across large enterprises.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9357635649127842,
+    "metadata": {}
+  },
+  {
+    "event_id": "a57458f0-cdb2-4ebe-ac4f-d0cd7c5b232f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:37.803890+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Internal comms, okay. This sounds promising, but I'm not actually the person who makes these decisions. My role is to research potential solutions and then present them to the head of HR, [Decision Maker Name].",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9725663375601434,
+    "metadata": {}
+  },
+  {
+    "event_id": "b6ff1940-9afd-4c48-a586-77bd84f3cb93",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:40.803890+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's perfectly fine. I'd be happy to tailor my presentation to highlight the aspects that would most appeal to [Decision Maker Name]. What are her top priorities or challenges in this area?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8707300321416174,
+    "metadata": {}
+  },
+  {
+    "event_id": "11756541-93bd-413a-9b49-5408e202b819",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:42.803890+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Well, she's really focused on improving employee engagement and reducing the endless stream of emails. We're also struggling with new hires finding relevant information quickly. But budget is always a massive concern for her.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8705564312039616,
+    "metadata": {}
+  },
+  {
+    "event_id": "6b7a3e84-8f66-4558-83e4-555f34a1ff37",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:45.803890+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Excellent. So, if I could show you how [Product Name] significantly reduces email overload and cuts down new hire ramp-up time, while demonstrating a clear ROI for her budget, would that be a strong case for her to consider?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8938447372545802,
+    "metadata": {}
+  },
+  {
+    "event_id": "1738559a-5a6e-4ee2-b8c0-5e0defc4145b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:48.803890+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It would definitely help. She's incredibly busy though, so getting her on a separate call for a full demo would be very difficult. She just wants the highlights.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9196304269403098,
+    "metadata": {}
+  },
+  {
+    "event_id": "a88e8d80-8bf3-40c1-acf1-2db2a7dbc6d2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:53.803890+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "How about this: I can put together a concise, personalized one-page summary specifically for [Decision Maker Name], outlining those key benefits and ROI, along with a short, 5-minute video that you can easily share with her. Would that be helpful?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9423905712163478,
+    "metadata": {}
+  },
+  {
+    "event_id": "8b0ca0d4-90d7-4cff-80e0-5cd175e85785",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:13:56.803890+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yes, that would be much better. If you can make it really punchy and get straight to the point on cost-effectiveness, that's what she'll want to see.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9572944515986322,
+    "metadata": {}
+  },
+  {
+    "event_id": "1cda07d2-fbcd-428c-8d52-5ada6d36f94d",
+    "event_type": "SESSION_END",
+    "session_id": "16e613b2-dbc1-4c4e-9814-48bb36260492",
+    "tenant_id": "ced3948f-a775-4b6c-9f41-1169fdcbb33a",
+    "timestamp_utc": "2026-06-28T22:14:01.803890+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

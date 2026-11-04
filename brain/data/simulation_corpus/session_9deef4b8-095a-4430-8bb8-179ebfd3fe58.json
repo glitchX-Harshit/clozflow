@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "f742bafc-9813-405c-bf38-54f7a93a9264",
+    "event_type": "SESSION_START",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:24.154700+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_73",
+      "crm_opportunity_id": "opp_73"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "8f2f7b71-5f76-4908-9755-242059669d88",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:28.154700+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining. I'm here to walk you through Horizon, our new project management platform. We believe it can significantly streamline your workflow and improve team collaboration at [Company Name].",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.897760157871071,
+    "metadata": {}
+  },
+  {
+    "event_id": "0cf790c7-7f7f-4964-a5a8-32bf52ecf243",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:30.154700+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Horizon... right. We already use Jira, Trello, and sometimes Asana for different teams. I'm not entirely clear on what Horizon does that's so different. Is it another one of those 'all-in-one' tools that ends up doing everything mediocrely?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9351518726645976,
+    "metadata": {}
+  },
+  {
+    "event_id": "8903cd3b-17ca-407f-8b93-7491359d694f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:34.154700+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very common concern, and a good one. Horizon isn't just another project management tool. It's specifically designed for cross-functional teams managing complex, interdependent projects. What sets us apart is our AI-powered dependency mapping and predictive scheduling, which actively identifies bottlenecks before they occur, something traditional tools struggle with.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8964902807806003,
+    "metadata": {}
+  },
+  {
+    "event_id": "80af2e0a-f9e5-4e81-a062-8311f8580665",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:36.154700+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI-powered dependency mapping... what does that even mean? Does it just guess when things will go wrong? I'm picturing a lot of red flags that aren't actually problems, just creating more noise for my project managers.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9122515699291068,
+    "metadata": {}
+  },
+  {
+    "event_id": "d3ebb9c4-415d-4ddb-bdcd-da4681b67e40",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:38.154700+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's more sophisticated than guessing. Horizon learns from your team's historical data and progress to accurately predict potential delays based on task interdependencies and resource availability. It proactively flags tasks that are likely to impact your critical path, allowing your PMs to intervene early. It reduces the 'noise' by focusing only on critical, high-impact risks, saving your PMs countless hours of manual tracking.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9881552704092222,
+    "metadata": {}
+  },
+  {
+    "event_id": "b54999b1-3c35-4640-8b31-d12c73a322e7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:43.154700+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that sounds... interesting. But how much data does it need to 'learn'? We're not exactly big data experts here. And what's the setup like? We can't afford a long implementation phase. My teams are already stretched too thin.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8581466491125239,
+    "metadata": {}
+  },
+  {
+    "event_id": "da90d60c-16d4-408d-aae8-562ef331aab5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:46.154700+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The learning phase is surprisingly quick, often within the first few weeks of consistent use, as it integrates directly with your existing task data from tools like Jira or Asana. Our implementation is designed to be self-service for basic setup, with dedicated support for complex integrations, typically taking days, not weeks or months. Would you be open to a follow-up call with one of our solution architects to dive deeper into the technical aspects of the AI and integration?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8632088894844484,
+    "metadata": {}
+  },
+  {
+    "event_id": "9a8c89cb-4dfd-4f5f-82fe-3bc63576aef7",
+    "event_type": "SESSION_END",
+    "session_id": "9deef4b8-095a-4430-8bb8-179ebfd3fe58",
+    "tenant_id": "c0100ef3-83be-49cc-add9-53d31544907c",
+    "timestamp_utc": "2026-06-28T22:17:51.154700+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

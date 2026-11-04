@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "81ccb327-b563-4bf2-9b1c-f71e21be7c01",
+    "event_type": "SESSION_START",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:24.164266+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_81",
+      "crm_opportunity_id": "opp_81"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "4784c58a-ac00-4a37-92ea-be304c0ade4f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:26.164266+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], great to finally connect. I'm excited to share how our platform, ConnectFlow, can help your internal communications team at [Company Name] streamline your employee engagement initiatives.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.88896691325028,
+    "metadata": {}
+  },
+  {
+    "event_id": "2345dbac-05c9-48bd-91b3-3653a6ff6544",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:30.164266+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello. Yeah, I think I remember your email. ConnectFlow... right. We already use Slack for team chats, and our intranet has a news section. What's the big difference? Is this just another place for people to get information, which they probably won't read anyway?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8665381053689223,
+    "metadata": {}
+  },
+  {
+    "event_id": "40ab831d-03f6-4042-9a27-500c299ce690",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:34.164266+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a very common challenge, and you've hit on exactly where ConnectFlow excels. While Slack is great for immediate communication, and intranets for static information, ConnectFlow unifies and personalizes all internal communications, ensuring the right message reaches the right employee at the right time, regardless of their preferred channel. We often see a 40% increase in message readership and 25% higher engagement rates with company initiatives.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9193229476616687,
+    "metadata": {}
+  },
+  {
+    "event_id": "565f530d-037c-42c2-88df-72a4289c34cb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:39.164266+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Forty percent increase? That sounds like marketing fluff. And 'right message, right time' \u2013 does it just spam everyone with push notifications? My employees are already drowning in emails and pings. We don't need more noise, we need clearer communication, not just more of it.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.984384845971449,
+    "metadata": {}
+  },
+  {
+    "event_id": "8fce8a8d-d80c-44ec-bee7-f1a4c6f4b63c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:44.164266+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "You're absolutely right; more noise is the last thing anyone needs. ConnectFlow uses smart segmentation and preference management, allowing employees to choose how and when they receive updates, or even what topics they're interested in. It's not about spamming; it's about intelligent delivery. For example, a field technician might get critical safety updates via SMS, while an office worker receives departmental news via a personalized digest in their email, all managed from one central platform. It reduces the overall volume of irrelevant communications, making the important messages stand out.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9346589327064926,
+    "metadata": {}
+  },
+  {
+    "event_id": "356036f8-96e3-4e41-ab76-727dc72b8f4b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:48.164266+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, I see. So it's like a personalized internal newsletter on steroids, but for all channels? What about analytics? Can I actually track if people are reading this stuff, or if they're just ignoring it like everything else?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9389183005221162,
+    "metadata": {}
+  },
+  {
+    "event_id": "22cbf921-8d76-406d-8a32-10352db9a048",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:50.164266+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Exactly. And yes, comprehensive analytics are a core feature. You can track readership, engagement rates, click-throughs, and even survey responses across all channels. This allows you to optimize your communication strategy continuously, ensuring your messages resonate. You'll finally have concrete data on what's working and what isn't. Would you be open to a quick 10-minute demo to see how easy it is to set up a segmented campaign and view the analytics dashboard?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8547765883091331,
+    "metadata": {}
+  },
+  {
+    "event_id": "da51db31-66b9-41e5-b26e-f21f1c98b722",
+    "event_type": "SESSION_END",
+    "session_id": "86b78e88-50ba-44c9-b4a2-9372b6a98d40",
+    "tenant_id": "7461c9d5-aadc-4807-b8b4-3081eb368a16",
+    "timestamp_utc": "2026-06-28T22:17:55.164266+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

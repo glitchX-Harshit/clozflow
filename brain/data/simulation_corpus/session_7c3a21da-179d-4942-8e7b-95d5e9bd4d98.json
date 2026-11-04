@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "0a146b4d-387a-48b6-8f0c-f4d9f49885fc",
+    "event_type": "SESSION_START",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:12.134076+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_39",
+      "crm_opportunity_id": "opp_39"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "0e161ff6-47cd-4bf1-850b-ffd1f5bd2eed",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:14.134076+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], after our last conversation, I believe [Product Name] would be a perfect fit to centralize your marketing asset management. What are your thoughts on our Enterprise plan?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.989900864317099,
+    "metadata": {}
+  },
+  {
+    "event_id": "1462f97f-bc01-4ecb-8759-190bf12b9ac5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:17.134076+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, it sounds interesting, but our budget for this quarter is pretty much allocated. Is there any flexibility on pricing, perhaps for early adopters or a longer-term commitment?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8844773673857528,
+    "metadata": {}
+  },
+  {
+    "event_id": "d8c37ead-d7bf-4c7c-8853-79ef91977630",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:19.134076+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We understand budgeting cycles can be challenging. Our Enterprise plan is structured to provide comprehensive value, but for new clients, we occasionally offer a discount on annual pre-payment. We could also explore a phased rollout approach to spread costs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9260883256379157,
+    "metadata": {}
+  },
+  {
+    "event_id": "e7d356cf-81b1-4491-b165-6b409c708f75",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:22.134076+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We're a non-profit, so our budget is extremely constrained compared to typical corporate clients. Do you have specific non-profit rates or volume discounts for a larger team like ours, say for 200 users?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9256963918325785,
+    "metadata": {}
+  },
+  {
+    "event_id": "1f199860-b534-4062-99e4-825cbb0a449b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:24.134076+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Ah, non-profit status is an important detail. We do have special non-profit pricing tiers that offer a significant reduction from our standard rates. For 200 users, that would put you into a more favorable bracket. I can share those specifics.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.904057673206637,
+    "metadata": {}
+  },
+  {
+    "event_id": "686756a4-6b00-4121-a824-7ec3697567e9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:27.134076+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "And what if we only need 75% of the features in the Enterprise plan? Can we get a custom module pricing, or do we have to pay for the whole suite?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9802138422971562,
+    "metadata": {}
+  },
+  {
+    "event_id": "e4baca44-9017-4e3e-9544-cbed2c7ac689",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:30.134076+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "While our Enterprise plan offers the best value with its full feature set, we do have a modular approach. We can discuss paring down features if there are specific ones you absolutely won't use, but often the included features prove valuable down the line. Let's look at the non-profit pricing first, it might make the full suite more palatable.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8610274164033965,
+    "metadata": {}
+  },
+  {
+    "event_id": "5f4c160f-8192-4c71-8f19-201c0beee359",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:32.134076+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right, well, even with non-profit pricing, it's a significant investment for us. Can you get back to me with the absolute best you can do for a 200-user non-profit, keeping our core needs in mind? I need to present a rock-bottom figure.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8811325092785873,
+    "metadata": {}
+  },
+  {
+    "event_id": "2a9c7c0a-8898-4729-8ef6-a662cc085489",
+    "event_type": "SESSION_END",
+    "session_id": "7c3a21da-179d-4942-8e7b-95d5e9bd4d98",
+    "tenant_id": "de674ab5-4eaf-47f5-a449-f88c422c11e8",
+    "timestamp_utc": "2026-06-28T22:14:37.134076+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

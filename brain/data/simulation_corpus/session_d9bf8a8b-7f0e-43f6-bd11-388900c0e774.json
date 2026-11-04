@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "54327e95-759d-4d84-b97f-0125879e347e",
+    "event_type": "SESSION_START",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:14.892184+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_51",
+      "crm_opportunity_id": "opp_51"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "764d81c0-fc67-475c-9998-828ac2244a6a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:16.892184+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Alex, thanks for making time. I'm excited to show you how our platform can streamline your data analytics workflow.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8737811301953895,
+    "metadata": {}
+  },
+  {
+    "event_id": "14fc463a-bdb1-4d02-8d79-561e0fbcc428",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:18.892184+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, thanks. Look, I only have about 10 minutes before my next call. We're pretty swamped with year-end reporting, so let's keep it quick.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9545915074667484,
+    "metadata": {}
+  },
+  {
+    "event_id": "81f405af-5b37-4b7e-930d-90dccc7318a8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:21.892184+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Understood. In a nutshell, we automate data ingestion and provide real-time dashboards that usually take weeks to build manually. Are you currently facing challenges with report generation time?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8827993056703065,
+    "metadata": {}
+  },
+  {
+    "event_id": "f361fa06-facf-4850-a826-f33523cc264a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:26.892184+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Honestly, everyone faces that. But our current solution, while clunky, is paid for. I'm not sure we have the budget to switch right now, even if it saves some time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9694805082562591,
+    "metadata": {}
+  },
+  {
+    "event_id": "b5ae838e-6c28-4aa5-8df4-aa3e25771219",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:28.892184+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I hear that. Many of our clients start by focusing on the operational cost savings and reduced errors. Can I quickly show you a 2-minute demo of the reporting module?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8763814970802447,
+    "metadata": {}
+  },
+  {
+    "event_id": "35d1c8fe-023a-4fd5-9b23-db855afc9a9c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:31.892184+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sure, make it snappy.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8523815733678846,
+    "metadata": {}
+  },
+  {
+    "event_id": "c4e0ecb4-e853-432f-a4f1-70905ab6292c",
+    "event_type": "SESSION_END",
+    "session_id": "d9bf8a8b-7f0e-43f6-bd11-388900c0e774",
+    "tenant_id": "03ca9f9c-ee72-4975-afaf-f9031968ebf0",
+    "timestamp_utc": "2026-06-28T22:16:36.892184+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "ae4c44c7-ceea-44e5-94d5-93fe5b50c059",
+    "event_type": "SESSION_START",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:18:54.911646+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_104",
+      "crm_opportunity_id": "opp_104"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "7bcef459-ad1f-4834-8452-eb841f836f15",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:18:56.911646+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good morning, [Buyer Name]. I wanted to follow up on your interest in optimizing your sales prospecting. Are you currently facing challenges generating high-quality leads for your BDR team?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9096442300334169,
+    "metadata": {}
+  },
+  {
+    "event_id": "7579fd7c-e050-4007-a49e-aaf6872448ba",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:18:59.911646+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Morning. Actually, we just implemented a new prospecting tool from [Competitor X] about three months ago. It's been a pretty big improvement.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9373762332438895,
+    "metadata": {}
+  },
+  {
+    "event_id": "861de4b8-d407-48b3-972d-d9ad56ccf8a0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:19:02.911646+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's great to hear you're seeing improvements! Many of our clients have come to us after using [Competitor X] and found that while it's good for volume, it often misses the mark on lead qualification depth. We specialize in AI-driven intent data.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9818319537136172,
+    "metadata": {}
+  },
+  {
+    "event_id": "79d1710f-40ad-4ddf-bc07-d19f420221f0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:19:06.911646+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Intent data, yeah, X also claims to do that. I'm not sure how much more 'depth' we really need. Our BDRs are hitting their targets.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8953065702812514,
+    "metadata": {}
+  },
+  {
+    "event_id": "d5f9c0ce-18fc-45b8-9f43-89879aa13ed6",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:19:11.911646+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The key difference is our ability to identify purchase intent signals specific to your industry, not just general interest. This means significantly higher conversion rates from BDR to AE, and less wasted time chasing lukewarm leads.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9492269018810815,
+    "metadata": {}
+  },
+  {
+    "event_id": "0191a2a6-e43c-4766-affa-ab9acf847595",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:19:13.911646+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Less wasted time is always good, but we just spent a ton of money integrating X. I'm really not looking to shake things up again so soon. What makes your intent data so much better?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9880300895476146,
+    "metadata": {}
+  },
+  {
+    "event_id": "c39ceba4-56dc-46e2-bc5e-23196aeb9cb2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:19:16.911646+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely respect that. Perhaps a quick, 15-minute demo focusing specifically on how our proprietary AI pinpoints 'deep intent' signals might be useful, just for future reference? No obligation to change, of course.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9484195216726173,
+    "metadata": {}
+  },
+  {
+    "event_id": "2e1b02b0-6ef7-465b-bcff-d0adef5f39bd",
+    "event_type": "SESSION_END",
+    "session_id": "cd0d4a50-378c-4104-a71f-467a528b3e23",
+    "tenant_id": "af6dec11-59c9-45c5-8a2e-7d0b68c5378b",
+    "timestamp_utc": "2026-06-28T22:19:21.911646+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

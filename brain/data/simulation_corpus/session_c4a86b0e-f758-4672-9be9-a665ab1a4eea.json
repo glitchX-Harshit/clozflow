@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "33c81b87-3416-4965-ac65-4593905cb2ab",
+    "event_type": "SESSION_START",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:29.917951+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_5",
+      "crm_opportunity_id": "opp_5"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c15157e9-8e00-4bca-99be-b249ce2e2ab1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:34.917951+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi David, thanks for the time today. I know you're looking for ways to consolidate your disparate data sources for better reporting.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9064781158118325,
+    "metadata": {}
+  },
+  {
+    "event_id": "611adee8-af99-4288-b8be-41410d83eeae",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:38.917951+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, that's definitely a pain point. But honestly, every vendor promises 'unified data,' and it always ends up being a Frankenstein monster of connectors and manual exports. How is your solution different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9182875558405248,
+    "metadata": {}
+  },
+  {
+    "event_id": "b2b91db3-24e8-4d09-8df6-f457e29fe27a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:42.917951+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate your candor. Our platform uses a unique semantic layer that abstracts data sources, meaning you don't need to rebuild connectors every time a system changes. It's designed for true interoperability and self-service reporting, even for non-technical users.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9331654823630706,
+    "metadata": {}
+  },
+  {
+    "event_id": "a1d5dc26-e109-419a-8254-13420c8dfa7f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:44.917951+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Self-service? My team struggles with Excel pivot tables. Are you sure 'non-technical' users won't just break it? And what about security? We handle a lot of sensitive customer data.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8547535409044097,
+    "metadata": {}
+  },
+  {
+    "event_id": "f48561fc-3493-40c7-a86b-a10a08e67690",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:47.917951+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Those are excellent points, David. The user interface is highly intuitive, drag-and-drop, designed specifically for business users. And on security, we're ISO 27001 certified, GDPR compliant, and offer robust role-based access controls to ensure data privacy. We're very serious about that.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9156931325297243,
+    "metadata": {}
+  },
+  {
+    "event_id": "af1ac1ed-d25e-4eac-a0c4-5fa41ee3fd74",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:51.917951+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "ISO 27001, okay, that's good. But what's the typical implementation time? We're talking about integrating Salesforce, our ERP, and two legacy databases. That sounds like months of work.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9216454298765128,
+    "metadata": {}
+  },
+  {
+    "event_id": "dce210db-fe91-4411-a1aa-8d5d9f66af52",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:53.917951+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "For that scope, we typically see initial data ingestion and core reporting capabilities live within 4-6 weeks. Full optimization might take longer, but you'll see value quickly. How does that timeline sound in the context of your current needs?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9755956168321577,
+    "metadata": {}
+  },
+  {
+    "event_id": "ea5574bc-800d-4e78-9e26-5a0ab34fd875",
+    "event_type": "SESSION_END",
+    "session_id": "c4a86b0e-f758-4672-9be9-a665ab1a4eea",
+    "tenant_id": "e3f76733-d430-446c-b132-e7df19839648",
+    "timestamp_utc": "2026-06-28T22:12:58.917951+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

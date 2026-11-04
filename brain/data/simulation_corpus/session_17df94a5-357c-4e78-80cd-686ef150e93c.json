@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "2b9305f2-2e8b-4107-8918-59a0ca329627",
+    "event_type": "SESSION_START",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:12.128498+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_34",
+      "crm_opportunity_id": "opp_34"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "d912567d-7cf7-4596-ae94-f63827744442",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:16.128498+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Good afternoon [Buyer Name]. Our B2B SaaS, [Product Name], is designed to reduce employee onboarding time by 40% while simultaneously increasing new hire retention rates by 15% in their first year.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8712144478452618,
+    "metadata": {}
+  },
+  {
+    "event_id": "fed9657a-4363-46f7-8945-e3d0cb10cb94",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:20.128498+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a bold claim. How do you actually achieve a 40% reduction in onboarding time? Sounds too good to be true, frankly.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9167016268008255,
+    "metadata": {}
+  },
+  {
+    "event_id": "f2941f31-943b-437d-bd3c-905c8966f6c8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:23.128498+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's a combination of personalized learning paths, automated administrative tasks, and interactive knowledge modules accessible on-demand. Imagine new hires completing compliance training and initial role-specific learning within their first week, guided by AI, rather than waiting for scheduled sessions.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9581611132487268,
+    "metadata": {}
+  },
+  {
+    "event_id": "0774f24a-1565-4f5f-967a-3443898c1e72",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:25.128498+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Everyone says that their system is intuitive and saves time. Do you have any independent data or client testimonials to back up those specific numbers? Our HR department is notoriously skeptical of new software promises.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9108254440388286,
+    "metadata": {}
+  },
+  {
+    "event_id": "9634b30c-7e84-4330-99c0-3e9b7af62373",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:28.128498+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. We have several detailed case studies, including one from a similar-sized company in your industry, which validates these metrics. I'd also be happy to connect you with one of our existing clients for a direct reference call.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9602627902713197,
+    "metadata": {}
+  },
+  {
+    "event_id": "145fcdaf-0a17-4ab3-ba52-4d8f2da186ef",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:32.128498+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, maybe. What's the typical rollout time for something like this? We're already behind on other HR tech initiatives, and the thought of another lengthy implementation is daunting.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9673155819805288,
+    "metadata": {}
+  },
+  {
+    "event_id": "428c21aa-c684-4eb8-8b73-ea98c65782d1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:37.128498+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our implementation team works closely with you to ensure a swift rollout. For most organizations, we aim for initial setup and launch within 3-4 weeks, focusing on getting your core onboarding paths live quickly so you can see immediate value.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9847925359788268,
+    "metadata": {}
+  },
+  {
+    "event_id": "6386fee4-5643-4eb8-abde-4e16a39ba995",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:40.128498+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Alright, send me those case studies and the reference contact info. I'll need to run this past my HR lead and see if it's even worth considering given our current backlog.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9702872037114183,
+    "metadata": {}
+  },
+  {
+    "event_id": "858dadc2-eef3-4413-8738-4e4a1fef021a",
+    "event_type": "SESSION_END",
+    "session_id": "17df94a5-357c-4e78-80cd-686ef150e93c",
+    "tenant_id": "765eb7ee-4bb5-467c-8fa7-4cfd938fcf3e",
+    "timestamp_utc": "2026-06-28T22:14:45.128498+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

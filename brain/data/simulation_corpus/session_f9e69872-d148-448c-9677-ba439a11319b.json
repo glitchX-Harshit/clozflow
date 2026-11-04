@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "755f1503-a700-49e7-8f85-706eb25de639",
+    "event_type": "SESSION_START",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:17:52.977388+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_85",
+      "crm_opportunity_id": "opp_85"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "b291c222-6e13-47f9-ab30-b49d7187c295",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:17:55.977388+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining. I wanted to share how our secure file-sharing platform can enhance your collaboration and compliance.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9536256903214954,
+    "metadata": {}
+  },
+  {
+    "event_id": "393cb5fc-de33-4fb9-8f35-88d21edbb92c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:17:57.977388+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Secure file sharing? We use Dropbox and Google Drive. It works. Why do we need another tool adding to our tech stack?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9881053377570647,
+    "metadata": {}
+  },
+  {
+    "event_id": "daa44ef5-9b04-47a1-85f8-9fa2f06a3c42",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:01.977388+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a valid point. While those are great for general use, our platform offers enterprise-grade security features like granular access controls, audit trails, and data residency options, crucial for industries with strict regulatory requirements like yours.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9317962651445142,
+    "metadata": {}
+  },
+  {
+    "event_id": "2b8c6070-883f-466a-a8ce-804d0f874346",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:03.977388+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Mmm, I guess compliance is always a headache. But honestly, most of my team finds Dropbox easy. They're not going to want to learn a whole new system.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8672134964101776,
+    "metadata": {}
+  },
+  {
+    "event_id": "790161a3-ae75-458f-bced-0528dccd1033",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:07.977388+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We've designed our interface to be incredibly intuitive, mirroring the simplicity of the tools your team already uses. Plus, we offer migration assistance to make the transition effortless.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8622003017511909,
+    "metadata": {}
+  },
+  {
+    "event_id": "9625dfc5-92b5-48aa-adb8-09d3c5c39b9b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:09.977388+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'm not convinced it's a priority right now. We have bigger fish to fry. Can you just send me a brochure or something? I'll glance at it if I have time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9593502365440874,
+    "metadata": {}
+  },
+  {
+    "event_id": "6e3ebf01-e133-4238-ac64-96885e3d14d5",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:11.977388+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Of course. I'll send over some materials that highlight the compliance benefits. Would it be okay if I followed up in a month or so to see if anything has changed?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9446915785349114,
+    "metadata": {}
+  },
+  {
+    "event_id": "752ca36e-cf21-4e70-b433-1d5b4eb7b696",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:16.977388+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Sure, a month sounds fine. Just don't call every day.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9369871344202759,
+    "metadata": {}
+  },
+  {
+    "event_id": "e1065702-e487-4252-b4ef-fa23ab8557b0",
+    "event_type": "SESSION_END",
+    "session_id": "f9e69872-d148-448c-9677-ba439a11319b",
+    "tenant_id": "2aa997f3-3db6-47e6-a456-88824c102c34",
+    "timestamp_utc": "2026-06-28T22:18:21.977388+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

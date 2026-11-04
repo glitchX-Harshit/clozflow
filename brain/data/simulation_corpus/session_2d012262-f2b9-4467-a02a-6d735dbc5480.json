@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "38a02d58-ab77-4b43-9e00-572c32285792",
+    "event_type": "SESSION_START",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:29.298385+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_119",
+      "crm_opportunity_id": "opp_119"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "7b0a4d22-8aa4-4981-8587-823687f9286f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:33.298385+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for joining. I'm [Salesperson Name] from [Our Product Name]. We help project managers gain better visibility and collaboration across distributed teams. What are your biggest headaches with project tracking today?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9031741961148134,
+    "metadata": {}
+  },
+  {
+    "event_id": "8dc40481-7ca1-4f73-9127-ed0ab9f2ed83",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:37.298385+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Headaches? All of them. My team is spread across three time zones, and keeping everyone on the same page is a nightmare. But we're using [Current PM Tool], and migrating again would be a catastrophe.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9546263796801224,
+    "metadata": {}
+  },
+  {
+    "event_id": "599e194a-9808-485d-aee6-7a580090f9e0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:41.298385+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I totally understand the aversion to migration, it can be daunting. Many teams feel that way. What if you could integrate [Our Product Name] with your existing [Current PM Tool] to add a layer of real-time communication and progress tracking without a full migration? We're designed to augment, not always replace.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9615853799641154,
+    "metadata": {}
+  },
+  {
+    "event_id": "f3758788-c65a-4508-ad6c-4e4fa6fd17f4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:45.298385+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Augment? So, another tool to log into? My team already complains about too many platforms. And I'm not sure how another tool would magically solve our communication issues. People still need to talk to each other.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9768945173000237,
+    "metadata": {}
+  },
+  {
+    "event_id": "a01e5c42-3cc6-43cf-9793-07d23656f94c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:47.298385+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's exactly right, people still need to talk. But imagine if those conversations were consistently happening around the most up-to-date project data, with AI-driven summaries and automated status updates, reducing the need for endless sync meetings. How many hours a week do you think your team spends just trying to get a clear picture of project status?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8893128055384268,
+    "metadata": {}
+  },
+  {
+    "event_id": "489d8585-42be-4636-a43a-da3952e331ca",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:49.298385+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hours? Probably too many. But I'm just not convinced. We tried something similar a few years ago, and it just created more silos. My leadership is really hesitant about new software. They'll just say no.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9256824734160108,
+    "metadata": {}
+  },
+  {
+    "event_id": "59862952-b3e9-495c-b4b8-0eec51dd1b21",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:51.298385+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I appreciate your honesty about past experiences and internal hurdles. We've specifically designed our solution to break down silos. Would you be open to a 10-minute overview of how our cross-platform dashboards work, and I can share a success story from a company with a very similar distributed team setup?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.984815527727956,
+    "metadata": {}
+  },
+  {
+    "event_id": "1e7c4529-2e0d-4166-8718-746d88510d0d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:53.298385+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Ten minutes, fine. But honestly, I'm just doing this as a courtesy. My boss just approved a major software purchase for finance, so we're definitely out of budget for the rest of the year.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9610281626864865,
+    "metadata": {}
+  },
+  {
+    "event_id": "586a98b2-934a-46fb-9adf-102c7d023389",
+    "event_type": "SESSION_END",
+    "session_id": "2d012262-f2b9-4467-a02a-6d735dbc5480",
+    "tenant_id": "afe7b619-2709-40e9-8537-3bbcb909c0c0",
+    "timestamp_utc": "2026-06-28T22:19:58.298385+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

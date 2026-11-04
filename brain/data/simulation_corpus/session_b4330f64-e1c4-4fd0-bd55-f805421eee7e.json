@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "88926dcd-4c26-4872-958d-0d9178762299",
+    "event_type": "SESSION_START",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:15.111935+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_41",
+      "crm_opportunity_id": "opp_41"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "8c64ced0-f8e4-4f17-953a-0c728742e502",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:19.111935+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Alex, thanks so much for joining today. I know you're busy, so I want to make sure we cover what's most important to you regarding improving your team's project visibility. Does that sound like a good agenda?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9548544899853172,
+    "metadata": {}
+  },
+  {
+    "event_id": "8c47bee8-6363-4641-b3aa-4e455ed73011",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:21.111935+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, it's fine. Honestly, I only have about 10 minutes before my next hard stop. Can you just get straight to the point about what your tool actually *does* for project visibility?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9544228709650594,
+    "metadata": {}
+  },
+  {
+    "event_id": "a3f0ab23-ee0a-4c4d-8281-edde9fc16428",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:25.111935+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely. In a nutshell, our platform centralizes all project data, giving you real-time dashboards that show task progress, resource allocation, and potential bottlenecks across all active projects. No more hunting through spreadsheets or disparate tools.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9127663119199417,
+    "metadata": {}
+  },
+  {
+    "event_id": "d4bc1e5c-ca34-4ad9-9e0f-b7d53e708e69",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:28.111935+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hmm. We use Jira for tasks and a custom spreadsheet for resource allocation. How is this different from just building better dashboards in Jira or connecting our spreadsheet to Power BI? That sounds like a lot of overhead to switch.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9062844707335763,
+    "metadata": {}
+  },
+  {
+    "event_id": "cce1a6bd-75ff-4633-b3c4-292ade45ad9e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:33.111935+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's a fair point. The key difference is our predictive analytics engine, which proactively flags potential delays or overloaded resources *before* they become critical, based on historical data and current workload. Jira's reporting is retrospective; ours is proactive.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8905471884681924,
+    "metadata": {}
+  },
+  {
+    "event_id": "881acc56-e25e-4d6a-a582-8e56a2780f39",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:37.111935+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Predictive... okay. And how much does this 'proactive' insight cost, roughly? Just a ballpark, please. I don't want to get into a long pricing discussion right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9606903603383293,
+    "metadata": {}
+  },
+  {
+    "event_id": "5d9634a3-e30a-4e49-b639-db86c8105a02",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:40.111935+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our pricing scales with your team size and required features, but for a team of around 50 users, you'd be looking at a range of $800 to $1,500 per month, depending on the advanced analytics tier. That includes full implementation support.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9452114930059717,
+    "metadata": {}
+  },
+  {
+    "event_id": "3cc8b91b-b12c-4cf8-b169-6dac351ef26d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:44.111935+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Wow, that's... a bit higher than I anticipated. I'll need to discuss that with my director. I really have to jump now. Can you just send me a brief overview and that pricing range in an email? Thanks.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 29000,
+      "end_ms": 30500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8921236378850294,
+    "metadata": {}
+  },
+  {
+    "event_id": "26758fb6-8cba-4625-9191-ab0afe633fc5",
+    "event_type": "SESSION_END",
+    "session_id": "b4330f64-e1c4-4fd0-bd55-f805421eee7e",
+    "tenant_id": "e03957ba-640e-44ae-b3f2-f2ab1606db1b",
+    "timestamp_utc": "2026-06-28T22:15:49.111935+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

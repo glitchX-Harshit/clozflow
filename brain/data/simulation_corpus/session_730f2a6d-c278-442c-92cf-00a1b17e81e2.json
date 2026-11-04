@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "e0395f4e-498e-4177-8df4-7d4b1d9aa4a7",
+    "event_type": "SESSION_START",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:18:54.913977+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_107",
+      "crm_opportunity_id": "opp_107"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "e173122e-3d33-4c5b-b023-1897b147f9cb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:18:57.913977+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Our automated onboarding solution guides new hires through every step, from HR paperwork to IT setup, ensuring they're productive faster and reducing the burden on your admin staff.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9211209095856975,
+    "metadata": {}
+  },
+  {
+    "event_id": "10c1e568-2f76-4a8c-84e5-2804f00572d2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:18:59.913977+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That sounds good in theory, but setting up a whole new system like that? Our HR team is already swamped. It feels like a massive undertaking, especially data migration.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8616070507855589,
+    "metadata": {}
+  },
+  {
+    "event_id": "52757ad9-7684-4abd-87b2-aab19b656ffb",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:19:01.913977+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that concern completely. We've actually designed the implementation to be as seamless as possible. Our average setup time is just 2-3 weeks, thanks to pre-built integrations with major HRIS systems and dedicated support.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8662543037551195,
+    "metadata": {}
+  },
+  {
+    "event_id": "e9cf32ad-1d90-484e-bb06-e8fce5e2dd60",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:19:03.913977+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "2-3 weeks for 'setup' still sounds like a lot of internal resources tied up. And then training everyone? We're talking months before we see any real benefit, aren't we?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9851888687099457,
+    "metadata": {}
+  },
+  {
+    "event_id": "7b2c2270-b0be-460b-ab4d-f05e0b43573f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:19:08.913977+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The initial setup is largely handled by our team, minimizing your HR's involvement. And for training, we offer intuitive user interfaces and comprehensive training modules that most users pick up within a day. We can also start with a pilot for a specific department.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 14000,
+      "end_ms": 15500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8977275115734181,
+    "metadata": {}
+  },
+  {
+    "event_id": "9f60746a-edbe-4353-a479-2c3c717554cf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:19:13.913977+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "A pilot sounds less daunting, I suppose. But it's still a change management headache. How do you guarantee our existing data integrates without a hitch?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8845195079704319,
+    "metadata": {}
+  },
+  {
+    "event_id": "99797d9c-2f9e-4cec-89f3-cf90e2f0dc02",
+    "event_type": "SESSION_END",
+    "session_id": "730f2a6d-c278-442c-92cf-00a1b17e81e2",
+    "tenant_id": "ca2f4913-5104-4d7b-8fb3-c78b813c9bb3",
+    "timestamp_utc": "2026-06-28T22:19:18.913977+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

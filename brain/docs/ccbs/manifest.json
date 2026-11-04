@@ -1,0 +1,72 @@
+[
+  {
+    "volume": 1,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 1 document.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_01.txt",
+    "pages": 122,
+    "characters": 83530
+  },
+  {
+    "volume": 2,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow Brain volume 2.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_02.txt",
+    "pages": 144,
+    "characters": 113295
+  },
+  {
+    "volume": 3,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 3.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_03.txt",
+    "pages": 188,
+    "characters": 163485
+  },
+  {
+    "volume": 4,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 4.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_04.txt",
+    "pages": 210,
+    "characters": 192241
+  },
+  {
+    "volume": 5,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 5.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_05.txt",
+    "pages": 214,
+    "characters": 194224
+  },
+  {
+    "volume": 6,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 6.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_06.txt",
+    "pages": 214,
+    "characters": 194327
+  },
+  {
+    "volume": 7,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 7.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_07.txt",
+    "pages": 192,
+    "characters": 180429
+  },
+  {
+    "volume": 8,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\clozflow brain volume 8.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_08.txt",
+    "pages": 192,
+    "characters": 175350
+  },
+  {
+    "volume": 9,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow brain volume 9.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_09.txt",
+    "pages": 209,
+    "characters": 198058
+  },
+  {
+    "volume": 10,
+    "source_path": "C:\\Users\\ASUS\\Downloads\\Clozflow_Brain_Volume_10.pdf",
+    "extracted_text_path": "C:\\Users\\ASUS\\Desktop\\Clozflow Brain\\docs\\ccbs\\extracted\\volume_10.txt",
+    "pages": 39,
+    "characters": 52712
+  }
+]

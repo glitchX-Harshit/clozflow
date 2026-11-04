@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "0b576143-d7fc-4394-9274-3663522c3e25",
+    "event_type": "SESSION_START",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:12.127183+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_33",
+      "crm_opportunity_id": "opp_33"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "8b40ea7f-293e-4798-a55b-733fe2fef4b4",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:14.127183+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], thanks for connecting. Our platform, [Product Name], helps B2B sales teams identify and engage high-potential leads with unparalleled accuracy, significantly boosting conversion rates.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9620163528246415,
+    "metadata": {}
+  },
+  {
+    "event_id": "fd1f57bf-ba8f-4677-be73-31e009cf674d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:17.127183+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Wait, so is this like a lead generation tool, or more of a CRM add-on for sales engagement? We have Salesloft and HubSpot already.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9871534745409276,
+    "metadata": {}
+  },
+  {
+    "event_id": "6d7b1885-6337-479d-92fd-54901f914d8e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:21.127183+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's a fantastic question and a common point of confusion. We sit upstream of Salesloft and HubSpot. While they manage outreach and customer relationships, [Product Name] uses predictive AI to *identify* which prospects are most likely to convert *before* your sales team even contacts them, enriching your existing lead lists with actionable intent data.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9089200331749259,
+    "metadata": {}
+  },
+  {
+    "event_id": "334aa4d9-752a-4762-a89b-05a8b24ebc28",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:23.127183+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, but how is that different from ZoomInfo or Lusha then? They also claim to provide intent data and lead enrichment. We just demoed them last week.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8562658360498142,
+    "metadata": {}
+  },
+  {
+    "event_id": "c8124c2a-1ba7-496e-96eb-d36b53115f9d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:28.127183+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "The key differentiator is our proprietary behavioral scoring model. While ZoomInfo and Lusha provide demographic and firmographic data, we track real-time digital body language across thousands of sources to predict purchase intent with a higher degree of accuracy, telling you *who* to talk to and *when* they're ready to buy, not just *who they are*.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9327047210170377,
+    "metadata": {}
+  },
+  {
+    "event_id": "eabf10cb-6e8a-4349-a69a-f79d88322804",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:30.127183+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I'm still not entirely clear on where this would fit into our current sales tech stack. It feels like there might be overlap, and another tool to manage is a headache.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 18000,
+      "end_ms": 19500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9528176680500619,
+    "metadata": {}
+  },
+  {
+    "event_id": "4c4d4bb2-dc84-4411-8290-c2c9c306fa8d",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:35.127183+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand. To illustrate its unique position, I could quickly show you a specific use case where [Product Name] identified a high-intent lead that your existing tools might have missed, and how it directly fed into your Salesloft sequence. Would you have 15 minutes next week?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 23000,
+      "end_ms": 24500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9391392610155913,
+    "metadata": {}
+  },
+  {
+    "event_id": "71af2955-b7b5-48b5-9c94-012da381b03b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:37.127183+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I guess... Can you send me some documentation first? My head's spinning a bit with all these vendors. I need to read through it on my own time.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 25000,
+      "end_ms": 26500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9284700370797615,
+    "metadata": {}
+  },
+  {
+    "event_id": "814c79ea-95b6-46d0-a985-dde990af4ec4",
+    "event_type": "SESSION_END",
+    "session_id": "48ff2612-f684-429c-8272-1dced86906ab",
+    "tenant_id": "2be2f038-fbae-4acb-b737-1d654ecb33a2",
+    "timestamp_utc": "2026-06-28T22:14:42.127183+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

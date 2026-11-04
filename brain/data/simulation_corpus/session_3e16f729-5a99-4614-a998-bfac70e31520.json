@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "1a2aebc8-0985-4b42-9a17-5c1c80b67f4f",
+    "event_type": "SESSION_START",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:29.921484+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_9",
+      "crm_opportunity_id": "opp_9"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "0eaa5707-fc6e-4a88-b18f-5a13630f1069",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:31.921484+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Rachel, thanks for your time. I'm calling about our employee engagement platform. We've seen great success in helping companies reduce turnover and boost productivity.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 2000,
+      "end_ms": 3500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9552527286244954,
+    "metadata": {}
+  },
+  {
+    "event_id": "3d399b91-8740-4aaf-b812-555b2e7dde68",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:33.921484+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Employee engagement? We just rolled out a new benefits package, had a company picnic. I think our team is pretty engaged. What more could we possibly need?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9163347987447441,
+    "metadata": {}
+  },
+  {
+    "event_id": "6284ad82-587a-43c2-9ccc-52a647e14e29",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:38.921484+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's fantastic to hear, Rachel. Our platform complements those initiatives by providing real-time sentiment analysis, anonymous feedback channels, and actionable insights into what truly motivates your workforce beyond perks. It's about proactive understanding, not reactive guessing.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 9000,
+      "end_ms": 10500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9590548588243569,
+    "metadata": {}
+  },
+  {
+    "event_id": "63d718d5-2508-4395-b217-a0aa748156df",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:40.921484+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Real-time sentiment? Anonymous feedback? That sounds a bit Big Brother-ish. I don't want my employees thinking we're constantly monitoring them. And frankly, I'm not sure how much more 'insight' we need right now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8666217215656113,
+    "metadata": {}
+  },
+  {
+    "event_id": "7816d789-99e5-4f18-9dee-7cebc0810ee9",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:45.921484+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand your concern about perception, Rachel. The platform is designed to be completely transparent and focused on collective insights, not individual monitoring. It aggregates feedback to identify trends, allowing you to address systemic issues before they impact morale or productivity. It's about giving employees a voice they might not feel comfortable using in public forums.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9798377303502228,
+    "metadata": {}
+  },
+  {
+    "event_id": "e515bc1b-cfd7-4106-af96-70d5c242b6af",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:50.921484+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, a 'voice.' But what if they just complain? We have enough internal grumbling already. I'm worried it would just open a Pandora's Box.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9016897855689525,
+    "metadata": {}
+  },
+  {
+    "event_id": "5dfa1ef2-60ee-4cb1-9d83-9b231e2d5982",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:12:55.921484+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "It's natural to have that concern. However, by providing a structured channel, you can turn 'grumbling' into constructive feedback that you can actually act upon. Ignoring issues often makes them worse. Would you be open to seeing a quick, anonymous demo to understand how it collects feedback without creating an open complaint forum?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 26000,
+      "end_ms": 27500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8784009012827263,
+    "metadata": {}
+  },
+  {
+    "event_id": "6adee104-b55d-471a-8ed0-34daa44af684",
+    "event_type": "SESSION_END",
+    "session_id": "3e16f729-5a99-4614-a998-bfac70e31520",
+    "tenant_id": "a3d0c69d-ef51-4c62-82c0-f9f49d5e9642",
+    "timestamp_utc": "2026-06-28T22:13:00.921484+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,211 @@
+[
+  {
+    "event_id": "fc20a3d4-3c12-4bd3-b6a7-30d69ea7ce84",
+    "event_type": "SESSION_START",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:17:52.980166+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_88",
+      "crm_opportunity_id": "opp_88"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "03907223-dbab-4828-8762-5b63774258cf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:17:55.980166+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for jumping on. I wanted to quickly walk you through how our supply chain optimization software can help you identify bottlenecks and reduce operational costs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 3000,
+      "end_ms": 4500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.884817555904591,
+    "metadata": {}
+  },
+  {
+    "event_id": "d09f64b9-50d8-4b83-8a34-a24d94882c47",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:17:59.980166+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hey. (distant chatter in the background) Sorry, just dealing with a delivery issue right now. Go ahead, but I'm a bit distracted.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 7000,
+      "end_ms": 8500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8760444774692686,
+    "metadata": {}
+  },
+  {
+    "event_id": "1e073841-522c-44db-afde-d66846cf8460",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:02.980166+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "No problem at all. In essence, our software uses AI to analyze your entire supply chain, predicting potential disruptions and suggesting optimal routes and inventory levels to save you money and prevent delays.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 10000,
+      "end_ms": 11500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8996102557861831,
+    "metadata": {}
+  },
+  {
+    "event_id": "b43c6682-3bff-4ff6-bc49-40b968ace93c",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:05.980166+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": " (muffled) ...hold on a sec. (speaks away from phone) 'No, not that one, the other one!' ...Okay, sorry. So, it 'predicts disruption'? Sounds a bit too good to be true, honestly. We've got so many variables.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 13000,
+      "end_ms": 14500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9765062395420395,
+    "metadata": {}
+  },
+  {
+    "event_id": "035cdd6c-ad96-435b-9bb5-5a6a0c997db0",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:08.980166+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand the complexity. Our system integrates with your existing data sources \u2013 ERP, TMS, WMS \u2013 to provide a holistic view. The AI learns from historical data and real-time events, providing surprisingly accurate forecasts.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9605615588367848,
+    "metadata": {}
+  },
+  {
+    "event_id": "ee846f6d-3962-49f9-a3ab-7582f12b0fd7",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:12.980166+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right. Well, I really need to go deal with this. Can you just send me an email with the main points and some examples of how it's actually helped companies deal with, you know, *actual* disruptions? This call isn't ideal.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 20000,
+      "end_ms": 21500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9708452515987325,
+    "metadata": {}
+  },
+  {
+    "event_id": "035749c5-b0f6-4fad-8a20-e61e3ba0c69a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:14.980166+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Of course. I'll send that over immediately, and I'll include a short video demo. Perhaps we can reschedule for a time when you're less swamped?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 22000,
+      "end_ms": 23500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9178446787646883,
+    "metadata": {}
+  },
+  {
+    "event_id": "af277963-1bf9-423c-bd64-65be744b2cbf",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:19.980166+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, send the email. We'll see. Thanks.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 27000,
+      "end_ms": 28500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8572723630746459,
+    "metadata": {}
+  },
+  {
+    "event_id": "26a76746-62ef-44f7-be8c-7fd611ee7dce",
+    "event_type": "SESSION_END",
+    "session_id": "b37c469c-8102-4a31-83d6-c68334c84df3",
+    "tenant_id": "c4c02282-6356-4d78-b724-4535f50b8711",
+    "timestamp_utc": "2026-06-28T22:18:24.980166+00:00",
+    "sequence_num": 9,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "event_id": "8b726a9d-47ce-4339-8b33-75dd15cc74d9",
+    "event_type": "SESSION_START",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:16:42.149551+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_70",
+      "crm_opportunity_id": "opp_70"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "25c7d034-f197-4736-94c2-c0ed867c6e16",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:16:46.149551+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hello [Buyer Name], hope you're doing well. I'm reaching out because I saw your recent job posting for a new VP of Product, which often signals growth and a need for better product analytics.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9874741299806136,
+    "metadata": {}
+  },
+  {
+    "event_id": "094bbefb-fea2-4bcf-8382-8eb8cbc80034",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:16:48.149551+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Uh, yeah, we're growing. But honestly, analytics isn't our biggest pain point right now. We're swamped with feature development and bug fixes. Maybe next quarter, but not now.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9005248980668176,
+    "metadata": {}
+  },
+  {
+    "event_id": "2d15eceb-8003-4835-8848-2da17f316198",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:16:53.149551+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I completely understand that development cycles can be intense. However, many of our clients find that better product analytics *reduces* the time spent on bug fixes and helps prioritize feature development more effectively, by identifying what truly drives user value. It's about working smarter, not just harder.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 11000,
+      "end_ms": 12500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9552338174385704,
+    "metadata": {}
+  },
+  {
+    "event_id": "6912d60e-d4bd-44c4-8be9-759462ec562a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:16:58.149551+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Smarter? We have Google Analytics. And Mixpanel. And our own internal dashboards. We're drowning in data, not lacking it. We just don't have time to make sense of it all.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 16000,
+      "end_ms": 17500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8670695026390146,
+    "metadata": {}
+  },
+  {
+    "event_id": "018def5d-533c-438d-b7e4-0ce74ac53afc",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:17:01.149551+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "That's precisely where [Product Name] shines. We don't just give you more data; we provide AI-driven insights that highlight key user behaviors, identify drop-off points, and suggest opportunities for improvement. It helps you cut through the noise. Could I show you a 5-minute example of how we surface actionable insights, rather than just raw numbers?",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9161890877155692,
+    "metadata": {}
+  },
+  {
+    "event_id": "cc8f01ee-d7e0-485e-8208-d2489e1986c2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:17:06.149551+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Five minutes, huh? Look, I'm literally walking into another meeting in two minutes. Just send me an email with the 'actionable insights' part highlighted. I'll get to it when I can.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.953210867487997,
+    "metadata": {}
+  },
+  {
+    "event_id": "35533e5c-4b2a-40d2-a3f7-f3ac1adaf2d1",
+    "event_type": "SESSION_END",
+    "session_id": "44a251aa-1cd1-43bb-9efb-48c4f3669aed",
+    "tenant_id": "5c9f99dc-bf77-45bb-a355-4d33ec75f5b2",
+    "timestamp_utc": "2026-06-28T22:17:11.149551+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

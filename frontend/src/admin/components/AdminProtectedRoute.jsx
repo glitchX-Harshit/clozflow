@@ -62,7 +62,7 @@ export default function AdminProtectedRoute({ children }) {
     try {
       const API_BASE = typeof window !== 'undefined' && typeof window.APP_API_BASE === 'string'
         ? window.APP_API_BASE
-        : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
+        : (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8100' : '');
       const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

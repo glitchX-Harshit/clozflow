@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "8d63f967-bead-4e6e-a3dc-2195de9a0df8",
+    "event_type": "SESSION_START",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:30.799479+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_24",
+      "crm_opportunity_id": "opp_24"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "c3d01340-55fc-4b87-bc37-8399f992c00e",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:34.799479+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi [Buyer Name], thanks for connecting. I'm here to introduce you to [Product Name], our innovative project management suite designed specifically for agile marketing teams.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 4000,
+      "end_ms": 5500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9877998750146424,
+    "metadata": {}
+  },
+  {
+    "event_id": "65806345-1468-45b7-afb7-6bca033d5cf8",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:36.799479+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Right. Agile marketing. We're currently using Asana for our project management, and it's been working pretty well for us for the past three years. What makes yours so different?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 6000,
+      "end_ms": 7500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9680088169093218,
+    "metadata": {}
+  },
+  {
+    "event_id": "67e4b6cf-d983-47ef-b9f2-d90bf484ccf1",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:38.799479+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Asana is a solid tool. [Product Name], however, goes beyond task management by integrating advanced features like automated resource allocation based on skill sets, AI-driven bottleneck identification, and direct integration with popular design and content tools.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9744378633788681,
+    "metadata": {}
+  },
+  {
+    "event_id": "5b9182a1-700f-479c-91ec-9bc87161025b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:42.799479+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Resource allocation? We manage that ourselves. And bottleneck identification? Asana has reporting that shows where things are getting stuck. It sounds like you're just adding more bells and whistles that we probably won't use.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8730914215871656,
+    "metadata": {}
+  },
+  {
+    "event_id": "79e9d262-92ad-48be-94ec-9306dac1441f",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:45.799479+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I understand that perspective. The key difference is the *automation* and *predictive* nature of these features. Instead of manually reviewing reports, [Product Name] proactively alerts you to potential delays and suggests reallocations to keep projects on track, saving managers hours each week.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 15000,
+      "end_ms": 16500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8934363576011881,
+    "metadata": {}
+  },
+  {
+    "event_id": "3018ba7d-f4a0-4fc8-b703-3bdfc03f4739",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:49.799479+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hours each week, really? We're a lean team. Any new software means a migration, training, and potential disruption. We'd need to see some pretty compelling ROI to switch from something that's already 'good enough'.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 19000,
+      "end_ms": 20500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9283747352801707,
+    "metadata": {}
+  },
+  {
+    "event_id": "ebbd28fb-a4de-45f6-a9f3-44526b1eac13",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:54.799479+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "I agree completely. We offer a no-cost trial and a dedicated onboarding specialist to ensure a smooth transition with minimal disruption. Plus, we can calculate a projected ROI specifically for your team's size and project volume.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9896296821757646,
+    "metadata": {}
+  },
+  {
+    "event_id": "f0fc5c0e-24de-4897-94de-c7ee4815eae2",
+    "event_type": "SESSION_END",
+    "session_id": "9ef3ac32-9b8f-4d47-853d-26e047c53c1f",
+    "tenant_id": "6b38ec93-4911-4e2e-9d83-70ec52c9d4a7",
+    "timestamp_utc": "2026-06-28T22:13:59.799479+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]

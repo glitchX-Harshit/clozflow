@@ -1,0 +1,189 @@
+[
+  {
+    "event_id": "fbefef6e-cf56-46a8-92c8-4f3225a7d9ec",
+    "event_type": "SESSION_START",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:00.573695+00:00",
+    "sequence_num": 0,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "salesperson_id": "sp_122",
+      "crm_opportunity_id": "opp_122"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  },
+  {
+    "event_id": "d5a3d8c4-d868-4aed-8d2f-fbcfe36aa38b",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:05.573695+00:00",
+    "sequence_num": 1,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Hi Alex, thanks so much for making time today. I know your schedule is packed.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 5000,
+      "end_ms": 6500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9814756874414136,
+    "metadata": {}
+  },
+  {
+    "event_id": "1d356d3e-725e-414b-b4d5-844e7378706a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:08.573695+00:00",
+    "sequence_num": 2,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Yeah, no problem. But full disclosure, I only have about 7-8 minutes before my next hard stop. So, can we cut to the chase? What exactly are you offering that's different from the five other outreach tools I've demoed this month?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 8000,
+      "end_ms": 9500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8870147877669048,
+    "metadata": {}
+  },
+  {
+    "event_id": "a0dd0cba-dcf6-4460-b41d-ea19ded82230",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:12.573695+00:00",
+    "sequence_num": 3,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Absolutely, I appreciate your directness. Our platform isn't just an outreach tool; it leverages AI to identify optimal times and content for engagement across multiple channels, specifically for B2B. It\u2019s about quality, not just quantity of touches.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 12000,
+      "end_ms": 13500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9318100461509683,
+    "metadata": {}
+  },
+  {
+    "event_id": "56d14b2b-52e4-46ee-8100-7ee466f8580a",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:17.573695+00:00",
+    "sequence_num": 4,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "AI, sure, everyone's saying that. But how does that translate to actual results for my SDRs? And how much is this 'quality' going to cost me?",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 17000,
+      "end_ms": 18500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9075551451308873,
+    "metadata": {}
+  },
+  {
+    "event_id": "89ce3fe2-0fd9-4601-9bc5-d1ab7f798e60",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:21.573695+00:00",
+    "sequence_num": 5,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "We've seen clients reduce unqualified leads by 30% and increase conversion rates by 15% within the first quarter. Pricing starts at $150 per user per month, tiered based on advanced features and integration needs.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 21000,
+      "end_ms": 22500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.9685716428288184,
+    "metadata": {}
+  },
+  {
+    "event_id": "b714eb5f-19ed-431a-b286-5fb0ac0af207",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:24.573695+00:00",
+    "sequence_num": 6,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Okay, that's a bit higher than our current solution. Look, I really need to jump. Send me a one-pager with those stats and the pricing tiers. I'll review it if I get a spare moment.",
+      "speaker_id": "SPEAKER_2",
+      "speaker_role": "BUYER",
+      "start_ms": 24000,
+      "end_ms": 25500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.984377821948466,
+    "metadata": {}
+  },
+  {
+    "event_id": "d26bd67c-e376-4caf-ace7-444daa4669f2",
+    "event_type": "TRANSCRIPT_SEGMENT",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:28.573695+00:00",
+    "sequence_num": 7,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 200,
+    "payload": {
+      "text": "Will do. And just to confirm, what's the best email address for that? I'll also include a link to a brief case study relevant to your industry.",
+      "speaker_id": "SPEAKER_1",
+      "speaker_role": "SALESPERSON",
+      "start_ms": 28000,
+      "end_ms": 29500,
+      "is_final": true,
+      "language": "en-US"
+    },
+    "confidence": 0.8601245134586359,
+    "metadata": {}
+  },
+  {
+    "event_id": "6b571029-598c-4c09-bb6f-431724828d12",
+    "event_type": "SESSION_END",
+    "session_id": "d0a88e37-e03d-4f87-90eb-dd3542221d35",
+    "tenant_id": "bd13ad0d-0e28-4cdd-9cba-331a130773e0",
+    "timestamp_utc": "2026-06-28T22:20:33.573695+00:00",
+    "sequence_num": 8,
+    "source": "simulator",
+    "priority": 1,
+    "ttl_ms": 500,
+    "payload": {
+      "status": "COMPLETED"
+    },
+    "confidence": 1.0,
+    "metadata": {}
+  }
+]
