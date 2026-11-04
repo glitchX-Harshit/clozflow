@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { 
   ArrowLeft, Bot, Play, MoreVertical, 
   FileText, Braces, Wrench, Settings, 
-  CheckCircle, Sparkles, ChevronDown, ChevronUp,
+  CheckCircle, CheckCircle2, Sparkles, ChevronDown, ChevronUp,
   Save, Loader2, Check, ExternalLink, Database, Mic,
   ShieldCheck, Tag, Info, Layers, Zap, Target, DollarSign, Trash2
 } from 'lucide-react';
@@ -10,15 +11,36 @@ import './AgentEditor.css';
 import AgentTestingPanel from './AgentTestingPanel';
 import VoicePersonaSelector, { CLOZFLOW_VOICE_LIST } from '../../components/VoicePersonaSelector';
 import CapsuleSelector from '../../components/CapsuleSelector';
+import ArchetypeLibraryModal from '../../components/ArchetypeLibraryModal';
+import { 
+  extractVariables, 
+  substituteVariables, 
+  formatVariableLabel, 
+  mergeVariablesWithDefaults 
+} from '../../utils/variableParser';
+import { SALES_ARCHETYPES, getArchetypeById } from '../../data/salesArchetypes';
 
-export const AgentEditor = ({ agentId = null, onBack }) => {
+export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack }) => {
+  const [searchParams] = useSearchParams();
+  const queryArchetype = searchParams?.get('archetype');
+  const effectiveArchetypeId = initialArchetypeId || queryArchetype;
+
   const [activeTab, setActiveTab] = useState('instructions');
   const [currentId, setCurrentId] = useState(agentId);
+
+  useEffect(() => {
+    setCurrentId(agentId);
+  }, [agentId]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showTestingPanel, setShowTestingPanel] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+
+  // Archetype & Template State
+  const [showArchetypeModal, setShowArchetypeModal] = useState(false);
+  const [activeArchetypeId, setActiveArchetypeId] = useState(effectiveArchetypeId || null);
+  const [templateNotification, setTemplateNotification] = useState(null);
 
   // Configuration Fields
   const [agentName, setAgentName] = useState('New Sales Agent');
@@ -43,6 +65,67 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
     prospect_name: 'Rahul Sharma',
     company: 'Clozflow Technologies'
   });
+
+  // Real-time extracted dynamic variables from greeting + system prompt
+  const combinedPromptText = `${greetingEnabled ? greetingText : ''} ${systemPrompt}`;
+  const detectedVariables = useMemo(() => extractVariables(combinedPromptText), [combinedPromptText]);
+
+  const applyArchetype = useCallback((archetype, checkConfirmation = true) => {
+    if (!archetype) return;
+
+    if (checkConfirmation && isDirty) {
+      const proceed = window.confirm(
+        `Applying the "${archetype.name}" blueprint will update your greeting, directives, and suggested voice persona.\n\nCustom edits can still be made. Do you want to proceed?`
+      );
+      if (!proceed) return;
+    }
+
+    setAgentName(archetype.name);
+    setRole(archetype.defaultRole || archetype.default_role || 'outbound_qualification');
+    setMission(archetype.mission || '');
+    setSystemPrompt(archetype.systemPrompt || archetype.system_prompt || '');
+    if (archetype.greeting) {
+      setGreetingText(archetype.greeting);
+      setGreetingEnabled(true);
+    }
+    const voiceId = archetype.defaultVoiceId || archetype.default_voice_id;
+    if (voiceId) {
+      setSpeaker(voiceId);
+    }
+    const lang = archetype.defaultLanguage || archetype.default_language;
+    if (lang) {
+      setLanguage(lang);
+    }
+    const p = archetype.defaultPace || archetype.default_pace;
+    if (p) {
+      setPace(p);
+    }
+    const t = archetype.defaultTone || archetype.default_tone;
+    if (t) {
+      setTone(t);
+    }
+    setActiveArchetypeId(archetype.id);
+
+    // Merge dynamic variables with archetype defaults
+    const combined = `${archetype.greeting || ''} ${archetype.systemPrompt || archetype.system_prompt || ''}`;
+    const detected = extractVariables(combined);
+    const supported = archetype.supportedVariables || archetype.supported_variables;
+    setTestVariables(prev => mergeVariablesWithDefaults(detected, prev, supported));
+
+    setIsDirty(true);
+    setTemplateNotification(`Applied template: ${archetype.name}`);
+    setTimeout(() => setTemplateNotification(null), 3500);
+  }, [isDirty]);
+
+  // Pre-seed archetype when creating a fresh agent with archetype query/prop
+  useEffect(() => {
+    if (!currentId && effectiveArchetypeId) {
+      const arch = getArchetypeById(effectiveArchetypeId);
+      if (arch) {
+        applyArchetype(arch, false);
+      }
+    }
+  }, [currentId, effectiveArchetypeId, applyArchetype]);
 
   const [expandedSections, setExpandedSections] = useState({
     greeting: true,
@@ -290,9 +373,39 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
             className="editor-textarea"
             value={greetingText}
             onChange={(e) => { setGreetingText(e.target.value); setIsDirty(true); }}
-            placeholder={`e.g. Hi {{prospect_name}}, this is ${agentName || 'Shivangi'} from Clozflow. Am I speaking with the founder?`}
+            placeholder={`e.g. Hi {{borrower_name | "Sir"}}, this is ${agentName || 'Neha'} from Clozflow. Am I speaking with the founder?`}
           />
         )}
+
+        {/* Dynamic Prompt Variables Chip Inspection Bar */}
+        <div className="dynamic-variables-inspection-bar">
+          <div className="var-bar-header">
+            <div className="var-bar-title">
+              <Braces size={14} color="#2563eb" />
+              <span>Detected Dynamic Tokens ({detectedVariables.length})</span>
+            </div>
+            <span className="var-bar-hint">Tokens auto-substituted during live calls</span>
+          </div>
+          <div className="var-chips-wrap">
+            {detectedVariables.length > 0 ? (
+              detectedVariables.map(v => (
+                <span 
+                  key={v.name} 
+                  className="var-chip"
+                  onClick={() => setActiveTab('variables')}
+                  title={`Click to edit test value. Fallback: "${v.fallback || 'none'}"`}
+                >
+                  <span className="var-chip-name">{`{{${v.name}}}`}</span>
+                  {v.fallback && <span className="var-chip-fallback">| "{v.fallback}"</span>}
+                </span>
+              ))
+            ) : (
+              <span className="var-chips-empty">
+                No variables detected. Add <code>{'{{variable_name | "Fallback"}}'}</code> to greeting or directives.
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Objective Card */}
@@ -317,53 +430,132 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
           </div>
         )}
       </div>
-    </div>
-  );
 
-  const renderVariablesTab = () => (
-    <div className="instructions-tab">
-      <div className="editor-section">
-        <h3>Dynamic Test Variables</h3>
-        <p style={{ fontSize: '0.82rem', color: '#64748b', marginBottom: 16 }}>
-          These template variables replace placeholders like <code>{'{{prospect_name}}'}</code> and <code>{'{{company}}'}</code> during browser testing.
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div className="form-group">
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: 6 }}>
-              Prospect Name (<code>{'{{prospect_name}}'}</code>)
-            </label>
-            <input 
-              type="text" 
-              className="form-input" 
-              value={testVariables.prospect_name || ''}
-              onChange={(e) => {
-                setTestVariables(prev => ({ ...prev, prospect_name: e.target.value }));
-                setIsDirty(true);
-              }}
-              style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6 }}
-            />
+      {/* Autonomous Directives & System Prompt Card */}
+      <div className="expandable-card">
+        <div className="card-header" onClick={() => toggleSection('behavior')}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '0.98rem' }}>Autonomous Directives & Objection Playbook</h3>
+            <span style={{ fontSize: '0.78rem', color: '#64748b' }}>Custom conversational rules, 2-Yes scripts, objection trees, and compliance guardrails</span>
           </div>
-
-          <div className="form-group">
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: 6 }}>
-              Target Company (<code>{'{{company}}'}</code>)
-            </label>
-            <input 
-              type="text" 
-              className="form-input" 
-              value={testVariables.company || ''}
-              onChange={(e) => {
-                setTestVariables(prev => ({ ...prev, company: e.target.value }));
-                setIsDirty(true);
-              }}
-              style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6 }}
-            />
-          </div>
+          {expandedSections.behavior ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </div>
+        {expandedSections.behavior && (
+          <div className="card-content" style={{ padding: '16px 20px' }}>
+            <div className="form-group">
+              <textarea 
+                className="form-textarea prompt-textarea" 
+                rows={12}
+                value={systemPrompt}
+                onChange={(e) => { setSystemPrompt(e.target.value); setIsDirty(true); }}
+                placeholder="Enter custom prompt directives, objection playbooks, or choose a blueprint from Template Library..."
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
+
+  const renderVariablesTab = () => {
+    const substitutedGreeting = substituteVariables(greetingText, testVariables);
+
+    return (
+      <div className="instructions-tab">
+        <div className="editor-section">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+            <h3>Dynamic Test Variables</h3>
+            <span style={{ fontSize: '0.72rem', padding: '3px 8px', borderRadius: 4, background: '#eff6ff', color: '#1d4ed8', fontWeight: 600, border: '1px solid #bfdbfe' }}>
+              Token Engine
+            </span>
+          </div>
+          <p style={{ fontSize: '0.82rem', color: '#64748b', marginBottom: 16 }}>
+            These template variables replace placeholders like <code>{'{{prospect_name}}'}</code> and <code>{'{{company}}'}</code> during browser and PSTN testing.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+            {detectedVariables.length > 0 ? (
+              detectedVariables.map(v => (
+                <div key={v.name} className="form-group">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155' }}>
+                      {formatVariableLabel(v.name)}
+                    </label>
+                    <code style={{ fontSize: '0.72rem', background: '#f1f5f9', padding: '1px 5px', borderRadius: 4, color: '#2563eb' }}>
+                      {`{{${v.name}}}`}
+                    </code>
+                  </div>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={testVariables[v.name] !== undefined ? testVariables[v.name] : ''}
+                    placeholder={v.fallback ? `Default fallback: "${v.fallback}"` : 'Enter test value...'}
+                    onChange={(e) => {
+                      setTestVariables(prev => ({ ...prev, [v.name]: e.target.value }));
+                      setIsDirty(true);
+                    }}
+                    style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.85rem' }}
+                  />
+                  {v.fallback && (
+                    <span style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: 4, display: 'block' }}>
+                      Fallback: <em>"{v.fallback}"</em>
+                    </span>
+                  )}
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="form-group">
+                  <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: 6 }}>
+                    Prospect Name (<code>{'{{prospect_name}}'}</code>)
+                  </label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={testVariables.prospect_name || ''}
+                    onChange={(e) => {
+                      setTestVariables(prev => ({ ...prev, prospect_name: e.target.value }));
+                      setIsDirty(true);
+                    }}
+                    style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6 }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: 6 }}>
+                    Target Company (<code>{'{{company}}'}</code>)
+                  </label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={testVariables.company || ''}
+                    onChange={(e) => {
+                      setTestVariables(prev => ({ ...prev, company: e.target.value }));
+                      setIsDirty(true);
+                    }}
+                    style={{ width: '100%', padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: 6 }}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Live Substituted Greeting Preview */}
+          {greetingEnabled && greetingText && (
+            <div style={{ marginTop: 24, padding: '16px 18px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, fontSize: '0.78rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                <Sparkles size={13} color="#2563eb" />
+                <span>Live Spoken Opening Script Preview (Bulbul v4 Synthesis)</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.88rem', color: '#1e293b', lineHeight: 1.6, fontStyle: 'italic' }}>
+                "{substitutedGreeting}"
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const renderCapsuleTab = () => {
     const selectedCap = capsules.find(c => String(c.id) === String(capsuleId));
@@ -548,17 +740,31 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
 
           <div className="form-group">
             <label style={{ fontSize: '0.82rem', fontWeight: 600, display: 'block', marginBottom: 6 }}>
-              Spoken Language & Dialect
+              Spoken Language & Dialect (Sarvam Bulbul v4)
             </label>
             <select 
               className="form-select"
               value={language}
               onChange={(e) => { setLanguage(e.target.value); setIsDirty(true); }}
-              style={{ width: '100%', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: 6 }}
+              style={{ width: '100%', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: 6, fontWeight: 500 }}
             >
-              <option value="Auto">Auto (Dynamic Hinglish code-switching)</option>
-              <option value="English">Indian English (Conversational)</option>
-              <option value="Hindi">Conversational Hindi</option>
+              <option value="Auto">Auto (Dynamic Hinglish Code-Switching)</option>
+              <optgroup label="Official 11 Indic Languages (Bulbul v4 Flash)">
+                <option value="Hindi">Hindi (हिन्दी · hi-IN)</option>
+                <option value="English">Indian English (en-IN)</option>
+                <option value="Bengali">Bengali (বাংলা · bn-IN)</option>
+                <option value="Gujarati">Gujarati (ગુજરાતી · gu-IN)</option>
+                <option value="Kannada">Kannada (ಕನ್ನಡ · kn-IN)</option>
+                <option value="Malayalam">Malayalam (മലയാളം · ml-IN)</option>
+                <option value="Marathi">Marathi (मराठी · mr-IN)</option>
+                <option value="Odia">Odia (ଓଡ଼ିଆ · od-IN)</option>
+                <option value="Punjabi">Punjabi (ਪੰਜਾਬੀ · pa-IN)</option>
+                <option value="Tamil">Tamil (தமிழ் · ta-IN)</option>
+                <option value="Telugu">Telugu (తెలుగు · te-IN)</option>
+              </optgroup>
+              <optgroup label="Additional Regional Languages">
+                <option value="Assamese">Assamese (অসমীয়া · as-IN)</option>
+              </optgroup>
             </select>
           </div>
 
@@ -623,6 +829,28 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
           <button 
             type="button" 
             className="suggestion-chip"
+            style={{ background: '#fdf4ff', borderColor: '#f0abfc', color: '#7e22ce', fontWeight: 600 }}
+            onClick={() => setShowArchetypeModal(true)}
+          >
+            <Sparkles size={13} style={{ marginRight: 4, display: 'inline' }} />
+            <span>Browse 5 Sales Archetypes</span>
+          </button>
+          {detectedVariables.slice(0, 3).map(v => (
+            <button 
+              key={v.name}
+              type="button" 
+              className="suggestion-chip"
+              onClick={() => {
+                setSystemPrompt(prev => prev + ` {{${v.name}}}`);
+                setIsDirty(true);
+              }}
+            >
+              + Insert {`{{${v.name}}}`}
+            </button>
+          ))}
+          <button 
+            type="button" 
+            className="suggestion-chip"
             onClick={() => {
               setSystemPrompt(prev => prev + "\n- Keep all responses strictly under 2 sentences.");
               setIsDirty(true);
@@ -655,14 +883,32 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="agent-editor-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Loader2 size={32} className="animate-spin" color="#2563eb" style={{ margin: '0 auto 12px' }} />
+          <p style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 500 }}>Loading agent configuration...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="agent-editor-container">
       {/* Editor Header */}
       <header className="agent-editor-header">
         <div className="header-left">
           {onBack && (
-            <button type="button" className="icon-button" onClick={onBack} title="Back to Agents">
-              <ArrowLeft size={18} />
+            <button 
+              type="button" 
+              className="icon-button" 
+              onClick={onBack} 
+              title="Back to Agents"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 12px', borderRadius: '8px', border: '1px solid #e2e8f0', background: '#f8fafc', color: '#334155', fontWeight: 600, fontSize: '0.84rem', cursor: 'pointer' }}
+            >
+              <ArrowLeft size={16} />
+              <span>Back</span>
             </button>
           )}
           <div className="agent-title">
@@ -688,6 +934,16 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
         </div>
 
         <div className="header-right">
+          <button 
+            type="button" 
+            className="btn-template-library"
+            onClick={() => setShowArchetypeModal(true)}
+            title="Browse and apply pre-built enterprise sales archetypes"
+          >
+            <Sparkles size={15} />
+            <span>Template Library</span>
+          </button>
+
           <button 
             type="button" 
             className="btn-primary" 
@@ -731,6 +987,22 @@ export const AgentEditor = ({ agentId = null, onBack }) => {
           onClose={() => setShowTestingPanel(false)} 
           onSaveAndTest={handleSaveAgent}
         />
+      )}
+
+      {/* Archetype Library Modal */}
+      <ArchetypeLibraryModal 
+        isOpen={showArchetypeModal}
+        onClose={() => setShowArchetypeModal(false)}
+        onApplyArchetype={(arch) => applyArchetype(arch, true)}
+        currentArchetypeId={activeArchetypeId}
+      />
+
+      {/* Template Notification Toast */}
+      {templateNotification && (
+        <div className="agent-template-toast animate-fade-in">
+          <CheckCircle2 size={16} color="#10b981" />
+          <span>{templateNotification}</span>
+        </div>
       )}
     </div>
   );

@@ -177,23 +177,24 @@ class SarvamTTSProvider(TTSProvider):
 
         # Map language names to BCP-47 codes
         LANG_MAP = {
-            "Auto": None,
-            "English": "en-IN",
-            "Indian English": "en-IN",
-            "Hindi": "hi-IN",
-            "Hinglish": "hi-IN",
-            "Tamil": "ta-IN",
-            "Telugu": "te-IN",
-            "Bengali": "bn-IN",
-            "Marathi": "mr-IN",
-            "Kannada": "kn-IN",
-            "Gujarati": "gu-IN",
-            "Punjabi": "pa-IN",
-            "Malayalam": "ml-IN",
-            "Odia": "od-IN",
+            "auto": None,
+            "english": "en-IN",
+            "indian english": "en-IN",
+            "hindi": "hi-IN",
+            "hinglish": "hi-IN",
+            "tamil": "ta-IN",
+            "telugu": "te-IN",
+            "bengali": "bn-IN",
+            "marathi": "mr-IN",
+            "kannada": "kn-IN",
+            "gujarati": "gu-IN",
+            "punjabi": "pa-IN",
+            "malayalam": "ml-IN",
+            "odia": "od-IN",
+            "assamese": "as-IN",
         }
-        if actual_lang in LANG_MAP:
-            actual_lang = LANG_MAP[actual_lang]
+        if actual_lang and actual_lang.lower().strip() in LANG_MAP:
+            actual_lang = LANG_MAP[actual_lang.lower().strip()]
 
         # If language code is empty or default, infer from persona ID suffix
         if not actual_lang:
@@ -207,6 +208,7 @@ class SarvamTTSProvider(TTSProvider):
             elif "_pa_" in sp_lower: actual_lang = "pa-IN"
             elif "_ml_" in sp_lower: actual_lang = "ml-IN"
             elif "_od_" in sp_lower: actual_lang = "od-IN"
+            elif "_as_" in sp_lower: actual_lang = "as-IN"
             elif "_en_" in sp_lower: actual_lang = "en-IN"
             else: actual_lang = "hi-IN"
 

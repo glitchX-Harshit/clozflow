@@ -1,4 +1,5 @@
 from utils.capsule_formatter import format_capsule_context
+from utils.variable_parser import substitute_variables_text
 
 """
 
@@ -306,9 +307,25 @@ def call_to_dict(call: PearlCall) -> dict:
 
 
 
-# â”€â”€ Agent CRUD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Sales Archetypes ──────────────────────────────────────────────────────────
+
+@router.get("/archetypes")
+def list_sales_archetypes():
+    """Returns list of standard pre-built enterprise sales archetypes."""
+    from data.sales_archetypes import get_all_archetypes
+    return get_all_archetypes()
+
+@router.get("/archetypes/{archetype_id}")
+def get_sales_archetype(archetype_id: str):
+    """Returns details for a single sales archetype."""
+    from data.sales_archetypes import get_archetype_by_id
+    arch = get_archetype_by_id(archetype_id)
+    if not arch:
+        raise HTTPException(status_code=404, detail="Archetype not found")
+    return arch
 
 
+# ── Agent CRUD ────────────────────────────────────────────────────────────────
 
 @router.post("/agents")
 
@@ -2775,11 +2792,7 @@ async def create_test_session(
 
             tvars = snapshot.get("test_variables") or {}
 
-            rendered_greeting = custom_greeting
-
-            for k, v in tvars.items():
-
-                rendered_greeting = rendered_greeting.replace(f"{{{{{k}}}}}", str(v))
+            rendered_greeting = substitute_variables_text(custom_greeting, tvars)
 
             opening_text = rendered_greeting
 
@@ -2789,7 +2802,7 @@ async def create_test_session(
 
             prospect_name = snapshot.get("test_variables", {}).get("prospect_name") or "there"
 
-            sys_override = snapshot.get("system_prompt")
+            sys_override = substitute_variables_text(snapshot.get("system_prompt"), snapshot.get("test_variables") or {})
 
             _test_agent_name = snapshot.get("name") or "Pearl"
             _test_vc = snapshot.get("voice_config") or {}
@@ -3099,11 +3112,7 @@ async def clear_test_session(
 
             tvars = snapshot.get("test_variables") or {}
 
-            rendered_greeting = custom_greeting
-
-            for k, v in tvars.items():
-
-                rendered_greeting = rendered_greeting.replace(f"{{{{{k}}}}}", str(v))
+            rendered_greeting = substitute_variables_text(custom_greeting, tvars)
 
             opening_text = rendered_greeting
 
@@ -3113,7 +3122,7 @@ async def clear_test_session(
 
             capsule_text = snapshot.get("capsule_context") or "No product context provided."
 
-            sys_override = snapshot.get("system_prompt")
+            sys_override = substitute_variables_text(snapshot.get("system_prompt"), snapshot.get("test_variables") or {})
 
             _clear_agent_name = snapshot.get("name") or "Pearl"
             _clear_vc = snapshot.get("voice_config") or {}
@@ -3290,7 +3299,7 @@ async def browser_voice_test_websocket(
 
     capsule_text = snapshot.get("capsule_context", "No product context provided.")
 
-    system_prompt = snapshot.get("system_prompt")
+    system_prompt = substitute_variables_text(snapshot.get("system_prompt"), snapshot.get("test_variables") or {})
 
     voice_cfg = snapshot.get("voice_config") or {}
 
@@ -3641,9 +3650,7 @@ async def browser_voice_test_websocket(
     # If user explicitly configured a custom scripted greeting override (and not generic boilerplate)
     if custom_greeting and custom_greeting.strip() and not ("How are you doing today" in custom_greeting and "calling from" in custom_greeting):
         tvars = snapshot.get("test_variables") or {}
-        rendered_greeting = custom_greeting
-        for k, v in tvars.items():
-            rendered_greeting = rendered_greeting.replace(f"{{{{{k}}}}}", str(v))
+        rendered_greeting = substitute_variables_text(custom_greeting, tvars)
         full_opening = rendered_greeting
         await websocket.send_json({"type": "transcript", "speaker": "agent", "text": full_opening})
         await tts.send_text(full_opening)

@@ -26,6 +26,7 @@ const PostCallSummary = React.lazy(() => import('./pages/PostCallSummary'));
 const OutreachStudioPage = React.lazy(() => import('./pages/OutreachStudioPage'));
 const RelayPublic = React.lazy(() => import('./pages/RelayPublic'));
 const HowItWorksPage = React.lazy(() => import('./pages/HowItWorksPage'));
+const AgentEditorPage = React.lazy(() => import('./pages/pearl/AgentEditorPage'));
 
 // ── Admin Intelligence Module ──
 const AdminProtectedRoute = React.lazy(() => import('./admin/components/AdminProtectedRoute'));
@@ -201,6 +202,19 @@ function App() {
                         } />
                         <Route path="/outreach-studio" element={
                             <ProtectedRoute><Suspense fallback={null}><OutreachStudioPage /></Suspense></ProtectedRoute>
+                        } />
+                        {/* Dedicated Full-Screen Agent Editor */}
+                        <Route path="/agent-editor/:id" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/agent-editor" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/pearl/agent-editor/:id" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/pearl/agent-editor" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
                         } />
                         {/* Public Relay page — NO auth required (buyer-facing) */}
                         <Route path="/relay/:slug" element={<Suspense fallback={null}><RelayPublic /></Suspense>} />

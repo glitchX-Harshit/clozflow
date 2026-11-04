@@ -483,6 +483,22 @@ export const AgentTestingPanel = ({
           </div>
         </div>
 
+        {/* Dynamic Lead Test Tokens */}
+        {(() => {
+          const activeVars = agentProp?.test_variables || sessionData?.agent_snapshot?.test_variables;
+          if (!activeVars || Object.keys(activeVars).length === 0) return null;
+          return (
+            <div style={{ padding: '6px 16px', background: '#f8fafc', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto', fontSize: '0.72rem' }}>
+              <span style={{ color: '#64748b', fontWeight: 600, whiteSpace: 'nowrap' }}>Lead Context:</span>
+              {Object.entries(activeVars).map(([k, v]) => (
+                <span key={k} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '4px', padding: '1px 6px', color: '#334155', whiteSpace: 'nowrap' }}>
+                  <strong style={{ color: '#2563eb' }}>{k}</strong>: {String(v)}
+                </span>
+              ))}
+            </div>
+          );
+        })()}
+
         {/* Unsaved Agent Warning */}
         {!agentId && (
           <div className="tp-min-banner">

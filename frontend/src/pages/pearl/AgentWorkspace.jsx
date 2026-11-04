@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Bot, Plus, Play, Copy, Trash2, Search, Edit3, 
   Sparkles, Phone, ArrowLeft, Loader2, Volume2, Database, Mic,
@@ -7,6 +8,7 @@ import {
 import AgentEditor from './AgentEditor';
 import AgentTestingPanel from './AgentTestingPanel';
 import Pearl from '../Pearl';
+import ArchetypeShowcase from '../../components/ArchetypeShowcase';
 import './AgentWorkspace.css';
 
 const AgentMonogram = ({ name = 'Agent' }) => {
@@ -88,7 +90,8 @@ const getHeaders = () => {
   };
 };
 
-export const AgentWorkspace = ({ onNavigateSection }) => {
+export const AgentWorkspace = ({ onNavigateSection: _onNavigateSection = null }) => {
+  const navigate = useNavigate();
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -159,9 +162,15 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
 
   // 1. If currently editing or creating an agent, show AgentEditor
   if (editingAgentId !== null) {
+    const isObj = typeof editingAgentId === 'object' && editingAgentId !== null;
+    const isNew = isObj ? editingAgentId.isNew : (editingAgentId === 'new');
+    const parsedId = isNew ? null : (isObj ? editingAgentId.id : editingAgentId);
+    const initialArchId = isObj ? editingAgentId.archetypeId : null;
+
     return (
       <AgentEditor 
-        agentId={editingAgentId === 'new' ? null : editingAgentId} 
+        agentId={parsedId} 
+        initialArchetypeId={initialArchId}
         onBack={() => {
           setEditingAgentId(null);
           fetchAgents();
@@ -204,6 +213,10 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
     a.mission?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleUseArchetype = (archetypeId) => {
+    navigate(`/agent-editor/new?archetype=${archetypeId}`);
+  };
+
   return (
     <div className="agent-ws-container animate-fade-in">
       {/* Top Header */}
@@ -225,7 +238,7 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
           <button 
             type="button" 
             className="agent-btn-primary"
-            onClick={() => setEditingAgentId('new')}
+            onClick={() => navigate('/agent-editor/new')}
           >
             <Plus size={15} />
             <span>New Agent</span>
@@ -235,6 +248,9 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
 
       {/* Main Content Area */}
       <div className="agent-ws-body">
+        {/* Explore Sales Archetypes Showcase */}
+        <ArchetypeShowcase onSelectArchetype={handleUseArchetype} />
+
         {/* Search & Filter Bar */}
         <div className="agent-ws-filter-bar">
           <div className="agent-ws-search-box">
@@ -271,7 +287,7 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
               <button 
                 type="button" 
                 className="agent-btn-primary" 
-                onClick={() => setEditingAgentId('new')}
+                onClick={() => navigate('/agent-editor/new')}
                 style={{ margin: '0 auto' }}
               >
                 <Plus size={15} />
@@ -307,7 +323,7 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
                 <div 
                   key={agent.id} 
                   className="agent-ws-card"
-                  onClick={() => setEditingAgentId(agent.id)}
+                  onClick={() => navigate(`/agent-editor/${agent.id}`)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="agent-card-top">
@@ -360,8 +376,11 @@ export const AgentWorkspace = ({ onNavigateSection }) => {
                         <button 
                           type="button" 
                           className="agent-tool-btn"
-                          onClick={() => setEditingAgentId(agent.id)}
-                          title="Edit agent"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/agent-editor/${agent.id}`);
+                          }}
+                          title="Edit agent (Opens dedicated full page)"
                         >
                           <Edit3 size={13} />
                         </button>
