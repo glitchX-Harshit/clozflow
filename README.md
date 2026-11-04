@@ -1,6 +1,6 @@
 # Clozflow brain integrated
 
-Development branch: **`codex/clozflow-brain-integrated`**. This checkout combines the ClozFlow main interface with its integrated Brain. It does not replace `main` or modify an existing Desktop installation.
+Development branch: **`mahav/clozflow-brain-integrated`**. This checkout combines the ClozFlow main interface with its integrated Brain. It does not replace `main` or modify an existing Desktop installation.
 
 ## Layout
 

@@ -2,7 +2,7 @@ name: Integrated development checks
 
 on:
   push:
-    branches: [codex/clozflow-brain-integrated]
+    branches: [mahav/clozflow-brain-integrated]
   pull_request:
     paths:
       - 'brain/**'

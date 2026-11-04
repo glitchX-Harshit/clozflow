@@ -2,7 +2,7 @@
 
 - **Recorded:** 2026-11-04
 - **Repository:** `glitchX-Harshit/clozflow`
-- **Branch:** `codex/clozflow-brain-integrated`
+- **Branch:** `mahav/clozflow-brain-integrated`
 - **Commit:** `0752535b5e61d424129c9a71dfbb88cd3d7ad61b`
 
 ## Summary
@@ -31,7 +31,7 @@ The failure therefore establishes a lint problem. It does **not** establish whet
 
 ## Resolution procedure
 
-Work from a clean checkout of `codex/clozflow-brain-integrated`, so fixes stay isolated from `main` and from any unrelated local edits.
+Work from a clean checkout of `mahav/clozflow-brain-integrated`, so fixes stay isolated from `main` and from any unrelated local edits.
 
 From the repository root, run the checks in the Brain directory:
 
@@ -54,7 +54,7 @@ python -m pyright src
 python -m pytest tests -q --timeout=30
 ```
 
-Commit and push reviewed fixes to `codex/clozflow-brain-integrated`, then confirm the Brain and frontend checks in the new GitHub Actions run. Keep the branch separate from `main` unless a merge is explicitly intended.
+Commit and push reviewed fixes to `mahav/clozflow-brain-integrated`, then confirm the Brain and frontend checks in the new GitHub Actions run. Keep the branch separate from `main` unless a merge is explicitly intended.
 
 ## Scope and limitations
 
