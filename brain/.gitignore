@@ -23,4 +23,5 @@ data/*.sqlite
 data/*.sqlite-*
 *.pid
 data/keys/
+configs/engines.local.yaml
 

@@ -12,7 +12,7 @@
   "backend/services/websocket_service.py": "8f856b90bc183f0c4885b991e5bceaf298269fb826a3418511342cd1a0e38b1c",
   "backend/services/brain_client.py": "6b7932d53d88a68e301b614fbe658e14c1ac0820869280ad4376791f244f908e",
   "frontend/src/pages/LocalAuthPage.jsx": "4955fe4f9cbaa1858f9738f82f048190606c1a8807977155cc73f45614ac72bc",
-  "frontend/index.html": "ce621f1b95fb8a4baffc594a6f74c22f838a253f12e219fc36c8f938bb520bfd",
+  "frontend/index.html": "1a82d3175247f5735e34cde2168cff7c88b69f0cb5eb7ee686d59a258adc6c76",
   "frontend/src/audio/audioStreamClient.js": "c2b78695c3feb0caf7ff58d91c2fafdd58dfc45a393651955e3d0fdf44e4118a",
   "frontend/src/hooks/useRealtimeCopilot.js": "21ab58ef0083c090c72677b0126272d6e3191e1f1336d1720e7ae6f7ca00905a",
   "backend/services/call_context_engine.py": "249422e1c833f15fbc5ee9624dae1ed3eb8819394e4fea2de2291110eeed811f",
