@@ -117,6 +117,10 @@ class CreateAgentRequest(BaseModel):
 
     test_variables: Optional[dict] = None
 
+    settings: Optional[dict] = None
+
+    tools_config: Optional[list] = None
+
 
 
 
@@ -146,6 +150,10 @@ class UpdateAgentRequest(BaseModel):
     greeting: Optional[str] = None
 
     test_variables: Optional[dict] = None
+
+    settings: Optional[dict] = None
+
+    tools_config: Optional[list] = None
 
 
 
@@ -192,6 +200,10 @@ def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
         "greeting": agent.greeting,
 
         "test_variables": agent.test_variables,
+
+        "settings": (agent.voice_config or {}).get("settings", {}),
+
+        "tools_config": (agent.voice_config or {}).get("tools_config", []),
 
         "version": agent.version or 1,
 
@@ -377,7 +389,7 @@ def create_agent(
 
         autonomy_policy=req.autonomy_policy or DEFAULT_AUTONOMY,
 
-        voice_config=req.voice_config,
+        voice_config=(lambda vc, s, tc: {**(vc or {}), **({"settings": s} if s is not None else {}), **({"tools_config": tc} if tc is not None else {})})(req.voice_config, req.settings, req.tools_config),
 
         lead_source_config=req.lead_source_config,
 
@@ -533,9 +545,19 @@ def update_agent(
 
     update_fields = req.model_dump(exclude_unset=True)
 
-    for field, value in update_fields.items():
+    settings_val = update_fields.pop("settings", None)
+    tools_val = update_fields.pop("tools_config", None)
+    if settings_val is not None or tools_val is not None:
+        merged_vc = dict(agent.voice_config or {})
+        if settings_val is not None:
+            merged_vc["settings"] = settings_val
+        if tools_val is not None:
+            merged_vc["tools_config"] = tools_val
+        agent.voice_config = merged_vc
 
-        setattr(agent, field, value)
+    for field, value in update_fields.items():
+        if hasattr(agent, field):
+            setattr(agent, field, value)
 
 
 

@@ -314,7 +314,7 @@ const VoicePersonaSelector = ({ value, onChange }) => {
                           e.stopPropagation();
                           togglePreview(voice.id);
                         }}
-                        title={`Preview ${voice.name} (Bulbul v4 Flash)`}
+                        title={`Preview ${voice.name} (Voice Sample)`}
                       >
                         {isItemPlaying ? (
                           <Square size={10} fill="currentColor" />

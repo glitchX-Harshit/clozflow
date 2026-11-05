@@ -21,6 +21,7 @@ Key optimizations over previous version:
 import os
 
 import json
+import re
 
 import time
 
@@ -208,6 +209,13 @@ class ConversationEngine:
 
         self.last_security_event: Optional[Dict[str, Any]] = None
 
+        settings = (self.voice_config or {}).get("settings", {})
+        raw_temp = settings.get("temperature", (self.voice_config or {}).get("temperature", 0.7))
+        try:
+            self.temperature = float(raw_temp)
+        except (ValueError, TypeError):
+            self.temperature = 0.7
+
         
 
         # Pre-built messages prefix (immutable across turns)
@@ -355,7 +363,10 @@ class ConversationEngine:
 
     f"- Never repeat something already established in the conversation.\n"
 
-    f"- Move the conversation toward the objective naturally rather than forcing a pitch.\n\n"
+    f"- Move the conversation toward the objective naturally rather than forcing a pitch.\n"
+    f"- For B2B discovery & qualification: Qualify key parameters (pain points, monthly volume/scale, and decision authority) conversationally before locking in next steps or scheduling walkthroughs.\n"
+    f"- When prospects attempt brush-offs (e.g. 'email pe details bhej do' / 'send me an email'): Never just disconnect or passively agree; warmly acknowledge and immediately pivot with a short, high-value clarifying question (e.g. current monthly call volume or operational bottleneck) to ensure any follow-up is relevant.\n"
+    f"- When agreeing to a walkthrough or demo: Offer two specific timeslots concisely rather than an open question, and mention instant calendar confirmation.\n\n"
 
 
 
@@ -381,7 +392,22 @@ class ConversationEngine:
 
         if custom_instructions and custom_instructions.strip():
 
-            return f"{prompt}\n\nSPECIFIC AGENT DIRECTIVES & GUIDELINES:\n{custom_instructions.strip()}"
+            clean_instructions = custom_instructions.strip()
+            # Guardrail: Never let inferior static archetype blocks degrade or override the core conversation engine.
+            if "You are Aditya, enterprise sales specialist representing" in clean_instructions or "[Native Clozflow B2B Engine]" in clean_instructions:
+                clean_instructions = re.sub(
+                    r'You are Aditya, enterprise sales specialist representing.*?(?=(?:SPECIFIC AGENT DIRECTIVES|ADDITIONAL DIRECTIVES|\Z))',
+                    '',
+                    clean_instructions,
+                    flags=re.DOTALL
+                ).strip()
+                clean_instructions = clean_instructions.replace(
+                    "[Native Clozflow B2B Engine] Leverages backend conversation engine with autonomous discovery, dynamic pattern interrupt, and consultative BANT qualification.",
+                    ""
+                ).strip()
+
+            if clean_instructions:
+                return f"{prompt}\n\nSPECIFIC AGENT DIRECTIVES & GUIDELINES:\n{clean_instructions}"
 
         return prompt
 
@@ -499,7 +525,7 @@ class ConversationEngine:
 
             "stream": True,
 
-            "temperature": 0.7,
+            "temperature": getattr(self, "temperature", 0.7),
 
             "max_tokens": 150,  # Allow slightly longer dynamic answers
 

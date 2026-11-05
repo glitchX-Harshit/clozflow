@@ -42,7 +42,7 @@ EXPECTED_IDS.forEach(id => {
   assert.ok(voiceIdSet.has(arch.defaultVoiceId), `defaultVoiceId '${arch.defaultVoiceId}' must exist in CLOZFLOW_VOICE_LIST`);
   assert.ok(arch.defaultLanguage, `${id} must have a defaultLanguage`);
   assert.ok(arch.greeting, `${id} must have a greeting`);
-  assert.ok(arch.systemPrompt, `${id} must have a systemPrompt`);
+  assert.ok(arch.systemPrompt || arch.useDefaultExpertPrompt, `${id} must have a systemPrompt`);
   assert.ok(Array.isArray(arch.supportedVariables) && arch.supportedVariables.length > 0, `${id} must have supportedVariables`);
   assert.ok(Array.isArray(arch.objectionPlaybooks) && arch.objectionPlaybooks.length > 0, `${id} must have objectionPlaybooks`);
   assert.ok(Array.isArray(arch.recommendedVoices) && arch.recommendedVoices.length > 0, `${id} must have recommendedVoices`);
