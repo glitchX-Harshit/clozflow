@@ -895,9 +895,16 @@ Custom edits can still be made. Do you want to proceed?`
             }}
           >
             <option value="">Select knowledge base...</option>
-            {capsules.map(c => (
-              <option key={c.id} value={c.id}>{c.name} ({c.product_name})</option>
-            ))}
+            {capsules.map(c => {
+              const label = (c.product_name && c.product_name !== c.name)
+                ? `${c.name} (${c.product_name})`
+                : c.name;
+              return (
+                <option key={c.id} value={c.id} title={label}>
+                  {label}
+                </option>
+              );
+            })}
           </select>
           <button 
             type="button" 

@@ -659,30 +659,35 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 14px 0;
+  gap: 24px;
 }
 
 .setting-info {
-  max-width: 440px;
+  flex: 1 1 320px;
+  min-width: 260px;
+  max-width: 480px;
 }
 
 .setting-label {
-  font-size: 0.86rem;
-  font-weight: 500;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: #0f172a;
   margin-bottom: 2px;
+  white-space: nowrap;
 }
 
 .setting-sub {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: #64748b;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .setting-control {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 /* Minimal Slider */
@@ -692,6 +697,7 @@
   align-items: flex-end;
   gap: 4px;
   width: 140px;
+  flex-shrink: 0;
 }
 
 .sarvam-slider {
@@ -708,7 +714,7 @@
 
 /* Minimal Dropdown */
 .sarvam-select {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 0.84rem;
@@ -716,6 +722,15 @@
   background: #ffffff;
   outline: none;
   cursor: pointer;
+  width: 240px;
+  max-width: 260px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sarvam-select:focus {
+  border-color: #0f172a;
 }
 
 /* Tags Pill Container */
