@@ -36,7 +36,7 @@ export const ArchetypeShowcase = ({ onSelectArchetype }) => {
               <span className="archetype-verified-pill">5 Enterprise Blueprints</span>
             </div>
             <p className="archetype-showcase-subtitle">
-              Launch revenue-generating conversational engines with pre-trained 2-Yes frameworks, objection playbooks, and native Indic voices.
+              Launch revenue-generating conversational engines with adaptive objection handling, graceful call-cut rules, and native Indic voices.
             </p>
           </div>
         </div>

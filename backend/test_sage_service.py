@@ -1,0 +1,187 @@
+"""
+Test Suite: Sage AI Agent Architect Service & Adaptive Call Cut Intelligence
+═════════════════════════════════════════════════════════════════════════════
+Verifies:
+1. Sage service response generation, planning steps, and follow-up questions
+2. Flexible rejection handling and call disconnection rules (no rigid 2-yes lock)
+3. Dynamic agent configuration patch generation
+4. Conversation Engine prompt builder with organic cadence (no hardcoded bridge words)
+"""
+
+import asyncio
+import os
+import sys
+
+# Ensure backend root is on sys.path
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from services.pearl.sage_service import run_sage_conversation, _generate_heuristic_response, _build_context_summary
+from services.pearl.conversation_engine import ConversationEngine
+
+
+async def test_sage_heuristic_rejection_and_call_cut():
+    print("Testing Sage Call Cut & Rejection Architecture...")
+    agent_state = {
+        "name": "B2B Qualifier",
+        "role": "outbound_qualification",
+        "mission": "Qualify prospects and book discovery walkthroughs.",
+        "fine_tuning_directives": "Initial directives.",
+        "greeting_enabled": False,
+        "settings": {
+            "callCutRule": "reframe_once_then_exit",
+            "disconnectPhrase": "Bilkul samjha sir, thank you for your time. Have a great day!"
+        }
+    }
+
+    # Query about call cut / rejection
+    res = await run_sage_conversation(
+        messages=[],
+        query="When a prospect says they are not interested, when should the agent cut the call instead of 2-yes?",
+        agent_state=agent_state
+    )
+
+    assert "steps" in res, "Response must include steps summary"
+    assert "steps_detail" in res and len(res["steps_detail"]) >= 2, "Response must include detailed steps"
+    assert "text" in res and len(res["text"]) > 10, "Response must include consultative opening"
+    assert "body" in res and len(res["body"]) > 20, "Response must include explanatory body"
+    assert "follow_up_questions" in res and len(res["follow_up_questions"]) > 0, "Must ask context-aware questions"
+    assert "action_card" in res and res["action_card"], "Must include interactive action card"
+    assert "options" in res["action_card"] and len(res["action_card"]["options"]) >= 2, "Action card must have options"
+    assert "patch" in res and res["patch"], "Must include configuration patch"
+    assert "settings" in res["patch"], "Patch should include telephony settings update"
+    assert res["patch"]["settings"].get("callCutRule") == "reframe_once_then_exit"
+
+    print("[PASS] Sage Call Cut & Rejection handling verified.")
+
+
+async def test_sage_cold_call_and_tone():
+    print("Testing Sage Cold Calling & Human Tone Configuration...")
+    agent_state = {
+        "name": "Sales Rep 101",
+        "role": "cold_call",
+        "voice_config": {"speaker": "shubh_enhi_ads", "language": "Auto"}
+    }
+
+    # Query about cold call setup
+    res_cold = await run_sage_conversation(
+        messages=[],
+        query="Set up this agent for outbound cold calling",
+        agent_state=agent_state
+    )
+    assert res_cold["patch"].get("greeting_enabled") is False, "Cold call agent should have fixed greeting disabled"
+
+    # Query about human tone and natural Indian cadence
+    res_tone = await run_sage_conversation(
+        messages=[],
+        query="Make the voice sound natural human like with Indian English and no canned bridge words",
+        agent_state=agent_state
+    )
+    assert "bridge" in res_tone["body"].lower() or "filler" in res_tone["body"].lower() or "cadence" in res_tone["body"].lower()
+    assert "voice_config" in res_tone["patch"] or "fine_tuning_directives" in res_tone["patch"]
+
+    print("[PASS] Cold Calling & Human Tone Configuration verified.")
+
+
+async def test_sage_multi_strategy_objection_and_call_cut():
+    print("Testing Sage Multi-Strategy Objection & Call Cut (2-Yes, Immediate, Two-Touch)...")
+    agent_state = {
+        "name": "B2B Qualifier",
+        "role": "outbound_qualification",
+        "mission": "Qualify prospects and book discovery walkthroughs.",
+        "fine_tuning_directives": "Initial directives.",
+        "greeting_enabled": False,
+        "settings": {
+            "callCutRule": "reframe_once_then_exit",
+            "disconnectPhrase": "Bilkul samjha sir, thank you for your time. Have a great day!"
+        }
+    }
+
+    # 1. Exact user phrasing: "not everyone need 2 yes"
+    res_2yes = await run_sage_conversation(
+        messages=[],
+        query="not everyone need 2 yes you know, make it disconnect when listening to rejection",
+        agent_state=agent_state
+    )
+    assert res_2yes["patch"]["settings"].get("callCutRule") in ["reframe_once_then_exit", "immediate_disconnect"]
+    assert "rejection" in res_2yes["body"].lower() or "exit" in res_2yes["body"].lower()
+
+    # 2. Immediate Disconnect request
+    res_imm = await run_sage_conversation(
+        messages=[],
+        query="Disconnect immediately on first rejection without pushback",
+        agent_state=agent_state
+    )
+    assert res_imm["patch"]["settings"].get("callCutRule") == "immediate_disconnect", "Must set immediate_disconnect"
+    assert "immediately" in res_imm["text"].lower() or "immediate" in res_imm["text"].lower()
+
+    # 3. Two-Touch Reframe request
+    res_two = await run_sage_conversation(
+        messages=[],
+        query="Push up to 2 times on objections before disconnecting",
+        agent_state=agent_state
+    )
+    assert res_two["patch"]["settings"].get("callCutRule") == "two_touch_reframe", "Must set two_touch_reframe"
+
+    # 4. Directive deduplication across multiple turns
+    state_mut = {"fine_tuning_directives": "Initial directive line."}
+    run1 = await run_sage_conversation(messages=[], query="objection handling", agent_state=state_mut)
+    state_mut["fine_tuning_directives"] = run1["patch"]["fine_tuning_directives"]
+    run2 = await run_sage_conversation(messages=[], query="rejection handling", agent_state=state_mut)
+    dir_content = run2["patch"]["fine_tuning_directives"]
+    assert dir_content.count("OBJECTION & DISCONNECTION HANDLING:") == 1, "Must not duplicate section header"
+
+    print("[PASS] Multi-Strategy Objection & Call Cut verified cleanly.")
+
+
+def test_conversation_engine_dynamic_prompt():
+    print("Testing ConversationEngine System Prompt with Organic Cadence & Call-Cut...")
+    
+    # Test 1: Default reframe_once_then_exit
+    engine_default = ConversationEngine(
+        objective="Qualify lead",
+        lead_context={"business_name": "Acme Corp", "agent_name": "Sage"},
+        voice_config={
+            "settings": {
+                "callCutRule": "reframe_once_then_exit",
+                "disconnectPhrase": "Bilkul samjha sir, thank you for your time. Have a great day!"
+            }
+        }
+    )
+    prompt_default = engine_default.system_prompt
+    
+    # Must NOT contain hardcoded bridge words list
+    assert "'haan haan', 'achha okay okay', 'ohh', 'actually', 'matlab', 'bilkul', 'sahi', 'fair point', 'exactly', 'dekhiye'" not in prompt_default
+    assert "Do not rely on hardcoded bridge words or artificial fillers mechanically" in prompt_default
+    assert "Bilkul samjha sir, thank you for your time. Have a great day!" in prompt_default
+
+    # Test 2: Immediate disconnect setting (harmonious instruction)
+    engine_imm = ConversationEngine(
+        objective="Collect feedback",
+        lead_context={"business_name": "Beta Labs", "agent_name": "Sage"},
+        voice_config={
+            "settings": {
+                "callCutRule": "immediate_disconnect",
+                "disconnectPhrase": "Thank you, goodbye."
+            }
+        }
+    )
+    prompt_imm = engine_imm.system_prompt
+    assert "Immediate Disconnect" in prompt_imm
+    assert "Thank you, goodbye." in prompt_imm
+    # Must NOT command "Never just disconnect" when immediate_disconnect is chosen
+    assert "Never just disconnect" not in prompt_imm
+    assert "Respect their decision immediately" in prompt_imm
+
+    print("[PASS] ConversationEngine prompt verified: no hardcoded bridge words, dynamic call-cut rules active.")
+
+
+async def main():
+    await test_sage_heuristic_rejection_and_call_cut()
+    await test_sage_multi_strategy_objection_and_call_cut()
+    await test_sage_cold_call_and_tone()
+    test_conversation_engine_dynamic_prompt()
+    print("\nALL SAGE AI AGENT ARCHITECT TESTS PASSED SUCCESSFULLY!")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

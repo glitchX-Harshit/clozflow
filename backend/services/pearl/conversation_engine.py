@@ -303,6 +303,20 @@ class ConversationEngine:
 
         gender_word = "female" if is_female else "male"
 
+        settings = (getattr(self, 'voice_config', None) or {}).get("settings") or (self.lead or {}).get("settings") or {}
+        call_cut_rule = settings.get("callCutRule", "reframe_once_then_exit")
+        custom_disconnect = settings.get("disconnectPhrase", "Understood, thank you for your time. Have a great day!")
+
+        if call_cut_rule == "immediate_disconnect":
+            call_cut_instruction = f"Immediate Disconnect: If the prospect expresses disinterest, rejection, or asks to end the call, do not argue or push. Gracefully end the call immediately: '{custom_disconnect}'."
+            brush_off_instruction = f"When prospects attempt brush-offs or decline: Respect their decision immediately — do not argue or push back; acknowledge warmly and end the call gracefully ('{custom_disconnect}')."
+        elif call_cut_rule == "two_touch_reframe":
+            call_cut_instruction = f"Adaptive Reframe: Provide up to 2 distinct value angles when addressing objections. If the prospect persists in rejecting or asks not to call, gracefully and politely end the call: '{custom_disconnect}'."
+            brush_off_instruction = f"When prospects attempt soft brush-offs (e.g. 'email pe details bhej do' / 'send me an email'): Warmly acknowledge and pivot with a concise, high-value clarifying question before exiting."
+        else:
+            call_cut_instruction = f"Rejection & Graceful Call Cut: Do not force an artificial multi-step objection tree. For soft brush-offs (e.g. 'send info', 'busy now'), provide one natural, empathetic value reframe. But if the prospect gives a firm rejection ('not interested', 'stop calling', or repeated refusal), do not badger them — gracefully and politely end the call ('{custom_disconnect}') to maintain brand goodwill."
+            brush_off_instruction = f"When prospects attempt soft brush-offs (e.g. 'email pe details bhej do' / 'send me an email'): Warmly acknowledge and immediately pivot with a short, high-value clarifying question (e.g. current monthly call volume or operational bottleneck) to ensure any follow-up is relevant."
+
         prompt = (
 
     f"You are {curr_agent_name} calling {name} directly regarding the context below."
@@ -325,7 +339,7 @@ class ConversationEngine:
 
     f"- Dynamically mirror the prospect's language, vocabulary, pace, formality, and energy. If they speak mostly Hindi, use more Hindi. If mostly English, use mostly English with natural Indian conversational phrasing. If they code-switch, code-switch naturally with them.\n"
 
-    f"- Use natural spoken expressions when they genuinely fit: 'haan haan', 'achha okay okay', 'ohh', 'actually', 'matlab', 'bilkul', 'sahi', 'fair point', 'exactly', 'dekhiye'. Do not insert fillers mechanically.\n"
+    f"- Let natural Indian conversational cadence and authentic cultural nuances emerge organically from the dialogue context and tone. Do not rely on hardcoded bridge words or artificial fillers mechanically; speak with spontaneous conversational flow and human pauses.\n"
 
     f"- You are {gender_word}. In Hindi or Indic speech, naturally use {gender_word} grammatical self-inflections.\n"
 
@@ -358,14 +372,12 @@ class ConversationEngine:
     f"- Ask useful questions when information is missing instead of guessing.\n"
 
     f"- Handle objections conversationally. Acknowledge the concern, identify the underlying reason, then respond using relevant context.\n"
-
+    f"- {call_cut_instruction}\n"
     f"- Never dump features or recite the product context.\n"
-
     f"- Never repeat something already established in the conversation.\n"
-
     f"- Move the conversation toward the objective naturally rather than forcing a pitch.\n"
     f"- For B2B discovery & qualification: Qualify key parameters (pain points, monthly volume/scale, and decision authority) conversationally before locking in next steps or scheduling walkthroughs.\n"
-    f"- When prospects attempt brush-offs (e.g. 'email pe details bhej do' / 'send me an email'): Never just disconnect or passively agree; warmly acknowledge and immediately pivot with a short, high-value clarifying question (e.g. current monthly call volume or operational bottleneck) to ensure any follow-up is relevant.\n"
+    f"- {brush_off_instruction}\n"
     f"- When agreeing to a walkthrough or demo: Offer two specific timeslots concisely rather than an open question, and mention instant calendar confirmation.\n\n"
 
 

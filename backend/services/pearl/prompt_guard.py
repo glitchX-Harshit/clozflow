@@ -71,7 +71,7 @@ _COERCED_COMMITMENT_REGEX = re.compile("|".join(_COERCED_COMMITMENT_PATTERNS), r
 _DEFLECTION_RESPONSES = [
     "Haha, bilkul nahi! Main toh seedhe business results aur conversion ki baat karne aayi hoon. Batayiye, aapka current outbound process kaisa chal raha hai?",
     "Nice try! But honestly, main yahan aapke sales pipeline ko streamline karne ki baat kar rahi hoon. Let's focus on that — challenges kahan aa rahe hain?",
-    "Dekhiye, main Pearl hoon aur mera focus sirf aapki company ke growth aur conversions pe hai. Chaliye main topic pe aate hain, what's your biggest priority right now?",
+    "Samajh rahi hoon, but honestly mera focus sirf aapki company ke growth aur conversions pe hai. Chaliye main topic pe aate hain, what's your biggest priority right now?",
     "Haha, good one! But shortcuts ya tricks chhodte hain, let's talk real business. Aapki team currently leads kaise handle kar rahi hai?",
 ]
 

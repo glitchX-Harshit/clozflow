@@ -11,7 +11,7 @@ Reuses existing auth (get_current_user), database (get_db), and models.
 
 """
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, UploadFile, File, Form, Header, Query
 
 from fastapi.responses import StreamingResponse, Response
 
@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 
 from pydantic import BaseModel
 
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 from datetime import datetime
 
@@ -85,9 +85,31 @@ router = APIRouter(prefix="/api/pearl", tags=["pearl"])
 
 
 
-# â”€â”€ Request/Response Schemas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+def get_optional_user(
+    authorization: Optional[str] = Header(None),
+    token: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+) -> Optional[User]:
+    try:
+        raw_token = None
+        if authorization and authorization.startswith("Bearer "):
+            raw_token = authorization.split(" ")[1]
+        elif token:
+            raw_token = token.replace("Bearer ", "").strip() if token.startswith("Bearer ") else token.strip()
+        if raw_token:
+            return verify_token_string(raw_token, db)
+    except Exception:
+        pass
+    return None
 
 
+class SageChatRequest(BaseModel):
+    messages: List[Dict[str, Any]] = []
+    query: Optional[str] = None
+    agent_state: Optional[Dict[str, Any]] = None
+
+
+# ── Request/Response Schemas ──────────────────────────────────────────
 
 class CreateAgentRequest(BaseModel):
 
@@ -5444,4 +5466,30 @@ def get_campaign_status(
         "completed_at": campaign.completed_at.isoformat() if campaign.completed_at else None
 
     }
+
+
+# ── Sage · AI Agent Architect Endpoint ───────────────────────────────────
+
+@router.post("/sage/chat")
+async def sage_chat_endpoint(
+    req: SageChatRequest,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """
+    Sage · AI Agent Architect
+    Powered by Qwen (qwen/qwen3.8-27b via Groq) with intelligent heuristic fallback.
+    Delivers multi-step architectural reasoning, context-aware call cut & objection calibration,
+    interactive decision cards, and live agent configuration patches.
+    """
+    from services.pearl.sage_service import run_sage_conversation
+    response = await run_sage_conversation(
+        messages=req.messages,
+        query=req.query,
+        agent_state=req.agent_state or {},
+        user_id=current_user.id if current_user else None,
+        db=db
+    )
+    return response
+
 

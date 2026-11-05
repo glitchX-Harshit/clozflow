@@ -183,7 +183,7 @@ export const ArchetypeLibraryModal = ({ isOpen, onClose, onApplyArchetype, curre
             <div className="archetype-preview-section">
               <div className="preview-section-title">
                 <MessageSquare size={14} color="#0f172a" />
-                <span>2-Yes Fixed Opening Script Preview</span>
+                <span>Fixed Opening Script Preview</span>
               </div>
               <div className="archetype-greeting-box">
                 {greetingSegments.map((seg, idx) => {

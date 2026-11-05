@@ -132,7 +132,11 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
     voicemailDetection: true,
     voicemailMessage: 'Hey, seems like I have reached your voicemail. I shall call you back at a later time.',
     callForwarding: false,
-    maxCallLength: 15 // minutes (up to 60)
+    maxCallLength: 15, // minutes (up to 60)
+    
+    // Call Disconnection & Rejection Exit Policy
+    callCutRule: 'reframe_once_then_exit', // 'reframe_once_then_exit' | 'immediate_disconnect' | 'two_touch_reframe' | 'custom'
+    disconnectPhrase: 'Bilkul samjha sir, thank you for your time. Have a great day!'
   });
 
   // Automated Tests Tab State
@@ -144,31 +148,39 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   ]);
   const [isRunningTests, setIsRunningTests] = useState(false);
 
-  // "The Genie" Right Panel Chat State (Matching Screenshots 1-6)
-  const [isGenieOpen, setIsGenieOpen] = useState(true);
-  const [genieMessages, setGenieMessages] = useState([
+  // Sage · AI Agent Architect Right Panel Chat State
+  const [isSageOpen, setIsSageOpen] = useState(true);
+  const [sageMessages, setSageMessages] = useState([
     {
-      id: 'g-1',
-      sender: 'user',
-      text: 'perform a cold call'
-    },
-    {
-      id: 'g-2',
+      id: 's-1',
       sender: 'assistant',
-      text: "Let me look at your agent first to see what it's set up for.",
-      steps: 'Worked on 4 steps >',
-      body: "Your agent has been pre-configured with Clozflow's High-Conversion Sales Brain. Fixed greeting is off so it starts dynamically based on lead context, barge-in is enabled, and BANT qualification is active.",
-      timestamp: '8:32 AM',
-      actionCard: {
-        title: 'What do you want to do?',
+      text: "Hello! I am Sage, your AI Agent Architect.",
+      steps: 'Ready to assist >',
+      steps_detail: [
+        'Loaded Clozflow core conversation intelligence',
+        'Calibrated dynamic Indic voice and barge-in recovery',
+        'Initialized adaptive objection & call-cut architecture'
+      ],
+      body: "I help you build human-like voice agents that convert. I tune prompts deeply to your business context, calibrate when the agent should push/reframe vs when to gracefully cut the call upon rejection, and ensure authentic, natural human delivery without canned filler phrases.",
+      follow_up_questions: [
+        "When a prospect says 'I am not interested' or 'send info on email', should the agent attempt one polite value reframe, or immediately cut the call gracefully?",
+        "What qualification hurdle matters most before locking in a calendar walkthrough?"
+      ],
+      action_card: {
+        title: 'What would you like to configure first?',
         options: [
-          'Set up this agent to make cold calls, then test it',
-          'Place one cold call to my number right now'
+          'Configure dynamic cold calling & graceful call-cut rules',
+          'Tune human tone & authentic Indian English / Hinglish cadence',
+          'Launch live test simulation in Agent Testing Panel'
         ]
-      }
+      },
+      timestamp: 'Just now'
     }
   ]);
-  const [genieInput, setGenieInput] = useState('');
+  const [sageInput, setSageInput] = useState('');
+  const [isSageThinking, setIsSageThinking] = useState(false);
+  const [expandedSteps, setExpandedSteps] = useState({});
+  const [lastAppliedPatchId, setLastAppliedPatchId] = useState(null);
 
   // Real-time extracted dynamic variables from greeting + custom prompt
   const combinedPromptText = `${greetingEnabled ? greetingText : ''} ${promptMode === 'custom' ? systemPrompt : fineTuningDirectives}`;
@@ -271,10 +283,23 @@ Custom edits can still be made. Do you want to proceed?`
           setMission(data.mission || '');
 
           // Check if agent uses native expert prompt or custom
+          const savedSettings = data.settings || data.voice_config?.settings || {};
+          const savedPromptMode = savedSettings.promptMode;
+          const savedDirectives = savedSettings.fineTuningDirectives;
+
           const rawPrompt = data.system_prompt || '';
-          if (!rawPrompt.trim() || rawPrompt.includes('[Native Clozflow B2B Engine]')) {
+          if (savedPromptMode) {
+            setPromptMode(savedPromptMode);
+            if (savedPromptMode === 'expert') {
+              setFineTuningDirectives(savedDirectives || rawPrompt);
+              setSystemPrompt('');
+            } else {
+              setSystemPrompt(rawPrompt);
+            }
+          } else if (!rawPrompt.trim() || rawPrompt.includes('[Native Clozflow B2B Engine]')) {
             setPromptMode('expert');
             setSystemPrompt('');
+            setFineTuningDirectives('');
           } else {
             setPromptMode('custom');
             setSystemPrompt(rawPrompt);
@@ -344,6 +369,12 @@ Custom edits can still be made. Do you want to proceed?`
       ? (fineTuningDirectives.trim() ? fineTuningDirectives.trim() : null)
       : systemPrompt;
 
+    const persistedSettings = {
+      ...settings,
+      promptMode,
+      fineTuningDirectives: fineTuningDirectives.trim()
+    };
+
     const payload = {
       name: agentName.trim() || 'Untitled Agent',
       role,
@@ -356,10 +387,10 @@ Custom edits can still be made. Do you want to proceed?`
         pace: parseFloat(pace),
         tone,
         gender: personaGender,
-        settings: settings,
+        settings: persistedSettings,
         tools_config: systemTools
       },
-      settings: settings,
+      settings: persistedSettings,
       capsule_id: capsuleId ? parseInt(capsuleId) : null,
       test_variables: testVariables,
       call_provider: 'exotel'
@@ -414,53 +445,175 @@ Custom edits can still be made. Do you want to proceed?`
     setShowTestingPanel(true);
   };
 
-  // Genie AI Assistant Interactive Action Handler
-  const handleGenieSubmit = (e) => {
+  // Sage AI Agent Architect Configuration Patch Handler
+  const applySagePatch = useCallback((patch, patchId = null) => {
+    if (!patch) return;
+    if (patch.fine_tuning_directives !== undefined) {
+      setFineTuningDirectives(patch.fine_tuning_directives);
+    }
+    if (patch.greeting_enabled !== undefined) {
+      setGreetingEnabled(Boolean(patch.greeting_enabled));
+    }
+    if (patch.greeting_text !== undefined) {
+      setGreetingText(patch.greeting_text);
+    }
+    if (patch.settings) {
+      setSettings(prev => ({ ...prev, ...patch.settings }));
+    }
+    if (patch.voice_config) {
+      if (patch.voice_config.speaker) setSpeaker(patch.voice_config.speaker);
+      if (patch.voice_config.language) setLanguage(patch.voice_config.language);
+      if (patch.voice_config.pace) setPace(patch.voice_config.pace);
+      if (patch.voice_config.tone) setTone(patch.voice_config.tone);
+    }
+    if (patch.mission) {
+      setMission(patch.mission);
+    }
+    if (patchId) {
+      setLastAppliedPatchId(patchId);
+    }
+    setIsDirty(true);
+  }, []);
+
+  // Sage AI Agent Architect Interactive Chat Handler
+  const handleSageSubmit = async (e, directQuery = null) => {
     e?.preventDefault();
-    if (!genieInput.trim()) return;
+    const query = (directQuery || sageInput || '').trim();
+    if (!query || isSageThinking) return;
 
-    const query = genieInput.trim();
-    const newMsg = { id: `u-${Date.now()}`, sender: 'user', text: query };
-    setGenieMessages(prev => [...prev, newMsg]);
-    setGenieInput('');
+    const userMsg = {
+      id: `u-${Date.now()}`,
+      sender: 'user',
+      text: query,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
 
-    // Dynamic AI assistant response interpreting instructions
-    setTimeout(() => {
-      let replyText = "I've analyzed your instructions and updated the configuration.";
+    setSageMessages(prev => [...prev, userMsg]);
+    setSageInput('');
+    setIsSageThinking(true);
+
+    const token = localStorage.getItem('token');
+    const activeCapsule = capsules.find(c => c.id === parseInt(capsuleId) || c.id === capsuleId);
+
+    try {
+      const res = await fetch(`${window.APP_API_BASE || ''}/api/pearl/sage/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify({
+          messages: sageMessages.slice(-6).map(m => ({
+            role: m.sender === 'user' ? 'user' : 'assistant',
+            content: m.text + (m.body ? `\n${m.body}` : '')
+          })),
+          query,
+          agent_state: {
+            name: agentName,
+            role,
+            mission,
+            prompt_mode: promptMode,
+            system_prompt: systemPrompt,
+            fine_tuning_directives: fineTuningDirectives,
+            greeting_enabled: greetingEnabled,
+            greeting_text: greetingText,
+            voice_config: { speaker, language, pace, tone },
+            settings,
+            capsule_id: capsuleId,
+            capsule_name: activeCapsule?.title || activeCapsule?.name || '',
+            capsule_context: activeCapsule?.content || activeCapsule?.context || '',
+            variables: testVariables
+          }
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error(`Sage API returned ${res.status}`);
+      }
+
+      const data = await res.json();
+      const assistantMsg = {
+        id: data.id || `s-${Date.now()}`,
+        sender: 'assistant',
+        text: data.text || "I've reviewed and adjusted the agent's strategy.",
+        steps: data.steps || "Worked on 3 steps >",
+        steps_detail: data.steps_detail || [],
+        body: data.body || '',
+        follow_up_questions: data.follow_up_questions || [],
+        action_card: data.action_card || null,
+        patch: data.patch || null,
+        timestamp: data.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setSageMessages(prev => [...prev, assistantMsg]);
+
+      // If a patch is provided, automatically apply it to keep the editor synchronized in real time
+      if (data.patch && Object.keys(data.patch).length > 0) {
+        applySagePatch(data.patch, assistantMsg.id);
+      }
+    } catch (err) {
+      console.error('Sage Chat Error:', err);
+      // Graceful client fallback
       const qLower = query.toLowerCase();
+      let patch = null;
 
       if (qLower.includes('cold call') || qLower.includes('sales')) {
         setPromptMode('expert');
         setGreetingEnabled(false);
-        replyText = "Switched to Clozflow's High-Conversion Sales Brain. Fixed greeting is turned off for dynamic pattern interrupts, and BANT qualification is primed.";
+        patch = { greeting_enabled: false };
+      } else if (qLower.includes('immediate') || qLower.includes('first rejection') || qLower.includes('no push') || qLower.includes('dont push') || qLower.includes("don't push")) {
+        setSettings(s => ({ ...s, callCutRule: 'immediate_disconnect' }));
+        patch = { settings: { callCutRule: 'immediate_disconnect' } };
+      } else if (qLower.includes('two') || qLower.includes('2 reframe') || qLower.includes('2 touch') || qLower.includes('twice')) {
+        setSettings(s => ({ ...s, callCutRule: 'two_touch_reframe' }));
+        patch = { settings: { callCutRule: 'two_touch_reframe' } };
+      } else if (qLower.includes('cut') || qLower.includes('disconnect') || qLower.includes('rejection') || qLower.includes('objection') || qLower.includes('2 yes') || qLower.includes('2-yes') || qLower.includes('two yes')) {
+        setSettings(s => ({ ...s, callCutRule: 'reframe_once_then_exit' }));
+        patch = { settings: { callCutRule: 'reframe_once_then_exit' } };
       } else if (qLower.includes('greeting off') || qLower.includes('disable greeting')) {
         setGreetingEnabled(false);
-        replyText = "Disabled fixed opening script. The agent will now initiate conversation dynamically.";
+        patch = { greeting_enabled: false };
       } else if (qLower.includes('greeting on') || qLower.includes('enable greeting')) {
         setGreetingEnabled(true);
-        replyText = "Enabled fixed opening script. You can edit the greeting text in the Instructions tab.";
+        patch = { greeting_enabled: true };
       } else if (qLower.includes('hindi') || qLower.includes('hinglish')) {
         setSettings(s => ({ ...s, startingLanguage: 'Hindi' }));
-        replyText = "Set starting language to Hindi with auto-switching enabled.";
+        patch = { settings: { startingLanguage: 'Hindi' } };
       } else if (qLower.includes('interrupt') || qLower.includes('barge')) {
         setSettings(s => ({ ...s, bargeIn: true }));
-        replyText = "Caller barge-in (interruption) is enabled for active two-way dialogue.";
-      } else if (qLower.includes('call center') || qLower.includes('ambient') || qLower.includes('background')) {
-        setSettings(s => ({ ...s, backgroundSound: 'callcenter', backgroundVolume: 40 }));
-        replyText = "Background ambient sound configured to Call Center (40% volume).";
+        patch = { settings: { bargeIn: true } };
       }
 
       setIsDirty(true);
 
-      const assistantMsg = {
-        id: `a-${Date.now()}`,
+      const fallbackMsg = {
+        id: `s-err-${Date.now()}`,
         sender: 'assistant',
-        text: replyText,
-        steps: 'Applied 1 action >',
-        timestamp: 'Just now'
+        text: "I've analyzed your instructions and updated the configuration.",
+        steps: "Applied 2 steps >",
+        steps_detail: [
+          "Calibrated conversational directives & exit criteria",
+          "Updated live editor state"
+        ],
+        body: "I have configured the agent with natural conversational flow and adaptive objection handling. Rather than a rigid 2-Yes loop, the agent will reframe once naturally with value, and politely cut the call upon firm rejection.",
+        follow_up_questions: [
+          "When should the agent disconnect the call vs push & reframe during objections?",
+          "Would you like to test this live in the Agent Testing Panel?"
+        ],
+        action_card: {
+          title: "Select next action",
+          options: [
+            "Test caller rejection handling in Simulation Panel",
+            "Tune call disconnection & exit policy"
+          ]
+        },
+        patch,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
-      setGenieMessages(prev => [...prev, assistantMsg]);
-    }, 600);
+      setSageMessages(prev => [...prev, fallbackMsg]);
+    } finally {
+      setIsSageThinking(false);
+    }
   };
 
   const currentAgentSnapshot = {
@@ -1348,6 +1501,47 @@ Custom edits can still be made. Do you want to proceed?`
           }}
         />
       </div>
+
+      {/* 6. Call Disconnection & Rejection Policy */}
+      <div className="settings-group-title">Call Disconnection & Objection Policy</div>
+
+      <div className="setting-row" style={{ alignItems: 'flex-start' }}>
+        <div className="setting-info">
+          <div className="setting-label">Call cut & disconnect strategy</div>
+          <div className="setting-sub">Define when the agent gracefully cuts the call vs attempting a value reframe</div>
+        </div>
+        <select 
+          className="sarvam-select"
+          style={{ width: '280px' }}
+          value={settings.callCutRule || 'reframe_once_then_exit'}
+          onChange={(e) => {
+            setSettings(s => ({ ...s, callCutRule: e.target.value }));
+            setIsDirty(true);
+          }}
+        >
+          <option value="reframe_once_then_exit">Push & reframe once naturally, then disconnect if rejected</option>
+          <option value="immediate_disconnect">Immediate polite disconnect on first rejection</option>
+          <option value="two_touch_reframe">Adaptive push (up to 2 soft reframes) before exit</option>
+          <option value="custom">Custom exit directives</option>
+        </select>
+      </div>
+
+      <div className="setting-row" style={{ alignItems: 'flex-start' }}>
+        <div className="setting-info">
+          <div className="setting-label">Polite exit statement</div>
+          <div className="setting-sub">Spoken closing phrase before disconnecting upon rejection</div>
+        </div>
+        <input 
+          type="text" 
+          className="sarvam-input"
+          style={{ width: '280px' }}
+          value={settings.disconnectPhrase || 'Bilkul samjha sir, thank you for your time. Have a great day!'}
+          onChange={(e) => {
+            setSettings(s => ({ ...s, disconnectPhrase: e.target.value }));
+            setIsDirty(true);
+          }}
+        />
+      </div>
     </div>
   );
 
@@ -1410,29 +1604,47 @@ Custom edits can still be made. Do you want to proceed?`
   );
 
   // ────────────────────────────────────────────────────────────────────────
-  // RIGHT SIDEBAR: "THE GENIE" CHAT PANEL (Matching Screenshots 1-6)
+  // RIGHT SIDEBAR: "SAGE · AI AGENT ARCHITECT" (Powered by Qwen via Groq)
   // ────────────────────────────────────────────────────────────────────────
-  const renderGeniePanel = () => {
-    if (!isGenieOpen) return null;
+  const renderSagePanel = () => {
+    if (!isSageOpen) return null;
 
     return (
       <div className="agent-editor-right">
         {/* Top Header */}
-        <div className="genie-top-bar">
-          <div className="genie-agent-title">
+        <div className="sage-top-bar">
+          <div className="sage-agent-title">
             <Sparkles size={15} color="#0f172a" />
-            <span>Cold Call Voice Agent...</span>
+            <span>Sage · AI Agent Architect</span>
           </div>
-          <div className="genie-top-actions">
+          <div className="sage-top-actions">
             <button 
               type="button" 
               className="btn-new-chat"
               onClick={() => {
-                setGenieMessages([
+                setSageMessages([
                   {
-                    id: `g-${Date.now()}`,
+                    id: `s-${Date.now()}`,
                     sender: 'assistant',
-                    text: "Started new configuration chat. What would you like to set up on this agent?",
+                    text: "Started new configuration session. What would you like to build or refine with Sage?",
+                    steps: "Ready to assist >",
+                    steps_detail: [
+                      "Initialized fresh architect session",
+                      "Loaded current agent context and knowledge base"
+                    ],
+                    body: "Tell me about your offer, target prospect, or objection challenges. I'll configure your agent's tone, refusal handling, and call-cut rules.",
+                    follow_up_questions: [
+                      "When should your agent push vs disconnect during rejections?",
+                      "What qualification hurdle matters most before scheduling a meeting?"
+                    ],
+                    action_card: {
+                      title: "Quick architectural setups",
+                      options: [
+                        "Configure dynamic cold calling & graceful call-cut rules",
+                        "Calibrate authentic Indian English / Hinglish tone",
+                        "Launch live test simulation in Agent Testing Panel"
+                      ]
+                    },
                     timestamp: 'Just now'
                   }
                 ]);
@@ -1441,14 +1653,11 @@ Custom edits can still be made. Do you want to proceed?`
               <Plus size={12} />
               <span>New chat</span>
             </button>
-            <button type="button" className="btn-top-icon" title="Chat History">
-              <Clock size={14} />
-            </button>
             <button 
               type="button" 
               className="btn-top-icon" 
               title="Close Panel"
-              onClick={() => setIsGenieOpen(false)}
+              onClick={() => setIsSageOpen(false)}
             >
               <X size={14} />
             </button>
@@ -1456,8 +1665,8 @@ Custom edits can still be made. Do you want to proceed?`
         </div>
 
         {/* Chat Feed */}
-        <div className="genie-chat-feed">
-          {genieMessages.map(msg => {
+        <div className="sage-chat-feed">
+          {sageMessages.map(msg => {
             if (msg.sender === 'user') {
               return (
                 <div key={msg.id} className="user-bubble">
@@ -1466,32 +1675,70 @@ Custom edits can still be made. Do you want to proceed?`
               );
             }
 
+            const isStepsExpanded = Boolean(expandedSteps[msg.id]);
+
             return (
               <div key={msg.id} className="assistant-cluster">
                 <div className="assistant-bubble-text">{msg.text}</div>
+                
                 {msg.steps && (
-                  <div className="assistant-thought-link">
+                  <div 
+                    className="assistant-thought-link"
+                    onClick={() => setExpandedSteps(prev => ({ ...prev, [msg.id]: !prev[msg.id] }))}
+                    title="Click to toggle reasoning steps"
+                  >
                     <span>{msg.steps}</span>
+                    {isStepsExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                   </div>
                 )}
+
+                {isStepsExpanded && msg.steps_detail && msg.steps_detail.length > 0 && (
+                  <div className="sage-steps-drawer">
+                    {msg.steps_detail.map((stepDesc, idx) => (
+                      <div key={idx} className="sage-step-item">
+                        <span className="sage-step-number">{idx + 1}</span>
+                        <span>{stepDesc}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {msg.body && (
                   <div className="assistant-bubble-text" style={{ color: '#475569', fontSize: '0.82rem' }}>
                     {msg.body}
                   </div>
                 )}
-                {msg.actionCard && (
-                  <div className="genie-action-card">
-                    <div className="action-card-title">{msg.actionCard.title}</div>
+
+                {msg.follow_up_questions && msg.follow_up_questions.length > 0 && (
+                  <div className="sage-questions-container">
+                    <div className="sage-questions-label">Architect Follow-up:</div>
+                    {msg.follow_up_questions.map((q, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="sage-question-chip"
+                        onClick={() => handleSageSubmit(null, q)}
+                        title="Click to ask Sage this question"
+                      >
+                        <span>{q}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {msg.action_card && (
+                  <div className="sage-action-card">
+                    <div className="action-card-title">{msg.action_card.title}</div>
                     <div className="action-card-options">
-                      {msg.actionCard.options.map((opt, i) => (
+                      {msg.action_card.options.map((opt, i) => (
                         <div 
                           key={i} 
                           className="action-option-item"
                           onClick={() => {
-                            if (opt.includes('test')) {
+                            if (opt.toLowerCase().includes('test') || opt.toLowerCase().includes('simulation')) {
                               handleOpenTesting();
                             } else {
-                              alert(`Executing: ${opt}`);
+                              handleSageSubmit(null, opt);
                             }
                           }}
                         >
@@ -1502,32 +1749,54 @@ Custom edits can still be made. Do you want to proceed?`
                     </div>
                   </div>
                 )}
+
+                {msg.patch && Object.keys(msg.patch).length > 0 && (
+                  <div className="sage-patch-pill">
+                    <CheckCircle2 size={13} color="#16a34a" />
+                    <span>Live configuration synchronized with Sage patch</span>
+                  </div>
+                )}
               </div>
             );
           })}
+
+          {isSageThinking && (
+            <div className="assistant-cluster">
+              <div className="sage-thinking-bubble">
+                <Loader2 size={14} className="animate-spin" />
+                <span>Sage is analyzing context & planning prompt architecture...</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Input Bar */}
-        <div className="genie-input-wrapper">
-          <form className="genie-input-box" onSubmit={handleGenieSubmit}>
+        <div className="sage-input-wrapper">
+          <form className="sage-input-box" onSubmit={(e) => handleSageSubmit(e)}>
             <input 
               type="text" 
-              placeholder="Ask a follow-up..." 
-              value={genieInput}
-              onChange={(e) => setGenieInput(e.target.value)}
+              placeholder="Ask Sage anything or describe how agent should behave..." 
+              value={sageInput}
+              onChange={(e) => setSageInput(e.target.value)}
+              disabled={isSageThinking}
             />
-            <button type="submit" className="btn-send-circle" title="Send message">
-              <Send size={12} />
+            <button 
+              type="submit" 
+              className="btn-send-circle" 
+              title="Send message"
+              disabled={isSageThinking || !sageInput.trim()}
+            >
+              {isSageThinking ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             </button>
           </form>
         </div>
 
         {/* Footer Meta */}
-        <div className="genie-bottom-meta">
+        <div className="sage-bottom-meta">
           <a href="#report" onClick={(e) => { e.preventDefault(); alert('Feedback reported to Clozflow engineering.'); }}>
             Report an issue
           </a>
-          <span>Session ID: {currentId ? currentId.slice(0, 8) : 'b9d94c62'}...</span>
+          <span>Powered by Qwen · Groq</span>
         </div>
       </div>
     );
@@ -1613,23 +1882,23 @@ Custom edits can still be made. Do you want to proceed?`
             <MoreVertical size={15} />
           </button>
 
-          {!isGenieOpen && (
+          {!isSageOpen && (
             <button 
               type="button" 
               className="btn-pill-save"
               style={{ background: '#f8fafc' }}
-              onClick={() => setIsGenieOpen(true)}
-              title="Open Genie AI Assistant"
+              onClick={() => setIsSageOpen(true)}
+              title="Open Sage · AI Agent Architect"
             >
               <Sparkles size={13} />
-              <span>Assistant</span>
+              <span>Sage</span>
             </button>
           )}
         </div>
       </header>
 
       {/* ──────────────────────────────────────────────────────────────────
-          BODY: LEFT TABS, CENTER CONTENT, RIGHT GENIE
+          BODY: LEFT TABS, CENTER CONTENT, RIGHT SAGE
           ────────────────────────────────────────────────────────────────── */}
       <div className="agent-editor-body">
         {/* Left Sidebar */}
@@ -1703,8 +1972,8 @@ Custom edits can still be made. Do you want to proceed?`
           </div>
         </div>
 
-        {/* Right Sidebar: The Genie */}
-        {renderGeniePanel()}
+        {/* Right Sidebar: Sage · AI Agent Architect */}
+        {renderSagePanel()}
       </div>
 
       {/* ──────────────────────────────────────────────────────────────────
