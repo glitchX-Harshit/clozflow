@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Landmark, ShieldCheck, ShoppingCart, Building2, Truck, 
-  Sparkles, ArrowRight, Mic, Braces, CheckCircle2, ChevronRight
+  Sparkles, ArrowRight, Mic, Braces
 } from 'lucide-react';
 import { SALES_ARCHETYPES } from '../data/salesArchetypes';
 import './ArchetypeShowcase.css';
@@ -68,18 +68,17 @@ export const ArchetypeShowcase = ({ onSelectArchetype }) => {
             <div 
               key={archetype.id} 
               className="archetype-card"
-              style={{ '--accent-color': archetype.accentColor }}
             >
               <div className="archetype-card-badge-row">
-                <span className="archetype-badge-pill" style={{ color: archetype.accentColor, borderColor: `${archetype.accentColor}33`, background: `${archetype.accentColor}10` }}>
+                <span className="archetype-badge-pill">
                   {archetype.badge}
                 </span>
                 <span className="archetype-vertical-text">{archetype.category}</span>
               </div>
 
               <div className="archetype-card-body">
-                <div className="archetype-icon-box" style={{ background: `${archetype.accentColor}14`, color: archetype.accentColor }}>
-                  <IconComp size={18} strokeWidth={2} />
+                <div className="archetype-icon-box">
+                  <IconComp size={17} strokeWidth={1.8} />
                 </div>
                 <div className="archetype-card-content">
                   <h4 className="archetype-card-title">{archetype.name}</h4>
