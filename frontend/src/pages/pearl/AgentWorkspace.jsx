@@ -248,9 +248,6 @@ export const AgentWorkspace = ({ onNavigateSection: _onNavigateSection = null })
 
       {/* Main Content Area */}
       <div className="agent-ws-body">
-        {/* Explore Sales Archetypes Showcase */}
-        <ArchetypeShowcase onSelectArchetype={handleUseArchetype} />
-
         {/* Search & Filter Bar */}
         <div className="agent-ws-filter-bar">
           <div className="agent-ws-search-box">
@@ -408,6 +405,11 @@ export const AgentWorkspace = ({ onNavigateSection: _onNavigateSection = null })
             })}
           </div>
         )}
+
+        {/* Explore Sales Archetypes / Agent Types (Positioned Below Created Agents) */}
+        <div style={{ marginTop: '36px' }}>
+          <ArchetypeShowcase onSelectArchetype={handleUseArchetype} />
+        </div>
       </div>
 
       {/* Contextual Browser Testing Drawer when clicking "Test" directly from card */}
