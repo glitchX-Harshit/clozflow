@@ -1172,3 +1172,603 @@
 .toggle-switch input:checked + .slider:before {
   transform: translateX(16px);
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   SAGE PRODUCTION HARDENING (FIXES 1, 2, 3, 4)
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Top bar extra buttons */
+.btn-clear-chat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-clear-chat:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+/* Header Sage Drawer Toggle Button */
+.btn-sage-header-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-sage-header-toggle:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.btn-sage-header-toggle.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+/* Fix 1: Dynamic Loading Skeleton & Multi-Step Progress Indicators */
+.sage-thinking-cluster {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sage-thinking-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sage-thinking-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.sage-thinking-steps-track {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 2px;
+}
+
+.sage-thinking-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.sage-thinking-step.active {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.sage-thinking-step.completed {
+  color: #16a34a;
+}
+
+.step-bullet {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sage-thinking-step.active .step-bullet {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15);
+}
+
+.sage-thinking-step.completed .step-bullet {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.sage-skeleton-shimmer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.skeleton-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Fix 2: Proposed Changes Preview Card & Instant Undo */
+.sage-proposed-changes-card {
+  background: #ffffff;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(234, 88, 12, 0.05);
+  margin-top: 4px;
+}
+
+.proposed-changes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.proposed-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.proposed-badge {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.proposed-diff-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #fafaf9;
+  border: 1px solid #f5f5f4;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+
+.proposed-diff-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.diff-field-name {
+  font-weight: 600;
+  color: #44403c;
+  flex-shrink: 0;
+}
+
+.diff-field-val {
+  color: #78716c;
+}
+
+.proposed-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.btn-undo-patch {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-undo-patch:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.proposed-undone-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #16a34a;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: #f0fdf4;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #bbf7d0;
+}
+
+/* Fix 3: Direct Cold Call Phone Dialer Modal */
+.cold-call-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.cold-call-modal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 440px;
+  max-width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.cold-call-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cold-call-icon-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #a7f3d0;
+}
+
+.cold-call-modal-body {
+  padding: 20px;
+}
+
+.cold-call-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cold-call-form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.phone-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: border-color 0.15s ease;
+}
+
+.phone-input-wrap:focus-within {
+  border-color: #0f172a;
+}
+
+.phone-prefix-tag {
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.cold-call-input {
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  color: #0f172a;
+  width: 100%;
+  font-family: inherit;
+}
+
+.cold-call-form-group .cold-call-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.cold-call-form-group .cold-call-input:focus {
+  border-color: #0f172a;
+}
+
+.phone-hint {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.cold-call-alert-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  margin-top: 12px;
+}
+
+.cold-call-alert-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  margin-top: 12px;
+}
+
+.cold-call-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-dial-now {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-dial-now:hover {
+  background: #1e293b;
+}
+
+.cold-call-active-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.calling-radar-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.calling-radar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  animation: radarPulse 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  opacity: 0;
+}
+
+.calling-radar-ring.delay-1 {
+  animation-delay: 0.8s;
+}
+
+@keyframes radarPulse {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.calling-radar-center {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #10b981;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.calling-status-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.calling-phone-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 16px;
+}
+
+.calling-timer-tag {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: monospace;
+}
+
+.calling-meta-box {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.calling-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+}
+
+.calling-meta-row .meta-label {
+  color: #64748b;
+}
+
+.calling-meta-row .meta-val {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.btn-cancel-call {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-cancel-call:hover {
+  background: #fee2e2;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   RESPONSIVE LAYOUT & SMOOTH SLIDING DRAWER (FIX 4)
+   ────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 1366px) {
+  .agent-editor-right.sage-drawer-mode {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 420px;
+    max-width: 90vw;
+    height: 100vh;
+    z-index: 10000;
+    background-color: #ffffff;
+    box-shadow: -8px 0 32px rgba(15, 23, 42, 0.18);
+    border-left: 1px solid #e2e8f0;
+    transform: translateX(0);
+    animation: slideInDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .sage-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 9999;
+    animation: fadeInBackdrop 0.2s ease forwards;
+  }
+}
+
+@keyframes slideInDrawer {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 900px) {
+  .agent-editor-body {
+    flex-direction: column;
+  }
+  .agent-editor-left {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 8px 16px;
+  }
+  .agent-editor-left .sarvam-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 4px;
+    padding-bottom: 4px;
+  }
+  .agent-editor-right.sage-drawer-mode {
+    width: 100vw;
+    max-width: 100vw;
+  }
+}
+

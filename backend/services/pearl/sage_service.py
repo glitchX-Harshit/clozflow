@@ -130,7 +130,9 @@ def _build_context_summary(agent_state: Dict[str, Any]) -> str:
     name = agent_state.get("name", "Conversation Agent")
     role = agent_state.get("role", "outbound_qualification")
     mission = agent_state.get("mission", "Qualify intent and book discovery calls.")
-    capsule = agent_state.get("capsule_context") or agent_state.get("capsule_name") or "General B2B Sales"
+    capsule_name = agent_state.get("capsule_name") or agent_state.get("capsule_title") or "General B2B Sales"
+    capsule_context = agent_state.get("capsule_context") or ""
+    capsule_metadata = agent_state.get("capsule_metadata") or {}
     prompt_mode = agent_state.get("prompt_mode", "expert")
     directives = agent_state.get("fine_tuning_directives") or agent_state.get("system_prompt") or ""
     greeting_enabled = agent_state.get("greeting_enabled", False)
@@ -142,12 +144,24 @@ def _build_context_summary(agent_state: Dict[str, Any]) -> str:
     call_cut_rule = settings.get("callCutRule", "reframe_once_then_exit")
     disconnect_phrase = settings.get("disconnectPhrase", "Understood, thank you for your time. Have a great day!")
 
+    capsule_details = [f"- Knowledge Capsule: {capsule_name}"]
+    if isinstance(capsule_metadata, dict):
+        if capsule_metadata.get("description"):
+            capsule_details.append(f"  • Product / Solution: {capsule_metadata['description']}")
+        if capsule_metadata.get("target_audience"):
+            capsule_details.append(f"  • Target Audience (ICP): {capsule_metadata['target_audience']}")
+        if capsule_metadata.get("value_props"):
+            capsule_details.append(f"  • Key Value Proposition: {capsule_metadata['value_props']}")
+    if capsule_context:
+        capsule_details.append(f"  • Capsule Grounding Data:\n    {capsule_context[:700]}")
+    capsule_summary_str = "\n".join(capsule_details)
+
     return (
         f"CURRENT AGENT SNAPSHOT:\n"
         f"- Name: {name}\n"
         f"- Role: {role}\n"
         f"- Mission: {mission}\n"
-        f"- Knowledge Context / Capsule: {capsule}\n"
+        f"{capsule_summary_str}\n"
         f"- Prompt Architecture: {prompt_mode}\n"
         f"- Existing Directives: {directives[:300]}...\n"
         f"- Greeting Enabled: {greeting_enabled} (Text: '{greeting_text}')\n"
@@ -197,6 +211,37 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
     role = agent_state.get("role", "outbound_qualification")
     existing_directives = agent_state.get("fine_tuning_directives") or agent_state.get("system_prompt") or ""
 
+    # 0. Direct Cold Call / Phone Dialer Request
+    if any(k in q_low for k in ["call my number", "to my number", "dial my number", "cold call right now", "call right now", "test call"]):
+        return {
+            "steps": "Worked on 3 steps >",
+            "steps_detail": [
+                "Verified agent audio configuration and telephony route",
+                "Prepared live outbound dialer dispatch payload",
+                "Initiated real-time cold call testing workflow"
+            ],
+            "text": "Opening direct cold call dialer for live audio test.",
+            "body": "I'm launching the direct phone call dialer. Enter your phone number below and Clozflow Pearl will initiate a live outbound call so you can experience the agent's tone, barge-in responsiveness, and rejection handling in real time.",
+            "follow_up_questions": [
+                "Would you like to test soft hesitation ('send an email') or an immediate hard rejection ('not interested')?",
+                "Do you want to adjust the agent's opening cadence before placing the call?"
+            ],
+            "action_card": {
+                "title": "Direct Dialer Dispatch",
+                "options": [
+                    "Place one cold call to my number right now",
+                    "Review dynamic outbound opening directives",
+                    "Configure graceful call disconnection rules for rejected calls"
+                ]
+            },
+            "patch": {
+                "settings": {
+                    "bargeIn": True,
+                    "callCutRule": agent_state.get("settings", {}).get("callCutRule", "reframe_once_then_exit")
+                }
+            }
+        }
+
     # 1. Objection, Call Cut & 2-Yes Calibration
     objection_keywords = [
         "cut", "disconnect", "rejection", "objection", "push", "hang up", "not interested",
@@ -218,8 +263,8 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
                 "- Respect Prospect Time: Never badger or repeatedly ask questions when the prospect clearly declines."
             )
             action_options = [
+                "Place one cold call to my number right now",
                 "Revert to 1 natural value reframe before disconnecting",
-                "Simulate a live immediate rejection call in Testing Panel",
                 "Customize the polite disconnect phrase"
             ]
         elif any(k in q_low for k in ["two", "2 reframe", "2 touch", "twice", "2 times", "two touch"]):
@@ -235,9 +280,9 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
                 "- Hard Rejection: If the prospect confirms rejection twice or asks not to be called, exit gracefully: 'Bilkul samjha sir, thank you for your time. Have a great day!' and disconnect immediately."
             )
             action_options = [
+                "Place one cold call to my number right now",
                 "Switch to 1 reframe then exit to prevent prospect fatigue",
-                "Switch to immediate disconnect on first rejection",
-                "Simulate a 2-objection scenario in Agent Testing Panel"
+                "Switch to immediate disconnect on first rejection"
             ]
         else:
             call_cut_rule = "reframe_once_then_exit"
@@ -254,9 +299,9 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
                 "- Natural Accent Cadence: Speak with organic conversational flow. Do not use canned fillers mechanically."
             )
             action_options = [
+                "Place one cold call to my number right now",
                 "Push & reframe once naturally, then disconnect politely if rejected",
-                "Disconnect immediately on first rejection without pushback",
-                "Simulate a live rejection test call in Agent Testing Panel"
+                "Disconnect immediately on first rejection without pushback"
             ]
 
         new_directives = _merge_or_replace_directive_section(
@@ -325,9 +370,9 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
             "action_card": {
                 "title": "What do you want to do next?",
                 "options": [
+                    "Place one cold call to my number right now",
                     "Review dynamic outbound opening directives",
-                    "Configure graceful call disconnection rules for rejected calls",
-                    "Run a simulation in the Agent Testing Panel"
+                    "Configure graceful call disconnection rules for rejected calls"
                 ]
             },
             "patch": {
@@ -419,9 +464,9 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
         "action_card": {
             "title": "Recommended Architectural Next Steps",
             "options": [
+                "Place one cold call to my number right now",
                 "Tune Call Disconnection & Rejection thresholds",
-                "Configure dynamic outbound pattern interrupt hook",
-                "Run automated dialer tests across edge cases"
+                "Configure dynamic outbound pattern interrupt hook"
             ]
         },
         "patch": {

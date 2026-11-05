@@ -151,7 +151,7 @@ def test_conversation_engine_dynamic_prompt():
     
     # Must NOT contain hardcoded bridge words list
     assert "'haan haan', 'achha okay okay', 'ohh', 'actually', 'matlab', 'bilkul', 'sahi', 'fair point', 'exactly', 'dekhiye'" not in prompt_default
-    assert "Do not rely on hardcoded bridge words or artificial fillers mechanically" in prompt_default
+    assert "Colloquial Hinglish Cadence" in prompt_default
     assert "Bilkul samjha sir, thank you for your time. Have a great day!" in prompt_default
 
     # Test 2: Immediate disconnect setting (harmonious instruction)
@@ -175,13 +175,50 @@ def test_conversation_engine_dynamic_prompt():
     print("[PASS] ConversationEngine prompt verified: no hardcoded bridge words, dynamic call-cut rules active.")
 
 
+async def test_sage_capsule_grounding_and_dialer():
+    print("Testing Sage Knowledge Capsule Grounding & Direct Dialer Actions...")
+    agent_state = {
+        "name": "SaaS Closer",
+        "role": "outbound_qualification",
+        "capsule_name": "CloudERP Pro for Manufacturing",
+        "capsule_context": "CloudERP Pro eliminates factory inventory tracking errors and reduces lead time by 35%.",
+        "capsule_metadata": {
+            "description": "Enterprise Resource Planning for mid-market factories",
+            "target_audience": "Factory Owners and Plant Heads in India",
+            "value_props": "Real-time scrap tracking and automated GST invoice reconciliation"
+        },
+        "settings": {
+            "callCutRule": "reframe_once_then_exit"
+        }
+    }
+
+    # Verify context summary builder extracts capsule metadata
+    summary = _build_context_summary(agent_state)
+    assert "CloudERP Pro for Manufacturing" in summary
+    assert "Factory Owners and Plant Heads" in summary
+    assert "Real-time scrap tracking" in summary
+
+    # Verify cold call action card option presence
+    res_dial = await run_sage_conversation(
+        messages=[],
+        query="Place one cold call to my number right now",
+        agent_state=agent_state
+    )
+    assert res_dial["action_card"] is not None
+    assert "Place one cold call to my number right now" in res_dial["action_card"]["options"]
+
+    print("[PASS] Knowledge Capsule Grounding & Direct Dialer verified cleanly.")
+
+
 async def main():
     await test_sage_heuristic_rejection_and_call_cut()
     await test_sage_multi_strategy_objection_and_call_cut()
     await test_sage_cold_call_and_tone()
     test_conversation_engine_dynamic_prompt()
+    await test_sage_capsule_grounding_and_dialer()
     print("\nALL SAGE AI AGENT ARCHITECT TESTS PASSED SUCCESSFULLY!")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
