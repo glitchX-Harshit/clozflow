@@ -146,12 +146,24 @@ def _build_context_summary(agent_state: Dict[str, Any]) -> str:
 
     capsule_details = [f"- Knowledge Capsule: {capsule_name}"]
     if isinstance(capsule_metadata, dict):
-        if capsule_metadata.get("description"):
-            capsule_details.append(f"  • Product / Solution: {capsule_metadata['description']}")
-        if capsule_metadata.get("target_audience"):
-            capsule_details.append(f"  • Target Audience (ICP): {capsule_metadata['target_audience']}")
-        if capsule_metadata.get("value_props"):
-            capsule_details.append(f"  • Key Value Proposition: {capsule_metadata['value_props']}")
+        prod = capsule_metadata.get("product_name") or capsule_metadata.get("product")
+        if prod:
+            capsule_details.append(f"  • Product Name: {prod}")
+        desc = capsule_metadata.get("description") or capsule_metadata.get("product_specification") or capsule_metadata.get("summary")
+        if desc:
+            capsule_details.append(f"  • Product / Solution: {desc}")
+        aud = capsule_metadata.get("target_audience") or capsule_metadata.get("icp")
+        if aud:
+            capsule_details.append(f"  • Target Audience (ICP): {aud}")
+        vp = capsule_metadata.get("value_props") or capsule_metadata.get("key_differentiators") or capsule_metadata.get("usp")
+        if vp:
+            capsule_details.append(f"  • Key Value Proposition: {vp}")
+        pains = capsule_metadata.get("pain_points_solved") or capsule_metadata.get("pain_points")
+        if pains:
+            capsule_details.append(f"  • Pain Points Solved: {pains}")
+        company = capsule_metadata.get("company_name") or capsule_metadata.get("business_name")
+        if company:
+            capsule_details.append(f"  • Company: {company}")
     if capsule_context:
         capsule_details.append(f"  • Capsule Grounding Data:\n    {capsule_context[:700]}")
     capsule_summary_str = "\n".join(capsule_details)
@@ -497,6 +509,40 @@ async def run_sage_conversation(
 
     if not user_query:
         user_query = "Help me optimize this agent for high-conversion sales calls."
+
+    # Ground Sage with DB Knowledge Capsule if capsule_id is provided
+    if db and state.get("capsule_id"):
+        try:
+            from models import Capsule
+            c_id = state.get("capsule_id")
+            if isinstance(c_id, (int, str)) and str(c_id).isdigit():
+                cap = db.query(Capsule).filter(Capsule.id == int(c_id)).first()
+                if cap:
+                    if not state.get("capsule_name"):
+                        state["capsule_name"] = cap.name or cap.product_name
+                    meta = state.setdefault("capsule_metadata", {})
+                    if not meta.get("product_name") and cap.product_name:
+                        meta["product_name"] = cap.product_name
+                    if not meta.get("description") and cap.product_specification:
+                        meta["description"] = cap.product_specification
+                    if not meta.get("target_audience") and cap.target_audience:
+                        meta["target_audience"] = cap.target_audience
+                    if not meta.get("value_props") and cap.key_differentiators:
+                        meta["value_props"] = cap.key_differentiators
+                    if not meta.get("pain_points_solved") and cap.pain_points_solved:
+                        meta["pain_points_solved"] = cap.pain_points_solved
+                    if not state.get("capsule_context"):
+                        parts = [
+                            f"Product: {cap.product_name}" if cap.product_name else "",
+                            f"Audience: {cap.target_audience}" if cap.target_audience else "",
+                            f"Specs: {cap.product_specification}" if cap.product_specification else "",
+                            f"Differentiators: {cap.key_differentiators}" if cap.key_differentiators else "",
+                            f"Pain Points: {cap.pain_points_solved}" if cap.pain_points_solved else "",
+                            f"Context: {cap.additional_context}" if cap.additional_context else ""
+                        ]
+                        state["capsule_context"] = " | ".join(p for p in parts if p)
+        except Exception as e:
+            print(f"[Sage Service] Error loading Capsule from DB: {e}")
 
     groq_api_key = os.getenv("GROQ_API_KEY", "").strip()
     context_summary = _build_context_summary(state)

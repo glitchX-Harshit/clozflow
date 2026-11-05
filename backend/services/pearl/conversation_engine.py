@@ -339,11 +339,17 @@ class ConversationEngine:
     f"- Dynamically mirror the prospect's language, pace, and energy.\n"
     f"- You are {gender_word}. In Hindi or Indic speech, naturally use {gender_word} grammatical self-inflections.\n\n"
 
-    f"OUTBOUND OPENING:\n"
+    f"OUTBOUND OPENING & DYNAMIC PATTERN INTERRUPT:\n"
     f"- You dialed this outbound call to {name}. You are the caller (never ask 'did you call me?').\n"
-    f"- Strict Zero-Pitch Opening: Do not pitch products or solutions in turn 1. State who you are, company name, a quick reason for reaching out to their team, and ask for 20-30 seconds (e.g. 'Hey Siddharth, Aditya from Clozflow—dekha aapki team operations scale kar rahi hai, bas 30 seconds chahiye the. Catch you at an okay time?').\n"
-    f"- Keep the opening strictly to 1-2 punchy sentences with natural conversational Hinglish.\n"
-    f"- Adapt the hook to the available context; never recite a generic sales script.\n\n"
+    f"- The prospect's immediate default reaction to an unknown caller is defensive resistance (expecting spam selling, robotic interrogation, checkout nagging, or courier blame).\n"
+    f"- Break their defensive pattern within the first 10 seconds by executing an authentic psychological angle grounded in the context:\n"
+    f"  * Lending / Loan / KYC: Disarm bank-spam fear immediately. Never recite robotic verification scripts ('Dear applicant, your loan is incomplete'). Clarify you are NOT calling to sell anything—their approved limit is already sanctioned/pending, and casually check if the app froze or the Aadhaar OTP failed.\n"
+    f"  * D2C COD Order Verification: Disarm robotic IVR interrogation ('Snitch se order confirm karne ke liye call kiya hai'). Frame the call as excitement and parcel protection—the parcel is currently being packed, and you are verifying their landmark so the courier delivery partner doesn't wander or get lost.\n"
+    f"  * Abandoned Cart: Disarm buyer's remorse and checkout nagging ('You left items in your cart'). Proactively check if a payment gateway timeout or bank glitch deducted their money without confirming the order.\n"
+    f"  * NDR Logistics / Delivery Failure: Disarm courier-blame defensiveness ('Delivery failed due to unavailability'). Side with the customer immediately—call out the reality that courier riders often zip past without calling, validate their frustration, and confirm a verified landmark or re-attempt slot.\n"
+    f"  * Consultative / B2B Outbound: Zero pitch in turn 1. State who you are, company name, a quick relevant reason for reaching out, and ask for 20-30 seconds micro-permission.\n"
+    f"- DO NOT HARDCODE OR RECITE FIXED PHRASES VERBATIM: Synthesize the lead's name, brand, amounts, item details, and context dynamically into a fresh, spontaneous 1-2 sentence spoken Hinglish opening.\n"
+    f"- Strict Brevity: Exactly 1 to 2 punchy spoken sentences. Never lecture, never dump features, never sound like an automated script.\n\n"
 
     f"SALES INTELLIGENCE:\n"
     f"- Listen before selling. Understand what the prospect actually means, not just their literal words.\n"
@@ -481,7 +487,14 @@ class ConversationEngine:
 
                 "role": "user",
 
-                "content": f"Generate your first spoken opening for this call as {getattr(self, 'agent_name', 'Pearl')} ({'female grammar' if getattr(self, 'gender', 'Female').lower() == 'female' else 'male grammar'}). Keep it strictly to 1-2 punchy sentences. Do not pitch any products, features, or tools. State your identity, specific business context, and ask for a 20-second micro-permission. Use natural conversational Hinglish. Return spoken text only."
+                "content": (
+                    f"Generate your first spoken opening for this call as {getattr(self, 'agent_name', 'Pearl')} "
+                    f"({'female grammar' if getattr(self, 'gender', 'Female').lower() == 'female' else 'male grammar'}). "
+                    "Execute an authentic psychological pattern interrupt tailored to the call context and persona directives "
+                    "(e.g., disarming loan spam fear for KYC, parcel protection/landmark check for COD, payment glitch empathy for cart recovery, siding against fake courier attempt for NDR, or micro-permission for consultative outbound). "
+                    "Keep it strictly to 1-2 punchy spoken sentences in natural conversational Hinglish. Do not pitch features or tools. "
+                    "Return spoken text only."
+                )
 
             })
 
@@ -584,6 +597,9 @@ class ConversationEngine:
                     return
 
                 await asyncio.sleep(1.5)
+        else:
+            yield "Haan bilkul, ek second dijiye main check kar leti hoon."
+            return
 
 
 

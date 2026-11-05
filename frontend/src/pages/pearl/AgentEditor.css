@@ -1713,6 +1713,10 @@
 /* ──────────────────────────────────────────────────────────────────────────
    RESPONSIVE LAYOUT & SMOOTH SLIDING DRAWER (FIX 4)
    ────────────────────────────────────────────────────────────────────────── */
+.sage-drawer-backdrop {
+  display: none;
+}
+
 @media (max-width: 1366px) {
   .agent-editor-right.sage-drawer-mode {
     position: fixed;
@@ -1731,6 +1735,7 @@
   }
 
   .sage-drawer-backdrop {
+    display: block;
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.4);

@@ -210,12 +210,59 @@ async def test_sage_capsule_grounding_and_dialer():
     print("[PASS] Knowledge Capsule Grounding & Direct Dialer verified cleanly.")
 
 
+async def test_sage_deep_capsule_fields():
+    print("Testing Sage Deep Capsule Model Fields (Specs, Differentiators, Pain Points)...")
+    agent_state = {
+        "name": "Factory Automation Agent",
+        "capsule_name": "RoboWeld AI",
+        "capsule_metadata": {
+            "product_name": "RoboWeld Pro-X",
+            "product_specification": "Automated MIG/TIG robotic arm controller with 0.1mm repeatability",
+            "target_audience": "Automotive Tier 1 suppliers in Pune & Chennai",
+            "value_props": "Cuts weld cycle time by 45% and eliminates human defect rate",
+            "pain_points_solved": "Skilled welder labor shortages and costly structural defect rework",
+            "company_name": "RoboWeld Technologies"
+        }
+    }
+    summary = _build_context_summary(agent_state)
+    assert "RoboWeld Pro-X" in summary
+    assert "Automated MIG/TIG robotic arm" in summary
+    assert "Automotive Tier 1 suppliers" in summary
+    assert "Cuts weld cycle time by 45%" in summary
+    assert "Skilled welder labor shortages" in summary
+    assert "RoboWeld Technologies" in summary
+
+    print("[PASS] Deep Knowledge Capsule fields extracted and verified.")
+
+
+async def test_outbound_dialer_api_logic():
+    print("Testing Outbound Dialer Phone Normalization & Telephony Logic...")
+    from utils.telephony import normalize_indian_phone_number
+
+    # 1. Phone normalization
+    assert normalize_indian_phone_number("9876543210") == "+919876543210"
+    assert normalize_indian_phone_number("+919876543210") == "+919876543210"
+    assert normalize_indian_phone_number("09876543210") == "+919876543210"
+    assert normalize_indian_phone_number("919876543210") == "+919876543210"
+
+    # 2. Invalid numbers raise ValueError
+    try:
+        normalize_indian_phone_number("12345")
+        assert False, "Should have raised ValueError"
+    except ValueError:
+        pass
+
+    print("[PASS] Outbound dialer phone normalization verified.")
+
+
 async def main():
     await test_sage_heuristic_rejection_and_call_cut()
     await test_sage_multi_strategy_objection_and_call_cut()
     await test_sage_cold_call_and_tone()
     test_conversation_engine_dynamic_prompt()
     await test_sage_capsule_grounding_and_dialer()
+    await test_sage_deep_capsule_fields()
+    await test_outbound_dialer_api_logic()
     print("\nALL SAGE AI AGENT ARCHITECT TESTS PASSED SUCCESSFULLY!")
 
 

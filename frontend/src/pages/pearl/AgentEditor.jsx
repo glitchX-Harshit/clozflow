@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   ArrowLeft, Bot, Phone, MoreVertical, 
@@ -177,7 +177,12 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
 
   const getSageStorageKey = useCallback((id) => `clozflow_sage_chat_${id || 'draft'}`, []);
 
-  const [isSageOpen, setIsSageOpen] = useState(true);
+  const [isSageOpen, setIsSageOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth > 1366;
+    }
+    return true;
+  });
   const [sageMessages, setSageMessages] = useState(() => {
     try {
       const key = `clozflow_sage_chat_${agentId || 'draft'}`;
@@ -230,16 +235,19 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
 
   // Fix 3: Direct Phone Call Dialer Modal State
   const [showColdCallModal, setShowColdCallModal] = useState(false);
-  const [coldCallPhone, setColdCallPhone] = useState('+919876543210');
+  const [coldCallPhone, setColdCallPhone] = useState('9876543210');
   const [coldCallRecipient, setColdCallRecipient] = useState(testVariables.lead_name || 'Prospect');
   const [coldCallStatus, setColdCallStatus] = useState('idle'); // idle | dialing | ringing | connected | completed | failed
   const [coldCallId, setColdCallId] = useState(null);
   const [coldCallError, setColdCallError] = useState(null);
   const [coldCallSeconds, setColdCallSeconds] = useState(0);
 
+  const loadedAgentKeyRef = useRef(getSageStorageKey(currentId || agentId));
+
   // Sync Sage chat from localStorage when agent ID switches
   useEffect(() => {
     const key = getSageStorageKey(currentId || agentId);
+    loadedAgentKeyRef.current = key;
     try {
       const saved = localStorage.getItem(key);
       if (saved) {
@@ -252,11 +260,15 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
     } catch (e) {
       console.warn('Error reading Sage chat cache on agent switch:', e);
     }
-  }, [currentId, agentId, getSageStorageKey]);
+    // If no saved chat exists for this agent, reset to fresh welcome consultation
+    setSageMessages([DEFAULT_SAGE_WELCOME_MESSAGE]);
+  }, [currentId, agentId, getSageStorageKey, DEFAULT_SAGE_WELCOME_MESSAGE]);
 
   // Persist Sage chat to localStorage whenever messages change
   useEffect(() => {
     const key = getSageStorageKey(currentId || agentId);
+    // Guard: Only persist if the messages in state correspond to this agent
+    if (loadedAgentKeyRef.current !== key) return;
     try {
       localStorage.setItem(key, JSON.stringify(sageMessages));
     } catch (e) {
@@ -598,6 +610,24 @@ Custom edits can still be made. Do you want to proceed?`
         summary: `${labels[snapshot.settings?.callCutRule] || snapshot.settings?.callCutRule || 'Default'} → ${labels[patch.settings.callCutRule] || patch.settings.callCutRule}`
       });
     }
+    if (patch.settings?.disconnectPhrase && patch.settings.disconnectPhrase !== snapshot.settings?.disconnectPhrase) {
+      diffItems.push({
+        field: 'Disconnect Phrase',
+        summary: `"${patch.settings.disconnectPhrase.slice(0, 45)}..."`
+      });
+    }
+    if (patch.settings?.startingLanguage && patch.settings.startingLanguage !== snapshot.settings?.startingLanguage) {
+      diffItems.push({
+        field: 'Starting Language',
+        summary: `${snapshot.settings?.startingLanguage || 'English'} → ${patch.settings.startingLanguage}`
+      });
+    }
+    if (patch.prompt_mode && patch.prompt_mode !== snapshot.promptMode) {
+      diffItems.push({
+        field: 'Prompt Architecture',
+        summary: `${snapshot.promptMode} → ${patch.prompt_mode}`
+      });
+    }
     if (patch.greeting_enabled !== undefined && Boolean(patch.greeting_enabled) !== snapshot.greetingEnabled) {
       diffItems.push({
         field: 'Opening Hook',
@@ -608,6 +638,12 @@ Custom edits can still be made. Do you want to proceed?`
       diffItems.push({
         field: 'Greeting Script',
         summary: `Updated: "${patch.greeting_text.slice(0, 45)}..."`
+      });
+    }
+    if (patch.system_prompt && patch.system_prompt !== snapshot.systemPrompt) {
+      diffItems.push({
+        field: 'System Prompt',
+        summary: 'Updated system instructions'
       });
     }
     if (patch.fine_tuning_directives && patch.fine_tuning_directives !== snapshot.fineTuningDirectives) {
@@ -653,9 +689,11 @@ Custom edits can still be made. Do you want to proceed?`
 
   // Sage AI Agent Architect Configuration Patch Handler with Pre-Patch Snapshot (Fix 2)
   const applySagePatch = useCallback((patch, patchId = null) => {
-    if (!patch) return [];
+    if (!patch) return { diff: [], snapshot: null };
 
     const prePatchSnapshot = {
+      promptMode,
+      systemPrompt,
       fineTuningDirectives,
       greetingEnabled,
       greetingText,
@@ -672,6 +710,12 @@ Custom edits can still be made. Do you want to proceed?`
       setLastAppliedPatchId(patchId);
     }
 
+    if (patch.prompt_mode !== undefined) {
+      setPromptMode(patch.prompt_mode);
+    }
+    if (patch.system_prompt !== undefined) {
+      setSystemPrompt(patch.system_prompt);
+    }
     if (patch.fine_tuning_directives !== undefined) {
       setFineTuningDirectives(patch.fine_tuning_directives);
     }
@@ -695,14 +739,18 @@ Custom edits can still be made. Do you want to proceed?`
     }
     setIsDirty(true);
 
-    return computeProposedDiff(patch, prePatchSnapshot);
-  }, [fineTuningDirectives, greetingEnabled, greetingText, settings, speaker, language, pace, tone, mission, computeProposedDiff]);
+    const diff = computeProposedDiff(patch, prePatchSnapshot);
+    return { diff, snapshot: prePatchSnapshot };
+  }, [promptMode, systemPrompt, fineTuningDirectives, greetingEnabled, greetingText, settings, speaker, language, pace, tone, mission, computeProposedDiff]);
 
   // Instant Undo Handler (Fix 2)
   const handleUndoPatch = useCallback((msgId) => {
-    const snapshot = patchSnapshots[msgId];
+    const msg = sageMessages.find(m => m.id === msgId);
+    const snapshot = patchSnapshots[msgId] || msg?.pre_patch_snapshot;
     if (!snapshot) return;
 
+    if (snapshot.promptMode !== undefined) setPromptMode(snapshot.promptMode);
+    if (snapshot.systemPrompt !== undefined) setSystemPrompt(snapshot.systemPrompt);
     if (snapshot.fineTuningDirectives !== undefined) setFineTuningDirectives(snapshot.fineTuningDirectives);
     if (snapshot.greetingEnabled !== undefined) setGreetingEnabled(snapshot.greetingEnabled);
     if (snapshot.greetingText !== undefined) setGreetingText(snapshot.greetingText);
@@ -714,10 +762,11 @@ Custom edits can still be made. Do you want to proceed?`
     if (snapshot.mission !== undefined) setMission(snapshot.mission);
 
     setUndonePatches(prev => ({ ...prev, [msgId]: true }));
+    setSageMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_undone: true } : m));
     setIsDirty(true);
     setTemplateNotification("Sage patch reverted to previous state.");
     setTimeout(() => setTemplateNotification(null), 3000);
-  }, [patchSnapshots]);
+  }, [patchSnapshots, sageMessages]);
 
   // Clear / New Chat Handlers (Fix 1)
   const handleClearSageChat = useCallback(() => {
@@ -769,10 +818,13 @@ Custom edits can still be made. Do you want to proceed?`
   // Direct Phone Call Dialer Actions (Fix 3)
   const handleTriggerColdCall = async () => {
     setColdCallError(null);
-    const cleanPhone = (coldCallPhone || '').trim();
+    let cleanPhone = (coldCallPhone || '').trim();
     if (!cleanPhone || cleanPhone.replace(/[^0-9]/g, '').length < 10) {
       setColdCallError('Please enter a valid 10-digit Indian phone number (e.g. +91 98765 43210).');
       return;
+    }
+    if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('0') && !cleanPhone.startsWith('91')) {
+      cleanPhone = `+91${cleanPhone}`;
     }
 
     setColdCallStatus('dialing');
@@ -853,9 +905,12 @@ Custom edits can still be made. Do you want to proceed?`
     const token = localStorage.getItem('token');
     const activeCapsule = capsules.find(c => String(c.id) === String(capsuleId));
     const capsuleMetadata = {
-      description: activeCapsule?.description || activeCapsule?.summary || '',
+      product_name: activeCapsule?.product_name || activeCapsule?.name || '',
+      description: activeCapsule?.product_specification || activeCapsule?.description || activeCapsule?.summary || '',
       target_audience: activeCapsule?.target_audience || activeCapsule?.icp || '',
-      value_props: activeCapsule?.value_props || activeCapsule?.usp || '',
+      value_props: activeCapsule?.key_differentiators || activeCapsule?.value_props || activeCapsule?.usp || '',
+      pain_points_solved: activeCapsule?.pain_points_solved || '',
+      company_name: activeCapsule?.company_name || '',
       faqs: activeCapsule?.faqs || []
     };
 
@@ -913,8 +968,9 @@ Custom edits can still be made. Do you want to proceed?`
 
       // If a patch is provided, automatically snapshot pre-patch state and apply it
       if (data.patch && Object.keys(data.patch).length > 0) {
-        const diff = applySagePatch(data.patch, assistantMsg.id);
+        const { diff, snapshot } = applySagePatch(data.patch, assistantMsg.id);
         assistantMsg.patch_diff = diff;
+        assistantMsg.pre_patch_snapshot = snapshot;
       }
 
       setSageMessages(prev => [...prev, assistantMsg]);
@@ -970,8 +1026,9 @@ Custom edits can still be made. Do you want to proceed?`
       };
 
       if (patch && Object.keys(patch).length > 0) {
-        const diff = applySagePatch(patch, fallbackMsg.id);
+        const { diff, snapshot } = applySagePatch(patch, fallbackMsg.id);
         fallbackMsg.patch_diff = diff;
+        fallbackMsg.pre_patch_snapshot = snapshot;
       }
 
       setSageMessages(prev => [...prev, fallbackMsg]);
@@ -2138,7 +2195,7 @@ Custom edits can still be made. Do you want to proceed?`
                       )}
 
                       <div className="proposed-actions-bar">
-                        {undonePatches[msg.id] ? (
+                        {undonePatches[msg.id] || msg.is_undone ? (
                           <div className="proposed-undone-badge">
                             <Check size={12} color="#16a34a" />
                             <span>Changes Reverted</span>
