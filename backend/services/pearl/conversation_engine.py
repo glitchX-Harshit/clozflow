@@ -291,7 +291,9 @@ class ConversationEngine:
 
     def _build_system_prompt(self, custom_instructions: Optional[str] = None) -> str:
 
-        name = self.lead.get('business_name') or self.lead.get('prospect_name') or 'Unknown'
+        full_name = self.lead.get('business_name') or self.lead.get('prospect_name') or 'Unknown'
+        first_name = full_name.split()[0] if full_name and full_name != 'Unknown' else full_name
+        name = first_name
 
         capsule = self.lead.get('capsule_context', 'No product context provided.')
 
@@ -324,7 +326,7 @@ class ConversationEngine:
             f"CONVERSATION STYLE & SPOKEN NUANCE:\n"
             f"- Sound like a real Indian executive on a spontaneous phone call; never sound like a bot, telemarketer, or translated script.\n"
             f"- Colloquial Hinglish Cadence: Blend English business terms with natural spoken markers ('haan haan', 'achha', 'dekhiye', 'ek minute', 'suno', 'theek hai na', 'bilkul', 'actually'). Never use literal bookish translations (avoid 'pain solve karna', 'tied hai', 'priority slot assign kar raha hoon').\n"
-            f"- Executive Peer Status: Speak with relaxed confidence. Use respectful '{name} ji' / 'sir/ma'am' on cold outreach. Never apologize for calling (avoid 'sorry to bother' or 'apologies').\n"
+            f"- Executive Peer Status: Speak with relaxed confidence on first-name terms (e.g. '{first_name}', 'Sir/Ma\'am'). Address them by first name '{first_name}' or 'Sir/Ma\'am'—never address them with their full surname, and do NOT append or force 'ji' (never say '{first_name} ji' or '{full_name}'). Never apologize for calling.\n"
             f"- Dynamically mirror the prospect's language, pace, and energy.\n\n"
             f"BREVITY & CONVERSATIONAL RHYTHM:\n"
             f"- Spoken Opening: Usually 1-2 punchy sentences (~15-25 words), flexible if context requires.\n"
@@ -439,19 +441,18 @@ class ConversationEngine:
         # Groq/Minijinja models require at least one user message
 
         if not self.history:
-
+            full_lead_name = self.lead.get('business_name') or self.lead.get('prospect_name') or 'Unknown'
+            first_lead_name = full_lead_name.split()[0] if full_lead_name and full_lead_name != 'Unknown' else full_lead_name
             messages.append({
-
                 "role": "user",
-
                 "content": (
                     f"Generate your first spoken opening for this call as {getattr(self, 'agent_name', 'Pearl')} "
                     f"({'female grammar' if getattr(self, 'gender', 'Female').lower() == 'female' else 'male grammar'}). "
                     "Execute an authentic pattern interrupt tailored to the call context and archetype blueprint. "
+                    f"Address the prospect by their first name '{first_lead_name}' or 'Sir/Ma\'am' (never append 'ji', never say '{first_lead_name} ji', never say '{full_lead_name}'). "
                     "Keep the opening punchy, usually 1-2 spoken sentences (~15-25 words) in natural conversational Roman Hinglish. Do not pitch features or tools. "
                     "Output Roman script only (strictly zero Devanagari script). Return spoken text only."
                 )
-
             })
 
             

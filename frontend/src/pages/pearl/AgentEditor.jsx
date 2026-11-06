@@ -358,7 +358,7 @@ Custom edits can still be made. Do you want to proceed?`
       setSystemPrompt('');
       setFineTuningDirectives('');
       setGreetingEnabled(false);
-      setGreetingText(archetype.greeting || 'Hi {{lead_name | "Siddharth ji"}}, {{rep_name | "Aditya"}} from {{product_name | "Clozflow"}}. Most high-growth teams we talk to lose 40% of inbound pipeline because reps connect after 30 minutes—how is {{prospect_company | "your team"}} tackling instant speed-to-lead right now?');
+      setGreetingText(archetype.greeting || 'Hi {{lead_name | "Siddharth"}}, {{rep_name | "Aditya"}} from {{product_name | "Clozflow"}}. Most high-growth teams we talk to lose 40% of inbound pipeline because reps connect after 30 minutes—how is {{prospect_company | "your team"}} tackling instant speed-to-lead right now?');
     } else {
       setPromptMode('custom');
       setSystemPrompt(archetype.systemPrompt || archetype.system_prompt || '');

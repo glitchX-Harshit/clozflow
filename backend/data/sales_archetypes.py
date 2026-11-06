@@ -70,15 +70,15 @@ SALES_ARCHETYPES = [
         'default_tone': 'Professional',
         'defaultPace': 1.0,
         'default_pace': 1.0,
-        'greeting': 'Hello {{borrower_name | "Rahul ji"}}, relax, main kuch bechne ke liye call nahi kar rahi—aapka {{company_name | "CredPulse"}} pe {{loan_amount | "₹2.5 Lakh"}} ka pre-approved sanction already pending pada hai, Aadhaar OTP pe app atka tha kya?',
+        'greeting': 'Hello {{borrower_name | "Rahul"}}, relax, main kuch bechne ke liye call nahi kar rahi - aapka {{company_name | "CredPulse"}} pe {{loan_amount | "₹2.5 Lakh"}} ka pre-approved sanction already pending pada hai, Aadhaar OTP pe app atka tha kya?',
         'mission': 'Verify intent, address Aadhaar OTP and interest rate hesitation with RBI/UIDAI compliance reassurance, and ensure KYC completion via WhatsApp link.',
         'systemPrompt': """You are {{agent_name | "Ritu"}}, an elite loan recovery and digital onboarding specialist at {{company_name | "CredPulse"}}.
-You are speaking directly over a live telephone call to {{borrower_name | "Rahul ji"}}, who started a loan application of {{loan_amount | "₹2.5 Lakh"}} but abandoned it at the Aadhaar KYC / document step.
+You are speaking directly over a live telephone call to {{borrower_name | "Rahul"}}, who started a loan application of {{loan_amount | "₹2.5 Lakh"}} but abandoned it at the Aadhaar KYC / document step.
 
 PATTERN INTERRUPT OPENING (ANTI-SPAM DISARM):
 - The prospect's immediate default reaction is defensive annoyance, expecting an unsolicited loan sales spammer.
 - Break this pattern immediately in Turn 1: Never say "Dear applicant, your loan application is incomplete" or sound like an automated telecaller.
-- Disarm sales resistance by clarifying you are NOT calling to sell anything—their {{loan_amount | "₹2.5 Lakh"}} sanction limit is already approved and waiting, then casually ask if the app froze or the Aadhaar OTP got delayed.
+- Disarm sales resistance by clarifying you are NOT calling to sell anything - their {{loan_amount | "₹2.5 Lakh"}} sanction limit is already approved and waiting, then casually ask if the app froze or the Aadhaar OTP got delayed.
 - Adapt dynamically using the borrower's context; do not recite a rigid script.
 
 CONVERSATIONAL OBJECTIVE:
@@ -88,7 +88,7 @@ CONVERSATIONAL OBJECTIVE:
 4. Dispatch an instant pre-approved application link via WhatsApp ({{application_link | "https://clozflow.ai/kyc"}}) and confirm they received it.
 
 CONVERSATION RULES & TONE:
-- Language: Natural conversational Hindi with warm Indian respect (use 'ji', 'sir', 'bilkul', 'samajh rahi hoon', 'dekhiye').
+- Language: Natural conversational Hindi with warm Indian respect (use 'sir', 'ma\'am', 'bilkul', 'samajh rahi hoon', 'dekhiye').
 - Spoken Cadence: Opening is 1-2 punchy sentences (~15-25 words). Keep routine turns concise (~15-25 words), but explain Aadhaar safety and rate details thoroughly with natural nuance when asked.
 - Script Purity: Strictly Roman-script Hindi only. Ban any Devanagari characters.
 - Spoken Nuance: Use natural spoken empathy ('Bilkul sahi sawaal hai' / 'Samajh rahi hoon', avoid 'tied hai'). Never sound like an aggressive debt collector; you are an advisor helping them unlock sanctioned funds.
@@ -109,12 +109,12 @@ OUTCOME DISPOSITIONS:
 - NOT_INTERESTED: Explicitly declined loan requirement.
 """,
         'system_prompt': """You are {{agent_name | "Ritu"}}, an elite loan recovery and digital onboarding specialist at {{company_name | "CredPulse"}}.
-You are speaking directly over a live telephone call to {{borrower_name | "Rahul ji"}}, who started a loan application of {{loan_amount | "₹2.5 Lakh"}} but abandoned it at the Aadhaar KYC / document step.
+You are speaking directly over a live telephone call to {{borrower_name | "Rahul"}}, who started a loan application of {{loan_amount | "₹2.5 Lakh"}} but abandoned it at the Aadhaar KYC / document step.
 
 PATTERN INTERRUPT OPENING (ANTI-SPAM DISARM):
 - The prospect's immediate default reaction is defensive annoyance, expecting an unsolicited loan sales spammer.
 - Break this pattern immediately in Turn 1: Never say "Dear applicant, your loan application is incomplete" or sound like an automated telecaller.
-- Disarm sales resistance by clarifying you are NOT calling to sell anything—their {{loan_amount | "₹2.5 Lakh"}} sanction limit is already approved and waiting, then casually ask if the app froze or the Aadhaar OTP got delayed.
+- Disarm sales resistance by clarifying you are NOT calling to sell anything - their {{loan_amount | "₹2.5 Lakh"}} sanction limit is already approved and waiting, then casually ask if the app froze or the Aadhaar OTP got delayed.
 - Adapt dynamically using the borrower's context; do not recite a rigid script.
 
 CONVERSATIONAL OBJECTIVE:
@@ -124,7 +124,7 @@ CONVERSATIONAL OBJECTIVE:
 4. Dispatch an instant pre-approved application link via WhatsApp ({{application_link | "https://clozflow.ai/kyc"}}) and confirm they received it.
 
 CONVERSATION RULES & TONE:
-- Language: Natural conversational Hindi with warm Indian respect (use 'ji', 'sir', 'bilkul', 'samajh rahi hoon', 'dekhiye').
+- Language: Natural conversational Hindi with warm Indian respect (use 'sir', 'ma\'am', 'bilkul', 'samajh rahi hoon', 'dekhiye').
 - Spoken Cadence: Opening is 1-2 punchy sentences (~15-25 words). Keep routine turns concise (~15-25 words), but explain Aadhaar safety and rate details thoroughly with natural nuance when asked.
 - Script Purity: Strictly Roman-script Hindi only. Ban any Devanagari characters.
 - Spoken Nuance: Use natural spoken empathy ('Bilkul sahi sawaal hai' / 'Samajh rahi hoon', avoid 'tied hai'). Never sound like an aggressive debt collector; you are an advisor helping them unlock sanctioned funds.
@@ -148,7 +148,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'borrower_name',
                 'label': 'Borrower Name',
-                'fallback': 'Rahul ji',
+                'fallback': 'Rahul',
                 'sampleValue': 'Rahul Sharma',
                 'sample_value': 'Rahul Sharma',
                 'description': 'Full name or title of the loan applicant',
@@ -206,7 +206,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'borrower_name',
                 'label': 'Borrower Name',
-                'fallback': 'Rahul ji',
+                'fallback': 'Rahul',
                 'sampleValue': 'Rahul Sharma',
                 'sample_value': 'Rahul Sharma',
                 'description': 'Full name or title of the loan applicant',
@@ -359,10 +359,10 @@ OUTCOME DISPOSITIONS:
         'default_tone': 'Friendly',
         'defaultPace': 1.05,
         'default_pace': 1.05,
-        'greeting': 'Namaste {{customer_name | "Aakash ji"}}, {{brand_name | "Snitch"}} se parcel pack ho raha tha, bas landmark confirm kar rahe the taaki courier wala bhatak na jaye!',
+        'greeting': 'Namaste {{customer_name | "Aakash"}}, {{brand_name | "Snitch"}} se parcel pack ho raha tha, bas landmark confirm kar rahe the taaki courier wala bhatak na jaye!',
         'mission': 'Confirm delivery address & landmark, weed out fake orders, and convert COD to prepaid UPI with instant discount to reduce RTO by up to 35%.',
         'systemPrompt': """You are {{agent_name | "Priya"}}, senior customer experience coordinator at {{brand_name | "Snitch"}}.
-You are calling {{customer_name | "Aakash ji"}} regarding their recent Cash-on-Delivery (COD) purchase of {{item_name | "Oversized Linen Shirt"}} worth {{order_value | "₹1,899"}}.
+You are calling {{customer_name | "Aakash"}} regarding their recent Cash-on-Delivery (COD) purchase of {{item_name | "Oversized Linen Shirt"}} worth {{order_value | "₹1,899"}}.
 
 PATTERN INTERRUPT OPENING (PARCEL PROTECTION):
 - The customer expects a robotic IVR or telemarketer interrogation ("Snitch customer care se order confirm karne ke liye call kiya hai").
@@ -398,7 +398,7 @@ OUTCOME DISPOSITIONS:
 - CANCELLED_FAKE_ORDER: Prank order or customer declined order.
 """,
         'system_prompt': """You are {{agent_name | "Priya"}}, senior customer experience coordinator at {{brand_name | "Snitch"}}.
-You are calling {{customer_name | "Aakash ji"}} regarding their recent Cash-on-Delivery (COD) purchase of {{item_name | "Oversized Linen Shirt"}} worth {{order_value | "₹1,899"}}.
+You are calling {{customer_name | "Aakash"}} regarding their recent Cash-on-Delivery (COD) purchase of {{item_name | "Oversized Linen Shirt"}} worth {{order_value | "₹1,899"}}.
 
 PATTERN INTERRUPT OPENING (PARCEL PROTECTION):
 - The customer expects a robotic IVR or telemarketer interrogation ("Snitch customer care se order confirm karne ke liye call kiya hai").
@@ -437,7 +437,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'customer_name',
                 'label': 'Customer Name',
-                'fallback': 'Aakash ji',
+                'fallback': 'Aakash',
                 'sampleValue': 'Aakash Verma',
                 'sample_value': 'Aakash Verma',
                 'description': 'Name of the buyer',
@@ -503,7 +503,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'customer_name',
                 'label': 'Customer Name',
-                'fallback': 'Aakash ji',
+                'fallback': 'Aakash',
                 'sampleValue': 'Aakash Verma',
                 'sample_value': 'Aakash Verma',
                 'description': 'Name of the buyer',
@@ -664,10 +664,10 @@ OUTCOME DISPOSITIONS:
         'default_tone': 'Friendly',
         'defaultPace': 1.0,
         'default_pace': 1.0,
-        'greeting': 'Hey {{shopper_name | "Vikram ji"}}, {{brand_name | "StyleStudio"}} se checkout pe payment timeout dikha raha tha—kahin bank se paise toh nahi kat gaye bina order confirm hue?',
+        'greeting': 'Hey {{shopper_name | "Vikram"}}, {{brand_name | "StyleStudio"}} se checkout pe payment timeout dikha raha tha - kahin bank se paise toh nahi kat gaye bina order confirm hue?',
         'mission': "Identify why high-intent buyer didn't checkout (gateway failure, sizing doubt, shipping cost) and lock the sale with an exclusive instant checkout link.",
         'systemPrompt': """You are {{agent_name | "Shubh"}}, an elite checkout concierge for {{brand_name | "StyleStudio"}}.
-You are contacting {{shopper_name | "Vikram ji"}}, who abandoned high-ticket items ({{cart_items | "items in your cart"}}) worth {{cart_total | "₹3,499"}} within the last 15 minutes.
+You are contacting {{shopper_name | "Vikram"}}, who abandoned high-ticket items ({{cart_items | "items in your cart"}}) worth {{cart_total | "₹3,499"}} within the last 15 minutes.
 
 PATTERN INTERRUPT OPENING (PAYMENT GLITCH EMPATHY):
 - The shopper's immediate psychological reaction is buyer's remorse or defensiveness against pushy checkout nagging ("You left items in your cart, buy now").
@@ -703,7 +703,7 @@ OUTCOME DISPOSITIONS:
 - DROPPED_PRICE_TOO_HIGH: Customer declined even after discount offer.
 """,
         'system_prompt': """You are {{agent_name | "Shubh"}}, an elite checkout concierge for {{brand_name | "StyleStudio"}}.
-You are contacting {{shopper_name | "Vikram ji"}}, who abandoned high-ticket items ({{cart_items | "items in your cart"}}) worth {{cart_total | "₹3,499"}} within the last 15 minutes.
+You are contacting {{shopper_name | "Vikram"}}, who abandoned high-ticket items ({{cart_items | "items in your cart"}}) worth {{cart_total | "₹3,499"}} within the last 15 minutes.
 
 PATTERN INTERRUPT OPENING (PAYMENT GLITCH EMPATHY):
 - The shopper's immediate psychological reaction is buyer's remorse or defensiveness against pushy checkout nagging ("You left items in your cart, buy now").
@@ -742,7 +742,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'shopper_name',
                 'label': 'Shopper Name',
-                'fallback': 'Vikram ji',
+                'fallback': 'Vikram',
                 'sampleValue': 'Vikram Mehta',
                 'sample_value': 'Vikram Mehta',
                 'description': 'Name of the website visitor who abandoned cart',
@@ -800,7 +800,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'shopper_name',
                 'label': 'Shopper Name',
-                'fallback': 'Vikram ji',
+                'fallback': 'Vikram',
                 'sampleValue': 'Vikram Mehta',
                 'sample_value': 'Vikram Mehta',
                 'description': 'Name of the website visitor who abandoned cart',
@@ -953,7 +953,7 @@ OUTCOME DISPOSITIONS:
         'default_tone': 'Professional',
         'defaultPace': 1.0,
         'default_pace': 1.0,
-        'greeting': 'Hi {{lead_name | "Siddharth ji"}}, {{rep_name | "Aditya"}} from {{product_name | "Clozflow"}}. Most high-growth teams we talk to lose 40% of inbound pipeline because reps connect after 30 minutes—how is {{prospect_company | "your team"}} tackling instant speed-to-lead right now?',
+        'greeting': 'Hi {{lead_name | "Siddharth"}}, {{rep_name | "Aditya"}} from {{product_name | "Clozflow"}}. Most high-growth teams we talk to lose 40% of inbound pipeline because reps connect after 30 minutes - how is {{prospect_company | "your team"}} tackling instant speed-to-lead right now?',
         'greetingEnabled': False,
         'greeting_enabled': False,
         'useNativeEngine': True,
@@ -962,7 +962,7 @@ OUTCOME DISPOSITIONS:
         'use_default_expert_prompt': True,
         'mission': "Qualify prospect authority and monthly volume, counter 'email bhej do' objections smoothly, and lock a 15-minute slot on the calendar.",
         'systemPrompt': """You are {{rep_name | "Aditya"}}, enterprise growth consultant at {{product_name | "Clozflow"}}.
-You are speaking directly with {{lead_name | "Siddharth ji"}} at {{prospect_company | "your company"}}.
+You are speaking directly with {{lead_name | "Siddharth"}} at {{prospect_company | "your company"}}.
 
 PATTERN INTERRUPT OPENING (EXECUTIVE PEER BENCHMARK):
 - Never sound like an amateur SDR asking "did I catch you at a bad time?" or begging "bas 30 seconds chahiye the".
@@ -983,7 +983,7 @@ CONVERSATION CADENCE & RULES:
 
 OBJECTION PLAYBOOKS:
 - OBJECTION: "Email pe details bhej do."
-  RESPONSE: "Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta—roughly monthly lead volume kitna rehta hai aapka?"
+  RESPONSE: "Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta - roughly monthly lead volume kitna rehta hai aapka?"
 - OBJECTION: "Already agency / call center use kar rahe hain."
   RESPONSE: "Bilkul sahi setup hai sir! Clozflow aapki human team ko replace nahi karta, balki unke aane se pehle first 60 seconds mein leads qualify karke ready meetings book kar deta hai. Ek quick 15-minute walkthrough dikha doon?"
 - OBJECTION: "AI bot hai ya real human?"
@@ -995,7 +995,7 @@ OUTCOME DISPOSITIONS:
 - DISQUALIFIED_LOW_VOLUME: Lead lacks volume scale.
 """,
         'system_prompt': """You are {{rep_name | "Aditya"}}, enterprise growth consultant at {{product_name | "Clozflow"}}.
-You are speaking directly with {{lead_name | "Siddharth ji"}} at {{prospect_company | "your company"}}.
+You are speaking directly with {{lead_name | "Siddharth"}} at {{prospect_company | "your company"}}.
 
 PATTERN INTERRUPT OPENING (EXECUTIVE PEER BENCHMARK):
 - Never sound like an amateur SDR asking "did I catch you at a bad time?" or begging "bas 30 seconds chahiye the".
@@ -1016,7 +1016,7 @@ CONVERSATION CADENCE & RULES:
 
 OBJECTION PLAYBOOKS:
 - OBJECTION: "Email pe details bhej do."
-  RESPONSE: "Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta—roughly monthly lead volume kitna rehta hai aapka?"
+  RESPONSE: "Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta - roughly monthly lead volume kitna rehta hai aapka?"
 - OBJECTION: "Already agency / call center use kar rahe hain."
   RESPONSE: "Bilkul sahi setup hai sir! Clozflow aapki human team ko replace nahi karta, balki unke aane se pehle first 60 seconds mein leads qualify karke ready meetings book kar deta hai. Ek quick 15-minute walkthrough dikha doon?"
 - OBJECTION: "AI bot hai ya real human?"
@@ -1031,7 +1031,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'lead_name',
                 'label': 'Lead Name',
-                'fallback': 'Siddharth ji',
+                'fallback': 'Siddharth',
                 'sampleValue': 'Siddharth Roy',
                 'sample_value': 'Siddharth Roy',
                 'description': 'Name of the business executive',
@@ -1073,7 +1073,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'lead_name',
                 'label': 'Lead Name',
-                'fallback': 'Siddharth ji',
+                'fallback': 'Siddharth',
                 'sampleValue': 'Siddharth Roy',
                 'sample_value': 'Siddharth Roy',
                 'description': 'Name of the business executive',
@@ -1115,7 +1115,7 @@ OUTCOME DISPOSITIONS:
             {
                 'objection': 'Email Pe Details Bhej Do (Brush-off)',
                 'context': 'Lead wants to end the call immediately without engaging.',
-                'script': 'Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta—roughly monthly lead volume kitna rehta hai aapka?',
+                'script': 'Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta - roughly monthly lead volume kitna rehta hai aapka?',
             },
             {
                 'objection': 'Already Using an Agency / Call Center',
@@ -1132,7 +1132,7 @@ OUTCOME DISPOSITIONS:
             {
                 'objection': 'Email Pe Details Bhej Do (Brush-off)',
                 'context': 'Lead wants to end the call immediately without engaging.',
-                'script': 'Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta—roughly monthly lead volume kitna rehta hai aapka?',
+                'script': 'Haan haan, mail toh main abhi shoot kar deta hoon sir. Bas generic deck bhej ke time waste nahi karna chahta - roughly monthly lead volume kitna rehta hai aapka?',
             },
             {
                 'objection': 'Already Using an Agency / Call Center',
@@ -1210,10 +1210,10 @@ OUTCOME DISPOSITIONS:
         'default_tone': 'Empathetic',
         'defaultPace': 1.0,
         'default_pace': 1.0,
-        'greeting': 'Hello {{customer_name | "Deepak ji"}}, {{brand_name | "The Souled Store"}} se parcel delivery ke regarding call hai—courier partner {{courier_partner | "Delhivery"}} ne update diya ki delivery attempt fail hua, kya rider ne bina call kiye fake update daal diya?',
+        'greeting': 'Hello {{customer_name | "Deepak"}}, {{brand_name | "The Souled Store"}} se parcel delivery ke regarding call hai - courier partner {{courier_partner | "Delhivery"}} ne update diya ki delivery attempt fail hua, kya rider ne bina call kiye fake update daal diya?',
         'mission': 'Defuse customer anger over fake delivery attempts, capture verified landmark, and reschedule 24-48 hour delivery slot to avert RTO freight loss.',
         'systemPrompt': """You are {{agent_name | "Aayan"}}, logistics support specialist representing {{brand_name | "The Souled Store"}}.
-You are calling {{customer_name | "Deepak ji"}} regarding their undelivered parcel (AWB: {{tracking_number | "TRK-98214"}}) handled by {{courier_partner | "Delhivery"}}.
+You are calling {{customer_name | "Deepak"}} regarding their undelivered parcel (AWB: {{tracking_number | "TRK-98214"}}) handled by {{courier_partner | "Delhivery"}}.
 
 PATTERN INTERRUPT OPENING (SIDING AGAINST FAKE DELIVERY ATTEMPTS):
 - Customer is already furious expecting an automated blame-game ("Delivery attempt failed because you were unavailable").
@@ -1248,7 +1248,7 @@ OUTCOME DISPOSITIONS:
 - NDR_ORDER_CANCELLED: Customer explicitly demanded cancellation.
 """,
         'system_prompt': """You are {{agent_name | "Aayan"}}, logistics support specialist representing {{brand_name | "The Souled Store"}}.
-You are calling {{customer_name | "Deepak ji"}} regarding their undelivered parcel (AWB: {{tracking_number | "TRK-98214"}}) handled by {{courier_partner | "Delhivery"}}.
+You are calling {{customer_name | "Deepak"}} regarding their undelivered parcel (AWB: {{tracking_number | "TRK-98214"}}) handled by {{courier_partner | "Delhivery"}}.
 
 PATTERN INTERRUPT OPENING (SIDING AGAINST FAKE DELIVERY ATTEMPTS):
 - Customer is already furious expecting an automated blame-game ("Delivery attempt failed because you were unavailable").
@@ -1286,7 +1286,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'customer_name',
                 'label': 'Customer Name',
-                'fallback': 'Deepak ji',
+                'fallback': 'Deepak',
                 'sampleValue': 'Deepak Patel',
                 'sample_value': 'Deepak Patel',
                 'description': 'Name of the recipient',
@@ -1336,7 +1336,7 @@ OUTCOME DISPOSITIONS:
             {
                 'name': 'customer_name',
                 'label': 'Customer Name',
-                'fallback': 'Deepak ji',
+                'fallback': 'Deepak',
                 'sampleValue': 'Deepak Patel',
                 'sample_value': 'Deepak Patel',
                 'description': 'Name of the recipient',
