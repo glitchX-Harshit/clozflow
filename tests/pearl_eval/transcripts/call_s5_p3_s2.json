@@ -1,0 +1,157 @@
+{
+  "call_id": "call_s5_p3_s2",
+  "call_index": 53,
+  "scenario_id": "S5",
+  "scenario_name": "NDR delivery rescue",
+  "persona_id": "P3",
+  "persona_name": "Hostile/suspicious",
+  "persona_difficulty": "hard",
+  "seed": 2,
+  "failure_injection": "OPT_OUT",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "agent",
+      "text": "Deepak, Aayan The Souled Store se. AWB DEL-9841203 Delhivery package re-attempt verify karne ke liye call kiya hai.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:34:35.100000Z",
+      "latency_ms": 1030.0
+    },
+    {
+      "turn": 1,
+      "speaker": "prospect",
+      "text": "Arey kaun ho tum log? Kahan se number mila mera? Fraud lag raha hai, spam band karo!",
+      "word_count": 16,
+      "timestamp": "2026-11-06T19:34:36.400000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 2,
+      "speaker": "agent",
+      "text": "Deepak, koi fraud nahi hai, The Souled Store ka merchandise return ho raha tha. Agar nahi chahiye toh main return mark kar deta hoon.",
+      "word_count": 24,
+      "timestamp": "2026-11-06T19:34:37.700000Z",
+      "latency_ms": 840.0
+    },
+    {
+      "turn": 3,
+      "speaker": "prospect",
+      "text": "Arey dekho, do not call me again. Mera number DNC registry pe dalo aur phone kaato.",
+      "word_count": 15,
+      "timestamp": "2026-11-06T19:34:39.100000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 4,
+      "speaker": "agent",
+      "text": "Bilkul Deepak, number DNC registry mein mark kar diya gaya hai. Aage se koi call nahi aayegi. Apologies.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:34:40.500000Z",
+      "latency_ms": 860.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "mark_dnc",
+      "arguments": {},
+      "result": {
+        "status": "success",
+        "message": "Lead added to DNC"
+      },
+      "status": "success",
+      "latency_ms": 50.0,
+      "timestamp": "2026-11-06T19:34:39.800000Z"
+    }
+  ],
+  "slots": {
+    "dnc": true,
+    "outcome": "dnc"
+  },
+  "metrics": {
+    "agent_turn_count": 3,
+    "avg_agent_word_count": 20.0,
+    "max_agent_word_count": 24,
+    "p50_latency_ms": 860.0,
+    "p90_latency_ms": 996.0,
+    "max_latency_ms": 1030.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "No confirmation write tool was executed"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 20.0,
+      "max_words": 24,
+      "over_turns": [],
+      "reason": "Avg: 20.0 words, Max: 24 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "dnc_called": true,
+      "stopped_pitch": true,
+      "reason": "Politely stopped pitching and called mark_dnc"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "No tool failure injected"
+    },
+    "A11": {
+      "pass": false,
+      "bilkul_ratio": 0.33,
+      "bilkul_count": 1,
+      "total_turns": 3,
+      "reason": "Bilkul starts 33.3% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Male",
+      "reason": "Verbs strictly consistent with Male gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Deepak, Aayan The Souled Store se. AWB DEL-9841203 Delhivery package re-attempt verify karne ke liye call kiya hai.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "No barge-in interruption occurred in this call"
+    }
+  }
+}

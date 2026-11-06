@@ -255,6 +255,86 @@ async def test_outbound_dialer_api_logic():
     print("[PASS] Outbound dialer phone normalization verified.")
 
 
+async def test_sage_empowered_categories():
+    print("Testing Sage Empowered Inbound Support, Knowledge Base, Cold Calling & Production Readiness...")
+    agent_state = {
+        "name": "Omni Agent",
+        "role": "outbound_qualification",
+        "settings": {"callCutRule": "reframe_once_then_exit"}
+    }
+
+    # 1. Inbound support setup
+    res_inbound = await run_sage_conversation(
+        messages=[],
+        query="Set up an agent for inbound support calls",
+        agent_state=agent_state
+    )
+    assert res_inbound["patch"].get("role") == "inbound_support"
+    assert res_inbound["patch"].get("greeting_enabled") is True
+    assert "support" in res_inbound["patch"].get("greeting_text", "").lower()
+    assert "inbound" in res_inbound["body"].lower()
+
+    # 2. Knowledge base grounding with mock DB
+    class MockCapsule:
+        id = 42
+        name = "Product Catalog Capsule"
+        product_name = "Catalog Pro"
+        product_specification = "Specs"
+        target_audience = "B2B"
+        key_differentiators = "Diffs"
+        pain_points_solved = "Pains"
+        additional_context = "Context"
+
+    class MockQuery:
+        def first(self):
+            return MockCapsule()
+
+    class MockDB:
+        def query(self, model):
+            return MockQuery()
+
+    res_kb = await run_sage_conversation(
+        messages=[],
+        query="Add a knowledge base for product questions",
+        agent_state=agent_state,
+        db=MockDB()
+    )
+    assert "knowledge" in res_kb["body"].lower() or "ground" in res_kb["body"].lower()
+    assert "KNOWLEDGE CAPSULE GROUNDING" in res_kb["patch"].get("fine_tuning_directives", "")
+    assert res_kb["patch"].get("capsule_id") == 42, "Knowledge base card must attach capsule_id"
+
+    # 3. Outbound cold calling with graceful call-cut rules
+    res_cold = await run_sage_conversation(
+        messages=[],
+        query="Configure outbound cold calling with graceful call-cut rules",
+        agent_state=agent_state
+    )
+    assert res_cold["patch"].get("greeting_enabled") is False, "Outbound cold calling card must disable fixed greeting"
+    assert res_cold["patch"]["settings"].get("callCutRule") == "reframe_once_then_exit"
+
+    # 4. Indian English & Hinglish cadence
+    res_tone = await run_sage_conversation(
+        messages=[],
+        query="Calibrate authentic Indian English & Hinglish cadence",
+        agent_state=agent_state
+    )
+    assert res_tone["patch"]["voice_config"].get("speaker") == "shubh_enhi_ads"
+    assert "AUTHENTIC HUMAN CADENCE" in res_tone["patch"].get("fine_tuning_directives", "")
+
+    # 5. Live call readiness
+    res_ready = await run_sage_conversation(
+        messages=[],
+        query="Get an agent ready to take live calls",
+        agent_state=agent_state
+    )
+    assert "live" in res_ready["body"].lower() or "production" in res_ready["body"].lower()
+    assert res_ready["patch"]["settings"].get("bargeIn") is True
+    assert res_ready["patch"]["settings"].get("maxCallLength") == 15
+    assert res_ready["patch"]["settings"].get("backgroundSound") == "office"
+
+    print("[PASS] All 5 Empowered Starter Cards & Database Grounding verified cleanly.")
+
+
 async def main():
     await test_sage_heuristic_rejection_and_call_cut()
     await test_sage_multi_strategy_objection_and_call_cut()
@@ -263,9 +343,11 @@ async def main():
     await test_sage_capsule_grounding_and_dialer()
     await test_sage_deep_capsule_fields()
     await test_outbound_dialer_api_logic()
+    await test_sage_empowered_categories()
     print("\nALL SAGE AI AGENT ARCHITECT TESTS PASSED SUCCESSFULLY!")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 

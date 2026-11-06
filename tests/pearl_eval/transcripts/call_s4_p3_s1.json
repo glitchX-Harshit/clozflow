@@ -1,0 +1,131 @@
+{
+  "call_id": "call_s4_p3_s1",
+  "call_index": 40,
+  "scenario_id": "S4",
+  "scenario_name": "B2B discovery + meeting booking",
+  "persona_id": "P3",
+  "persona_name": "Hostile/suspicious",
+  "persona_difficulty": "hard",
+  "seed": 1,
+  "failure_injection": "VOICEMAIL",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "prospect",
+      "text": "The person you are calling is currently on another call. Please leave a message after the tone. Beep.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:30:30.100000Z",
+      "latency_ms": 0.0,
+      "is_voicemail": true
+    },
+    {
+      "turn": 1,
+      "speaker": "agent",
+      "text": "Hello Siddharth, Aditya from Clozflow regarding AI voice agents for sales. I will follow up via email with our deck.",
+      "word_count": 21,
+      "timestamp": "2026-11-06T19:30:31.500000Z",
+      "latency_ms": 1100.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "send_email",
+      "arguments": {
+        "deck": "Clozflow Sales Deck",
+        "email": "siddharth.roy@zetalogistics.in"
+      },
+      "result": {
+        "status": "success",
+        "message": "Deck emailed"
+      },
+      "status": "success",
+      "latency_ms": 70.0,
+      "timestamp": "2026-11-06T19:30:31.700000Z"
+    }
+  ],
+  "slots": {
+    "email": "siddharth.roy@zetalogistics.in",
+    "email_sent": true
+  },
+  "metrics": {
+    "agent_turn_count": 1,
+    "avg_agent_word_count": 21.0,
+    "max_agent_word_count": 21,
+    "p50_latency_ms": 1100.0,
+    "p90_latency_ms": 1100.0,
+    "max_latency_ms": 1100.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "No confirmation write tool was executed"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 21.0,
+      "max_words": 21,
+      "over_turns": [],
+      "reason": "Avg: 21.0 words, Max: 21 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "No tool failure injected"
+    },
+    "A11": {
+      "pass": true,
+      "bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 1,
+      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Male",
+      "reason": "Verbs strictly consistent with Male gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Hello Siddharth, Aditya from Clozflow regarding AI voice agents for sales. I will follow up via email with our deck.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "No barge-in interruption occurred in this call"
+    }
+  }
+}

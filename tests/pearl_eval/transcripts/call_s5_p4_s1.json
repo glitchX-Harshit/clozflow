@@ -1,0 +1,120 @@
+{
+  "call_id": "call_s5_p4_s1",
+  "call_index": 54,
+  "scenario_id": "S5",
+  "scenario_name": "NDR delivery rescue",
+  "persona_id": "P4",
+  "persona_name": "Confused/off-topic",
+  "persona_difficulty": "medium",
+  "seed": 1,
+  "failure_injection": "VOICEMAIL",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "prospect",
+      "text": "The person you are calling is currently on another call. Please leave a message after the tone. Beep.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:34:55.100000Z",
+      "latency_ms": 0.0,
+      "is_voicemail": true
+    },
+    {
+      "turn": 1,
+      "speaker": "agent",
+      "text": "Hello Deepak, Aayan calling from The Souled Store regarding Delhivery parcel DEL-9841203. We will re-attempt delivery tomorrow.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:34:56.500000Z",
+      "latency_ms": 1110.0
+    }
+  ],
+  "tool_calls": [],
+  "slots": {
+    "rescheduled": false
+  },
+  "metrics": {
+    "agent_turn_count": 1,
+    "avg_agent_word_count": 18.0,
+    "max_agent_word_count": 18,
+    "p50_latency_ms": 1110.0,
+    "p90_latency_ms": 1110.0,
+    "max_latency_ms": 1110.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": false,
+      "missing_slots": [
+        "address_type (home vs office)",
+        "delivery_slot",
+        "landmark",
+        "alternate_phone"
+      ],
+      "reason": "Missing required slots: address_type (home vs office), delivery_slot, landmark, alternate_phone"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "No confirmation write tool was executed"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 18.0,
+      "max_words": 18,
+      "over_turns": [],
+      "reason": "Avg: 18.0 words, Max: 18 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "No tool failure injected"
+    },
+    "A11": {
+      "pass": true,
+      "bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 1,
+      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Male",
+      "reason": "Verbs strictly consistent with Male gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Hello Deepak, Aayan calling from The Souled Store regarding Delhivery parcel DEL-9841203. We will re-attempt delivery tomorrow.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "No barge-in interruption occurred in this call"
+    }
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "call_id": "call_s5_p2_s2",
+  "call_index": 51,
+  "scenario_id": "S5",
+  "scenario_name": "NDR delivery rescue",
+  "persona_id": "P2",
+  "persona_name": "Busy",
+  "persona_difficulty": "medium",
+  "seed": 2,
+  "failure_injection": "SLOT_TAKEN",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "agent",
+      "text": "Deepak, Aayan The Souled Store se. Aapka Delhivery parcel DEL-9841203 re-attempt schedule karne ke liye call kiya hai.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:33:55.100000Z",
+      "latency_ms": 1050.0
+    },
+    {
+      "turn": 1,
+      "speaker": "prospect",
+      "text": "Office presentation mein hoon. AWB DEL-9841203 kal 2-5 PM deliver kar do.",
+      "word_count": 12,
+      "timestamp": "2026-11-06T19:33:56.400000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 2,
+      "speaker": "agent",
+      "text": "2-5 PM slot check kar raha hoon. Alternate number aur landmark note karwa dijiye.",
+      "word_count": 14,
+      "timestamp": "2026-11-06T19:33:57.700000Z",
+      "latency_ms": 780.0
+    },
+    {
+      "turn": 3,
+      "speaker": "prospect",
+      "text": "Office address hai, landmark cyber hub, alternate number 9811223344. Delhivery delivery rider ka direct phone number de sakte ho kya?",
+      "word_count": 20,
+      "timestamp": "2026-11-06T19:33:59.100000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": true
+    },
+    {
+      "turn": 4,
+      "speaker": "agent",
+      "text": "Rider number share nahi kiya ja sakta. 2-5 PM slot full hone ki wajah se 6-9 PM slot reserve kiya hai.",
+      "word_count": 21,
+      "timestamp": "2026-11-06T19:34:00.500000Z",
+      "latency_ms": 910.0
+    },
+    {
+      "turn": 5,
+      "speaker": "prospect",
+      "text": "[Barge-in: Reschedule confirm karke call cut karo, jaldi.]",
+      "word_count": 8,
+      "timestamp": "2026-11-06T19:34:01.600000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": true,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 6,
+      "speaker": "agent",
+      "text": "Read back: Office, 6-9 PM slot, Cyber Hub, alternate 9811223344. Reschedule confirm ho gaya Deepak. Shukriya!",
+      "word_count": 16,
+      "timestamp": "2026-11-06T19:34:02.700000Z",
+      "latency_ms": 570.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "reschedule_delivery",
+      "arguments": {
+        "slot": "2-5 PM",
+        "landmark": "Cyber Hub",
+        "address_type": "Office"
+      },
+      "result": {
+        "status": "error",
+        "error": "Requested slot '2-5 PM' is already taken. Please choose another time."
+      },
+      "status": "slot_conflict",
+      "latency_ms": 110.0,
+      "timestamp": "2026-11-06T19:33:58.000000Z"
+    },
+    {
+      "tool_name": "reschedule_delivery",
+      "arguments": {
+        "slot": "6-9 PM",
+        "landmark": "Cyber Hub",
+        "address_type": "Office",
+        "alternate_phone": "9811223344"
+      },
+      "result": {
+        "status": "success",
+        "message": "Delivery rescheduled to slot 6-9 PM at Office"
+      },
+      "status": "success",
+      "latency_ms": 80.0,
+      "timestamp": "2026-11-06T19:34:02.000000Z"
+    }
+  ],
+  "slots": {
+    "address_type": "office",
+    "slot": "6-9 PM",
+    "landmark": "Cyber Hub",
+    "alternate_phone": "9811223344",
+    "rescheduled": true
+  },
+  "metrics": {
+    "agent_turn_count": 4,
+    "avg_agent_word_count": 17.2,
+    "max_agent_word_count": 21,
+    "p50_latency_ms": 845.0,
+    "p90_latency_ms": 1008.0,
+    "max_latency_ms": 1050.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "Read-back confirmed before write"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 17.2,
+      "max_words": 21,
+      "over_turns": [],
+      "reason": "Avg: 17.2 words, Max: 21 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "Gracefully recovered with fallback without false claim"
+    },
+    "A11": {
+      "pass": true,
+      "bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 4,
+      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Male",
+      "reason": "Verbs strictly consistent with Male gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Deepak, Aayan The Souled Store se. Aapka Delhivery parcel DEL-9841203 re-attempt schedule karne ke liye call kiya hai.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "call_id": "call_s1_p4_s1",
+  "call_index": 6,
+  "scenario_id": "S1",
+  "scenario_name": "Fintech KYC recovery",
+  "persona_id": "P4",
+  "persona_name": "Confused/off-topic",
+  "persona_difficulty": "medium",
+  "seed": 1,
+  "failure_injection": "WRONG_EMAIL",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "agent",
+      "text": "Rahul, Ritu CredPulse Financial se. Aapka do lakh pachas hazar ka limit pending pada tha Aadhaar OTP stage pe.",
+      "word_count": 19,
+      "timestamp": "2026-11-06T19:21:10.100000Z",
+      "latency_ms": 1090.0
+    },
+    {
+      "turn": 1,
+      "speaker": "prospect",
+      "text": "Hello? Kaunsa order bhai? Kisko lagaya hai phone... main toh so raha tha.",
+      "word_count": 13,
+      "timestamp": "2026-11-06T19:21:11.400000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 2,
+      "speaker": "agent",
+      "text": "Rahul, order nahi, CredPulse Financial ka loan application hai. Link aapke WhatsApp number 9899112233 par bhej doon?",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:21:12.800000Z",
+      "latency_ms": 840.0
+    },
+    {
+      "turn": 3,
+      "speaker": "prospect",
+      "text": "Arey wait! Galat number bol rahe ho, actual WhatsApp 9876543210 hai, uspar bhejna. Waise CredPulse office Bangalore mein kahan hai?",
+      "word_count": 20,
+      "timestamp": "2026-11-06T19:21:14.300000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": true
+    },
+    {
+      "turn": 4,
+      "speaker": "agent",
+      "text": "Bangalore office ki exact details mere paas nahi hain. Main 9876543210 par WhatsApp link dispatch kar rahi hoon.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:21:15.900000Z",
+      "latency_ms": 880.0
+    },
+    {
+      "turn": 5,
+      "speaker": "prospect",
+      "text": "[Barge-in: Arey ruko, mujhe samajh nahi aa raha, WhatsApp pe details send karo pehle.]",
+      "word_count": 14,
+      "timestamp": "2026-11-06T19:21:17.000000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": true,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 6,
+      "speaker": "agent",
+      "text": "Haan Rahul, WhatsApp par send kar diya hai, wahan sari details mil jayengi. Shukriya!",
+      "word_count": 14,
+      "timestamp": "2026-11-06T19:21:18.100000Z",
+      "latency_ms": 580.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "send_whatsapp",
+      "arguments": {
+        "link": "https://credpulse.in/app/kyc",
+        "phone": "9876543210"
+      },
+      "result": {
+        "status": "success",
+        "message": "WhatsApp link sent to 9876543210"
+      },
+      "status": "success",
+      "latency_ms": 75.0,
+      "timestamp": "2026-11-06T19:21:16.100000Z"
+    }
+  ],
+  "slots": {
+    "outcome": "link_sent",
+    "link_sent": true
+  },
+  "metrics": {
+    "agent_turn_count": 4,
+    "avg_agent_word_count": 17.2,
+    "max_agent_word_count": 19,
+    "p50_latency_ms": 860.0,
+    "p90_latency_ms": 1027.0,
+    "max_latency_ms": 1090.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "Not applicable to scenario"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 17.2,
+      "max_words": 19,
+      "over_turns": [],
+      "reason": "Avg: 17.2 words, Max: 19 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "No tool failure injected"
+    },
+    "A11": {
+      "pass": true,
+      "bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 4,
+      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Female",
+      "reason": "Verbs strictly consistent with Female gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Rahul, Ritu CredPulse Financial se. Aapka do lakh pachas hazar ka limit pending pada tha Aadhaar OTP stage pe.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+    }
+  }
+}

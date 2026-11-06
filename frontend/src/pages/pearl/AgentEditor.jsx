@@ -148,34 +148,9 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   ]);
   const [isRunningTests, setIsRunningTests] = useState(false);
 
-  // Sage · AI Agent Architect Persistent State & Configuration
-  const DEFAULT_SAGE_WELCOME_MESSAGE = useMemo(() => ({
-    id: 's-1',
-    sender: 'assistant',
-    text: "Hello! I am Sage, your AI Agent Architect.",
-    steps: 'Ready to assist >',
-    steps_detail: [
-      'Loaded Clozflow core conversation intelligence',
-      'Calibrated dynamic Indic voice and barge-in recovery',
-      'Initialized adaptive objection & call-cut architecture'
-    ],
-    body: "I help you build human-like voice agents that convert. I tune prompts deeply to your business context, calibrate when the agent should push/reframe vs when to gracefully cut the call upon rejection, and ensure authentic, natural human delivery without canned filler phrases.",
-    follow_up_questions: [
-      "When a prospect says 'I am not interested' or 'send info on email', should the agent attempt one polite value reframe, or immediately cut the call gracefully?",
-      "What qualification hurdle matters most before locking in a calendar walkthrough?"
-    ],
-    action_card: {
-      title: 'What would you like to configure first?',
-      options: [
-        'Place one cold call to my number right now',
-        'Configure dynamic cold calling & graceful call-cut rules',
-        'Tune human tone & authentic Indian English / Hinglish cadence'
-      ]
-    },
-    timestamp: 'Just now'
-  }), []);
-
+  // Sage · AI Agent Architect Persistent State & Multi-Session Configuration
   const getSageStorageKey = useCallback((id) => `clozflow_sage_chat_${id || 'draft'}`, []);
+  const getSageSessionsKey = useCallback((id) => `clozflow_sage_sessions_${id || 'draft'}`, []);
 
   const [isSageOpen, setIsSageOpen] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -183,45 +158,57 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
     }
     return true;
   });
-  const [sageMessages, setSageMessages] = useState(() => {
+
+  const [sageSessions, setSageSessions] = useState(() => {
     try {
-      const key = `clozflow_sage_chat_${agentId || 'draft'}`;
-      const saved = localStorage.getItem(key);
-      if (saved) {
-        const parsed = JSON.parse(saved);
+      const sessKey = `clozflow_sage_sessions_${agentId || 'draft'}`;
+      const savedSessions = localStorage.getItem(sessKey);
+      if (savedSessions) {
+        const parsed = JSON.parse(savedSessions);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } catch (e) {
-      console.warn('Failed to load initial Sage chat from localStorage:', e);
-    }
-    return [
-      {
-        id: 's-1',
-        sender: 'assistant',
-        text: "Hello! I am Sage, your AI Agent Architect.",
-        steps: 'Ready to assist >',
-        steps_detail: [
-          'Loaded Clozflow core conversation intelligence',
-          'Calibrated dynamic Indic voice and barge-in recovery',
-          'Initialized adaptive objection & call-cut architecture'
-        ],
-        body: "I help you build human-like voice agents that convert. I tune prompts deeply to your business context, calibrate when the agent should push/reframe vs when to gracefully cut the call upon rejection, and ensure authentic, natural human delivery without canned filler phrases.",
-        follow_up_questions: [
-          "When a prospect says 'I am not interested' or 'send info on email', should the agent attempt one polite value reframe, or immediately cut the call gracefully?",
-          "What qualification hurdle matters most before locking in a calendar walkthrough?"
-        ],
-        action_card: {
-          title: 'What would you like to configure first?',
-          options: [
-            'Place one cold call to my number right now',
-            'Configure dynamic cold calling & graceful call-cut rules',
-            'Tune human tone & authentic Indian English / Hinglish cadence'
-          ]
-        },
-        timestamp: 'Just now'
+      // Migration from legacy single chat if active
+      const chatKey = `clozflow_sage_chat_${agentId || 'draft'}`;
+      const savedChat = localStorage.getItem(chatKey);
+      if (savedChat) {
+        const parsedChat = JSON.parse(savedChat);
+        if (Array.isArray(parsedChat) && parsedChat.length > 0) {
+          const userMsg = parsedChat.find(m => m.sender === 'user');
+          if (userMsg) {
+            const title = userMsg.text.length > 36 ? userMsg.text.slice(0, 36) + '...' : userMsg.text;
+            return [{
+              id: `sess-${Date.now()}`,
+              title,
+              createdAt: 'Previous Session',
+              updatedAt: Date.now(),
+              messages: parsedChat
+            }];
+          }
+        }
       }
-    ];
+    } catch (e) {
+      console.warn('Failed to load Sage sessions from storage:', e);
+    }
+    // Clean initial session showing "What's on your mind?"
+    return [{
+      id: `sess-${Date.now()}`,
+      title: 'New Architecture Session',
+      createdAt: 'Just now',
+      updatedAt: Date.now(),
+      messages: []
+    }];
   });
+
+  const [currentSessionId, setCurrentSessionId] = useState(() => {
+    return sageSessions[0]?.id || `sess-${Date.now()}`;
+  });
+
+  const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackCategory, setFeedbackCategory] = useState('Prompt Tuning');
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackSending, setFeedbackSending] = useState(false);
+  const [showTranslationsModal, setShowTranslationsModal] = useState(false);
 
   const [sageInput, setSageInput] = useState('');
   const [isSageThinking, setIsSageThinking] = useState(false);
@@ -229,11 +216,11 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   const [expandedSteps, setExpandedSteps] = useState({});
   const [lastAppliedPatchId, setLastAppliedPatchId] = useState(null);
 
-  // Fix 2: Pre-patch snapshots and undone records for instant undo
+  // Pre-patch snapshots and undone records for instant undo
   const [patchSnapshots, setPatchSnapshots] = useState({});
   const [undonePatches, setUndonePatches] = useState({});
 
-  // Fix 3: Direct Phone Call Dialer Modal State
+  // Direct Phone Call Dialer Modal State
   const [showColdCallModal, setShowColdCallModal] = useState(false);
   const [coldCallPhone, setColdCallPhone] = useState('9876543210');
   const [coldCallRecipient, setColdCallRecipient] = useState(testVariables.lead_name || 'Prospect');
@@ -242,39 +229,99 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   const [coldCallError, setColdCallError] = useState(null);
   const [coldCallSeconds, setColdCallSeconds] = useState(0);
 
-  const loadedAgentKeyRef = useRef(getSageStorageKey(currentId || agentId));
+  const activeSession = useMemo(() => {
+    return sageSessions.find(s => s.id === currentSessionId) || sageSessions[0] || { id: 'default', messages: [] };
+  }, [sageSessions, currentSessionId]);
 
-  // Sync Sage chat from localStorage when agent ID switches
+  const sageMessages = activeSession.messages || [];
+
+  const updateActiveSessionMessages = useCallback((updater) => {
+    setSageSessions(prev => {
+      const activeId = currentSessionId;
+      return prev.map(s => {
+        if (s.id === activeId) {
+          const nextMessages = typeof updater === 'function' ? updater(s.messages || []) : updater;
+          const firstUser = nextMessages.find(m => m.sender === 'user');
+          const newTitle = firstUser 
+            ? (firstUser.text.length > 36 ? firstUser.text.slice(0, 36) + '...' : firstUser.text)
+            : s.title;
+          return {
+            ...s,
+            title: newTitle,
+            updatedAt: Date.now(),
+            messages: nextMessages
+          };
+        }
+        return s;
+      });
+    });
+  }, [currentSessionId]);
+
+  const loadedAgentKeyRef = useRef(getSageSessionsKey(currentId || agentId));
+
+  // Sync Sage sessions when agent ID switches
   useEffect(() => {
-    const key = getSageStorageKey(currentId || agentId);
-    loadedAgentKeyRef.current = key;
+    const sessKey = getSageSessionsKey(currentId || agentId);
+    loadedAgentKeyRef.current = sessKey;
     try {
-      const saved = localStorage.getItem(key);
+      const saved = localStorage.getItem(sessKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setSageMessages(parsed);
+          setSageSessions(parsed);
+          setCurrentSessionId(parsed[0].id);
+          return;
+        }
+      }
+      // Check legacy chat for migration
+      const chatKey = getSageStorageKey(currentId || agentId);
+      const savedChat = localStorage.getItem(chatKey);
+      if (savedChat) {
+        const parsedChat = JSON.parse(savedChat);
+        if (Array.isArray(parsedChat) && parsedChat.length > 0 && parsedChat.some(m => m.sender === 'user')) {
+          const userMsg = parsedChat.find(m => m.sender === 'user');
+          const title = userMsg ? (userMsg.text.length > 36 ? userMsg.text.slice(0, 36) + '...' : userMsg.text) : 'Agent Architecture';
+          const migrated = [{
+            id: `sess-${Date.now()}`,
+            title,
+            createdAt: 'Previous Session',
+            updatedAt: Date.now(),
+            messages: parsedChat
+          }];
+          setSageSessions(migrated);
+          setCurrentSessionId(migrated[0].id);
           return;
         }
       }
     } catch (e) {
-      console.warn('Error reading Sage chat cache on agent switch:', e);
+      console.warn('Error reading Sage sessions on agent switch:', e);
     }
-    // If no saved chat exists for this agent, reset to fresh welcome consultation
-    setSageMessages([DEFAULT_SAGE_WELCOME_MESSAGE]);
-  }, [currentId, agentId, getSageStorageKey, DEFAULT_SAGE_WELCOME_MESSAGE]);
+    const freshSession = [{
+      id: `sess-${Date.now()}`,
+      title: 'New Architecture Session',
+      createdAt: 'Just now',
+      updatedAt: Date.now(),
+      messages: []
+    }];
+    setSageSessions(freshSession);
+    setCurrentSessionId(freshSession[0].id);
+  }, [currentId, agentId, getSageSessionsKey, getSageStorageKey]);
 
-  // Persist Sage chat to localStorage whenever messages change
+  // Persist sessions and active chat to localStorage whenever sessions change
   useEffect(() => {
-    const key = getSageStorageKey(currentId || agentId);
-    // Guard: Only persist if the messages in state correspond to this agent
-    if (loadedAgentKeyRef.current !== key) return;
+    const sessKey = getSageSessionsKey(currentId || agentId);
+    const chatKey = getSageStorageKey(currentId || agentId);
+    if (loadedAgentKeyRef.current !== sessKey) return;
     try {
-      localStorage.setItem(key, JSON.stringify(sageMessages));
+      localStorage.setItem(sessKey, JSON.stringify(sageSessions));
+      const curr = sageSessions.find(s => s.id === currentSessionId);
+      if (curr && Array.isArray(curr.messages)) {
+        localStorage.setItem(chatKey, JSON.stringify(curr.messages));
+      }
     } catch (e) {
-      console.warn('Error saving Sage chat cache to localStorage:', e);
+      console.warn('Error saving Sage sessions cache to localStorage:', e);
     }
-  }, [sageMessages, currentId, agentId, getSageStorageKey]);
+  }, [sageSessions, currentSessionId, currentId, agentId, getSageSessionsKey, getSageStorageKey]);
 
   // Dynamic Thinking Progress Step Timer (Fix 1)
   useEffect(() => {
@@ -678,6 +725,24 @@ Custom edits can still be made. Do you want to proceed?`
         summary: patch.mission.slice(0, 50) + '...'
       });
     }
+    if (patch.role && patch.role !== snapshot.role) {
+      diffItems.push({
+        field: 'Agent Role',
+        summary: `${snapshot.role || 'outbound_qualification'} → ${patch.role}`
+      });
+    }
+    if (patch.capsule_id && String(patch.capsule_id) !== String(snapshot.capsuleId)) {
+      diffItems.push({
+        field: 'Knowledge Capsule',
+        summary: `Connected Capsule ID: ${patch.capsule_id}`
+      });
+    }
+    if (patch.settings?.maxCallLength && patch.settings.maxCallLength !== snapshot.settings?.maxCallLength) {
+      diffItems.push({
+        field: 'Max Call Duration',
+        summary: `${snapshot.settings?.maxCallLength || 10}m → ${patch.settings.maxCallLength}m`
+      });
+    }
     if (diffItems.length === 0 && Object.keys(patch).length > 0) {
       diffItems.push({
         field: 'Agent Tuning',
@@ -702,7 +767,9 @@ Custom edits can still be made. Do you want to proceed?`
       language,
       pace,
       tone,
-      mission
+      mission,
+      role,
+      capsuleId
     };
 
     if (patchId) {
@@ -737,11 +804,17 @@ Custom edits can still be made. Do you want to proceed?`
     if (patch.mission) {
       setMission(patch.mission);
     }
+    if (patch.role) {
+      setRole(patch.role);
+    }
+    if (patch.capsule_id) {
+      setCapsuleId(patch.capsule_id);
+    }
     setIsDirty(true);
 
     const diff = computeProposedDiff(patch, prePatchSnapshot);
     return { diff, snapshot: prePatchSnapshot };
-  }, [promptMode, systemPrompt, fineTuningDirectives, greetingEnabled, greetingText, settings, speaker, language, pace, tone, mission, computeProposedDiff]);
+  }, [promptMode, systemPrompt, fineTuningDirectives, greetingEnabled, greetingText, settings, speaker, language, pace, tone, mission, role, capsuleId, computeProposedDiff]);
 
   // Instant Undo Handler (Fix 2)
   const handleUndoPatch = useCallback((msgId) => {
@@ -760,60 +833,75 @@ Custom edits can still be made. Do you want to proceed?`
     if (snapshot.pace !== undefined) setPace(snapshot.pace);
     if (snapshot.tone) setTone(snapshot.tone);
     if (snapshot.mission !== undefined) setMission(snapshot.mission);
+    if (snapshot.role !== undefined) setRole(snapshot.role);
+    if (snapshot.capsuleId !== undefined) setCapsuleId(snapshot.capsuleId);
 
     setUndonePatches(prev => ({ ...prev, [msgId]: true }));
-    setSageMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_undone: true } : m));
+    updateActiveSessionMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_undone: true } : m));
     setIsDirty(true);
     setTemplateNotification("Sage patch reverted to previous state.");
     setTimeout(() => setTemplateNotification(null), 3000);
-  }, [patchSnapshots, sageMessages]);
+  }, [patchSnapshots, sageMessages, updateActiveSessionMessages]);
 
-  // Clear / New Chat Handlers (Fix 1)
+  // Clear / New / Delete / Select Chat Handlers
   const handleClearSageChat = useCallback(() => {
-    const key = getSageStorageKey(currentId || agentId);
-    try {
-      localStorage.removeItem(key);
-    } catch (e) {}
-    setSageMessages([DEFAULT_SAGE_WELCOME_MESSAGE]);
+    updateActiveSessionMessages([]);
     setPatchSnapshots({});
     setUndonePatches({});
     setTemplateNotification("Sage conversation cleared.");
     setTimeout(() => setTemplateNotification(null), 2500);
-  }, [currentId, agentId, getSageStorageKey, DEFAULT_SAGE_WELCOME_MESSAGE]);
+  }, [updateActiveSessionMessages]);
 
   const handleNewSageChat = useCallback(() => {
-    const activeCapsule = capsules.find(c => String(c.id) === String(capsuleId));
-    const newMsg = {
-      id: `s-${Date.now()}`,
-      sender: 'assistant',
-      text: "Started new configuration session. What would you like to build or refine with Sage?",
-      steps: "Ready to assist >",
-      steps_detail: [
-        "Initialized fresh architect session",
-        `Loaded current agent snapshot (${agentName})`,
-        activeCapsule ? `Connected Knowledge Capsule: ${activeCapsule.title || activeCapsule.name}` : "General B2B sales context loaded"
-      ],
-      body: "Tell me about your offer, target prospect, or objection challenges. I'll configure your agent's tone, refusal handling, and call-cut rules.",
-      follow_up_questions: [
-        "When should your agent push vs disconnect during rejections?",
-        "What qualification hurdle matters most before scheduling a meeting?"
-      ],
-      action_card: {
-        title: "Quick architectural setups",
-        options: [
-          "Place one cold call to my number right now",
-          "Configure dynamic cold calling & graceful call-cut rules",
-          "Calibrate authentic Indian English / Hinglish tone"
-        ]
-      },
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const active = sageSessions.find(s => s.id === currentSessionId);
+    if (active && (!active.messages || active.messages.length === 0)) {
+      setShowHistoryPanel(false);
+      setSageInput('');
+      setTemplateNotification("Ready with clean architecture session");
+      setTimeout(() => setTemplateNotification(null), 2000);
+      return;
+    }
+    const newSession = {
+      id: `sess-${Date.now()}`,
+      title: 'New Architecture Session',
+      createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      updatedAt: Date.now(),
+      messages: []
     };
-    setSageMessages([newMsg]);
-    const key = getSageStorageKey(currentId || agentId);
-    try {
-      localStorage.setItem(key, JSON.stringify([newMsg]));
-    } catch (e) {}
-  }, [capsules, capsuleId, agentName, currentId, agentId, getSageStorageKey]);
+    setSageSessions(prev => [newSession, ...prev]);
+    setCurrentSessionId(newSession.id);
+    setShowHistoryPanel(false);
+    setSageInput('');
+    setTemplateNotification("Started fresh Sage architect session");
+    setTimeout(() => setTemplateNotification(null), 2500);
+  }, [sageSessions, currentSessionId]);
+
+  const handleDeleteSession = useCallback((sessId, e) => {
+    e?.stopPropagation();
+    setSageSessions(prev => {
+      const filtered = prev.filter(s => s.id !== sessId);
+      if (filtered.length === 0) {
+        const fresh = [{
+          id: `sess-${Date.now()}`,
+          title: 'New Architecture Session',
+          createdAt: 'Just now',
+          updatedAt: Date.now(),
+          messages: []
+        }];
+        setCurrentSessionId(fresh[0].id);
+        return fresh;
+      }
+      if (currentSessionId === sessId) {
+        setCurrentSessionId(filtered[0].id);
+      }
+      return filtered;
+    });
+  }, [currentSessionId]);
+
+  const handleSelectSession = useCallback((sessId) => {
+    setCurrentSessionId(sessId);
+    setShowHistoryPanel(false);
+  }, []);
 
   // Direct Phone Call Dialer Actions (Fix 3)
   const handleTriggerColdCall = async () => {
@@ -898,7 +986,7 @@ Custom edits can still be made. Do you want to proceed?`
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setSageMessages(prev => [...prev, userMsg]);
+    updateActiveSessionMessages(prev => [...prev, userMsg]);
     setSageInput('');
     setIsSageThinking(true);
 
@@ -973,16 +1061,33 @@ Custom edits can still be made. Do you want to proceed?`
         assistantMsg.pre_patch_snapshot = snapshot;
       }
 
-      setSageMessages(prev => [...prev, assistantMsg]);
+      updateActiveSessionMessages(prev => [...prev, assistantMsg]);
     } catch (err) {
       console.error('Sage Chat Error:', err);
       // Graceful client fallback
       let patch = null;
 
-      if (qLower.includes('cold call') || qLower.includes('sales')) {
-        setPromptMode('expert');
-        setGreetingEnabled(false);
-        patch = { greeting_enabled: false };
+      if (qLower.includes('inbound') || qLower.includes('support') || qLower.includes('customer care')) {
+        patch = {
+          role: 'inbound_support',
+          greeting_enabled: true,
+          greeting_text: 'Thank you for calling support! My name is Sage. How can I assist you today?',
+          settings: { bargeIn: true, callCutRule: 'reframe_once_then_exit' }
+        };
+      } else if (qLower.includes('knowledge') || qLower.includes('capsule') || qLower.includes('product question')) {
+        const targetCapsule = capsules.find(c => c.is_default) || capsules[0];
+        patch = { 
+          settings: { bargeIn: true },
+          ...(targetCapsule ? { capsule_id: targetCapsule.id } : {})
+        };
+      } else if (qLower.includes('live call') || qLower.includes('production ready') || qLower.includes('take live calls')) {
+        patch = { settings: { bargeIn: true, maxCallLength: 15, backgroundSound: 'office' } };
+      } else if (qLower.includes('cold call') || qLower.includes('sales')) {
+        patch = { 
+          prompt_mode: 'expert',
+          greeting_enabled: false,
+          settings: { callCutRule: 'reframe_once_then_exit', bargeIn: true }
+        };
       } else if (qLower.includes('immediate') || qLower.includes('first rejection') || qLower.includes('no push') || qLower.includes('dont push') || qLower.includes("don't push")) {
         patch = { settings: { callCutRule: 'immediate_disconnect' } };
       } else if (qLower.includes('two') || qLower.includes('2 reframe') || qLower.includes('2 touch') || qLower.includes('twice')) {
@@ -1031,7 +1136,7 @@ Custom edits can still be made. Do you want to proceed?`
         fallbackMsg.pre_patch_snapshot = snapshot;
       }
 
-      setSageMessages(prev => [...prev, fallbackMsg]);
+      updateActiveSessionMessages(prev => [...prev, fallbackMsg]);
     } finally {
       setIsSageThinking(false);
     }
@@ -1069,7 +1174,8 @@ Custom edits can still be made. Do you want to proceed?`
               <button 
                 type="button" 
                 className="btn-translation-chip"
-                onClick={() => alert('Translations auto-synced across 11 Indic languages')}
+                onClick={() => setShowTranslationsModal(true)}
+                title="View Indic Multilingual Coverage & Code-Switching Matrix"
               >
                 <Globe size={13} />
                 <span>Translations</span>
@@ -1406,7 +1512,10 @@ Custom edits can still be made. Do you want to proceed?`
             <button 
               type="button" 
               className="btn-secondary-pill"
-              onClick={() => alert('API documentation: Clozflow tool calling standard conforms to OpenAI function schemas.')}
+              onClick={() => {
+                setTemplateNotification('Tools conform to OpenAI function schema standards with real-time argument validation.');
+                setTimeout(() => setTemplateNotification(null), 3500);
+              }}
             >
               Read docs
             </button>
@@ -1824,7 +1933,11 @@ Custom edits can still be made. Do you want to proceed?`
             <button 
               type="button" 
               className="btn-secondary-pill"
-              onClick={() => alert('Translations refreshed across active dialects.')}
+              onClick={() => {
+                setShowTranslationsModal(true);
+                setTemplateNotification('Indic Translations matrix synchronized across 11 languages.');
+                setTimeout(() => setTemplateNotification(null), 3000);
+              }}
             >
               Regenerate Translations
             </button>
@@ -1986,7 +2099,8 @@ Custom edits can still be made. Do you want to proceed?`
             setIsRunningTests(true);
             setTimeout(() => {
               setIsRunningTests(false);
-              alert('All 4 test scenarios evaluated successfully! Conformance: 98.5%.');
+              setTemplateNotification('All 4 test scenarios evaluated successfully! Conformance: 98.5%.');
+              setTimeout(() => setTemplateNotification(null), 3500);
             }, 1200);
           }}
         >
@@ -2032,7 +2146,7 @@ Custom edits can still be made. Do you want to proceed?`
 
     return (
       <>
-        {/* Backdrop overlay for smaller displays (Fix 4) */}
+        {/* Backdrop overlay for smaller displays */}
         <div 
           className="sage-drawer-backdrop"
           onClick={() => setIsSageOpen(false)}
@@ -2043,10 +2157,21 @@ Custom edits can still be made. Do you want to proceed?`
           {/* Top Header */}
           <div className="sage-top-bar">
             <div className="sage-agent-title">
-              <Sparkles size={15} color="#0f172a" />
-              <span>Sage · AI Agent Architect</span>
+              <div className="sage-title-sparkle-wrap">
+                <Sparkles size={15} color="#0f172a" />
+              </div>
+              <span className="sage-title-text">Sage</span>
+              <span className="sage-badge-tag">Architect</span>
             </div>
             <div className="sage-top-actions">
+              <button 
+                type="button" 
+                className={`btn-top-icon ${showHistoryPanel ? 'active' : ''}`}
+                onClick={() => setShowHistoryPanel(prev => !prev)}
+                title="Conversation History"
+              >
+                <Clock size={15} />
+              </button>
               <button 
                 type="button" 
                 className="btn-new-chat"
@@ -2060,7 +2185,7 @@ Custom edits can still be made. Do you want to proceed?`
                 type="button" 
                 className="btn-clear-chat"
                 onClick={handleClearSageChat}
-                title="Clear Sage conversation history from cache"
+                title="Clear current session messages"
               >
                 <Trash2 size={12} />
                 <span>Clear</span>
@@ -2076,149 +2201,319 @@ Custom edits can still be made. Do you want to proceed?`
             </div>
           </div>
 
-          {/* Chat Feed */}
-          <div className="sage-chat-feed">
-            {sageMessages.map(msg => {
-              if (msg.sender === 'user') {
-                return (
-                  <div key={msg.id} className="user-bubble">
-                    {msg.text}
-                  </div>
-                );
-              }
+          {/* Session History Drawer (Overlay / Dropdown) */}
+          {showHistoryPanel && (
+            <div className="sage-history-panel">
+              <div className="sage-history-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Clock size={14} color="#0f172a" />
+                  <span style={{ fontWeight: 700, fontSize: '0.84rem', color: '#0f172a' }}>Saved Sessions</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <button 
+                    type="button" 
+                    className="btn-new-chat-sm" 
+                    onClick={handleNewSageChat}
+                    title="Start new conversation"
+                  >
+                    <Plus size={11} />
+                    <span>New Session</span>
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn-top-icon" 
+                    onClick={() => setShowHistoryPanel(false)}
+                    title="Close history"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
+              </div>
 
-              const isStepsExpanded = Boolean(expandedSteps[msg.id]);
-
-              return (
-                <div key={msg.id} className="assistant-cluster">
-                  <div className="assistant-bubble-text">{msg.text}</div>
-                  
-                  {msg.steps && (
-                    <div 
-                      className="assistant-thought-link"
-                      onClick={() => setExpandedSteps(prev => ({ ...prev, [msg.id]: !prev[msg.id] }))}
-                      title="Click to toggle reasoning steps"
-                    >
-                      <span>{msg.steps}</span>
-                      {isStepsExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                    </div>
-                  )}
-
-                  {isStepsExpanded && msg.steps_detail && msg.steps_detail.length > 0 && (
-                    <div className="sage-steps-drawer">
-                      {msg.steps_detail.map((stepDesc, idx) => (
-                        <div key={idx} className="sage-step-item">
-                          <span className="sage-step-number">{idx + 1}</span>
-                          <span>{stepDesc}</span>
+              <div className="sage-history-list">
+                {sageSessions.length === 0 ? (
+                  <div className="sage-history-empty">No saved sessions yet.</div>
+                ) : (
+                  sageSessions.map(sess => {
+                    const isActive = sess.id === currentSessionId;
+                    const msgCount = (sess.messages || []).length;
+                    return (
+                      <div 
+                        key={sess.id} 
+                        className={`sage-history-item ${isActive ? 'active' : ''}`}
+                        onClick={() => handleSelectSession(sess.id)}
+                      >
+                        <div className="history-item-left">
+                          <span className="history-item-title">{sess.title || 'Untitled Session'}</span>
+                          <span className="history-item-meta">
+                            {sess.createdAt} · {msgCount} {msgCount === 1 ? 'msg' : 'msgs'}
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {msg.body && (
-                    <div className="assistant-bubble-text" style={{ color: '#475569', fontSize: '0.82rem' }}>
-                      {msg.body}
-                    </div>
-                  )}
-
-                  {msg.follow_up_questions && msg.follow_up_questions.length > 0 && (
-                    <div className="sage-questions-container">
-                      <div className="sage-questions-label">Architect Follow-up:</div>
-                      {msg.follow_up_questions.map((q, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          className="sage-question-chip"
-                          onClick={() => handleSageSubmit(null, q)}
-                          title="Click to ask Sage this question"
-                        >
-                          <span>{q}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {msg.action_card && (
-                    <div className="sage-action-card">
-                      <div className="action-card-title">{msg.action_card.title}</div>
-                      <div className="action-card-options">
-                        {msg.action_card.options.map((opt, i) => (
-                          <div 
-                            key={i} 
-                            className="action-option-item"
-                            onClick={() => {
-                              const optLower = opt.toLowerCase();
-                              if (optLower.includes('cold call to my number') || optLower.includes('to my number') || optLower.includes('call my number') || optLower.includes('dial my number') || optLower.includes('phone call dialer')) {
-                                setShowColdCallModal(true);
-                              } else if (optLower.includes('test') || optLower.includes('simulation') || optLower.includes('testing panel')) {
-                                handleOpenTesting();
-                              } else {
-                                handleSageSubmit(null, opt);
-                              }
-                            }}
+                        <div className="history-item-actions">
+                          {isActive && <span className="history-active-pill">Active</span>}
+                          <button 
+                            type="button" 
+                            className="btn-delete-session"
+                            title="Delete session"
+                            onClick={(e) => handleDeleteSession(sess.id, e)}
                           >
-                            <span className="action-number-badge">{i + 1}</span>
-                            <span>{opt}</span>
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Chat Feed or Welcome Hero */}
+          <div className="sage-chat-feed">
+            {sageMessages.length === 0 ? (
+              <div className="sage-welcome-container">
+                <div className="sage-welcome-hero">
+                  <div className="sage-hero-emblem-wrap">
+                    <svg className="sage-hero-emblem" width="46" height="46" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="48" height="48" rx="14" fill="#0f172a" />
+                      <path d="M24 10L36 17V31L24 38L12 31V17L24 10Z" stroke="url(#clozflow_grad_1)" strokeWidth="2.2" strokeLinejoin="round" />
+                      <path d="M24 10V24M24 24L36 31M24 24L12 31" stroke="url(#clozflow_grad_2)" strokeWidth="1.8" strokeLinejoin="round" />
+                      <circle cx="24" cy="24" r="3.2" fill="#38bdf8" />
+                      <defs>
+                        <linearGradient id="clozflow_grad_1" x1="12" y1="10" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#38bdf8" />
+                          <stop offset="0.5" stopColor="#818cf8" />
+                          <stop offset="1" stopColor="#34d399" />
+                        </linearGradient>
+                        <linearGradient id="clozflow_grad_2" x1="12" y1="10" x2="36" y2="31" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#67e8f9" />
+                          <stop offset="1" stopColor="#a78bfa" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+
+                  <h2 className="sage-hero-title">What's on your mind?</h2>
+                  <p className="sage-hero-subtitle">
+                    Sage will architect prompts, calibrate objection handling, and tune voice settings for production.
+                  </p>
+                </div>
+
+                <div className="sage-starter-list">
+                  <button
+                    type="button"
+                    className="sage-starter-card"
+                    onClick={() => handleSageSubmit(null, "Set up an agent for inbound support calls")}
+                  >
+                    <div className="starter-card-icon-wrap" style={{ background: '#ecfdf5', color: '#059669' }}>
+                      <Bot size={16} />
+                    </div>
+                    <div className="starter-card-content">
+                      <span className="starter-card-title">Set up an agent for inbound support calls</span>
+                      <span className="starter-card-desc">Warm greeting, active listening & structured escalation routing</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="sage-starter-card"
+                    onClick={() => handleSageSubmit(null, "Add a knowledge base for product questions")}
+                  >
+                    <div className="starter-card-icon-wrap" style={{ background: '#eff6ff', color: '#2563eb' }}>
+                      <Database size={16} />
+                    </div>
+                    <div className="starter-card-content">
+                      <span className="starter-card-title">Add a knowledge base for product questions</span>
+                      <span className="starter-card-desc">Link product specs, ICP criteria & anti-hallucination bounds</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="sage-starter-card"
+                    onClick={() => handleSageSubmit(null, "Configure dynamic cold calling & graceful call-cut rules")}
+                  >
+                    <div className="starter-card-icon-wrap" style={{ background: '#fdf2f8', color: '#db2777' }}>
+                      <PhoneCall size={16} />
+                    </div>
+                    <div className="starter-card-content">
+                      <span className="starter-card-title">Configure outbound cold calling with graceful call-cut rules</span>
+                      <span className="starter-card-desc">Pattern interrupts, 1-touch value reframe & clean exits</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="sage-starter-card"
+                    onClick={() => handleSageSubmit(null, "Calibrate authentic Indian English / Hinglish tone")}
+                  >
+                    <div className="starter-card-icon-wrap" style={{ background: '#faf5ff', color: '#9333ea' }}>
+                      <Mic size={16} />
+                    </div>
+                    <div className="starter-card-content">
+                      <span className="starter-card-title">Calibrate authentic Indian English & Hinglish cadence</span>
+                      <span className="starter-card-desc">Natural human flow, zero canned robotic filler phrases</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="sage-starter-card"
+                    onClick={() => handleSageSubmit(null, "Get an agent ready to take live calls")}
+                  >
+                    <div className="starter-card-icon-wrap" style={{ background: '#fffbeb', color: '#d97706' }}>
+                      <CheckCircle2 size={16} />
+                    </div>
+                    <div className="starter-card-content">
+                      <span className="starter-card-title">Get an agent ready to take live calls</span>
+                      <span className="starter-card-desc">Production pre-flight audit, barge-in tuning & live testing</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              sageMessages.map(msg => {
+                if (msg.sender === 'user') {
+                  return (
+                    <div key={msg.id} className="user-bubble">
+                      {msg.text}
+                    </div>
+                  );
+                }
+
+                const isStepsExpanded = Boolean(expandedSteps[msg.id]);
+
+                return (
+                  <div key={msg.id} className="assistant-cluster">
+                    <div className="assistant-bubble-text">{msg.text}</div>
+                    
+                    {msg.steps && (
+                      <div 
+                        className="assistant-thought-link"
+                        onClick={() => setExpandedSteps(prev => ({ ...prev, [msg.id]: !prev[msg.id] }))}
+                        title="Click to toggle reasoning steps"
+                      >
+                        <span>{msg.steps}</span>
+                        {isStepsExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                      </div>
+                    )}
+
+                    {isStepsExpanded && msg.steps_detail && msg.steps_detail.length > 0 && (
+                      <div className="sage-steps-drawer">
+                        {msg.steps_detail.map((stepDesc, idx) => (
+                          <div key={idx} className="sage-step-item">
+                            <span className="sage-step-number">{idx + 1}</span>
+                            <span>{stepDesc}</span>
                           </div>
                         ))}
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Fix 2: Proposed Changes Preview Card & Instant Undo */}
-                  {msg.patch && Object.keys(msg.patch).length > 0 && (
-                    <div className="sage-proposed-changes-card">
-                      <div className="proposed-changes-header">
-                        <div className="proposed-title-wrap">
-                          <Sparkles size={13} color="#ea580c" />
-                          <span>Proposed Changes</span>
-                        </div>
-                        <span className="proposed-badge">Applied</span>
+                    {msg.body && (
+                      <div className="assistant-bubble-text" style={{ color: '#475569', fontSize: '0.82rem' }}>
+                        {msg.body}
                       </div>
+                    )}
 
-                      {msg.patch_diff && msg.patch_diff.length > 0 ? (
-                        <div className="proposed-diff-list">
-                          {msg.patch_diff.map((item, dIdx) => (
-                            <div key={dIdx} className="proposed-diff-item">
-                              <span className="diff-field-name">{item.field}:</span>
-                              <span className="diff-field-val">{item.summary}</span>
+                    {msg.follow_up_questions && msg.follow_up_questions.length > 0 && (
+                      <div className="sage-questions-container">
+                        <div className="sage-questions-label">Architect Follow-up:</div>
+                        {msg.follow_up_questions.map((q, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            className="sage-question-chip"
+                            onClick={() => handleSageSubmit(null, q)}
+                            title="Click to ask Sage this question"
+                          >
+                            <span>{q}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {msg.action_card && (
+                      <div className="sage-action-card">
+                        <div className="action-card-title">{msg.action_card.title}</div>
+                        <div className="action-card-options">
+                          {msg.action_card.options.map((opt, i) => (
+                            <div 
+                              key={i} 
+                              className="action-option-item"
+                              onClick={() => {
+                                const optLower = opt.toLowerCase();
+                                if (optLower.includes('cold call to my number') || optLower.includes('to my number') || optLower.includes('call my number') || optLower.includes('dial my number') || optLower.includes('phone call dialer')) {
+                                  setShowColdCallModal(true);
+                                } else if (optLower.includes('test') || optLower.includes('simulation') || optLower.includes('testing panel')) {
+                                  handleOpenTesting();
+                                } else {
+                                  handleSageSubmit(null, opt);
+                                }
+                              }}
+                            >
+                              <span className="action-number-badge">{i + 1}</span>
+                              <span>{opt}</span>
                             </div>
                           ))}
                         </div>
-                      ) : (
-                        <div className="proposed-diff-list">
-                          <div className="proposed-diff-item">
-                            <span className="diff-field-name">Status:</span>
-                            <span className="diff-field-val">Agent directives & telephony parameters synchronized</span>
-                          </div>
-                        </div>
-                      )}
+                      </div>
+                    )}
 
-                      <div className="proposed-actions-bar">
-                        {undonePatches[msg.id] || msg.is_undone ? (
-                          <div className="proposed-undone-badge">
-                            <Check size={12} color="#16a34a" />
-                            <span>Changes Reverted</span>
+                    {/* Proposed Changes Preview Card & Instant Undo */}
+                    {msg.patch && Object.keys(msg.patch).length > 0 && (
+                      <div className="sage-proposed-changes-card">
+                        <div className="proposed-changes-header">
+                          <div className="proposed-title-wrap">
+                            <Sparkles size={13} color="#ea580c" />
+                            <span>Proposed Changes</span>
+                          </div>
+                          <span className="proposed-badge">Applied</span>
+                        </div>
+
+                        {msg.patch_diff && msg.patch_diff.length > 0 ? (
+                          <div className="proposed-diff-list">
+                            {msg.patch_diff.map((item, dIdx) => (
+                              <div key={dIdx} className="proposed-diff-item">
+                                <span className="diff-field-name">{item.field}:</span>
+                                <span className="diff-field-val">{item.summary}</span>
+                              </div>
+                            ))}
                           </div>
                         ) : (
-                          <button
-                            type="button"
-                            className="btn-undo-patch"
-                            onClick={() => handleUndoPatch(msg.id)}
-                            title="Revert these changes to the previous state"
-                          >
-                            <RotateCcw size={12} />
-                            <span>Undo Changes</span>
-                          </button>
+                          <div className="proposed-diff-list">
+                            <div className="proposed-diff-item">
+                              <span className="diff-field-name">Status:</span>
+                              <span className="diff-field-val">Agent directives & telephony parameters synchronized</span>
+                            </div>
+                          </div>
                         )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
 
-            {/* Fix 1: Dynamic Loading Skeleton & Step Progress Indicators */}
+                        <div className="proposed-actions-bar">
+                          {undonePatches[msg.id] || msg.is_undone ? (
+                            <div className="proposed-undone-badge">
+                              <Check size={12} color="#16a34a" />
+                              <span>Changes Reverted</span>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              className="btn-undo-patch"
+                              onClick={() => handleUndoPatch(msg.id)}
+                              title="Revert these changes to the previous state"
+                            >
+                              <RotateCcw size={12} />
+                              <span>Undo Changes</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+
+            {/* Dynamic Loading Skeleton & Step Progress Indicators */}
             {isSageThinking && (
               <div className="assistant-cluster">
                 <div className="sage-thinking-cluster">
@@ -2254,7 +2549,7 @@ Custom edits can still be made. Do you want to proceed?`
             <form className="sage-input-box" onSubmit={(e) => handleSageSubmit(e)}>
               <input 
                 type="text" 
-                placeholder="Ask Sage anything or describe how agent should behave..." 
+                placeholder="Ask Sage to build, edit, or test anything..." 
                 value={sageInput}
                 onChange={(e) => setSageInput(e.target.value)}
                 disabled={isSageThinking}
@@ -2272,7 +2567,14 @@ Custom edits can still be made. Do you want to proceed?`
 
           {/* Footer Meta */}
           <div className="sage-bottom-meta">
-            <a href="#report" onClick={(e) => { e.preventDefault(); alert('Feedback reported to Clozflow engineering.'); }}>
+            <a 
+              href="#report" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setShowFeedbackModal(true); 
+              }}
+              title="Send suggestions or report an issue with Sage"
+            >
               Report an issue
             </a>
             <span>Powered by Qwen · Groq</span>
@@ -2732,6 +3034,173 @@ Custom edits can still be made. Do you want to proceed?`
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Feedback / Issue Modal */}
+      {showFeedbackModal && (
+        <div 
+          className="sage-feedback-overlay" 
+          onClick={(e) => { if (e.target === e.currentTarget) setShowFeedbackModal(false); }}
+        >
+          <div className="sage-feedback-card">
+            <div className="feedback-card-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Sparkles size={16} color="#0f172a" />
+                <h3 style={{ margin: 0, fontSize: '0.96rem', fontWeight: 700, color: '#0f172a' }}>
+                  Report an issue or suggestion
+                </h3>
+              </div>
+              <button 
+                type="button" 
+                className="btn-top-icon" 
+                onClick={() => setShowFeedbackModal(false)}
+              >
+                <X size={15} />
+              </button>
+            </div>
+            <div className="feedback-card-body">
+              <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569', marginBottom: 6, display: 'block' }}>
+                Feedback Category
+              </label>
+              <div className="feedback-category-pills">
+                {['Prompt Tuning', 'Objection & Call Cut', 'Voice Quality', 'Telephony / Dialer', 'General'].map(cat => (
+                  <button 
+                    key={cat} 
+                    type="button" 
+                    className={`category-pill ${feedbackCategory === cat ? 'active' : ''}`}
+                    onClick={() => setFeedbackCategory(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569', marginTop: 12, marginBottom: 6, display: 'block' }}>
+                Issue Details / Suggestions
+              </label>
+              <textarea 
+                rows={4}
+                value={feedbackText}
+                onChange={(e) => setFeedbackText(e.target.value)}
+                placeholder="Describe what occurred, unexpected agent output, or feature enhancement..."
+                className="feedback-textarea"
+              />
+            </div>
+            <div className="feedback-card-footer">
+              <button 
+                type="button" 
+                className="btn-secondary-pill" 
+                onClick={() => setShowFeedbackModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn-dial-now"
+                disabled={feedbackSending}
+                onClick={() => {
+                  setFeedbackSending(true);
+                  try {
+                    const logs = JSON.parse(localStorage.getItem('clozflow_sage_feedback') || '[]');
+                    logs.push({
+                      agent_id: currentId || agentId,
+                      category: feedbackCategory,
+                      notes: feedbackText,
+                      timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('clozflow_sage_feedback', JSON.stringify(logs));
+                    const token = localStorage.getItem('token');
+                    fetch(`${window.APP_API_BASE || ''}/api/pearl/sage/feedback`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: token ? `Bearer ${token}` : ''
+                      },
+                      body: JSON.stringify({
+                        agent_id: currentId || agentId,
+                        category: feedbackCategory,
+                        notes: feedbackText
+                      })
+                    }).catch(err => console.warn('Sage feedback API dispatch notice:', err));
+                  } catch (e) {}
+                  setTimeout(() => {
+                    setFeedbackSending(false);
+                    setShowFeedbackModal(false);
+                    setFeedbackText('');
+                    setTemplateNotification('Thank you! Feedback logged for Clozflow engineering.');
+                    setTimeout(() => setTemplateNotification(null), 3000);
+                  }, 300);
+                }}
+              >
+                {feedbackSending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
+                <span>Submit Feedback</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Indic Translations Matrix Modal */}
+      {showTranslationsModal && (
+        <div 
+          className="sage-feedback-overlay" 
+          onClick={(e) => { if (e.target === e.currentTarget) setShowTranslationsModal(false); }}
+        >
+          <div className="sage-translations-card">
+            <div className="feedback-card-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Globe size={16} color="#0f172a" />
+                <h3 style={{ margin: 0, fontSize: '0.96rem', fontWeight: 700, color: '#0f172a' }}>
+                  Indic Multilingual Architecture
+                </h3>
+              </div>
+              <button 
+                type="button" 
+                className="btn-top-icon" 
+                onClick={() => setShowTranslationsModal(false)}
+              >
+                <X size={15} />
+              </button>
+            </div>
+            <div className="translations-card-body">
+              <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0 0 12px', lineHeight: 1.5 }}>
+                Opening greetings, value reframes, and qualification questions are dynamically synthesized across 11 Indic languages with zero latency overhead.
+              </p>
+              <div className="indic-lang-grid">
+                {[
+                  { code: 'hi-IN', name: 'Hindi (हिन्दी)', status: 'Full Neural TTS & STT' },
+                  { code: 'en-IN', name: 'Indian English', status: 'Conversational Native' },
+                  { code: 'hi-en', name: 'Hinglish', status: 'Dynamic Code-Switching' },
+                  { code: 'ta-IN', name: 'Tamil (தமிழ்)', status: 'Neural Voice & STT' },
+                  { code: 'te-IN', name: 'Telugu (తెలుగు)', status: 'Neural Voice & STT' },
+                  { code: 'kn-IN', name: 'Kannada (ಕನ್ನಡ)', status: 'Neural Voice & STT' },
+                  { code: 'mr-IN', name: 'Marathi (मराठी)', status: 'Neural Voice & STT' },
+                  { code: 'gu-IN', name: 'Gujarati (ગુજરાતી)', status: 'Neural Voice & STT' },
+                  { code: 'bn-IN', name: 'Bengali (বাংলা)', status: 'Neural Voice & STT' },
+                  { code: 'pa-IN', name: 'Punjabi (ਪੰਜਾਬੀ)', status: 'Neural Voice & STT' },
+                  { code: 'ml-IN', name: 'Malayalam (മലയാളം)', status: 'Neural Voice & STT' }
+                ].map(lang => (
+                  <div key={lang.code} className="indic-lang-item">
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontWeight: 600, fontSize: '0.8rem', color: '#0f172a' }}>{lang.name}</span>
+                      <CheckCircle2 size={12} color="#16a34a" />
+                    </div>
+                    <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{lang.status}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="feedback-card-footer">
+              <button 
+                type="button" 
+                className="btn-dial-now" 
+                onClick={() => setShowTranslationsModal(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

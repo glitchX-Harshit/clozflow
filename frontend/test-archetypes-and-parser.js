@@ -227,6 +227,24 @@ function computeProposedDiff(patch, snapshot) {
       summary: 'Updated behavioral instructions & rejection thresholds'
     });
   }
+  if (patch.role && patch.role !== snapshot.role) {
+    diffItems.push({
+      field: 'Agent Role',
+      summary: `${snapshot.role || 'outbound_qualification'} → ${patch.role}`
+    });
+  }
+  if (patch.capsule_id && String(patch.capsule_id) !== String(snapshot.capsuleId)) {
+    diffItems.push({
+      field: 'Knowledge Capsule',
+      summary: `Connected Capsule ID: ${patch.capsule_id}`
+    });
+  }
+  if (patch.settings?.maxCallLength && patch.settings.maxCallLength !== snapshot.settings?.maxCallLength) {
+    diffItems.push({
+      field: 'Max Call Duration',
+      summary: `${snapshot.settings?.maxCallLength || 10}m → ${patch.settings.maxCallLength}m`
+    });
+  }
   return diffItems;
 }
 
@@ -246,19 +264,28 @@ const mockSnapshot = {
 const mockPatch = {
   settings: {
     callCutRule: 'immediate_disconnect',
-    disconnectPhrase: 'Understood sir, thank you.'
+    disconnectPhrase: 'Understood sir, thank you.',
+    maxCallLength: 15
   },
   greeting_enabled: false,
-  prompt_mode: 'expert'
+  prompt_mode: 'expert',
+  role: 'inbound_support',
+  capsule_id: 101
 };
 
 const diff = computeProposedDiff(mockPatch, mockSnapshot);
-assert.strictEqual(diff.length, 4, 'Diff must detect call-cut rule, disconnect phrase, greeting toggle, and prompt mode');
+assert.strictEqual(diff.length, 7, 'Diff must detect call-cut rule, disconnect phrase, prompt mode, greeting toggle, role, capsule, and max duration');
 assert.strictEqual(diff[0].field, 'Call-Cut Rule');
 assert.ok(diff[0].summary.includes('Immediate disconnect'));
 assert.strictEqual(diff[1].field, 'Disconnect Phrase');
 assert.strictEqual(diff[2].field, 'Prompt Architecture');
 assert.strictEqual(diff[3].field, 'Opening Hook');
+assert.strictEqual(diff[4].field, 'Agent Role');
+assert.ok(diff[4].summary.includes('inbound_support'));
+assert.strictEqual(diff[5].field, 'Knowledge Capsule');
+assert.ok(diff[5].summary.includes('101'));
+assert.strictEqual(diff[6].field, 'Max Call Duration');
+assert.ok(diff[6].summary.includes('15m'));
 console.log('✓ Sage configuration diff computation verified.');
 
 // Test 3.3: Pre-patch Snapshot Serialization & Reversion

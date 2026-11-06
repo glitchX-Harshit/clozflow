@@ -1,0 +1,175 @@
+{
+  "call_id": "call_s1_p1_s2",
+  "call_index": 1,
+  "scenario_id": "S1",
+  "scenario_name": "Fintech KYC recovery",
+  "persona_id": "P1",
+  "persona_name": "Cooperative",
+  "persona_difficulty": "easy",
+  "seed": 2,
+  "failure_injection": "TOOL_ERROR",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "agent",
+      "text": "Rahul, Ritu CredPulse Financial se. Aapka dhai lakh ka pre-approved limit Aadhaar OTP pe atka tha, right?",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:20:15.120000Z",
+      "latency_ms": 1050.2
+    },
+    {
+      "turn": 1,
+      "speaker": "prospect",
+      "text": "Haan, main Rahul bol raha hoon. Aadhaar o t p par to lakh limit wala application atka tha.",
+      "word_count": 17,
+      "timestamp": "2026-11-06T19:20:16.850000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 2,
+      "speaker": "agent",
+      "text": "Samajh rahi hoon. Main WhatsApp par direct link bhej rahi hoon, bas do minute lagenge.",
+      "word_count": 15,
+      "timestamp": "2026-11-06T19:20:18.210000Z",
+      "latency_ms": 780.5
+    },
+    {
+      "turn": 3,
+      "speaker": "prospect",
+      "text": "Theek hai bhej do. Aap log personal loan ke sath car loan aur credit card bhi offer karte ho kya?",
+      "word_count": 19,
+      "timestamp": "2026-11-06T19:20:19.900000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": true
+    },
+    {
+      "turn": 4,
+      "speaker": "agent",
+      "text": "Credit card ki details mere paas nahi hain. Hamare system mein link generation error aa gaya, main manual team ko assign kar rahi hoon.",
+      "word_count": 23,
+      "timestamp": "2026-11-06T19:20:21.800000Z",
+      "latency_ms": 1280.0
+    },
+    {
+      "turn": 5,
+      "speaker": "prospect",
+      "text": "[Barge-in: Haan manual team se karwa do, koi issue nahi hai.]",
+      "word_count": 10,
+      "timestamp": "2026-11-06T19:20:23.000000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": true,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 6,
+      "speaker": "agent",
+      "text": "Bilkul, escalate kar diya hai. Team aapse jaldi contact karegi. Thank you!",
+      "word_count": 12,
+      "timestamp": "2026-11-06T19:20:24.200000Z",
+      "latency_ms": 550.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "send_whatsapp",
+      "arguments": {
+        "link": "https://credpulse.in/app/kyc"
+      },
+      "result": {
+        "status": "error",
+        "error": "Internal 500: send_whatsapp failed upstream"
+      },
+      "status": "error",
+      "latency_ms": 120.0,
+      "timestamp": "2026-11-06T19:20:20.100000Z"
+    }
+  ],
+  "slots": {
+    "outcome": "link_sent",
+    "link_sent": true
+  },
+  "metrics": {
+    "agent_turn_count": 4,
+    "avg_agent_word_count": 17.0,
+    "max_agent_word_count": 23,
+    "p50_latency_ms": 915.3,
+    "p90_latency_ms": 1211.0,
+    "max_latency_ms": 1280.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "Not applicable to scenario"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 17.0,
+      "max_words": 23,
+      "over_turns": [],
+      "reason": "Avg: 17.0 words, Max: 23 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "Gracefully recovered with fallback without false claim"
+    },
+    "A11": {
+      "pass": false,
+      "bilkul_ratio": 0.25,
+      "bilkul_count": 1,
+      "total_turns": 4,
+      "reason": "Bilkul starts 25.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Female",
+      "reason": "Verbs strictly consistent with Female gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Rahul, Ritu CredPulse Financial se. Aapka dhai lakh ka pre-approved limit Aadhaar OTP pe atka tha, right?",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+    }
+  }
+}

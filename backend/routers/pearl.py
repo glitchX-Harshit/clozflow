@@ -109,6 +109,12 @@ class SageChatRequest(BaseModel):
     agent_state: Optional[Dict[str, Any]] = None
 
 
+class SageFeedbackRequest(BaseModel):
+    agent_id: Optional[Any] = None
+    category: Optional[str] = "General"
+    notes: Optional[str] = ""
+
+
 class AgentOutboundCallRequest(BaseModel):
     phone_number: str
     recipient_name: Optional[str] = "Prospect"
@@ -5586,5 +5592,20 @@ async def sage_chat_endpoint(
         db=db
     )
     return response
+
+
+@router.post("/sage/feedback")
+async def sage_feedback_endpoint(
+    req: SageFeedbackRequest,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """
+    Store or log user feedback and suggestions regarding Sage AI Agent Architect.
+    """
+    user_str = f"id={current_user.id}" if current_user else "anonymous"
+    print(f"[Sage Feedback] user={user_str} agent_id={req.agent_id} category={req.category} notes={req.notes}")
+    return {"status": "ok", "message": "Feedback received by Clozflow engineering."}
+
 
 

@@ -1,0 +1,216 @@
+{
+  "call_id": "call_s5_p6_s1",
+  "call_index": 58,
+  "scenario_id": "S5",
+  "scenario_name": "NDR delivery rescue",
+  "persona_id": "P6",
+  "persona_name": "Silent/mumbling",
+  "persona_difficulty": "hard",
+  "seed": 1,
+  "failure_injection": "SLOT_TAKEN",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "agent",
+      "text": "Deepak, Aayan The Souled Store se. Delhivery parcel DEL-9841203 deliver nahi ho paya tha, kya aap baat kar sakte hain?",
+      "word_count": 20,
+      "timestamp": "2026-11-06T19:35:55.100000Z",
+      "latency_ms": 1050.0
+    },
+    {
+      "turn": 1,
+      "speaker": "prospect",
+      "text": "Hmm... bolo. Haan.",
+      "word_count": 3,
+      "timestamp": "2026-11-06T19:35:56.400000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 2,
+      "speaker": "agent",
+      "text": "Aapka parcel re-attempt karna hai. Subah 10-12 AM, 2-5 PM, ya 6-9 PM mein se kaunsa time theek rahega?",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:35:57.600000Z",
+      "latency_ms": 780.0
+    },
+    {
+      "turn": 3,
+      "speaker": "prospect",
+      "text": "...10-12. Subah.",
+      "word_count": 2,
+      "timestamp": "2026-11-06T19:35:58.900000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 4,
+      "speaker": "agent",
+      "text": "10-12 AM slot fill ho chuka hai. 2-5 PM ya 6-9 PM mein se kaunsa slot lock karein?",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:36:00.200000Z",
+      "latency_ms": 810.0
+    },
+    {
+      "turn": 5,
+      "speaker": "prospect",
+      "text": "Achha... 2-5 PM kar do. The Souled Store ka return courier fee kitna lagta hai?",
+      "word_count": 14,
+      "timestamp": "2026-11-06T19:36:01.800000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": true
+    },
+    {
+      "turn": 6,
+      "speaker": "agent",
+      "text": "Return policy details mere paas nahi hain. Address type home hai ya office, aur landmark kya hai?",
+      "word_count": 16,
+      "timestamp": "2026-11-06T19:36:03.100000Z",
+      "latency_ms": 740.0
+    },
+    {
+      "turn": 7,
+      "speaker": "prospect",
+      "text": "[Barge-in: Home hai... landmark Sector 14 market, alternate 9876543210. 2-5 PM confirm karo.]",
+      "word_count": 13,
+      "timestamp": "2026-11-06T19:36:04.400000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": true,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 8,
+      "speaker": "agent",
+      "text": "Read back kar raha hoon: Home, Sector 14 market, alternate 9876543210, delivery slot 2-5 PM. Delivery reschedule ho gaya hai. Thank you!",
+      "word_count": 22,
+      "timestamp": "2026-11-06T19:36:05.700000Z",
+      "latency_ms": 670.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "reschedule_delivery",
+      "arguments": {
+        "slot": "10-12 AM",
+        "landmark": "",
+        "address_type": "",
+        "alternate_phone": ""
+      },
+      "result": {
+        "status": "error",
+        "error": "Slot 10-12 AM is already fully booked for courier DEL-9841203"
+      },
+      "status": "error",
+      "latency_ms": 540.0,
+      "timestamp": "2026-11-06T19:35:59.800000Z"
+    },
+    {
+      "tool_name": "reschedule_delivery",
+      "arguments": {
+        "slot": "2-5 PM",
+        "landmark": "Sector 14 market",
+        "address_type": "Home",
+        "alternate_phone": "9876543210"
+      },
+      "result": {
+        "status": "success",
+        "confirmation_code": "RESCHED-9841203-25"
+      },
+      "status": "success",
+      "latency_ms": 610.0,
+      "timestamp": "2026-11-06T19:36:05.100000Z"
+    }
+  ],
+  "slots": {
+    "address_type": "home",
+    "slot": "2-5 PM",
+    "landmark": "Sector 14 market",
+    "alternate_phone": "9876543210",
+    "rescheduled": true
+  },
+  "metrics": {
+    "agent_turn_count": 5,
+    "avg_agent_word_count": 18.8,
+    "max_agent_word_count": 22,
+    "p50_latency_ms": 810.0,
+    "p90_latency_ms": 990.0,
+    "max_latency_ms": 1050.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "Read-back confirmed before write"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 18.8,
+      "max_words": 22,
+      "over_turns": [],
+      "reason": "Avg: 18.8 words, Max: 22 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "violations": [],
+      "reason": "Slot constraint fully handled"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "Gracefully recovered from slot taken conflict by offering available alternatives"
+    },
+    "A11": {
+      "pass": true,
+      "bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 5,
+      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Male",
+      "reason": "Verbs strictly consistent with Male gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Deepak, Aayan The Souled Store se. Delhivery parcel DEL-9841203 deliver nahi ho paya tha, kya aap baat kar sakte hain?",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "call_id": "call_s3_p2_s2",
+  "call_index": 27,
+  "scenario_id": "S3",
+  "scenario_name": "Abandoned cart (high ticket)",
+  "persona_id": "P2",
+  "persona_name": "Busy",
+  "persona_difficulty": "medium",
+  "seed": 2,
+  "failure_injection": "WRONG_EMAIL",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "agent",
+      "text": "Vikram, Shubh StyleStudio se. Aapka Italian Leather Jacket aur Boots ka Rs 14,499 cart checkout pe ruka tha.",
+      "word_count": 18,
+      "timestamp": "2026-11-06T19:26:50.100000Z",
+      "latency_ms": 1080.0
+    },
+    {
+      "turn": 1,
+      "speaker": "prospect",
+      "text": "Haan abhi thoda busy hoon, 14,499 cart total zyada hai. Discount hai kya koi?",
+      "word_count": 14,
+      "timestamp": "2026-11-06T19:26:51.400000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 2,
+      "speaker": "agent",
+      "text": "Vikram, main aapke cart par special coupon VIP10 apply karne ki request bhej raha hoon.",
+      "word_count": 15,
+      "timestamp": "2026-11-06T19:26:52.700000Z",
+      "latency_ms": 780.0
+    },
+    {
+      "turn": 3,
+      "speaker": "prospect",
+      "text": "Friday subah 11 baje se pehle time nahi hai. StyleStudio international delivery Dubai mein karti hai kya?",
+      "word_count": 17,
+      "timestamp": "2026-11-06T19:26:54.100000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": false,
+      "is_off_capsule": true
+    },
+    {
+      "turn": 4,
+      "speaker": "agent",
+      "text": "Dubai delivery ki information catalog pe check kar sakte hain. Coupon VIP10 apply kar diya hai, discount active ho chuka hai.",
+      "word_count": 21,
+      "timestamp": "2026-11-06T19:26:55.500000Z",
+      "latency_ms": 910.0
+    },
+    {
+      "turn": 5,
+      "speaker": "prospect",
+      "text": "[Barge-in: VIP10 coupon laga ke direct checkout link bhej do WhatsApp pe.]",
+      "word_count": 12,
+      "timestamp": "2026-11-06T19:26:56.600000Z",
+      "latency_ms": 0.0,
+      "is_barge_in": true,
+      "is_off_capsule": false
+    },
+    {
+      "turn": 6,
+      "speaker": "agent",
+      "text": "Done Vikram, direct WhatsApp checkout link bhej diya hai. 7 din exchange policy available hai. Thank you!",
+      "word_count": 17,
+      "timestamp": "2026-11-06T19:26:57.700000Z",
+      "latency_ms": 570.0
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "apply_coupon",
+      "arguments": {
+        "code": "VIP10"
+      },
+      "result": {
+        "status": "error",
+        "error": "Coupon VIP10 service busy on attempt 1. Please retry."
+      },
+      "status": "failed_attempt_1",
+      "latency_ms": 110.0,
+      "timestamp": "2026-11-06T19:26:53.000000Z"
+    },
+    {
+      "tool_name": "apply_coupon",
+      "arguments": {
+        "code": "VIP10"
+      },
+      "result": {
+        "status": "success",
+        "message": "Coupon VIP10 applied successfully"
+      },
+      "status": "success",
+      "latency_ms": 90.0,
+      "timestamp": "2026-11-06T19:26:55.200000Z"
+    },
+    {
+      "tool_name": "send_whatsapp",
+      "arguments": {
+        "checkout_link": "https://stylestudio.in/cart/resume"
+      },
+      "result": {
+        "status": "success",
+        "message": "Link dispatched"
+      },
+      "status": "success",
+      "latency_ms": 70.0,
+      "timestamp": "2026-11-06T19:26:57.000000Z"
+    }
+  ],
+  "slots": {
+    "price_objection_raised": true,
+    "coupon_applied": true,
+    "checkout_link_sent": true,
+    "link_sent": true
+  },
+  "metrics": {
+    "agent_turn_count": 4,
+    "avg_agent_word_count": 17.8,
+    "max_agent_word_count": 21,
+    "p50_latency_ms": 845.0,
+    "p90_latency_ms": 1029.0,
+    "max_latency_ms": 1080.0
+  },
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "missing_slots": [],
+      "reason": "All required slots filled"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "Not applicable to scenario"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 17.8,
+      "max_words": 21,
+      "over_turns": [],
+      "reason": "Avg: 17.8 words, Max: 21 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "reason": "Not a constraint-driven persona"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "No tool failure injected"
+    },
+    "A11": {
+      "pass": true,
+      "bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 4,
+      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Male",
+      "reason": "Verbs strictly consistent with Male gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Vikram, Shubh StyleStudio se. Aapka Italian Leather Jacket aur Boots ka Rs 14,499 cart checkout pe ruka tha.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+    }
+  }
+}

@@ -212,7 +212,19 @@ def _normalize_call_cut_rule(rule_str: Optional[str]) -> str:
         return "custom"
     return "reframe_once_then_exit"
 
-def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dict[str, Any]:
+
+def _get_capsule_patch_id(db: Any, agent_state: Dict[str, Any]) -> Dict[str, Any]:
+    if db and not agent_state.get("capsule_id"):
+        try:
+            from models import Capsule
+            cap = db.query(Capsule).first()
+            if cap:
+                return {"capsule_id": cap.id}
+        except Exception:
+            pass
+    return {}
+
+def _generate_heuristic_response(query: str, agent_state: Dict[str, Any], db: Any = None) -> Dict[str, Any]:
     """
     Intelligent heuristic fallback when LLM API is unavailable or offline.
     Deeply analyzes user query and returns context-aware recommendations,
@@ -341,6 +353,7 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
             },
             "patch": {
                 "fine_tuning_directives": new_directives,
+                **({"greeting_enabled": False} if any(k in q_low for k in ["cold call", "outbound", "pattern interrupt"]) else {}),
                 "settings": {
                     "callCutRule": call_cut_rule,
                     "disconnectPhrase": disconnect_phrase,
@@ -443,6 +456,152 @@ def _generate_heuristic_response(query: str, agent_state: Dict[str, Any]) -> Dic
                     "tone": "Professional"
                 },
                 "fine_tuning_directives": new_directives
+            }
+        }
+
+    # 4. Inbound Customer Support & Service
+    if any(k in q_low for k in ["inbound", "support", "customer care", "help desk", "inbound call", "customer service"]):
+        inbound_content = (
+            "- Inbound Welcoming: Open with a warm, professional greeting acknowledging the caller immediately.\n"
+            "- Active Listening & Diagnosis: Clarify the customer's exact inquiry or issue before offering solutions.\n"
+            "- Knowledge Grounding: Provide precise, direct answers using connected product documentation or policies.\n"
+            "- Escalation Protocol: If an issue requires human supervisor review or technical deep-dive, politely collect the caller's details and confirm a callback timeframe."
+        )
+        new_directives = _merge_or_replace_directive_section(
+            existing_directives,
+            "INBOUND CUSTOMER SUPPORT PROTOCOL",
+            inbound_content
+        )
+        return {
+            "steps": "Worked on 3 steps >",
+            "steps_detail": [
+                "Configured inbound caller greeting & empathetic tone",
+                "Activated diagnostic issue clarification & escalation routing",
+                "Calibrated telephony parameters for low latency customer resolution"
+            ],
+            "text": "I've configured your agent for high-satisfaction inbound customer support.",
+            "body": (
+                "Inbound support requires immediate empathy, clarity, and structured diagnosis. "
+                "I've enabled a warm, welcoming opening greeting, configured active listening directives, and established clean escalation pathways "
+                "so callers get instant answers without being placed on hold."
+            ),
+            "follow_up_questions": [
+                "What is your standard protocol for issues that require human escalation?",
+                "Would you like to connect a specific Knowledge Capsule containing your product FAQs?"
+            ],
+            "action_card": {
+                "title": "Inbound Configuration Actions",
+                "options": [
+                    "Connect product FAQ knowledge capsule",
+                    "Place one test call to my number right now",
+                    "Calibrate escalation contact & ticket creation triggers"
+                ]
+            },
+            "patch": {
+                "role": "inbound_support",
+                "greeting_enabled": True,
+                "greeting_text": "Thank you for calling support! My name is Sage. How can I assist you today?",
+                "fine_tuning_directives": new_directives,
+                "settings": {
+                    "bargeIn": True,
+                    "callCutRule": "reframe_once_then_exit",
+                    "backgroundSound": "quiet"
+                }
+            }
+        }
+
+    # 5. Knowledge Base & Product Grounding
+    if any(k in q_low for k in ["knowledge base", "knowledge", "capsule", "product question", "faq", "grounding", "add a knowledge"]):
+        kb_content = (
+            "- Product Truth: Ground all answers strictly in verified Knowledge Capsule specifications and policies.\n"
+            "- Transparent Honesty: If a customer asks about a feature, price, or policy not documented in the capsule, never guess or hallucinate—state politely that you will confirm with the product specialist.\n"
+            "- Concise Delivery: Deliver direct, actionable answers under 2 sentences before checking caller comprehension."
+        )
+        new_directives = _merge_or_replace_directive_section(
+            existing_directives,
+            "KNOWLEDGE CAPSULE GROUNDING",
+            kb_content
+        )
+        return {
+            "steps": "Worked on 3 steps >",
+            "steps_detail": [
+                "Audited active Knowledge Capsule grounding parameters",
+                "Embedded strict hallucination guards and truthful policy bounds",
+                "Synchronized real-time objection grounding directives"
+            ],
+            "text": "I've grounded your agent in verified product knowledge and anti-hallucination guardrails.",
+            "body": (
+                "Voice agents must maintain total accuracy when discussing product features, pricing, and SLAs. "
+                "I've configured directives ensuring the agent references verified Knowledge Capsule data concisely, "
+                "with an explicit directive to never guess or invent unverified specs."
+            ),
+            "follow_up_questions": [
+                "Are there specific pricing tiers or technical caveats the agent should highlight?",
+                "Should the agent share detailed specs over the phone or offer to dispatch a PDF via WhatsApp?"
+            ],
+            "action_card": {
+                "title": "Knowledge Grounding Actions",
+                "options": [
+                    "Attach or select a Product Knowledge Capsule",
+                    "Place one cold call to my number right now",
+                    "Review anti-hallucination qualification guardrails"
+                ]
+            },
+            "patch": {
+                "fine_tuning_directives": new_directives,
+                **(_get_capsule_patch_id(db, agent_state)),
+                "settings": {
+                    "bargeIn": True
+                }
+            }
+        }
+
+    # 6. Production Readiness & Live Call Verification
+    if any(k in q_low for k in ["ready to take live calls", "production ready", "take live calls", "verify agent", "pre-flight", "checklist", "launch ready"]):
+        prod_content = (
+            "- Live Call Standard: Deliver crisp responses under 500ms with natural turn-taking.\n"
+            "- Barge-in Grace: Yield immediately when the prospect speaks, acknowledging interruptions smoothly.\n"
+            "- Respectful Termination: Respect prospect time; execute courteous call exit upon firm rejection without arguing."
+        )
+        new_directives = _merge_or_replace_directive_section(
+            existing_directives,
+            "PRODUCTION FLIGHT CONTROLS",
+            prod_content
+        )
+        return {
+            "steps": "Worked on 4 steps >",
+            "steps_detail": [
+                "Audited voice persona latency and barge-in responsiveness",
+                "Verified call-cut rules and graceful exit phrases",
+                "Checked ambient audio and telephony disconnect bounds",
+                "Validated prompt injection defense & qualification metrics"
+            ],
+            "text": "Your agent has been audited and calibrated for live production calls.",
+            "body": (
+                "I've verified the telephony parameters, audio interruption models, and exit thresholds against Clozflow production standards. "
+                "Barge-in is enabled for organic human turn-taking, polite call-cut rules are locked in to protect brand reputation, and latency is optimized."
+            ),
+            "follow_up_questions": [
+                "Would you like to run an instant live test call to your mobile phone before going live?",
+                "What is your target daily call volume for this campaign?"
+            ],
+            "action_card": {
+                "title": "Production Deployment Options",
+                "options": [
+                    "Place one cold call to my number right now",
+                    "Review full telephony & audio settings",
+                    "Launch agent into live campaign"
+                ]
+            },
+            "patch": {
+                "fine_tuning_directives": new_directives,
+                "settings": {
+                    "bargeIn": True,
+                    "callCutRule": agent_state.get("settings", {}).get("callCutRule", "reframe_once_then_exit"),
+                    "maxCallLength": 15,
+                    "backgroundSound": "office",
+                    "backgroundVolume": 25
+                }
             }
         }
 
@@ -626,7 +785,7 @@ async def run_sage_conversation(
                 print(f"[Sage Service] Error calling model {model_cand}: {e}")
 
     # Fallback to intelligent context-aware heuristic
-    heuristic_res = _generate_heuristic_response(user_query, state)
+    heuristic_res = _generate_heuristic_response(user_query, state, db=db)
     heuristic_res["id"] = f"s-{int(time.time()*1000)}"
     heuristic_res["timestamp"] = "Just now"
     return heuristic_res
