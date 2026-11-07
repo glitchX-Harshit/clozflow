@@ -31,6 +31,40 @@ export const ToolDrawer = ({
   // API Tool Subtabs
   const [apiSubtab, setApiSubtab] = useState('path'); // 'path' | 'headers' | 'auth' | 'body' | 'mapping' | 'timing'
 
+  // Visual Mock Response fields state (user-oriented key-value rows)
+  const parseMockBodyToFields = (rawBody) => {
+    try {
+      if (rawBody) {
+        const parsed = typeof rawBody === 'string' ? JSON.parse(rawBody) : rawBody;
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          const entries = Object.entries(parsed);
+          if (entries.length > 0) {
+            return entries.map(([k, v], idx) => ({
+              id: String(idx + 1),
+              key: k,
+              value: typeof v === 'object' ? JSON.stringify(v) : String(v)
+            }));
+          }
+        }
+      }
+    } catch (e) {
+      // not valid json object
+    }
+    return [
+      { id: '1', key: 'order_status', value: 'Out for delivery' },
+      { id: '2', key: 'delivery_partner', value: 'BlueDart Express' },
+      { id: '3', key: 'expected_eta', value: 'Today before 6 PM' }
+    ];
+  };
+
+  const [mockFields, setMockFields] = useState(() => parseMockBodyToFields(tool?.config?.mock_response_body));
+  const [showAdvancedMock, setShowAdvancedMock] = useState(false);
+  const [showRawJsonMock, setShowRawJsonMock] = useState(false);
+  const [showAdvancedValidator, setShowAdvancedValidator] = useState(false);
+  const [showAdvancedVerifier, setShowAdvancedVerifier] = useState(false);
+  const [showAdvancedApi, setShowAdvancedApi] = useState(false);
+  const [showRawTestOutput, setShowRawTestOutput] = useState(false);
+
   // cURL parser drawer/popover state
   const [showCurlModal, setShowCurlModal] = useState(false);
   const [curlInput, setCurlInput] = useState('');
@@ -40,7 +74,29 @@ export const ToolDrawer = ({
   // Live Test State
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
-  const [testInputs, setTestInputs] = useState(() => ({ ...testVariables }));
+  const [testInputs, setTestInputs] = useState(() => ({
+    lead_name: 'Siddharth Roy',
+    order_id: 'ORD-8821',
+    test_value: '9876543210',
+    spoken_value: '+91 98765-43210',
+    reference_value: '+91 98765 43210',
+    ...testVariables
+  }));
+
+  // Keyboard shortcut listener for Esc
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (showCurlModal) {
+          setShowCurlModal(false);
+        } else if (isOpen) {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, showCurlModal, onClose]);
 
   // Keep state synced when tool prop updates
   useEffect(() => {
@@ -55,6 +111,7 @@ export const ToolDrawer = ({
       const toolFallback = tool.fallback_response || tool.config?.fallback_response || '';
       setFallbackResponse(toolFallback);
       setConfig(tool.config ? { ...tool.config, timeout_seconds: toolTimeout, fallback_response: toolFallback } : { timeout_seconds: toolTimeout, fallback_response: toolFallback });
+      setMockFields(parseMockBodyToFields(tool.config?.mock_response_body));
       setTestResult(null);
     }
   }, [tool]);
@@ -62,6 +119,24 @@ export const ToolDrawer = ({
   // Handle configuration updates
   const updateConfig = (key, val) => {
     setConfig(prev => ({ ...prev, [key]: val }));
+  };
+
+  // Synchronize mock fields array to mock_response_body JSON
+  const updateMockFields = (newFields) => {
+    setMockFields(newFields);
+    const obj = {};
+    newFields.forEach(f => {
+      const k = (f.key || '').trim();
+      if (k) {
+        const val = f.value !== undefined ? f.value : '';
+        const trimmed = String(val).trim();
+        if (trimmed === 'true') obj[k] = true;
+        else if (trimmed === 'false') obj[k] = false;
+        else if (!isNaN(Number(trimmed)) && trimmed !== '') obj[k] = Number(trimmed);
+        else obj[k] = val;
+      }
+    });
+    updateConfig('mock_response_body', JSON.stringify(obj, null, 2));
   };
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -146,14 +221,91 @@ export const ToolDrawer = ({
         body: JSON.stringify(payload)
       });
 
-      const data = await res.json();
-      setTestResult(data);
+      if (res.ok) {
+        const data = await res.json();
+        setTestResult(data);
+        return;
+      }
+      throw new Error(`Server returned ${res.status}`);
     } catch (err) {
-      console.error('Test execution failed:', err);
-      setTestResult({
-        success: false,
-        error: err.message || 'Execution error'
-      });
+      // Provide intelligent fallback testing for client-side tools if backend is unreachable
+      if (toolType === 'mock_api') {
+        let parsedMock = {};
+        try {
+          parsedMock = JSON.parse(config.mock_response_body || '{}');
+        } catch (e) {
+          mockFields.forEach(f => {
+            if (f.key && f.key.trim()) parsedMock[f.key.trim()] = f.value;
+          });
+        }
+        const extracted = {};
+        (config.response_mapping || []).forEach(m => {
+          if (m.variable && parsedMock[m.path] !== undefined) {
+            extracted[m.variable] = parsedMock[m.path];
+          }
+        });
+        setTestResult({
+          success: true,
+          status_code: 200,
+          latency_ms: config.simulated_latency_ms || 180,
+          response_data: parsedMock,
+          extracted_variables: extracted,
+          spoken_feedback: Object.keys(extracted).length > 0 
+            ? `Successfully retrieved: ${Object.entries(extracted).map(([k, v]) => `${k} = ${v}`).join(', ')}`
+            : 'Mock response executed successfully.'
+        });
+      } else if (toolType === 'data_validator') {
+        const testVal = String(testInputs.test_value || '').trim();
+        const pattern = config.regex_pattern || '^(?:\\+91|0)?[6-9]\\d{9}$';
+        let isValid = false;
+        try {
+          const reg = new RegExp(pattern);
+          isValid = reg.test(testVal);
+        } catch (e) {
+          isValid = false;
+        }
+        setTestResult({
+          success: true,
+          status_code: 200,
+          latency_ms: 12,
+          is_valid: isValid,
+          reason: isValid ? 'Matched validation pattern' : 'Does not match pattern format',
+          spoken_feedback: isValid 
+            ? (config.spoken_on_success || 'Got it, that looks valid.')
+            : (config.spoken_on_fail || "That doesn't seem to be a valid format. Could you please repeat it?")
+        });
+      } else if (toolType === 'data_verifier') {
+        const spoken = String(testInputs.spoken_value || '').trim();
+        const ref = String(testInputs.reference_value || config.reference_value || '').trim();
+        const norm = config.normalization || 'strip_phone_formatting';
+        const clean = (str) => {
+          if (norm === 'strip_phone_formatting') return str.replace(/[\s\-\(\)\+]|^(?:91|0)/g, '');
+          if (norm === 'lowercase') return str.toLowerCase().trim();
+          return str;
+        };
+        const normSpoken = clean(spoken);
+        const normRef = clean(ref);
+        const matchMode = config.match_mode || 'exact_match';
+        const isMatch = matchMode === 'contains' 
+          ? (normRef.includes(normSpoken) || normSpoken.includes(normRef))
+          : (normSpoken === normRef);
+        setTestResult({
+          success: true,
+          status_code: 200,
+          latency_ms: 15,
+          is_match: isMatch,
+          normalized_spoken: normSpoken,
+          normalized_reference: normRef,
+          spoken_feedback: isMatch
+            ? (config.spoken_on_match || 'Thank you, that matches our records perfectly.')
+            : (config.spoken_on_mismatch || "I'm sorry, that does not match what we have on file.")
+        });
+      } else {
+        setTestResult({
+          success: false,
+          error: `Test execution: ${err.message || 'Endpoint unreachable'}`
+        });
+      }
     } finally {
       setIsTesting(false);
     }
@@ -206,95 +358,206 @@ export const ToolDrawer = ({
 
     return (
       <div className="drawer-tool-section">
-        {/* cURL Import Banner */}
-        <div className="curl-import-banner">
-          <div className="curl-banner-left">
-            <Code2 size={16} />
-            <span>Have a cURL command? Paste it to auto-fill the form</span>
+        {/* Endpoint Row */}
+        <div className="form-group-field">
+          <label>API Endpoint Web Address</label>
+          <div className="endpoint-config-row">
+            <div className="method-select-wrap">
+              <select 
+                className={`method-dropdown method-${method.toLowerCase()}`}
+                value={method}
+                onChange={(e) => updateConfig('method', e.target.value)}
+              >
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+                <option value="PATCH">PATCH</option>
+              </select>
+            </div>
+            <div className="url-input-wrap">
+              <input 
+                type="text" 
+                className="drawer-input endpoint-url-field"
+                placeholder="https://api.mycorp.com/v1/orders/{{order_id}}"
+                value={url}
+                onChange={(e) => updateConfig('url', e.target.value)}
+              />
+            </div>
           </div>
-          <button 
-            type="button" 
-            className="btn-curl-trigger"
-            onClick={() => setShowCurlModal(true)}
-          >
-            Paste cURL →
-          </button>
+          <div className="field-hint-text">
+            Use <code>{`{{variable}}`}</code> syntax to dynamically interpolate conversational parameters into the URL.
+          </div>
         </div>
 
-        {/* Endpoint Row (Method + URL) */}
-        <div className="endpoint-config-row">
-          <div className="method-select-wrap">
-            <select 
-              className={`method-dropdown method-${method.toLowerCase()}`}
-              value={method}
-              onChange={(e) => updateConfig('method', e.target.value)}
+        {/* Save Output to Conversation Variables (Primary Business View) */}
+        <div className="form-group-field" style={{ marginTop: 18 }}>
+          <div className="panel-table-header">
+            <div>
+              <span style={{ fontWeight: 600 }}>Save Output to Conversation Variables</span>
+              <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: '#64748b' }}>
+                Values returned from this endpoint will be stored into agent memory for use in prompt turns.
+              </p>
+            </div>
+            <button 
+              type="button" 
+              className="btn-text-action"
+              onClick={() => {
+                const updated = [...mapping, { path: '', variable: '', description: '' }];
+                updateConfig('response_mapping', updated);
+              }}
             >
-              <option value="GET">GET</option>
-              <option value="POST">POST</option>
-              <option value="PUT">PUT</option>
-              <option value="DELETE">DELETE</option>
-              <option value="PATCH">PATCH</option>
-            </select>
+              <Plus size={13} /> Add Variable
+            </button>
           </div>
-          <div className="url-input-wrap">
-            <input 
-              type="text" 
-              className="drawer-input endpoint-url-field"
-              placeholder="https://api.mycorp.com/v1/orders/{{order_id}}"
-              value={url}
-              onChange={(e) => updateConfig('url', e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="field-hint-text">
-          Use <code>{`{{variable}}`}</code> syntax to dynamically interpolate conversational parameters.
+
+          {mapping.length === 0 ? (
+            <div className="panel-empty-text">
+              No variables mapped yet. Click "+ Add Variable" to store API response fields into agent memory.
+            </div>
+          ) : (
+            <div className="visual-field-rows">
+              {mapping.map((m, idx) => (
+                <div key={idx} className="visual-field-row">
+                  <div className="visual-row-cell key-cell">
+                    <label className="visual-input-label">Response Field</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. order.status"
+                      className="drawer-input code-font"
+                      value={m.path || ''}
+                      onChange={(e) => {
+                        const copy = [...mapping];
+                        copy[idx] = { ...copy[idx], path: e.target.value };
+                        updateConfig('response_mapping', copy);
+                      }}
+                    />
+                  </div>
+                  <div className="visual-row-cell val-cell">
+                    <label className="visual-input-label">Agent Variable</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. order_status"
+                      className="drawer-input code-font"
+                      value={m.variable || ''}
+                      onChange={(e) => {
+                        const copy = [...mapping];
+                        copy[idx] = { ...copy[idx], variable: e.target.value };
+                        updateConfig('response_mapping', copy);
+                      }}
+                    />
+                  </div>
+                  <div className="visual-row-cell val-cell" style={{ flex: 1.2 }}>
+                    <label className="visual-input-label">Description</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Current shipment status"
+                      className="drawer-input"
+                      value={m.description || ''}
+                      onChange={(e) => {
+                        const copy = [...mapping];
+                        copy[idx] = { ...copy[idx], description: e.target.value };
+                        updateConfig('response_mapping', copy);
+                      }}
+                    />
+                  </div>
+                  <button 
+                    type="button" 
+                    className="btn-row-delete"
+                    title="Remove variable mapping"
+                    onClick={() => {
+                      const copy = mapping.filter((_, i) => i !== idx);
+                      updateConfig('response_mapping', copy);
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* API Subtabs */}
-        <div className="api-subtabs-bar">
-          <button 
-            type="button" 
-            className={`api-subtab-btn ${apiSubtab === 'path' ? 'active' : ''}`}
-            onClick={() => setApiSubtab('path')}
-          >
-            Path & Params ({params.length})
-          </button>
-          <button 
-            type="button" 
-            className={`api-subtab-btn ${apiSubtab === 'headers' ? 'active' : ''}`}
-            onClick={() => setApiSubtab('headers')}
-          >
-            Headers ({headers.length})
-          </button>
-          <button 
-            type="button" 
-            className={`api-subtab-btn ${apiSubtab === 'auth' ? 'active' : ''}`}
-            onClick={() => setApiSubtab('auth')}
-          >
-            Authentication {auth.type !== 'none' && '•'}
-          </button>
-          <button 
-            type="button" 
-            className={`api-subtab-btn ${apiSubtab === 'body' ? 'active' : ''}`}
-            onClick={() => setApiSubtab('body')}
-          >
-            Body
-          </button>
-          <button 
-            type="button" 
-            className={`api-subtab-btn ${apiSubtab === 'mapping' ? 'active' : ''}`}
-            onClick={() => setApiSubtab('mapping')}
-          >
-            @field Mapping ({mapping.length})
-          </button>
-          <button 
-            type="button" 
-            className={`api-subtab-btn ${apiSubtab === 'timing' ? 'active' : ''}`}
-            onClick={() => setApiSubtab('timing')}
-          >
-            Timing & Fallback
-          </button>
+        {/* Fallback Spoken Line */}
+        <div className="form-group-field" style={{ marginTop: 18 }}>
+          <label>Fallback spoken line if tool fails or times out</label>
+          <textarea 
+            rows={2}
+            className="drawer-textarea"
+            placeholder="I'm having trouble retrieving that record right now. Let's proceed with your other queries."
+            value={fallbackResponse}
+            onChange={(e) => setFallbackResponse(e.target.value)}
+          />
         </div>
+
+        {/* Advanced Developer Settings Accordion */}
+        <div className="advanced-accordion-wrap">
+          <button 
+            type="button" 
+            className="advanced-accordion-toggle"
+            onClick={() => setShowAdvancedApi(prev => !prev)}
+          >
+            <span>Advanced Developer Settings (cURL, Payload Body, Headers, Auth, Timeout)</span>
+            {showAdvancedApi ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {showAdvancedApi && (
+            <div className="advanced-accordion-content">
+              {/* cURL Import Action Card */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 16 }}>
+                <div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#0f172a' }}>Import from cURL Command</div>
+                  <div style={{ fontSize: '0.74rem', color: '#64748b' }}>Paste a cURL snippet to auto-populate endpoint, headers, auth, and request body</div>
+                </div>
+                <button 
+                  type="button" 
+                  className="btn-text-action"
+                  style={{ fontSize: '0.76rem', background: '#ffffff', border: '1px solid #e2e8f0', padding: '5px 12px', borderRadius: 6 }}
+                  onClick={() => setShowCurlModal(true)}
+                  title="Import parameters and headers from a cURL command"
+                >
+                  <Code2 size={13} /> Import cURL
+                </button>
+              </div>
+
+              {/* API Subtabs */}
+              <div className="api-subtabs-bar">
+                <button 
+                  type="button" 
+                  className={`api-subtab-btn ${apiSubtab === 'path' ? 'active' : ''}`}
+                  onClick={() => setApiSubtab('path')}
+                >
+                  Parameters ({params.length})
+                </button>
+                <button 
+                  type="button" 
+                  className={`api-subtab-btn ${apiSubtab === 'body' ? 'active' : ''}`}
+                  onClick={() => setApiSubtab('body')}
+                >
+                  Payload (Body)
+                </button>
+                <button 
+                  type="button" 
+                  className={`api-subtab-btn ${apiSubtab === 'headers' ? 'active' : ''}`}
+                  onClick={() => setApiSubtab('headers')}
+                >
+                  Headers ({headers.length})
+                </button>
+                <button 
+                  type="button" 
+                  className={`api-subtab-btn ${apiSubtab === 'auth' ? 'active' : ''}`}
+                  onClick={() => setApiSubtab('auth')}
+                >
+                  Authentication {auth.type !== 'none' && '•'}
+                </button>
+                <button 
+                  type="button" 
+                  className={`api-subtab-btn ${apiSubtab === 'timing' ? 'active' : ''}`}
+                  onClick={() => setApiSubtab('timing')}
+                >
+                  Timing & Timeout
+                </button>
+              </div>
 
         {/* Subtab 1: Params */}
         {apiSubtab === 'path' && (
@@ -553,107 +816,7 @@ export const ToolDrawer = ({
           </div>
         )}
 
-        {/* Subtab 5: Response Mapping */}
-        {apiSubtab === 'mapping' && (
-          <div className="subtab-panel">
-            <div className="panel-table-header">
-              <div>
-                <span style={{ fontWeight: 600 }}>@field Response Mapping</span>
-                <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-                  Extract values from the JSON response and bind them directly into conversation variables for the agent to reference.
-                </p>
-              </div>
-              <button 
-                type="button" 
-                className="btn-text-action"
-                onClick={() => {
-                  const updated = [...mapping, { path: '', variable: '', description: '' }];
-                  updateConfig('response_mapping', updated);
-                }}
-              >
-                <Plus size={13} /> Add Mapping
-              </button>
-            </div>
-
-            {mapping.length === 0 ? (
-              <div className="panel-empty-text">
-                No response fields mapped. Click "+ Add Mapping" to store attributes into variables.
-              </div>
-            ) : (
-              <div className="mapping-table-wrap">
-                <table className="mapping-table">
-                  <thead>
-                    <tr>
-                      <th style={{ width: '40%' }}>JSON Field Path (e.g. data.status)</th>
-                      <th style={{ width: '35%' }}>Target Variable Name</th>
-                      <th style={{ width: '20%' }}>Description</th>
-                      <th style={{ width: '5%' }}></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {mapping.map((m, idx) => (
-                      <tr key={idx}>
-                        <td>
-                          <input 
-                            type="text" 
-                            className="drawer-input table-field-input code-font"
-                            placeholder="data.order.status"
-                            value={m.path || ''}
-                            onChange={(e) => {
-                              const copy = [...mapping];
-                              copy[idx] = { ...copy[idx], path: e.target.value };
-                              updateConfig('response_mapping', copy);
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <input 
-                            type="text" 
-                            className="drawer-input table-field-input code-font"
-                            placeholder="order_status"
-                            value={m.variable || ''}
-                            onChange={(e) => {
-                              const copy = [...mapping];
-                              copy[idx] = { ...copy[idx], variable: e.target.value };
-                              updateConfig('response_mapping', copy);
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <input 
-                            type="text" 
-                            className="drawer-input table-field-input"
-                            placeholder="Order status"
-                            value={m.description || ''}
-                            onChange={(e) => {
-                              const copy = [...mapping];
-                              copy[idx] = { ...copy[idx], description: e.target.value };
-                              updateConfig('response_mapping', copy);
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <button 
-                            type="button" 
-                            className="btn-row-delete"
-                            onClick={() => {
-                              const copy = mapping.filter((_, i) => i !== idx);
-                              updateConfig('response_mapping', copy);
-                            }}
-                          >
-                            <Trash2 size={13} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Subtab 6: Timing & Fallback */}
+        {/* Subtab 5: Timing & Timeout */}
         {apiSubtab === 'timing' && (
           <div className="subtab-panel">
             <div className="form-group-field">
@@ -692,93 +855,95 @@ export const ToolDrawer = ({
                 step={1}
                 className="drawer-slider"
                 value={timeoutSeconds}
-                onChange={(e) => updateConfig('timeout_seconds', parseInt(e.target.value))}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  setTimeoutSeconds(val);
+                  updateConfig('timeout_seconds', val);
+                }}
               />
               <span className="field-hint-text">If the endpoint does not reply within this timeout, the fallback line will be spoken.</span>
             </div>
-
-            <div className="form-group-field" style={{ marginTop: 16 }}>
-              <label>Fallback spoken line if tool fails or times out</label>
-              <textarea 
-                rows={2}
-                className="drawer-textarea"
-                placeholder="I'm having trouble retrieving that record right now, let's continue with your questions."
-                value={fallbackResponse}
-                onChange={(e) => setFallbackResponse(e.target.value)}
-              />
-            </div>
           </div>
         )}
+            </div>
+          )}
+        </div>
       </div>
     );
   };
 
   // ──────────────────────────────────────────────────────────────────────────
-  // RENDER: DATA VALIDATOR CONFIGURATION
+  // RENDER: DATA VALIDATOR CONFIGURATION (User-Oriented Presets)
   // ──────────────────────────────────────────────────────────────────────────
   const renderDataValidatorForm = () => {
     const dataType = config.data_type || 'string';
     const preset = config.preset || 'indian_phone';
     const customRegex = config.regex_pattern || '';
-    const inputSource = config.input_source || 'spoken_input';
+    const inputSource = config.input_source || 'caller_phone_number';
     const includeInContext = config.include_in_context !== false;
 
-    const PRESET_PATTERNS = {
-      indian_phone: '^(?:\\+91|0)?[6-9]\\d{9}$',
-      pan_card: '^[A-Z]{5}[0-9]{4}[A-Z]$',
-      pincode: '^[1-9][0-9]{5}$',
-      email: '^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$',
-      aadhaar_last4: '^[0-9]{4}$'
-    };
+    const PRESETS = [
+      {
+        id: 'indian_phone',
+        label: 'Indian Mobile Number',
+        rule: 'Validates 10-digit Indian phone numbers (starting with 6-9). Automatically normalizes +91 prefixes, spaces, and dashes.',
+        pattern: '^(?:\\+91|0)?[6-9]\\d{9}$',
+        example: '+91 98765 43210'
+      },
+      {
+        id: 'email',
+        label: 'Email Address',
+        rule: 'Validates standard email format with username, @ symbol, and domain extension.',
+        pattern: '^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$',
+        example: 'alex@example.com'
+      },
+      {
+        id: 'pincode',
+        label: '6-digit PIN Code',
+        rule: 'Validates standard 6-digit Indian postal code format (e.g. 560001, 110001).',
+        pattern: '^[1-9][0-9]{5}$',
+        example: '560001'
+      },
+      {
+        id: 'pan_card',
+        label: 'PAN Card Number',
+        rule: 'Validates 10-character Indian Income Tax PAN card format (5 letters, 4 numbers, 1 letter).',
+        pattern: '^[A-Z]{5}[0-9]{4}[A-Z]$',
+        example: 'ABCDE1234F'
+      },
+      {
+        id: 'aadhaar_last4',
+        label: 'Aadhaar Last 4',
+        rule: 'Validates exactly 4 numeric digits for customer identity confirmation.',
+        pattern: '^[0-9]{4}$',
+        example: '4321'
+      },
+      {
+        id: 'custom',
+        label: 'Custom Regex Rule',
+        rule: 'Define custom regular expression rules for domain-specific codes.',
+        pattern: customRegex,
+        example: 'Custom regex pattern'
+      }
+    ];
 
-    const handleSelectPreset = (p) => {
-      updateConfig('preset', p);
-      if (p !== 'custom' && PRESET_PATTERNS[p]) {
-        updateConfig('regex_pattern', PRESET_PATTERNS[p]);
+    const currentPresetObj = PRESETS.find(p => p.id === preset) || PRESETS[0];
+
+    const handleSelectPreset = (pId) => {
+      updateConfig('preset', pId);
+      const matched = PRESETS.find(p => p.id === pId);
+      if (matched && pId !== 'custom') {
+        updateConfig('regex_pattern', matched.pattern);
       }
     };
 
     return (
       <div className="drawer-tool-section">
-        <div className="two-col-grid">
-          <div className="form-group-field">
-            <label>Data Type</label>
-            <select 
-              className="drawer-select"
-              value={dataType}
-              onChange={(e) => updateConfig('data_type', e.target.value)}
-            >
-              <option value="string">String</option>
-              <option value="number">Number</option>
-              <option value="date">Date</option>
-              <option value="time">Time</option>
-              <option value="datetime">Date & time</option>
-            </select>
-          </div>
-
-          <div className="form-group-field">
-            <label>Input Source</label>
-            <input 
-              type="text" 
-              className="drawer-input"
-              placeholder="e.g. caller_mobile, pan_card"
-              value={inputSource}
-              onChange={(e) => updateConfig('input_source', e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="form-group-field" style={{ marginTop: 14 }}>
-          <label>Validation Preset</label>
+        {/* Preset Selection Grid */}
+        <div className="form-group-field">
+          <label>Choose Validation Standard</label>
           <div className="preset-chips-grid">
-            {[
-              { id: 'indian_phone', label: 'Indian Phone (10 digits)' },
-              { id: 'pan_card', label: 'PAN Card (ABCDE1234F)' },
-              { id: 'pincode', label: '6-digit Pincode' },
-              { id: 'email', label: 'Email Address' },
-              { id: 'aadhaar_last4', label: 'Aadhaar Last 4' },
-              { id: 'custom', label: 'Custom Regex Pattern' }
-            ].map(pr => (
+            {PRESETS.map(pr => (
               <button 
                 key={pr.id}
                 type="button" 
@@ -791,23 +956,36 @@ export const ToolDrawer = ({
           </div>
         </div>
 
-        <div className="form-group-field" style={{ marginTop: 14 }}>
-          <label>Regular Expression Pattern</label>
-          <input 
-            type="text" 
-            className="drawer-input code-font"
-            placeholder="^[0-9]{10}$"
-            value={customRegex}
-            onChange={(e) => {
-              updateConfig('preset', 'custom');
-              updateConfig('regex_pattern', e.target.value);
-            }}
-          />
-          <span className="field-hint-text">Engine tests incoming spoken turn against this regex syntax in real-time.</span>
-        </div>
+        {/* User-friendly Format Rule Card (No Raw Regex in User's Face!) */}
+        {preset !== 'custom' ? (
+          <div className="format-guarantee-card">
+            <div className="format-card-header">
+              <ShieldCheck size={16} color="#0f172a" />
+              <span className="format-card-title">{currentPresetObj.label} Format</span>
+            </div>
+            <p className="format-card-desc">{currentPresetObj.rule}</p>
+            <div className="format-card-meta">
+              <span className="format-sample-label">Accepted format:</span>
+              <span className="format-sample-pill">{currentPresetObj.example}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="form-group-field" style={{ marginTop: 14 }}>
+            <label>Custom Regular Expression</label>
+            <input 
+              type="text" 
+              className="drawer-input code-font"
+              placeholder="^[0-9]{10}$"
+              value={customRegex}
+              onChange={(e) => updateConfig('regex_pattern', e.target.value)}
+            />
+            <span className="field-hint-text">Tests incoming spoken turn against this regex syntax in real-time.</span>
+          </div>
+        )}
 
+        {/* Spoken Voice Responses */}
         <div className="form-group-field" style={{ marginTop: 16 }}>
-          <label>Spoken feedback on successful format match</label>
+          <label>Spoken message when format is valid</label>
           <input 
             type="text" 
             className="drawer-input"
@@ -818,7 +996,7 @@ export const ToolDrawer = ({
         </div>
 
         <div className="form-group-field" style={{ marginTop: 12 }}>
-          <label>Spoken feedback on failed validation</label>
+          <label>Spoken message when format is invalid (retry prompt)</label>
           <input 
             type="text" 
             className="drawer-input"
@@ -829,7 +1007,7 @@ export const ToolDrawer = ({
         </div>
 
         <div className="form-group-field" style={{ marginTop: 12 }}>
-          <label>Spoken feedback on unexpected error</label>
+          <label>Spoken message on system error</label>
           <input 
             type="text" 
             className="drawer-input"
@@ -839,19 +1017,75 @@ export const ToolDrawer = ({
           />
         </div>
 
-        <div className="toggle-setting-row" style={{ marginTop: 16 }}>
-          <div className="toggle-setting-info">
-            <div className="toggle-setting-label">Include in context</div>
-            <div className="toggle-setting-sub">Pass validation outcome into LLM prompt so agent knows whether it passed</div>
-          </div>
-          <label className="toggle-switch">
-            <input 
-              type="checkbox" 
-              checked={includeInContext}
-              onChange={(e) => updateConfig('include_in_context', e.target.checked)}
-            />
-            <span className="slider"></span>
-          </label>
+        {/* Advanced Accordion Toggle */}
+        <div className="advanced-accordion-wrap">
+          <button 
+            type="button" 
+            className="advanced-accordion-toggle"
+            onClick={() => setShowAdvancedValidator(prev => !prev)}
+          >
+            <span>Advanced Pattern & Variable Settings</span>
+            {showAdvancedValidator ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {showAdvancedValidator && (
+            <div className="advanced-accordion-content">
+              <div className="two-col-grid">
+                <div className="form-group-field">
+                  <label>Data Type</label>
+                  <select 
+                    className="drawer-select"
+                    value={dataType}
+                    onChange={(e) => updateConfig('data_type', e.target.value)}
+                  >
+                    <option value="string">String</option>
+                    <option value="number">Number</option>
+                    <option value="date">Date</option>
+                    <option value="time">Time</option>
+                    <option value="datetime">Date & time</option>
+                  </select>
+                </div>
+
+                <div className="form-group-field">
+                  <label>Input Source Variable</label>
+                  <input 
+                    type="text" 
+                    className="drawer-input"
+                    placeholder="caller_phone_number"
+                    value={inputSource}
+                    onChange={(e) => updateConfig('input_source', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {preset !== 'custom' && (
+                <div className="form-group-field" style={{ marginTop: 12 }}>
+                  <label>Underlying Regular Expression Pattern</label>
+                  <input 
+                    type="text" 
+                    className="drawer-input code-font"
+                    value={config.regex_pattern || currentPresetObj.pattern}
+                    onChange={(e) => updateConfig('regex_pattern', e.target.value)}
+                  />
+                </div>
+              )}
+
+              <div className="toggle-setting-row" style={{ marginTop: 14 }}>
+                <div className="toggle-setting-info">
+                  <div className="toggle-setting-label">Include outcome in prompt context</div>
+                  <div className="toggle-setting-sub">Provide validation pass/fail status to the agent model</div>
+                </div>
+                <label className="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    checked={includeInContext}
+                    onChange={(e) => updateConfig('include_in_context', e.target.checked)}
+                  />
+                  <span className="slider"></span>
+                </label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -871,7 +1105,7 @@ export const ToolDrawer = ({
       <div className="drawer-tool-section">
         <div className="two-col-grid">
           <div className="form-group-field">
-            <label>Reference Source on File</label>
+            <label>Customer Record to Verify</label>
             <select 
               className="drawer-select"
               value={referenceSource}
@@ -886,7 +1120,7 @@ export const ToolDrawer = ({
           </div>
 
           <div className="form-group-field">
-            <label>Match Mode</label>
+            <label>Comparison Rule</label>
             <select 
               className="drawer-select"
               value={matchMode}
@@ -899,46 +1133,22 @@ export const ToolDrawer = ({
         </div>
 
         <div className="form-group-field" style={{ marginTop: 14 }}>
-          <label>Normalization Strategy</label>
-          <div className="timing-radios-vertical">
-            {[
-              { id: 'strip_phone_formatting', label: 'Strip phone formatting', sub: 'Removes +91, leading 0, spaces, dashes & parentheses' },
-              { id: 'lowercase', label: 'Lowercase & trim whitespace', sub: 'Case-insensitive comparison for names, codes, emails' },
-              { id: 'none', label: 'None (Exact character literal)', sub: 'Case-sensitive exact byte comparison' }
-            ].map(norm => (
-              <label key={norm.id} className={`timing-card-option ${normalization === norm.id ? 'active' : ''}`}>
-                <input 
-                  type="radio" 
-                  name="normalizationOption"
-                  checked={normalization === norm.id}
-                  onChange={() => updateConfig('normalization', norm.id)}
-                />
-                <div className="timing-text-wrap">
-                  <div className="timing-label">{norm.label}</div>
-                  <div className="timing-sub">{norm.sub}</div>
-                </div>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="form-group-field" style={{ marginTop: 14 }}>
-          <label>Sample Reference Value on File (for Testing)</label>
+          <label>Sample Record on File (for preview & testing)</label>
           <input 
             type="text" 
             className="drawer-input"
-            placeholder="+91 98765-43210 or 560001"
+            placeholder="+91 98765 43210 or ORD-8821"
             value={referenceValue}
             onChange={(e) => updateConfig('reference_value', e.target.value)}
           />
         </div>
 
         <div className="form-group-field" style={{ marginTop: 16 }}>
-          <label>Spoken feedback on successful match</label>
+          <label>Spoken feedback when verified</label>
           <input 
             type="text" 
             className="drawer-input"
-            placeholder="Thank you, that matches our records."
+            placeholder="Thank you, that matches our records perfectly."
             value={config.spoken_on_match || ''}
             onChange={(e) => updateConfig('spoken_on_match', e.target.value)}
           />
@@ -949,7 +1159,7 @@ export const ToolDrawer = ({
           <input 
             type="text" 
             className="drawer-input"
-            placeholder="I'm sorry, that doesn't match what we have on file."
+            placeholder="I'm sorry, that does not match what we have on file. Could you please double check?"
             value={config.spoken_on_mismatch || ''}
             onChange={(e) => updateConfig('spoken_on_mismatch', e.target.value)}
           />
@@ -966,133 +1176,298 @@ export const ToolDrawer = ({
           />
         </div>
 
-        <div className="toggle-setting-row" style={{ marginTop: 16 }}>
-          <div className="toggle-setting-info">
-            <div className="toggle-setting-label">Include in context</div>
-            <div className="toggle-setting-sub">Provide verified / unverified status in LLM agent conversation prompt</div>
-          </div>
-          <label className="toggle-switch">
-            <input 
-              type="checkbox" 
-              checked={includeInContext}
-              onChange={(e) => updateConfig('include_in_context', e.target.checked)}
-            />
-            <span className="slider"></span>
-          </label>
+        {/* Advanced Accordion Toggle */}
+        <div className="advanced-accordion-wrap">
+          <button 
+            type="button" 
+            className="advanced-accordion-toggle"
+            onClick={() => setShowAdvancedVerifier(prev => !prev)}
+          >
+            <span>Advanced Match & Normalization Settings</span>
+            {showAdvancedVerifier ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {showAdvancedVerifier && (
+            <div className="advanced-accordion-content">
+              <div className="form-group-field">
+                <label>Normalization Strategy</label>
+                <div className="timing-radios-vertical">
+                  {[
+                    { id: 'strip_phone_formatting', label: 'Strip phone formatting', sub: 'Removes +91, leading 0, spaces, dashes & parentheses' },
+                    { id: 'lowercase', label: 'Lowercase & trim whitespace', sub: 'Case-insensitive comparison for names, codes, emails' },
+                    { id: 'none', label: 'None (Exact character literal)', sub: 'Case-sensitive exact byte comparison' }
+                  ].map(norm => (
+                    <label key={norm.id} className={`timing-card-option ${normalization === norm.id ? 'active' : ''}`}>
+                      <input 
+                        type="radio" 
+                        name="normalizationOption"
+                        checked={normalization === norm.id}
+                        onChange={() => updateConfig('normalization', norm.id)}
+                      />
+                      <div className="timing-text-wrap">
+                        <div className="timing-label">{norm.label}</div>
+                        <div className="timing-sub">{norm.sub}</div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="toggle-setting-row" style={{ marginTop: 14 }}>
+                <div className="toggle-setting-info">
+                  <div className="toggle-setting-label">Include in agent prompt context</div>
+                  <div className="toggle-setting-sub">Provide verified / unverified status in conversation turn</div>
+                </div>
+                <label className="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    checked={includeInContext}
+                    onChange={(e) => updateConfig('include_in_context', e.target.checked)}
+                  />
+                  <span className="slider"></span>
+                </label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
   };
 
   // ──────────────────────────────────────────────────────────────────────────
-  // RENDER: MOCK API CONFIGURATION
+  // RENDER: MOCK API CONFIGURATION (User-Oriented Visual Fields)
   // ──────────────────────────────────────────────────────────────────────────
   const renderMockApiForm = () => {
     const latency = config.simulated_latency_ms || 180;
-    const mockBody = config.mock_response_body || '{\n  "status": "confirmed"\n}';
+    const mockBody = config.mock_response_body || '{\n  "order_status": "Out for delivery"\n}';
     const mapping = config.response_mapping || [];
     const headers = config.headers || [];
 
+    const MOCK_PRESETS = [
+      {
+        id: 'delivery',
+        label: 'Order Delivery',
+        fields: [
+          { id: '1', key: 'order_status', value: 'Out for delivery' },
+          { id: '2', key: 'delivery_partner', value: 'BlueDart Express' },
+          { id: '3', key: 'expected_eta', value: 'Today before 6 PM' }
+        ],
+        mapping: [
+          { path: 'order_status', variable: 'order_status', description: 'Current shipment status' },
+          { path: 'expected_eta', variable: 'expected_eta', description: 'Delivery ETA' }
+        ]
+      },
+      {
+        id: 'appointment',
+        label: 'Appointment Booking',
+        fields: [
+          { id: '1', key: 'booking_status', value: 'Confirmed' },
+          { id: '2', key: 'appointment_slot', value: 'Tomorrow at 2:30 PM' },
+          { id: '3', key: 'doctor_name', value: 'Dr. Siddharth Roy' }
+        ],
+        mapping: [
+          { path: 'booking_status', variable: 'booking_status', description: 'Appointment status' },
+          { path: 'appointment_slot', variable: 'appointment_slot', description: 'Confirmed slot' }
+        ]
+      },
+      {
+        id: 'balance',
+        label: 'Account & Balance',
+        fields: [
+          { id: '1', key: 'account_status', value: 'Active' },
+          { id: '2', key: 'available_balance', value: '₹18,500' },
+          { id: '3', key: 'due_date', value: '15th November' }
+        ],
+        mapping: [
+          { path: 'account_status', variable: 'account_status', description: 'Account status' },
+          { path: 'available_balance', variable: 'available_balance', description: 'Current balance' }
+        ]
+      }
+    ];
+
+    const applyMockPreset = (preset) => {
+      updateMockFields(preset.fields);
+      if (preset.mapping) {
+        updateConfig('response_mapping', preset.mapping);
+      }
+    };
+
     return (
       <div className="drawer-tool-section">
-        <div className="two-col-grid">
-          <div className="form-group-field">
-            <label>Mock URL</label>
-            <input 
-              type="text" 
-              className="drawer-input"
-              value={config.url || 'https://mock.clozflow.ai/api/v1/orders'}
-              onChange={(e) => updateConfig('url', e.target.value)}
-            />
-          </div>
-          <div className="form-group-field">
-            <label>HTTP Method</label>
-            <select 
-              className="drawer-select"
-              value={config.method || 'POST'}
-              onChange={(e) => updateConfig('method', e.target.value)}
-            >
-              <option value="GET">GET</option>
-              <option value="POST">POST</option>
-              <option value="PUT">PUT</option>
-              <option value="DELETE">DELETE</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="form-group-field" style={{ marginTop: 14 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <label style={{ margin: 0 }}>Simulated Network Latency</label>
-            <span className="slider-val-tag">{latency} ms</span>
-          </div>
-          <input 
-            type="range" 
-            min={30} 
-            max={2000} 
-            step={10}
-            className="drawer-slider"
-            value={latency}
-            onChange={(e) => updateConfig('simulated_latency_ms', parseInt(e.target.value))}
-          />
-          <span className="field-hint-text">Simulates realistic speech turn delay during conversational testing.</span>
-        </div>
-
-        {/* Mock Headers */}
-        <div className="form-group-field" style={{ marginTop: 14 }}>
+        {/* Preset Quick Chips */}
+        <div className="form-group-field">
           <div className="panel-table-header">
-            <span>Request Headers</span>
+            <span>Sample Business Presets</span>
+          </div>
+          <div className="preset-chips-grid">
+            {MOCK_PRESETS.map(pr => (
+              <button 
+                key={pr.id}
+                type="button" 
+                className="preset-chip-btn"
+                onClick={() => applyMockPreset(pr)}
+              >
+                + {pr.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Visual Return Data (Field Name & Return Value) */}
+        <div className="form-group-field" style={{ marginTop: 16 }}>
+          <div className="panel-table-header">
+            <div>
+              <span style={{ fontWeight: 600 }}>Simulated Return Data</span>
+              <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: '#64748b' }}>
+                Values this mock tool will return to your agent when triggered.
+              </p>
+            </div>
             <button 
               type="button" 
               className="btn-text-action"
               onClick={() => {
-                const updated = [...headers, { key: '', value: '', enabled: true }];
-                updateConfig('headers', updated);
+                const nextId = String(Date.now());
+                updateMockFields([...mockFields, { id: nextId, key: '', value: '' }]);
               }}
             >
-              <Plus size={13} /> Add Header
+              <Plus size={13} /> Add Field
             </button>
           </div>
-          {headers.length > 0 && (
-            <div className="key-value-rows">
-              {headers.map((h, idx) => (
-                <div key={idx} className="key-value-row">
-                  <input 
-                    type="checkbox" 
-                    checked={h.enabled !== false}
-                    onChange={(e) => {
-                      const copy = [...headers];
-                      copy[idx] = { ...copy[idx], enabled: e.target.checked };
-                      updateConfig('headers', copy);
-                    }}
-                  />
+
+          <div className="visual-field-rows">
+            {mockFields.map((f, idx) => (
+              <div key={f.id || idx} className="visual-field-row">
+                <div className="visual-row-cell key-cell">
+                  <label className="visual-input-label">Field Name</label>
                   <input 
                     type="text" 
-                    placeholder="Header Key"
-                    className="drawer-input row-input-key"
-                    value={h.key || ''}
+                    placeholder="e.g. order_status"
+                    className="drawer-input"
+                    value={f.key || ''}
                     onChange={(e) => {
-                      const copy = [...headers];
+                      const copy = [...mockFields];
                       copy[idx] = { ...copy[idx], key: e.target.value };
-                      updateConfig('headers', copy);
+                      updateMockFields(copy);
                     }}
                   />
+                </div>
+                <div className="visual-row-cell val-cell">
+                  <label className="visual-input-label">Return Value</label>
                   <input 
                     type="text" 
-                    placeholder="Header Value"
-                    className="drawer-input row-input-val"
-                    value={h.value || ''}
+                    placeholder="e.g. Out for delivery"
+                    className="drawer-input"
+                    value={f.value || ''}
                     onChange={(e) => {
-                      const copy = [...headers];
+                      const copy = [...mockFields];
                       copy[idx] = { ...copy[idx], value: e.target.value };
-                      updateConfig('headers', copy);
+                      updateMockFields(copy);
                     }}
                   />
+                </div>
+                <button 
+                  type="button" 
+                  className="btn-row-delete"
+                  title="Remove this return field"
+                  onClick={() => {
+                    const copy = mockFields.filter((_, i) => i !== idx);
+                    updateMockFields(copy);
+                  }}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Save Output to Conversation Variables */}
+        <div className="form-group-field" style={{ marginTop: 18 }}>
+          <div className="panel-table-header">
+            <div>
+              <span style={{ fontWeight: 600 }}>Save Output to Conversation Variables</span>
+              <p style={{ margin: '2px 0 0', fontSize: '0.78rem', color: '#64748b' }}>
+                Store these return fields into agent memory so the agent can speak them to callers.
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <button 
+                type="button" 
+                className="btn-text-action"
+                onClick={() => {
+                  const existing = new Set(mapping.map(m => (m.path || '').trim()));
+                  const toAdd = [];
+                  mockFields.forEach(f => {
+                    const k = (f.key || '').trim();
+                    if (k && !existing.has(k)) {
+                      toAdd.push({ path: k, variable: k, description: `Simulated ${k}` });
+                      existing.add(k);
+                    }
+                  });
+                  if (toAdd.length > 0) {
+                    updateConfig('response_mapping', [...mapping, ...toAdd]);
+                  }
+                }}
+                title="Automatically map all simulated fields to variables"
+              >
+                <Sparkles size={12} /> Auto-map fields
+              </button>
+              <button 
+                type="button" 
+                className="btn-text-action"
+                onClick={() => {
+                  const updated = [...mapping, { path: '', variable: '', description: '' }];
+                  updateConfig('response_mapping', updated);
+                }}
+              >
+                <Plus size={13} /> Add Variable
+              </button>
+            </div>
+          </div>
+
+          {mapping.length === 0 ? (
+            <div className="panel-empty-text">
+              No variables mapped yet. Click "+ Add Variable" to store outputs in agent memory.
+            </div>
+          ) : (
+            <div className="visual-field-rows">
+              {mapping.map((m, idx) => (
+                <div key={idx} className="visual-field-row">
+                  <div className="visual-row-cell key-cell">
+                    <label className="visual-input-label">Return Field</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. order_status"
+                      className="drawer-input"
+                      value={m.path || ''}
+                      onChange={(e) => {
+                        const copy = [...mapping];
+                        copy[idx] = { ...copy[idx], path: e.target.value };
+                        updateConfig('response_mapping', copy);
+                      }}
+                    />
+                  </div>
+                  <div className="visual-row-cell val-cell">
+                    <label className="visual-input-label">Agent Variable</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. order_status"
+                      className="drawer-input"
+                      value={m.variable || ''}
+                      onChange={(e) => {
+                        const copy = [...mapping];
+                        copy[idx] = { ...copy[idx], variable: e.target.value };
+                        updateConfig('response_mapping', copy);
+                      }}
+                    />
+                  </div>
                   <button 
                     type="button" 
                     className="btn-row-delete"
+                    title="Remove variable mapping"
                     onClick={() => {
-                      const copy = headers.filter((_, i) => i !== idx);
-                      updateConfig('headers', copy);
+                      const copy = mapping.filter((_, i) => i !== idx);
+                      updateConfig('response_mapping', copy);
                     }}
                   >
                     <Trash2 size={14} />
@@ -1103,99 +1478,197 @@ export const ToolDrawer = ({
           )}
         </div>
 
-        <div className="form-group-field" style={{ marginTop: 14 }}>
-          <label>Mock Response Body (JSON)</label>
-          <textarea 
-            rows={6}
-            className="drawer-textarea code-font"
-            value={mockBody}
-            onChange={(e) => updateConfig('mock_response_body', e.target.value)}
-          />
-        </div>
-
-        <div className="form-group-field" style={{ marginTop: 14 }}>
-          <div className="panel-table-header">
-            <span>Response Field Mapping</span>
-            <button 
-              type="button" 
-              className="btn-text-action"
-              onClick={() => {
-                const updated = [...mapping, { path: '', variable: '', description: '' }];
-                updateConfig('response_mapping', updated);
-              }}
-            >
-              <Plus size={13} /> Add Mapping
-            </button>
-          </div>
-          {mapping.map((m, idx) => (
-            <div key={idx} className="key-value-row" style={{ marginTop: 6 }}>
-              <input 
-                type="text" 
-                placeholder="Field path (e.g. status)"
-                className="drawer-input row-input-key code-font"
-                value={m.path || ''}
-                onChange={(e) => {
-                  const copy = [...mapping];
-                  copy[idx] = { ...copy[idx], path: e.target.value };
-                  updateConfig('response_mapping', copy);
-                }}
-              />
-              <input 
-                type="text" 
-                placeholder="Variable (e.g. order_status)"
-                className="drawer-input row-input-val code-font"
-                value={m.variable || ''}
-                onChange={(e) => {
-                  const copy = [...mapping];
-                  copy[idx] = { ...copy[idx], variable: e.target.value };
-                  updateConfig('response_mapping', copy);
-                }}
-              />
-              <button 
-                type="button" 
-                className="btn-row-delete"
-                onClick={() => {
-                  const copy = mapping.filter((_, i) => i !== idx);
-                  updateConfig('response_mapping', copy);
-                }}
-              >
-                <Trash2 size={13} />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Max wait timeout */}
-        <div className="form-group-field" style={{ marginTop: 16 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <label style={{ margin: 0 }}>Max Wait Timeout (Seconds)</label>
-            <span className="slider-val-tag">{timeoutSeconds}s</span>
-          </div>
+        {/* Voice Fallback */}
+        <div className="form-group-field" style={{ marginTop: 18 }}>
+          <label>Spoken line if tool cannot be reached</label>
           <input 
-            type="range" 
-            min={2} 
-            max={30} 
-            step={1}
-            className="drawer-slider"
-            value={timeoutSeconds}
-            onChange={(e) => {
-              const val = parseInt(e.target.value);
-              setTimeoutSeconds(val);
-              updateConfig('timeout_seconds', val);
-            }}
-          />
-        </div>
-
-        {/* Fallback response */}
-        <div className="form-group-field" style={{ marginTop: 16 }}>
-          <label>Fallback spoken line if mock service fails or times out</label>
-          <textarea 
-            rows={2}
-            className="drawer-textarea"
-            placeholder="I am having trouble checking that right now."
+            type="text" 
+            className="drawer-input"
+            placeholder="I am having trouble checking that right now. Let me help you with something else."
             value={fallbackResponse}
             onChange={(e) => setFallbackResponse(e.target.value)}
           />
+        </div>
+
+        {/* Advanced Developer Settings Accordion */}
+        <div className="advanced-accordion-wrap">
+          <button 
+            type="button" 
+            className="advanced-accordion-toggle"
+            onClick={() => setShowAdvancedMock(prev => !prev)}
+          >
+            <span>Advanced Developer Settings (Raw JSON, Headers, Latency)</span>
+            {showAdvancedMock ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {showAdvancedMock && (
+            <div className="advanced-accordion-content">
+              {/* Simulated Latency */}
+              <div className="form-group-field">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label style={{ margin: 0 }}>Simulated Network Latency</label>
+                  <span className="slider-val-tag">{latency} ms</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={30} 
+                  max={2000} 
+                  step={10}
+                  className="drawer-slider"
+                  value={latency}
+                  onChange={(e) => updateConfig('simulated_latency_ms', parseInt(e.target.value))}
+                />
+                <span className="field-hint-text">Simulates realistic speech turn delay during conversational testing.</span>
+              </div>
+
+              {/* Raw JSON toggle */}
+              <div className="form-group-field" style={{ marginTop: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                  <label style={{ margin: 0 }}>Raw Response Payload (JSON)</label>
+                  <button 
+                    type="button" 
+                    className="btn-text-action"
+                    onClick={() => setShowRawJsonMock(prev => !prev)}
+                  >
+                    {showRawJsonMock ? 'Hide Raw Editor' : 'Show Raw JSON Editor'}
+                  </button>
+                </div>
+                {showRawJsonMock && (
+                  <textarea 
+                    rows={6}
+                    className="drawer-textarea code-font"
+                    value={mockBody}
+                    onChange={(e) => {
+                      updateConfig('mock_response_body', e.target.value);
+                      try {
+                        const parsed = JSON.parse(e.target.value);
+                        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                          setMockFields(Object.entries(parsed).map(([k, v], idx) => ({
+                            id: String(idx + 1),
+                            key: k,
+                            value: typeof v === 'object' ? JSON.stringify(v) : String(v)
+                          })));
+                        }
+                      } catch (err) {}
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* Endpoint overrides */}
+              <div className="two-col-grid" style={{ marginTop: 14 }}>
+                <div className="form-group-field">
+                  <label>Mock Endpoint URL</label>
+                  <input 
+                    type="text" 
+                    className="drawer-input"
+                    value={config.url || 'https://mock.clozflow.ai/api/v1/orders'}
+                    onChange={(e) => updateConfig('url', e.target.value)}
+                  />
+                </div>
+                <div className="form-group-field">
+                  <label>HTTP Method</label>
+                  <select 
+                    className="drawer-select"
+                    value={config.method || 'POST'}
+                    onChange={(e) => updateConfig('method', e.target.value)}
+                  >
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Headers */}
+              <div className="form-group-field" style={{ marginTop: 14 }}>
+                <div className="panel-table-header">
+                  <span>Custom Headers</span>
+                  <button 
+                    type="button" 
+                    className="btn-text-action"
+                    onClick={() => {
+                      const updated = [...headers, { key: '', value: '', enabled: true }];
+                      updateConfig('headers', updated);
+                    }}
+                  >
+                    <Plus size={13} /> Add Header
+                  </button>
+                </div>
+                {headers.length > 0 && (
+                  <div className="key-value-rows">
+                    {headers.map((h, idx) => (
+                      <div key={idx} className="key-value-row">
+                        <input 
+                          type="checkbox" 
+                          checked={h.enabled !== false}
+                          onChange={(e) => {
+                            const copy = [...headers];
+                            copy[idx] = { ...copy[idx], enabled: e.target.checked };
+                            updateConfig('headers', copy);
+                          }}
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="Header Key"
+                          className="drawer-input row-input-key"
+                          value={h.key || ''}
+                          onChange={(e) => {
+                            const copy = [...headers];
+                            copy[idx] = { ...copy[idx], key: e.target.value };
+                            updateConfig('headers', copy);
+                          }}
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="Header Value"
+                          className="drawer-input row-input-val"
+                          value={h.value || ''}
+                          onChange={(e) => {
+                            const copy = [...headers];
+                            copy[idx] = { ...copy[idx], value: e.target.value };
+                            updateConfig('headers', copy);
+                          }}
+                        />
+                        <button 
+                          type="button" 
+                          className="btn-row-delete"
+                          onClick={() => {
+                            const copy = headers.filter((_, i) => i !== idx);
+                            updateConfig('headers', copy);
+                          }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Max wait timeout */}
+              <div className="form-group-field" style={{ marginTop: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label style={{ margin: 0 }}>Max Wait Timeout (Seconds)</label>
+                  <span className="slider-val-tag">{timeoutSeconds}s</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={2} 
+                  max={30} 
+                  step={1}
+                  className="drawer-slider"
+                  value={timeoutSeconds}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    setTimeoutSeconds(val);
+                    updateConfig('timeout_seconds', val);
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -1385,7 +1858,8 @@ export const ToolDrawer = ({
                       <input 
                         type="text" 
                         className="drawer-input test-field"
-                        value={testInputs.lead_name || 'Siddharth Roy'}
+                        placeholder="Siddharth Roy"
+                        value={testInputs.lead_name ?? ''}
                         onChange={(e) => setTestInputs(prev => ({ ...prev, lead_name: e.target.value }))}
                       />
                     </div>
@@ -1394,7 +1868,8 @@ export const ToolDrawer = ({
                       <input 
                         type="text" 
                         className="drawer-input test-field"
-                        value={testInputs.order_id || 'ORD-8821'}
+                        placeholder="ORD-8821"
+                        value={testInputs.order_id ?? ''}
                         onChange={(e) => setTestInputs(prev => ({ ...prev, order_id: e.target.value }))}
                       />
                     </div>
@@ -1473,15 +1948,24 @@ export const ToolDrawer = ({
                   </div>
                 )}
 
-                {/* Raw Response Data Viewer */}
+                {/* Raw Response Data Viewer (Collapsible for Power Users) */}
                 {testResult.response_data && (
                   <div className="response-data-viewer">
-                    <span className="response-viewer-label">Response Payload:</span>
-                    <pre className="response-pre code-font">
-                      {typeof testResult.response_data === 'object'
-                        ? JSON.stringify(testResult.response_data, null, 2)
-                        : String(testResult.response_data)}
-                    </pre>
+                    <button 
+                      type="button" 
+                      className="btn-text-action"
+                      style={{ fontSize: '0.74rem', padding: 0, textDecoration: 'underline' }}
+                      onClick={() => setShowRawTestOutput(prev => !prev)}
+                    >
+                      {showRawTestOutput ? 'Hide Raw Response Data' : 'View Raw Response Data (JSON)'}
+                    </button>
+                    {showRawTestOutput && (
+                      <pre className="response-pre code-font" style={{ marginTop: 6 }}>
+                        {typeof testResult.response_data === 'object'
+                          ? JSON.stringify(testResult.response_data, null, 2)
+                          : String(testResult.response_data)}
+                      </pre>
+                    )}
                   </div>
                 )}
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   X, Globe, CheckCircle2, Database, Sliders, 
   Wrench, ArrowRight, ShieldCheck, Cpu, Code2, Sparkles
@@ -16,6 +16,16 @@ const ICON_MAP = {
 
 
 export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -25,12 +35,12 @@ export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
         <div className="tool-modal-header">
           <div>
             <div className="tool-modal-badge">
-              <Sparkles size={13} />
-              <span>Agent Action Capabilities</span>
+              <Sparkles size={12} />
+              <span>Tool Library</span>
             </div>
             <h2 className="tool-modal-title">Add a Tool</h2>
             <p className="tool-modal-subtitle">
-              Choose a tool module to equip your agent with real-time external actions, data validation, and database verification.
+              Equip your agent with real-time external actions, input format verification, and customer record matching.
             </p>
           </div>
           <button 
@@ -43,23 +53,25 @@ export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
           </button>
         </div>
 
-        {/* 5 Cards Grid */}
+        {/* Clean Minimalist Cards Grid */}
         <div className="tool-cards-grid">
           {TOOL_TEMPLATES.map((tmpl) => {
             const Icon = tmpl.icon || ICON_MAP[tmpl.type] || Globe;
             return (
               <div 
                 key={tmpl.type}
-                className={`tool-selection-card card-${tmpl.badgeColor}`}
+                className="tool-selection-card"
                 onClick={() => onSelectToolType(tmpl)}
               >
                 <div className="tool-card-top">
-                  <div className={`tool-card-icon-wrap icon-${tmpl.badgeColor}`}>
-                    <Icon size={22} />
+                  <div className="tool-card-icon-wrap">
+                    <Icon size={19} />
                   </div>
-                  <span className={`tool-badge-pill pill-${tmpl.badgeColor}`}>
-                    {tmpl.badge}
-                  </span>
+                  {tmpl.badge && (
+                    <span className="tool-card-micro-badge">
+                      {tmpl.badge}
+                    </span>
+                  )}
                 </div>
 
                 <div className="tool-card-text">
@@ -68,18 +80,10 @@ export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
                   <p className="tool-card-desc">{tmpl.description}</p>
                 </div>
 
-                <div className="tool-card-tags">
-                  {tmpl.tags.map((tag) => (
-                    <span key={tag} className="tool-tag-chip">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
                 <div className="tool-card-footer">
                   <span className="tool-card-select-label">Configure Tool</span>
                   <div className="tool-card-arrow">
-                    <ArrowRight size={14} />
+                    <ArrowRight size={13} />
                   </div>
                 </div>
               </div>

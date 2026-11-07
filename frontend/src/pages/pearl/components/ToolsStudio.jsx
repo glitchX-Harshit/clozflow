@@ -51,13 +51,22 @@ export const ToolsStudio = ({
   };
 
   const getMethodBadge = (tool) => {
-    if (tool.tool_type === 'api_tool' || tool.tool_type === 'mock_api') {
+    if (tool.tool_type === 'api_tool') {
       const m = (tool.config?.method || 'GET').toUpperCase();
       return <span className={`badge-method method-${m.toLowerCase()}`}>{m}</span>;
     }
+    if (tool.tool_type === 'mock_api') {
+      return <span className="badge-method method-mock">MOCK</span>;
+    }
     if (tool.tool_type === 'data_validator') {
-      const preset = tool.config?.preset || 'regex';
-      return <span className="badge-method method-validator">{preset.replace('_', ' ').toUpperCase()}</span>;
+      const preset = tool.config?.preset || 'validator';
+      const cleanLabel = preset === 'indian_phone' ? 'PHONE' 
+        : preset === 'pan_card' ? 'PAN' 
+        : preset === 'pincode' ? 'PINCODE' 
+        : preset === 'email' ? 'EMAIL' 
+        : preset === 'aadhaar_last4' ? 'AADHAAR' 
+        : 'VALIDATOR';
+      return <span className="badge-method method-validator">{cleanLabel}</span>;
     }
     if (tool.tool_type === 'data_verifier') {
       return <span className="badge-method method-verifier">VERIFIER</span>;
@@ -74,6 +83,30 @@ export const ToolsStudio = ({
       case 'call_end': return 'Call End';
       default: return 'In-Call';
     }
+  };
+
+  const getToolFriendlySummary = (tool) => {
+    if (tool.description && tool.description.trim()) return tool.description;
+    if (tool.tool_type === 'api_tool') {
+      return tool.config?.url ? `Connects to ${tool.config.method || 'POST'} ${tool.config.url}` : 'Connects to an external REST endpoint';
+    }
+    if (tool.tool_type === 'mock_api') return 'Simulated mock response with visual return fields';
+    if (tool.tool_type === 'data_validator') {
+      const preset = tool.config?.preset || 'indian_phone';
+      const names = {
+        indian_phone: 'Indian Phone Number',
+        email: 'Email Address',
+        pincode: '6-digit PIN Code',
+        pan_card: 'PAN Card Number',
+        aadhaar_last4: 'Aadhaar Last 4'
+      };
+      return `Validates format for ${names[preset] || 'input data'}`;
+    }
+    if (tool.tool_type === 'data_verifier') {
+      return `Matches caller response against record on file (${tool.config?.reference_source || 'lead.phone'})`;
+    }
+    if (tool.tool_type === 'mcp') return 'Model Context Protocol integration';
+    return 'Custom agent tool';
   };
 
   return (
@@ -145,7 +178,7 @@ export const ToolsStudio = ({
                         </span>
                       </div>
                       <p className="tool-row-desc">
-                        {t.description || (t.config?.url ? t.config.url : 'No description provided')}
+                        {getToolFriendlySummary(t)}
                       </p>
                     </div>
                   </div>

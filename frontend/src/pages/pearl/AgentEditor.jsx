@@ -105,9 +105,25 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   const [showAddToolModal, setShowAddToolModal] = useState(false);
   const [selectedDrawerTool, setSelectedDrawerTool] = useState(null);
   const [isToolDrawerOpen, setIsToolDrawerOpen] = useState(false);
+  const [isSageOpen, setIsSageOpen] = useState(false);
+
+  const toggleSage = useCallback(() => {
+    setIsSageOpen(prev => {
+      const next = !prev;
+      if (next) {
+        setIsToolDrawerOpen(false);
+        setSelectedDrawerTool(null);
+        setShowAddToolModal(false);
+        setShowTestingPanel(false);
+      }
+      return next;
+    });
+  }, []);
 
   const handleSelectToolType = (template) => {
     setShowAddToolModal(false);
+    setIsSageOpen(false);
+    setShowTestingPanel(false);
     setSelectedDrawerTool({
       id: null,
       name: template.name,
@@ -122,6 +138,8 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   };
 
   const handleEditTool = (tool) => {
+    setIsSageOpen(false);
+    setShowTestingPanel(false);
     setSelectedDrawerTool(tool);
     setIsToolDrawerOpen(true);
   };
@@ -276,13 +294,6 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   // Sage · AI Agent Architect Persistent State & Multi-Session Configuration
   const getSageStorageKey = useCallback((id) => `clozflow_sage_chat_${id || 'draft'}`, []);
   const getSageSessionsKey = useCallback((id) => `clozflow_sage_sessions_${id || 'draft'}`, []);
-
-  const [isSageOpen, setIsSageOpen] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth > 1366;
-    }
-    return true;
-  });
 
   const [sageSessions, setSageSessions] = useState(() => {
     try {
@@ -800,6 +811,10 @@ Custom edits can still be made. Do you want to proceed?`
   };
 
   const handleOpenTesting = async () => {
+    setIsSageOpen(false);
+    setIsToolDrawerOpen(false);
+    setSelectedDrawerTool(null);
+    setShowAddToolModal(false);
     let id = currentId;
     if (!id) {
       id = await handleSaveAgent();
@@ -1615,7 +1630,11 @@ Custom edits can still be made. Do you want to proceed?`
     <ToolsStudio 
       tools={customTools}
       systemTools={systemTools}
-      onAddToolClick={() => setShowAddToolModal(true)}
+      onAddToolClick={() => {
+        setIsSageOpen(false);
+        setShowTestingPanel(false);
+        setShowAddToolModal(true);
+      }}
       onEditTool={handleEditTool}
       onDeleteTool={handleDeleteTool}
       onToggleToolActive={handleToggleToolActive}
@@ -1624,7 +1643,7 @@ Custom edits can still be made. Do you want to proceed?`
         setIsDirty(true);
       }}
       onOpenDocs={() => {
-        setTemplateNotification('Tools conform to OpenAI function schema standards with real-time argument validation.');
+        setTemplateNotification('Tools allow your agent to fetch live data, verify caller inputs, and update your CRM directly during phone conversations.');
         setTimeout(() => setTemplateNotification(null), 3500);
       }}
     />
@@ -2765,7 +2784,7 @@ Custom edits can still be made. Do you want to proceed?`
           <button 
             type="button" 
             className={`btn-sage-header-toggle ${isSageOpen ? 'active' : ''}`}
-            onClick={() => setIsSageOpen(prev => !prev)}
+            onClick={toggleSage}
             title="Toggle Sage · AI Agent Architect Drawer"
           >
             <Sparkles size={13} />
