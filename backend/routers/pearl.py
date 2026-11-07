@@ -39,9 +39,12 @@ from models_pearl import (
 
     PearlAgent, PearlCall, PearlEvent, PearlConversation, PearlMessage,
 
-    PearlTestSession, PearlTestMessage, PearlCampaign, PearlCampaignRecipient
+    PearlTestSession, PearlTestMessage, PearlCampaign, PearlCampaignRecipient,
+
+    AgentTool
 
 )
+
 
 from services.pearl.lead_ingestion import (
 
@@ -194,6 +197,24 @@ class UpdateAgentRequest(BaseModel):
 
 
 
+def tool_to_dict(tool: AgentTool) -> dict:
+    """Serialize an AgentTool to dict."""
+    return {
+        "id": tool.id,
+        "agent_id": tool.agent_id,
+        "name": tool.name,
+        "tool_type": tool.tool_type,
+        "description": tool.description,
+        "run_timing": tool.run_timing or "conversation",
+        "timeout_seconds": tool.timeout_seconds or 10,
+        "fallback_response": tool.fallback_response,
+        "config": tool.config or {},
+        "is_active": bool(tool.is_active) if tool.is_active is not None else True,
+        "created_at": tool.created_at.isoformat() if tool.created_at else None,
+        "updated_at": tool.updated_at.isoformat() if tool.updated_at else None,
+    }
+
+
 def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
 
     """Serialize a PearlAgent to dict for API response."""
@@ -239,6 +260,9 @@ def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
         "settings": (agent.voice_config or {}).get("settings", {}),
 
         "tools_config": (agent.voice_config or {}).get("tools_config", []),
+
+        "tools": [tool_to_dict(t) for t in (getattr(agent, "tools", None) or [])],
+
 
         "version": agent.version or 1,
 
@@ -5606,6 +5630,240 @@ async def sage_feedback_endpoint(
     user_str = f"id={current_user.id}" if current_user else "anonymous"
     print(f"[Sage Feedback] user={user_str} agent_id={req.agent_id} category={req.category} notes={req.notes}")
     return {"status": "ok", "message": "Feedback received by Clozflow engineering."}
+
+
+# ── Agent Tools Endpoints (API Tool, Validator, Verifier, Mock, MCP) ─────────
+
+class CreateAgentToolRequest(BaseModel):
+    name: str
+    tool_type: str  # api_tool | data_validator | data_verifier | mock_api | mcp
+    description: Optional[str] = None
+    run_timing: Optional[str] = "conversation"  # call_start | conversation | call_end
+    timeout_seconds: Optional[int] = 10
+    fallback_response: Optional[str] = None
+    config: Optional[dict] = None
+    is_active: Optional[bool] = True
+
+
+class UpdateAgentToolRequest(BaseModel):
+    name: Optional[str] = None
+    tool_type: Optional[str] = None
+    description: Optional[str] = None
+    run_timing: Optional[str] = None
+    timeout_seconds: Optional[int] = None
+    fallback_response: Optional[str] = None
+    config: Optional[dict] = None
+    is_active: Optional[bool] = None
+
+
+class TestAgentToolRequest(BaseModel):
+    tool_id: Optional[str] = None
+    tool_type: Optional[str] = None
+    config: Optional[dict] = None
+    test_input: Optional[dict] = None
+    timeout_seconds: Optional[int] = 10
+
+
+class ParseCurlRequest(BaseModel):
+    curl_command: str
+
+
+@router.get("/agents/{agent_id}/tools")
+def list_agent_tools(
+    agent_id: str,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """List all tools configured for a Pearl agent."""
+    agent = db.query(PearlAgent).filter(PearlAgent.id == agent_id).first()
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+
+    tools = db.query(AgentTool).filter(AgentTool.agent_id == agent_id).order_by(AgentTool.created_at.asc()).all()
+    return [tool_to_dict(t) for t in tools]
+
+
+@router.post("/agents/{agent_id}/tools")
+def create_agent_tool(
+    agent_id: str,
+    req: CreateAgentToolRequest,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """Create a new tool for a Pearl agent."""
+    agent = db.query(PearlAgent).filter(PearlAgent.id == agent_id).first()
+    if not agent:
+        raise HTTPException(404, "Agent not found")
+
+    valid_types = ("api_tool", "data_validator", "data_verifier", "mock_api", "mcp")
+    if req.tool_type not in valid_types:
+        raise HTTPException(400, f"Invalid tool_type '{req.tool_type}'. Must be one of: {', '.join(valid_types)}")
+
+    tool = AgentTool(
+        agent_id=agent_id,
+        name=req.name.strip(),
+        tool_type=req.tool_type,
+        description=req.description,
+        run_timing=req.run_timing or "conversation",
+        timeout_seconds=req.timeout_seconds or 10,
+        fallback_response=req.fallback_response,
+        config=req.config or {},
+        is_active=True if req.is_active is None else req.is_active
+    )
+    db.add(tool)
+    db.commit()
+    db.refresh(tool)
+
+    return tool_to_dict(tool)
+
+
+@router.get("/agents/{agent_id}/tools/{tool_id}")
+def get_agent_tool(
+    agent_id: str,
+    tool_id: str,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """Retrieve details of a specific tool."""
+    tool = db.query(AgentTool).filter(
+        AgentTool.id == tool_id,
+        AgentTool.agent_id == agent_id
+    ).first()
+    if not tool:
+        raise HTTPException(404, "Tool not found")
+
+    return tool_to_dict(tool)
+
+
+@router.put("/agents/{agent_id}/tools/{tool_id}")
+def update_agent_tool(
+    agent_id: str,
+    tool_id: str,
+    req: UpdateAgentToolRequest,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """Update configuration of an existing tool."""
+    tool = db.query(AgentTool).filter(
+        AgentTool.id == tool_id,
+        AgentTool.agent_id == agent_id
+    ).first()
+    if not tool:
+        raise HTTPException(404, "Tool not found")
+
+    if req.name is not None:
+        tool.name = req.name.strip()
+    if req.tool_type is not None:
+        tool.tool_type = req.tool_type
+    if req.description is not None:
+        tool.description = req.description
+    if req.run_timing is not None:
+        tool.run_timing = req.run_timing
+    if req.timeout_seconds is not None:
+        tool.timeout_seconds = req.timeout_seconds
+    if req.fallback_response is not None:
+        tool.fallback_response = req.fallback_response
+    if req.config is not None:
+        tool.config = req.config
+    if req.is_active is not None:
+        tool.is_active = req.is_active
+
+    tool.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(tool)
+
+    return tool_to_dict(tool)
+
+
+@router.patch("/agents/{agent_id}/tools/{tool_id}")
+def patch_agent_tool(
+    agent_id: str,
+    tool_id: str,
+    req: UpdateAgentToolRequest,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """Partially update tool attributes, e.g. toggle is_active status."""
+    return update_agent_tool(agent_id, tool_id, req, db, current_user)
+
+
+@router.delete("/agents/{agent_id}/tools/{tool_id}")
+def delete_agent_tool(
+    agent_id: str,
+    tool_id: str,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """Remove a tool from an agent."""
+    tool = db.query(AgentTool).filter(
+        AgentTool.id == tool_id,
+        AgentTool.agent_id == agent_id
+    ).first()
+    if not tool:
+        raise HTTPException(404, "Tool not found")
+
+    db.delete(tool)
+    db.commit()
+
+    return {"ok": True, "deleted_id": tool_id}
+
+
+@router.post("/tools/test")
+@router.post("/agents/{agent_id}/tools/test")
+async def test_agent_tool_endpoint(
+    req: TestAgentToolRequest,
+    agent_id: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_user)
+):
+    """
+    Live test tool execution endpoint.
+    Executes real HTTP requests for api_tool, regex format checking for data_validator,
+    database comparison for data_verifier, simulated responses for mock_api, and MCP checks.
+    """
+    from services.pearl.tool_engine import run_tool_test
+
+    target_type = req.tool_type
+    target_config = req.config or {}
+    timeout = req.timeout_seconds or 10
+
+    # If tool_id provided, merge with stored DB tool if not explicitly overridden
+    if req.tool_id:
+        tool = db.query(AgentTool).filter(
+            AgentTool.id == req.tool_id,
+            AgentTool.agent_id == agent_id
+        ).first()
+        if tool:
+            if not target_type:
+                target_type = tool.tool_type
+            if not target_config:
+                target_config = tool.config or {}
+            if not req.timeout_seconds:
+                timeout = tool.timeout_seconds or 10
+
+    if not target_type:
+        raise HTTPException(400, "tool_type is required for testing")
+
+    result = await run_tool_test(
+        tool_type=target_type,
+        config=target_config,
+        test_input=req.test_input or {},
+        timeout_seconds=timeout
+    )
+    return result
+
+
+@router.post("/tools/parse-curl")
+@router.post("/agents/{agent_id}/tools/parse-curl")
+def parse_curl_endpoint(
+    req: ParseCurlRequest,
+    agent_id: Optional[str] = None
+):
+    """Parse raw cURL command into structured API tool configuration."""
+    from services.pearl.tool_engine import parse_curl_command
+    parsed = parse_curl_command(req.curl_command or "")
+    return parsed
+
 
 
 

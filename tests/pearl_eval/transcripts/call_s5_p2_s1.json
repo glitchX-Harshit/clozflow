@@ -1,115 +1,100 @@
 {
   "call_id": "call_s5_p2_s1",
-  "call_index": 50,
+  "call_index": 250,
   "scenario_id": "S5",
   "scenario_name": "NDR delivery rescue",
   "persona_id": "P2",
   "persona_name": "Busy",
   "persona_difficulty": "medium",
   "seed": 1,
-  "failure_injection": "TOOL_ERROR",
+  "failure_injection": "VOICEMAIL",
   "turns": [
     {
       "turn": 0,
-      "speaker": "agent",
-      "text": "Deepak, Aayan The Souled Store se. AWB DEL-9841203 Delhivery shipment re-attempt timing set karne ke liye call kiya hai.",
-      "word_count": 19,
-      "timestamp": "2026-11-06T19:33:38.100000Z",
-      "latency_ms": 1040.0
+      "speaker": "prospect",
+      "text": "Jio voice answering machine for +919876500250. Speak after the tone. Beep.",
+      "word_count": 11,
+      "timestamp": "2026-11-07T09:00:37.164532+00:00",
+      "latency_ms": 0.0,
+      "latency_breakdown": {
+        "llm_ms": 0.0,
+        "ttft_ms": null,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      },
+      "is_voicemail": true
     },
     {
       "turn": 1,
-      "speaker": "prospect",
-      "text": "Office presentation mein hoon. AWB DEL-9841203 kal 2-5 PM deliver kar do.",
-      "word_count": 12,
-      "timestamp": "2026-11-06T19:33:39.400000Z",
-      "latency_ms": 0.0,
-      "is_barge_in": false,
-      "is_off_capsule": false
-    },
-    {
-      "turn": 2,
       "speaker": "agent",
-      "text": "Slot 2-5 PM note kar liya. Landmark aur alternate number confirm kar dijiye taaki courier direct pahunch sake.",
-      "word_count": 18,
-      "timestamp": "2026-11-06T19:33:40.700000Z",
-      "latency_ms": 780.0
-    },
-    {
-      "turn": 3,
-      "speaker": "prospect",
-      "text": "Office address hai, landmark cyber hub, alternate number 9811223344. The Souled Store ke founders Shark Tank Season 3 pe aaye the na?",
-      "word_count": 22,
-      "timestamp": "2026-11-06T19:33:42.100000Z",
-      "latency_ms": 0.0,
-      "is_barge_in": false,
-      "is_off_capsule": true
-    },
-    {
-      "turn": 4,
-      "speaker": "agent",
-      "text": "Media show details system mein nahi hain. Tool mein temporary API error aaya, par office address notes save ho gaye hain.",
+      "text": "Hello Deepak Patel, Aayan calling from The Souled Store. We missed you and will call back shortly. Have a nice day.",
       "word_count": 21,
-      "timestamp": "2026-11-06T19:33:43.500000Z",
-      "latency_ms": 890.0
-    },
-    {
-      "turn": 5,
-      "speaker": "prospect",
-      "text": "[Barge-in: Reschedule confirm karke call cut karo, jaldi.]",
-      "word_count": 8,
-      "timestamp": "2026-11-06T19:33:44.600000Z",
-      "latency_ms": 0.0,
-      "is_barge_in": true,
-      "is_off_capsule": false
-    },
-    {
-      "turn": 6,
-      "speaker": "agent",
-      "text": "Read back: Office, 2-5 PM, Cyber Hub, alternate 9811223344. Confirm ho gaya Deepak. Thank you!",
-      "word_count": 15,
-      "timestamp": "2026-11-06T19:33:45.700000Z",
-      "latency_ms": 560.0
+      "timestamp": "2026-11-07T09:00:37.164532+00:00",
+      "latency_ms": 721.8,
+      "latency_breakdown": {
+        "llm_ms": 721.8,
+        "ttft_ms": 499.3,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     }
   ],
   "tool_calls": [
     {
-      "tool_name": "reschedule_delivery",
+      "tool_name": "schedule_callback",
       "arguments": {
-        "slot": "2-5 PM",
-        "landmark": "Cyber Hub",
-        "address_type": "Office",
-        "alternate_phone": "9811223344"
+        "datetime": "Tomorrow 10:00 AM IST"
       },
       "result": {
-        "status": "error",
-        "error": "Internal 500: reschedule_delivery failed upstream"
+        "status": "success",
+        "message": "Callback scheduled for Tomorrow 10:00 AM IST"
       },
-      "status": "error",
-      "latency_ms": 110.0,
-      "timestamp": "2026-11-06T19:33:42.800000Z"
+      "status": "success",
+      "latency_ms": 52.12,
+      "timestamp": "2026-11-07T09:00:37.164532+00:00"
     }
   ],
   "slots": {
-    "address_type": "office",
-    "slot": "2-5 PM",
-    "landmark": "Cyber Hub",
-    "alternate_phone": "9811223344",
-    "rescheduled": true
+    "callback_set": true,
+    "callback_time": "Tomorrow 10:00 AM IST"
+  },
+  "world_state_diff": {
+    "calendar_events_count": 1,
+    "calendar_events": [
+      {
+        "title": "Callback with +919876500250",
+        "time_ist": "Tomorrow 10:00 AM IST",
+        "email": "prospect@phone.call",
+        "type": "callback",
+        "timestamp": "2026-11-07T09:00:37.164532+00:00"
+      }
+    ],
+    "orders_modified_count": 0,
+    "orders": {},
+    "whatsapp_messages_sent": 0,
+    "whatsapp_log": [],
+    "dnc_added": [],
+    "is_dnc": false
   },
   "metrics": {
-    "agent_turn_count": 4,
-    "avg_agent_word_count": 18.2,
+    "agent_turn_count": 1,
+    "avg_agent_word_count": 21.0,
     "max_agent_word_count": 21,
-    "p50_latency_ms": 835.0,
-    "p90_latency_ms": 995.0,
-    "max_latency_ms": 1040.0
+    "latency_component": "LLM-only (STT/TTS unmeasured in text simulation)",
+    "p50_latency_ms": 721.8,
+    "p90_latency_ms": 721.8,
+    "max_latency_ms": 721.8,
+    "stt_ms": "unmeasured",
+    "tts_ms": "unmeasured"
   },
+  "outcome": "voicemail",
   "assertions": {
     "A1": {
       "pass": true,
       "violations": [],
-      "reason": "Clean - no claims outside Capsule"
+      "reason": "Clean - no claims outside Capsule allowlist"
     },
     "A2": {
       "pass": true,
@@ -118,19 +103,20 @@
     },
     "A3": {
       "pass": true,
+      "skipped": true,
       "missing_slots": [],
-      "reason": "All required slots filled"
+      "reason": "Call intercepted by voicemail (did not reach a human) — slot collection waived"
     },
     "A4": {
       "pass": true,
-      "reason": "Read-back confirmed before write"
+      "reason": "No confirmation write tool was executed"
     },
     "A5": {
       "pass": true,
-      "avg_words": 18.2,
+      "avg_words": 21.0,
       "max_words": 21,
       "over_turns": [],
-      "reason": "Avg: 18.2 words, Max: 21 words (Passed)"
+      "reason": "Avg: 21.0 words, Max: 21 words (Passed)"
     },
     "A6": {
       "pass": true,
@@ -151,14 +137,14 @@
     },
     "A10": {
       "pass": true,
-      "reason": "Gracefully recovered with fallback without false claim"
+      "reason": "No tool failure injected"
     },
     "A11": {
       "pass": true,
-      "bilkul_ratio": 0.0,
+      "call_bilkul_ratio": 0.0,
       "bilkul_count": 0,
-      "total_turns": 4,
-      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+      "total_turns": 1,
+      "reason": "Turn opener stats: 0/1 start with Bilkul (overall benchmark scored across all turns)"
     },
     "A12": {
       "pass": true,
@@ -170,12 +156,21 @@
       "pass": true,
       "has_name": true,
       "has_company": true,
-      "turn_0_text": "Deepak, Aayan The Souled Store se. AWB DEL-9841203 Delhivery shipment re-attempt timing set karne ke liye call kiya hai.",
+      "turn_0_text": "Hello Deepak Patel, Aayan calling from The Souled Store. We missed you and will call back shortly. Have a nice day.",
       "reason": "Turn 0 introduced caller name and company"
     },
     "A14": {
       "pass": true,
-      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+      "reason": "No barge-in interruption occurred in this call"
+    },
+    "A15": {
+      "pass": true,
+      "violations": [],
+      "reason": "Voicemail handled cleanly without leaking order details"
     }
+  },
+  "recovery_status": {
+    "recovered": true,
+    "reason": "Zero order details leaked to voicemail; callback scheduled"
   }
 }

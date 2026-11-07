@@ -13,6 +13,9 @@ import AgentTestingPanel from './AgentTestingPanel';
 import VoicePersonaSelector, { CLOZFLOW_VOICE_LIST } from '../../components/VoicePersonaSelector';
 import CapsuleSelector from '../../components/CapsuleSelector';
 import ArchetypeLibraryModal from '../../components/ArchetypeLibraryModal';
+import ToolsStudio from './components/ToolsStudio';
+import AddToolModal from './components/AddToolModal';
+import ToolDrawer from './components/ToolDrawer';
 import { 
   extractVariables, 
   substituteVariables, 
@@ -20,6 +23,7 @@ import {
   mergeVariablesWithDefaults 
 } from '../../utils/variableParser';
 import { SALES_ARCHETYPES, getArchetypeById } from '../../data/salesArchetypes';
+
 
 export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack }) => {
   const [searchParams] = useSearchParams();
@@ -89,8 +93,8 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
     { name: 'customer_sentiment', desc: 'Emotional tone detected across turns (Positive, Neutral, Skeptical)', type: 'enum' },
   ], []);
 
-  // Tools Tab
-  const [toolsSubtab, setToolsSubtab] = useState('system'); // 'custom' | 'system'
+  // Tools Studio & Drawer State
+  const [toolsSubtab, setToolsSubtab] = useState('agent'); // 'agent' | 'system'
   const [systemTools, setSystemTools] = useState([
     { id: 'calendar', name: 'Instant Calendar Booking', desc: 'Books 15-minute product walkthroughs directly onto Cal.com / Google Calendar', enabled: true },
     { id: 'whatsapp', name: 'WhatsApp & SMS Dispatcher', desc: 'Sends PDF brochures, case studies, or payment links during the call', enabled: true },
@@ -99,7 +103,128 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
   ]);
   const [customTools, setCustomTools] = useState([]);
   const [showAddToolModal, setShowAddToolModal] = useState(false);
-  const [newToolForm, setNewToolForm] = useState({ name: '', endpoint: '', method: 'POST', description: '' });
+  const [selectedDrawerTool, setSelectedDrawerTool] = useState(null);
+  const [isToolDrawerOpen, setIsToolDrawerOpen] = useState(false);
+
+  const handleSelectToolType = (template) => {
+    setShowAddToolModal(false);
+    setSelectedDrawerTool({
+      id: null,
+      name: template.name,
+      tool_type: template.type,
+      description: template.description,
+      run_timing: template.defaultTiming || 'conversation',
+      fallback_response: template.defaultConfig?.fallback_response || '',
+      config: { ...template.defaultConfig },
+      is_active: true
+    });
+    setIsToolDrawerOpen(true);
+  };
+
+  const handleEditTool = (tool) => {
+    setSelectedDrawerTool(tool);
+    setIsToolDrawerOpen(true);
+  };
+
+  const handleSaveTool = async (savedTool) => {
+    const isNew = !savedTool.id || String(savedTool.id).startsWith('tool_draft_');
+    const token = localStorage.getItem('token');
+
+    if (!currentId) {
+      if (isNew) {
+        const localId = `tool_draft_${Date.now()}`;
+        setCustomTools(prev => [...prev, { ...savedTool, id: localId }]);
+      } else {
+        setCustomTools(prev => prev.map(t => t.id === savedTool.id ? savedTool : t));
+      }
+      setIsToolDrawerOpen(false);
+      setSelectedDrawerTool(null);
+      setIsDirty(true);
+      return;
+    }
+
+    try {
+      const url = isNew
+        ? `${window.APP_API_BASE || ''}/api/pearl/agents/${currentId}/tools`
+        : `${window.APP_API_BASE || ''}/api/pearl/agents/${currentId}/tools/${savedTool.id}`;
+      const method = isNew ? 'POST' : 'PUT';
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify(savedTool)
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save tool to server');
+      }
+
+      const returned = await res.json();
+      setCustomTools(prev => {
+        if (isNew) {
+          return [...prev, returned];
+        } else {
+          return prev.map(t => t.id === returned.id ? returned : t);
+        }
+      });
+      setIsToolDrawerOpen(false);
+      setSelectedDrawerTool(null);
+      setTemplateNotification(`Tool "${returned.name}" saved successfully.`);
+      setTimeout(() => setTemplateNotification(null), 3000);
+    } catch (err) {
+      console.error('Error saving tool:', err);
+      setCustomTools(prev => {
+        if (isNew) {
+          return [...prev, { ...savedTool, id: `tool_${Date.now()}` }];
+        } else {
+          return prev.map(t => t.id === savedTool.id ? savedTool : t);
+        }
+      });
+      setIsToolDrawerOpen(false);
+      setSelectedDrawerTool(null);
+    }
+  };
+
+  const handleDeleteTool = async (toolId) => {
+    const token = localStorage.getItem('token');
+    if (currentId && !String(toolId).startsWith('tool_draft_')) {
+      try {
+        await fetch(`${window.APP_API_BASE || ''}/api/pearl/agents/${currentId}/tools/${toolId}`, {
+          method: 'DELETE',
+          headers: { Authorization: token ? `Bearer ${token}` : '' }
+        });
+      } catch (e) {
+        console.warn('Failed to delete tool on backend:', e);
+      }
+    }
+    setCustomTools(prev => prev.filter(t => t.id !== toolId));
+    setIsToolDrawerOpen(false);
+    setSelectedDrawerTool(null);
+    setIsDirty(true);
+  };
+
+  const handleToggleToolActive = async (toolId, nextActive) => {
+    setCustomTools(prev => prev.map(t => t.id === toolId ? { ...t, is_active: nextActive } : t));
+    const token = localStorage.getItem('token');
+    if (currentId && !String(toolId).startsWith('tool_draft_')) {
+      try {
+        await fetch(`${window.APP_API_BASE || ''}/api/pearl/agents/${currentId}/tools/${toolId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token ? `Bearer ${token}` : ''
+          },
+          body: JSON.stringify({ is_active: nextActive })
+        });
+      } catch (e) {
+        console.warn('Failed to patch tool active status:', e);
+      }
+    }
+  };
+
 
   // Telephony & Audio Settings (Matching Sarvam Screenshots 3, 4, 5, 6)
   const [settings, setSettings] = useState({
@@ -522,8 +647,20 @@ Custom edits can still be made. Do you want to proceed?`
 
           if (data.capsule_id) setCapsuleId(data.capsule_id);
           if (data.test_variables) setTestVariables(data.test_variables);
+
+          if (data.tools && Array.isArray(data.tools)) {
+            setCustomTools(data.tools);
+          } else if (currentId) {
+            fetch(`${window.APP_API_BASE || ''}/api/pearl/agents/${currentId}/tools`, {
+              headers: { Authorization: token ? `Bearer ${token}` : '' }
+            })
+              .then(r => r.ok ? r.json() : [])
+              .then(tl => { if (Array.isArray(tl)) setCustomTools(tl); })
+              .catch(e => console.warn('Tools load failed:', e));
+          }
         }
       })
+
       .catch(err => console.error('Failed to load agent:', err))
       .finally(() => setLoading(false));
   }, [currentId]);
@@ -617,7 +754,38 @@ Custom edits can still be made. Do you want to proceed?`
       const finalId = (isNew && saved.id) ? saved.id : currentId;
       if (isNew && saved.id) {
         setCurrentId(saved.id);
+        const draftTools = customTools.filter(t => !t.id || String(t.id).startsWith('tool_draft_'));
+        for (const dt of draftTools) {
+          try {
+            await fetch(`${window.APP_API_BASE || ''}/api/pearl/agents/${saved.id}/tools`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: token ? `Bearer ${token}` : ''
+              },
+              body: JSON.stringify(dt)
+            });
+          } catch (e) {
+            console.warn('Failed to persist draft tool:', e);
+          }
+        }
+        if (draftTools.length > 0) {
+          try {
+            const toolsRes = await fetch(`${window.APP_API_BASE || ''}/api/pearl/agents/${saved.id}/tools`, {
+              headers: { Authorization: token ? `Bearer ${token}` : '' }
+            });
+            if (toolsRes.ok) {
+              const freshTools = await toolsRes.json();
+              if (Array.isArray(freshTools)) {
+                setCustomTools(freshTools);
+              }
+            }
+          } catch (te) {
+            console.warn('Failed to refetch persisted tools:', te);
+          }
+        }
       }
+
       setIsDirty(false);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2500);
@@ -1440,98 +1608,28 @@ Custom edits can still be made. Do you want to proceed?`
   // ────────────────────────────────────────────────────────────────────────
   // TAB 3: TOOLS (Matching Sarvam Screenshot 3)
   // ────────────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────────────────────────
+  // TAB 3: TOOLS STUDIO (Elevated Glassmorphic Actions & Drawers)
+  // ────────────────────────────────────────────────────────────────────────
   const renderToolsTab = () => (
-    <div className="sarvam-panel-content">
-      <div className="subtab-header-row">
-        <div className="subtab-pills">
-          <button 
-            type="button" 
-            className={`subtab-pill ${toolsSubtab === 'custom' ? 'active' : ''}`}
-            onClick={() => setToolsSubtab('custom')}
-          >
-            Custom tools
-          </button>
-          <button 
-            type="button" 
-            className={`subtab-pill ${toolsSubtab === 'system' ? 'active' : ''}`}
-            onClick={() => setToolsSubtab('system')}
-          >
-            System tools
-          </button>
-        </div>
-
-        <div className="subtab-actions">
-          <div className="sarvam-search-box">
-            <Search size={14} color="#94a3b8" />
-            <input type="text" placeholder="Search" />
-          </div>
-          <button 
-            type="button" 
-            className="btn-add-pill"
-            onClick={() => setShowAddToolModal(true)}
-          >
-            <Plus size={14} />
-            <span>Add tool</span>
-          </button>
-        </div>
-      </div>
-
-      {toolsSubtab === 'system' ? (
-        <div>
-          {systemTools.map(t => (
-            <div key={t.id} className="tool-card-row">
-              <div className="tool-card-info">
-                <h4>{t.name}</h4>
-                <p>{t.desc}</p>
-              </div>
-              <label className="toggle-switch">
-                <input 
-                  type="checkbox" 
-                  checked={t.enabled}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setSystemTools(prev => prev.map(item => item.id === t.id ? { ...item, enabled: checked } : item));
-                    setIsDirty(true);
-                  }}
-                />
-                <span className="slider"></span>
-              </label>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="tools-empty-state">
-          <div className="tools-empty-illustration">
-            <Wrench size={32} />
-          </div>
-          <div className="tools-empty-title">Let your agent take action</div>
-          <div className="tools-empty-desc">
-            Your agent can look up the caller's orders, verify their ID, or update a booking, and bring it right into the conversation.
-          </div>
-          <div className="tools-empty-actions">
-            <button 
-              type="button" 
-              className="btn-secondary-pill"
-              onClick={() => {
-                setTemplateNotification('Tools conform to OpenAI function schema standards with real-time argument validation.');
-                setTimeout(() => setTemplateNotification(null), 3500);
-              }}
-            >
-              Read docs
-            </button>
-            <button 
-              type="button" 
-              className="btn-add-pill"
-              onClick={() => setShowAddToolModal(true)}
-            >
-              <Plus size={14} />
-              <span>Add tool</span>
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    <ToolsStudio 
+      tools={customTools}
+      systemTools={systemTools}
+      onAddToolClick={() => setShowAddToolModal(true)}
+      onEditTool={handleEditTool}
+      onDeleteTool={handleDeleteTool}
+      onToggleToolActive={handleToggleToolActive}
+      onToggleSystemTool={(id, checked) => {
+        setSystemTools(prev => prev.map(item => item.id === id ? { ...item, enabled: checked } : item));
+        setIsDirty(true);
+      }}
+      onOpenDocs={() => {
+        setTemplateNotification('Tools conform to OpenAI function schema standards with real-time argument validation.');
+        setTimeout(() => setTemplateNotification(null), 3500);
+      }}
+    />
   );
+
 
   // ────────────────────────────────────────────────────────────────────────
   // TAB 4: SETTINGS (Matching Sarvam Screenshots 3, 4, 5, 6)
@@ -2827,62 +2925,27 @@ Custom edits can still be made. Do you want to proceed?`
         </div>
       )}
 
-      {/* Add Custom Tool Modal */}
-      {showAddToolModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#ffffff', borderRadius: 12, width: '420px', padding: 22 }}>
-            <h4 style={{ margin: '0 0 14px 0', fontSize: '0.96rem' }}>Create Custom API Tool</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <input 
-                type="text" 
-                placeholder="Tool name (e.g. verify_pincode)"
-                className="sarvam-textarea"
-                style={{ padding: '8px 12px' }}
-                value={newToolForm.name}
-                onChange={(e) => setNewToolForm(f => ({ ...f, name: e.target.value }))}
-              />
-              <input 
-                type="text" 
-                placeholder="Endpoint URL (e.g. https://api.mycorp.com/v1/verify)"
-                className="sarvam-textarea"
-                style={{ padding: '8px 12px' }}
-                value={newToolForm.endpoint}
-                onChange={(e) => setNewToolForm(f => ({ ...f, endpoint: e.target.value }))}
-              />
-              <textarea 
-                placeholder="Description of what this tool returns to the agent..."
-                className="sarvam-textarea"
-                rows={3}
-                value={newToolForm.description}
-                onChange={(e) => setNewToolForm(f => ({ ...f, description: e.target.value }))}
-              />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-              <button 
-                type="button" 
-                className="btn-secondary-pill"
-                onClick={() => setShowAddToolModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                type="button" 
-                className="btn-add-pill"
-                onClick={() => {
-                  if (newToolForm.name.trim()) {
-                    setCustomTools(prev => [...prev, { ...newToolForm, id: Date.now() }]);
-                    setShowAddToolModal(false);
-                    setNewToolForm({ name: '', endpoint: '', method: 'POST', description: '' });
-                    setIsDirty(true);
-                  }
-                }}
-              >
-                Save Tool
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 5-Card Add Tool Modal */}
+      <AddToolModal 
+        isOpen={showAddToolModal}
+        onClose={() => setShowAddToolModal(false)}
+        onSelectToolType={handleSelectToolType}
+      />
+
+      {/* Comprehensive Tool Drawer with Live Inspector */}
+      <ToolDrawer 
+        isOpen={isToolDrawerOpen}
+        onClose={() => {
+          setIsToolDrawerOpen(false);
+          setSelectedDrawerTool(null);
+        }}
+        tool={selectedDrawerTool}
+        agentId={currentId}
+        onSaveTool={handleSaveTool}
+        onDeleteTool={handleDeleteTool}
+        testVariables={testVariables}
+      />
+
 
       {/* Direct Cold Call Phone Dialer Modal (Fix 3) */}
       {showColdCallModal && (

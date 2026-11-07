@@ -22,6 +22,11 @@ class ScenarioDefinition:
     prospect_first_name: str
     objective: str
     system_prompt_override: str
+    allowed_numbers: List[str] = field(default_factory=list)
+    allowed_percentages: List[str] = field(default_factory=list)
+    allowed_policies: List[str] = field(default_factory=list)
+    allowed_guarantees: List[str] = field(default_factory=list)
+    allowed_confidential_registry: List[str] = field(default_factory=list)
 
 SCENARIOS: Dict[str, ScenarioDefinition] = {
     "S1": ScenarioDefinition(
@@ -89,7 +94,12 @@ RULES:
 4. If prospect says do not call / spam, immediately call mark_dnc, apologize politely, and end call.
 5. If asked if you are AI/bot, answer honestly that you are an AI assistant from CredPulse Financial.
 6. Use natural feminine Hindi grammar ('main karti hoon', 'bhej rahi hoon').
-"""
+""",
+        allowed_numbers=["250000", "2,50,000", "2.5", "2.5 lakh", "dhai lakh", "do lakh pachas hazar", "1", "2"],
+        allowed_percentages=[],
+        allowed_policies=[],
+        allowed_guarantees=[],
+        allowed_confidential_registry=[],
     ),
 
     "S2": ScenarioDefinition(
@@ -148,7 +158,12 @@ RULES:
 4. Do NOT say 'order update kar diya' or 'link bhej diya' before action succeeds.
 5. If asked if you are AI/bot, answer honestly that you are Snitch's AI assistant.
 6. Use natural feminine Hindi grammar ('karti hoon', 'bhej rahi hoon').
-"""
+""",
+        allowed_numbers=["1899", "1,899", "100", "3", "4", "3-4", "1", "2"],
+        allowed_percentages=[],
+        allowed_policies=["3-4 days delivery", "100 off prepaid via upi"],
+        allowed_guarantees=[],
+        allowed_confidential_registry=[],
     ),
 
     "S3": ScenarioDefinition(
@@ -212,7 +227,12 @@ RULES:
 2. Keep turns concise (15-25 words).
 3. If asked if you are AI/bot, answer honestly that you are an AI assistant from StyleStudio.
 4. Use natural masculine Hindi grammar ('main karta hoon', 'dekh raha hoon', 'bhej raha hoon').
-"""
+""",
+        allowed_numbers=["14499", "14,499", "7", "10", "1", "2"],
+        allowed_percentages=["10%"],
+        allowed_policies=["7-day exchange", "vip10 coupon"],
+        allowed_guarantees=[],
+        allowed_confidential_registry=[],
     ),
 
     "S4": ScenarioDefinition(
@@ -279,7 +299,12 @@ RULES:
 5. If prospect is busy, offer to send deck or schedule quick demo.
 6. If asked if AI/bot, state honestly: 'Main Clozflow ka AI sales assistant hoon.'
 7. Use natural masculine Hindi/English grammar ('karta hoon', 'bhej raha hoon').
-"""
+""",
+        allowed_numbers=["3", "11", "4", "1", "2"],
+        allowed_percentages=[],
+        allowed_policies=[],
+        allowed_guarantees=[],
+        allowed_confidential_registry=[],
     ),
 
     "S5": ScenarioDefinition(
@@ -341,6 +366,11 @@ RULES:
 3. Keep turns concise (15-25 words).
 4. If asked if AI/bot, answer honestly that you are an AI support assistant from The Souled Store.
 5. Use natural masculine Hindi grammar ('karta hoon', 'dekh raha hoon', 'bata raha hoon').
-"""
+""",
+        allowed_numbers=["9841203", "10", "12", "10-12", "2", "5", "2-5", "6", "9", "6-9", "1", "2"],
+        allowed_percentages=[],
+        allowed_policies=["reattempt delivery slots"],
+        allowed_guarantees=[],
+        allowed_confidential_registry=[],
     ),
 }

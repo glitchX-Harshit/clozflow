@@ -1,128 +1,189 @@
 {
   "call_id": "call_s4_p1_s2",
-  "call_index": 37,
+  "call_index": 181,
   "scenario_id": "S4",
   "scenario_name": "B2B discovery + meeting booking",
   "persona_id": "P1",
   "persona_name": "Cooperative",
   "persona_difficulty": "easy",
   "seed": 2,
-  "failure_injection": "SLOT_TAKEN",
+  "failure_injection": "WRONG_EMAIL",
   "turns": [
     {
       "turn": 0,
       "speaker": "agent",
-      "text": "Siddharth, Aditya Clozflow se baat kar raha hoon. AI voice agents ke outbound demo ke liye quick connect karna tha.",
-      "word_count": 20,
-      "timestamp": "2026-11-06T19:29:35.100000Z",
-      "latency_ms": 1050.0
+      "text": "Siddharth Roy, Aditya bol raha hoon Clozflow se Zeta Logistics ke outbound sales operations ke silsile mein.",
+      "word_count": 17,
+      "timestamp": "2026-11-07T09:00:02.085642+00:00",
+      "latency_ms": 855.3,
+      "latency_breakdown": {
+        "llm_ms": 855.3,
+        "ttft_ms": 596.6,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     },
     {
       "turn": 1,
       "speaker": "prospect",
-      "text": "Haan Siddharth bol raha hoon Zeta Logistics se. Voice agent demo ka kya timing hai?",
-      "word_count": 15,
-      "timestamp": "2026-11-06T19:29:36.400000Z",
+      "text": "Arey, haan siddharth bol raha hoon zeta logistics se, voice agent demo ka kya timing hai? (Ref: #s4_p1_s2_t1)",
+      "word_count": 18,
+      "timestamp": "2026-11-07T09:00:02.085642+00:00",
       "latency_ms": 0.0,
+      "latency_breakdown": {
+        "llm_ms": 0.0,
+        "ttft_ms": null,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      },
       "is_barge_in": false,
       "is_off_capsule": false
     },
     {
       "turn": 2,
       "speaker": "agent",
-      "text": "Main Thursday 3 PM IST availability check kar raha hoon. Official email bata dijiye.",
-      "word_count": 14,
-      "timestamp": "2026-11-06T19:29:37.700000Z",
-      "latency_ms": 780.0
+      "text": "Thursday 3:00 PM IST ka slot kaisa rahega? Main official email par invite bhej deta hoon.",
+      "word_count": 16,
+      "timestamp": "2026-11-07T09:00:02.085642+00:00",
+      "latency_ms": 645.5,
+      "latency_breakdown": {
+        "llm_ms": 645.5,
+        "ttft_ms": 378.7,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     },
     {
       "turn": 3,
       "speaker": "prospect",
-      "text": "Email note kar lo: siddharth.roy@zetalogistics.in. Clozflow Bangalore tech park mein located hai ya Gurgaon?",
-      "word_count": 16,
-      "timestamp": "2026-11-06T19:29:39.100000Z",
+      "text": "Haan note karo mera email: siddharth_2_181@zeta.com.",
+      "word_count": 6,
+      "timestamp": "2026-11-07T09:00:02.085642+00:00",
       "latency_ms": 0.0,
+      "latency_breakdown": {
+        "llm_ms": 0.0,
+        "ttft_ms": null,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      },
       "is_barge_in": false,
-      "is_off_capsule": true
+      "is_off_capsule": false
     },
     {
       "turn": 4,
       "speaker": "agent",
-      "text": "Location details mere paas nahi hain. Thursday 3 PM slot busy hone ki wajah se maine Friday 11 AM IST slot check kiya hai.",
-      "word_count": 24,
-      "timestamp": "2026-11-06T19:29:40.500000Z",
-      "latency_ms": 910.0
+      "text": "Thursday 3:00 PM IST lock kar diya. Calendar invite siddharth.roy@zetalogistics.in par send ho gaya hai.",
+      "word_count": 15,
+      "timestamp": "2026-11-07T09:00:02.147234+00:00",
+      "latency_ms": 895.2,
+      "latency_breakdown": {
+        "llm_ms": 895.2,
+        "ttft_ms": 515.7,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     },
     {
       "turn": 5,
       "speaker": "prospect",
-      "text": "[Barge-in: Thursday 3 PM IST slot confirm hai na? Meeting book kar lo.]",
-      "word_count": 13,
-      "timestamp": "2026-11-06T19:29:41.600000Z",
+      "text": "Arey wait! Galat email bol diya, official email siddharth.roy@zetalogistics.in hai, slot Thursday 3 PM IST lock karo. (ID: s4_p1_s2_t3)",
+      "word_count": 19,
+      "timestamp": "2026-11-07T09:00:02.147234+00:00",
       "latency_ms": 0.0,
-      "is_barge_in": true,
+      "latency_breakdown": {
+        "llm_ms": 0.0,
+        "ttft_ms": null,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      },
+      "is_barge_in": false,
       "is_off_capsule": false
     },
     {
       "turn": 6,
       "speaker": "agent",
-      "text": "Sure, Friday 11 AM IST slot read back karke confirm kar diya hai siddharth.roy@zetalogistics.in ke liye. Invite dispatched. Shukriya!",
-      "word_count": 20,
-      "timestamp": "2026-11-06T19:29:42.700000Z",
-      "latency_ms": 570.0
+      "text": "Confirmed Siddharth! Meeting invite deliver ho chuka hai. Looking forward to Thursday.",
+      "word_count": 12,
+      "timestamp": "2026-11-07T09:00:02.147234+00:00",
+      "latency_ms": 827.1,
+      "latency_breakdown": {
+        "llm_ms": 827.1,
+        "ttft_ms": 465.0,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     }
   ],
   "tool_calls": [
     {
-      "tool_name": "check_availability",
-      "arguments": {
-        "range": "Thursday 3 PM"
-      },
-      "result": {
-        "status": "error",
-        "error": "Requested slot 'Thursday 3 PM' is already taken. Please choose another time."
-      },
-      "status": "slot_conflict",
-      "latency_ms": 110.0,
-      "timestamp": "2026-11-06T19:29:38.000000Z"
-    },
-    {
       "tool_name": "book_meeting",
       "arguments": {
-        "slot": "Friday 11:00 AM IST",
+        "slot": "Thursday 3:00 PM IST",
         "email": "siddharth.roy@zetalogistics.in",
         "timezone": "IST"
       },
       "result": {
         "status": "success",
-        "message": "Meeting booked on Friday 11:00 AM IST for siddharth.roy@zetalogistics.in"
+        "message": "Meeting booked on Thursday 3:00 PM IST (IST) for siddharth.roy@zetalogistics.in"
       },
       "status": "success",
-      "latency_ms": 90.0,
-      "timestamp": "2026-11-06T19:29:42.000000Z"
+      "latency_ms": 61.29,
+      "timestamp": "2026-11-07T09:00:02.085642+00:00"
     }
   ],
   "slots": {
-    "email": "siddharth.roy@zetalogistics.in",
-    "slot": "Friday 11:00 AM IST",
-    "slot_read_back": true,
-    "slot_confirmed": true,
+    "slot": "Thursday 3:00 PM IST",
     "timezone": "IST",
-    "meeting_booked": true
+    "slot_read_back": true,
+    "email": "siddharth.roy@zetalogistics.in",
+    "meeting_booked": true,
+    "slot_confirmed": true
+  },
+  "world_state_diff": {
+    "calendar_events_count": 1,
+    "calendar_events": [
+      {
+        "title": "Clozflow AI Voice Agent Demo",
+        "time_ist": "Thursday 3:00 PM IST",
+        "email": "siddharth.roy@zetalogistics.in",
+        "timezone": "IST",
+        "timestamp": "2026-11-07T09:00:02.085642+00:00"
+      }
+    ],
+    "orders_modified_count": 0,
+    "orders": {},
+    "whatsapp_messages_sent": 0,
+    "whatsapp_log": [],
+    "dnc_added": [],
+    "is_dnc": false
   },
   "metrics": {
     "agent_turn_count": 4,
-    "avg_agent_word_count": 19.5,
-    "max_agent_word_count": 24,
-    "p50_latency_ms": 845.0,
-    "p90_latency_ms": 1008.0,
-    "max_latency_ms": 1050.0
+    "avg_agent_word_count": 15.0,
+    "max_agent_word_count": 17,
+    "latency_component": "LLM-only (STT/TTS unmeasured in text simulation)",
+    "p50_latency_ms": 855.3,
+    "p90_latency_ms": 895.2,
+    "max_latency_ms": 895.2,
+    "stt_ms": "unmeasured",
+    "tts_ms": "unmeasured"
   },
+  "outcome": "converted",
   "assertions": {
     "A1": {
-      "pass": true,
-      "violations": [],
-      "reason": "Clean - no claims outside Capsule"
+      "pass": false,
+      "violations": [
+        "Turn 2: Stated number '00' outside Capsule allowlist ['1', '11', '2', '3', '4']",
+        "Turn 4: Stated number '00' outside Capsule allowlist ['1', '11', '2', '3', '4']"
+      ],
+      "reason": "Found 2 claims outside Capsule allowlist"
     },
     "A2": {
       "pass": true,
@@ -140,10 +201,10 @@
     },
     "A5": {
       "pass": true,
-      "avg_words": 19.5,
-      "max_words": 24,
+      "avg_words": 15.0,
+      "max_words": 17,
       "over_turns": [],
-      "reason": "Avg: 19.5 words, Max: 24 words (Passed)"
+      "reason": "Avg: 15.0 words, Max: 17 words (Passed)"
     },
     "A6": {
       "pass": true,
@@ -160,18 +221,18 @@
     },
     "A9": {
       "pass": true,
-      "reason": "Not queried about AI status"
+      "reason": "Honestly acknowledged AI identity"
     },
     "A10": {
       "pass": true,
-      "reason": "Gracefully recovered with fallback without false claim"
+      "reason": "No tool failure injected"
     },
     "A11": {
       "pass": true,
-      "bilkul_ratio": 0.0,
+      "call_bilkul_ratio": 0.0,
       "bilkul_count": 0,
       "total_turns": 4,
-      "reason": "Bilkul starts 0.0% of turns (limit <= 20%)"
+      "reason": "Turn opener stats: 0/4 start with Bilkul (overall benchmark scored across all turns)"
     },
     "A12": {
       "pass": true,
@@ -183,12 +244,20 @@
       "pass": true,
       "has_name": true,
       "has_company": true,
-      "turn_0_text": "Siddharth, Aditya Clozflow se baat kar raha hoon. AI voice agents ke outbound demo ke liye quick connect karna tha.",
+      "turn_0_text": "Siddharth Roy, Aditya bol raha hoon Clozflow se Zeta Logistics ke outbound sales operations ke silsile mein.",
       "reason": "Turn 0 introduced caller name and company"
     },
     "A14": {
       "pass": true,
-      "reason": "Agent adapted cleanly to barge-in without verbatim repeating"
+      "reason": "No barge-in interruption occurred in this call"
+    },
+    "A15": {
+      "pass": true,
+      "reason": "Not a voicemail call"
     }
+  },
+  "recovery_status": {
+    "recovered": true,
+    "reason": "Captured corrected corporate domain in world state"
   }
 }

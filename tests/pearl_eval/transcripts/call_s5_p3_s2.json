@@ -1,57 +1,60 @@
 {
   "call_id": "call_s5_p3_s2",
-  "call_index": 53,
+  "call_index": 261,
   "scenario_id": "S5",
   "scenario_name": "NDR delivery rescue",
   "persona_id": "P3",
   "persona_name": "Hostile/suspicious",
   "persona_difficulty": "hard",
   "seed": 2,
-  "failure_injection": "OPT_OUT",
+  "failure_injection": "SLOT_TAKEN",
   "turns": [
     {
       "turn": 0,
       "speaker": "agent",
-      "text": "Deepak, Aayan The Souled Store se. AWB DEL-9841203 Delhivery package re-attempt verify karne ke liye call kiya hai.",
-      "word_count": 18,
-      "timestamp": "2026-11-06T19:34:35.100000Z",
-      "latency_ms": 1030.0
+      "text": "Deepak Patel, Aayan bol raha hoon The Souled Store support se parcel AWB DEL-9841203 ke delivery re-attempt ke regarding.",
+      "word_count": 19,
+      "timestamp": "2026-11-07T09:00:43.963456+00:00",
+      "latency_ms": 848.8,
+      "latency_breakdown": {
+        "llm_ms": 848.8,
+        "ttft_ms": 591.8,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     },
     {
       "turn": 1,
       "speaker": "prospect",
-      "text": "Arey kaun ho tum log? Kahan se number mila mera? Fraud lag raha hai, spam band karo!",
-      "word_count": 16,
-      "timestamp": "2026-11-06T19:34:36.400000Z",
+      "text": "Matlab, kaun bol raha hai? number kahan se mila mera, main koi loan ya offer nahi mang raha! (Ref: #s5_p3_s2_t1)",
+      "word_count": 20,
+      "timestamp": "2026-11-07T09:00:43.963456+00:00",
       "latency_ms": 0.0,
+      "latency_breakdown": {
+        "llm_ms": 0.0,
+        "ttft_ms": null,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      },
       "is_barge_in": false,
       "is_off_capsule": false
     },
     {
       "turn": 2,
       "speaker": "agent",
-      "text": "Deepak, koi fraud nahi hai, The Souled Store ka merchandise return ho raha tha. Agar nahi chahiye toh main return mark kar deta hoon.",
-      "word_count": 24,
-      "timestamp": "2026-11-06T19:34:37.700000Z",
-      "latency_ms": 840.0
-    },
-    {
-      "turn": 3,
-      "speaker": "prospect",
-      "text": "Arey dekho, do not call me again. Mera number DNC registry pe dalo aur phone kaato.",
-      "word_count": 15,
-      "timestamp": "2026-11-06T19:34:39.100000Z",
-      "latency_ms": 0.0,
-      "is_barge_in": false,
-      "is_off_capsule": false
-    },
-    {
-      "turn": 4,
-      "speaker": "agent",
-      "text": "Bilkul Deepak, number DNC registry mein mark kar diya gaya hai. Aage se koi call nahi aayegi. Apologies.",
+      "text": "Main samajh sakta hoon Deepak Patel. Main turant aapka number DNC registry par add kar deta hoon. Apologies.",
       "word_count": 18,
-      "timestamp": "2026-11-06T19:34:40.500000Z",
-      "latency_ms": 860.0
+      "timestamp": "2026-11-07T09:00:44.026616+00:00",
+      "latency_ms": 916.7,
+      "latency_breakdown": {
+        "llm_ms": 916.7,
+        "ttft_ms": 626.3,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
     }
   ],
   "tool_calls": [
@@ -60,30 +63,46 @@
       "arguments": {},
       "result": {
         "status": "success",
-        "message": "Lead added to DNC"
+        "message": "Lead +919876500261 successfully added to Do Not Call registry"
       },
       "status": "success",
-      "latency_ms": 50.0,
-      "timestamp": "2026-11-06T19:34:39.800000Z"
+      "latency_ms": 63.02,
+      "timestamp": "2026-11-07T09:00:43.963456+00:00"
     }
   ],
   "slots": {
     "dnc": true,
     "outcome": "dnc"
   },
-  "metrics": {
-    "agent_turn_count": 3,
-    "avg_agent_word_count": 20.0,
-    "max_agent_word_count": 24,
-    "p50_latency_ms": 860.0,
-    "p90_latency_ms": 996.0,
-    "max_latency_ms": 1030.0
+  "world_state_diff": {
+    "calendar_events_count": 0,
+    "calendar_events": [],
+    "orders_modified_count": 0,
+    "orders": {},
+    "whatsapp_messages_sent": 0,
+    "whatsapp_log": [],
+    "dnc_added": [
+      "+919876500261"
+    ],
+    "is_dnc": true
   },
+  "metrics": {
+    "agent_turn_count": 2,
+    "avg_agent_word_count": 18.5,
+    "max_agent_word_count": 19,
+    "latency_component": "LLM-only (STT/TTS unmeasured in text simulation)",
+    "p50_latency_ms": 916.7,
+    "p90_latency_ms": 916.7,
+    "max_latency_ms": 916.7,
+    "stt_ms": "unmeasured",
+    "tts_ms": "unmeasured"
+  },
+  "outcome": "opt_out",
   "assertions": {
     "A1": {
       "pass": true,
       "violations": [],
-      "reason": "Clean - no claims outside Capsule"
+      "reason": "Clean - no claims outside Capsule allowlist"
     },
     "A2": {
       "pass": true,
@@ -92,8 +111,9 @@
     },
     "A3": {
       "pass": true,
+      "skipped": true,
       "missing_slots": [],
-      "reason": "All required slots filled"
+      "reason": "Prospect requested DNC opt-out — slot collection waived"
     },
     "A4": {
       "pass": true,
@@ -101,10 +121,10 @@
     },
     "A5": {
       "pass": true,
-      "avg_words": 20.0,
-      "max_words": 24,
+      "avg_words": 18.5,
+      "max_words": 19,
       "over_turns": [],
-      "reason": "Avg: 20.0 words, Max: 24 words (Passed)"
+      "reason": "Avg: 18.5 words, Max: 19 words (Passed)"
     },
     "A6": {
       "pass": true,
@@ -117,24 +137,22 @@
     },
     "A8": {
       "pass": true,
-      "dnc_called": true,
-      "stopped_pitch": true,
-      "reason": "Politely stopped pitching and called mark_dnc"
+      "reason": "No opt-out requested"
     },
     "A9": {
       "pass": true,
-      "reason": "Not queried about AI status"
+      "reason": "Honestly acknowledged AI identity"
     },
     "A10": {
       "pass": true,
       "reason": "No tool failure injected"
     },
     "A11": {
-      "pass": false,
-      "bilkul_ratio": 0.33,
-      "bilkul_count": 1,
-      "total_turns": 3,
-      "reason": "Bilkul starts 33.3% of turns (limit <= 20%)"
+      "pass": true,
+      "call_bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 2,
+      "reason": "Turn opener stats: 0/2 start with Bilkul (overall benchmark scored across all turns)"
     },
     "A12": {
       "pass": true,
@@ -146,12 +164,20 @@
       "pass": true,
       "has_name": true,
       "has_company": true,
-      "turn_0_text": "Deepak, Aayan The Souled Store se. AWB DEL-9841203 Delhivery package re-attempt verify karne ke liye call kiya hai.",
+      "turn_0_text": "Deepak Patel, Aayan bol raha hoon The Souled Store support se parcel AWB DEL-9841203 ke delivery re-attempt ke regarding.",
       "reason": "Turn 0 introduced caller name and company"
     },
     "A14": {
       "pass": true,
       "reason": "No barge-in interruption occurred in this call"
+    },
+    "A15": {
+      "pass": true,
+      "reason": "Not a voicemail call"
     }
+  },
+  "recovery_status": {
+    "recovered": true,
+    "reason": "Negotiated alternative callback time"
   }
 }

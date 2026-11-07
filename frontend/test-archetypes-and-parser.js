@@ -315,4 +315,83 @@ assert.strictEqual(normalizeIndianPhone('+919876543210'), '+919876543210');
 assert.strictEqual(normalizeIndianPhone('09876543210'), '+919876543210');
 console.log('✓ Cold call dialer phone number normalization verified.');
 
+console.log('\n--- 4. Testing 5 Core Agent Tool Templates & Schemas ---');
+const { TOOL_TEMPLATES, getToolTemplateByType } = await import('./src/data/toolTemplates.js');
+
+assert.strictEqual(TOOL_TEMPLATES.length, 5, 'Must contain exactly 5 core tool templates');
+
+const EXPECTED_TOOL_TYPES = ['api_tool', 'data_validator', 'data_verifier', 'mock_api', 'mcp'];
+EXPECTED_TOOL_TYPES.forEach(type => {
+  const tmpl = getToolTemplateByType(type);
+  assert.ok(tmpl, `Tool template for ${type} must exist`);
+  assert.ok(tmpl.name, `${type} must have a name`);
+  assert.ok(tmpl.title, `${type} must have a title`);
+  assert.ok(tmpl.subtitle, `${type} must have a subtitle`);
+  assert.ok(tmpl.description, `${type} must have a description`);
+  assert.ok(tmpl.defaultTiming, `${type} must specify defaultTiming`);
+  assert.ok(tmpl.defaultConfig, `${type} must have defaultConfig`);
+  assert.ok(Array.isArray(tmpl.tags) && tmpl.tags.length > 0, `${type} must have tags`);
+});
+
+// Verify API Tool specifics
+const apiTool = getToolTemplateByType('api_tool');
+assert.strictEqual(apiTool.defaultConfig.method, 'POST');
+assert.ok(apiTool.defaultConfig.url);
+assert.ok(Array.isArray(apiTool.defaultConfig.params));
+assert.ok(Array.isArray(apiTool.defaultConfig.headers));
+assert.ok(apiTool.defaultConfig.auth);
+assert.ok(apiTool.defaultConfig.body);
+assert.ok(Array.isArray(apiTool.defaultConfig.response_mapping));
+assert.ok(apiTool.defaultConfig.timeout_seconds > 0);
+assert.ok(apiTool.defaultConfig.fallback_response);
+
+// Verify Data Validator specifics
+const validatorTool = getToolTemplateByType('data_validator');
+assert.strictEqual(validatorTool.defaultConfig.data_type, 'string');
+assert.strictEqual(validatorTool.defaultConfig.preset, 'indian_phone');
+assert.ok(validatorTool.defaultConfig.regex_pattern);
+assert.ok(validatorTool.defaultConfig.spoken_on_success);
+assert.ok(validatorTool.defaultConfig.spoken_on_fail);
+assert.strictEqual(validatorTool.defaultConfig.include_in_context, true);
+
+// Verify Data Verifier specifics
+const verifierTool = getToolTemplateByType('data_verifier');
+assert.strictEqual(verifierTool.defaultConfig.match_mode, 'exact_match');
+assert.strictEqual(verifierTool.defaultConfig.normalization, 'strip_phone_formatting');
+assert.ok(verifierTool.defaultConfig.spoken_on_match);
+assert.ok(verifierTool.defaultConfig.spoken_on_mismatch);
+assert.strictEqual(verifierTool.defaultConfig.include_in_context, true);
+
+// Verify Mock API specifics
+const mockTool = getToolTemplateByType('mock_api');
+assert.ok(mockTool.defaultConfig.simulated_latency_ms >= 50);
+assert.ok(mockTool.defaultConfig.mock_response_body);
+assert.ok(Array.isArray(mockTool.defaultConfig.response_mapping));
+
+// Verify MCP specifics
+const mcpTool = getToolTemplateByType('mcp');
+assert.strictEqual(mcpTool.defaultConfig.server_id, '');
+
+console.log('✓ All 5 core tool templates (API, Validator, Verifier, Mock, MCP) verified with full schemas.');
+
+// Section 5: Verify Component Files and Exports
+const fs = await import('fs');
+const path = await import('path');
+
+const componentsToCheck = [
+  { file: './src/pages/pearl/components/AddToolModal.jsx', name: 'AddToolModal' },
+  { file: './src/pages/pearl/components/ToolsStudio.jsx', name: 'ToolsStudio' },
+  { file: './src/pages/pearl/components/ToolDrawer.jsx', name: 'ToolDrawer' }
+];
+
+for (const comp of componentsToCheck) {
+  const fullPath = path.resolve(comp.file);
+  assert.ok(fs.existsSync(fullPath), `Component file ${comp.file} must exist`);
+  const content = fs.readFileSync(fullPath, 'utf-8');
+  assert.ok(content.includes(`export function ${comp.name}`) || content.includes(`export default function ${comp.name}`) || content.includes(`export const ${comp.name}`), `${comp.name} must be exported in ${comp.file}`);
+}
+
+console.log('✓ Tools Studio, AddToolModal, and ToolDrawer component files and exports confirmed.');
+
 console.log('\nALL TESTS PASSED SUCCESSFULLY! 100% SPECIFICATION CONFORMANCE CONFIRMED.');
+
