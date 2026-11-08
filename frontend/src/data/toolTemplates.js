@@ -16,6 +16,7 @@ export const TOOL_TEMPLATES = [
     subtitle: 'Call external REST endpoints',
     description: "Call your API to fetch or update data, such as a caller's booking details.",
     badge: 'REST API',
+    tags: ['REST API', 'Webhooks', 'CRM Actions'],
     defaultTiming: 'conversation',
     defaultRunMode: 'write', // 'write' (Pattern A: async non-blocking) | 'read' (Pattern B: filler + live lookup)
     defaultConfig: {
@@ -43,6 +44,7 @@ export const TOOL_TEMPLATES = [
     subtitle: 'Inspect formats with regular expressions',
     description: "Check a value's format and validity, such as an email or phone number.",
     badge: 'Validation',
+    tags: ['Indian Phone', 'PIN Code', 'Email'],
     defaultTiming: 'conversation',
     defaultRunMode: 'read',
     defaultConfig: {
@@ -66,6 +68,7 @@ export const TOOL_TEMPLATES = [
     subtitle: 'Cross-reference caller details against records',
     description: 'Verify caller information against records on file, such as account numbers or last digits of phone.',
     badge: 'Verification',
+    tags: ['Customer Record', 'Exact Match', 'Phone Normalizer'],
     defaultTiming: 'conversation',
     defaultRunMode: 'read',
     defaultConfig: {
@@ -75,7 +78,8 @@ export const TOOL_TEMPLATES = [
       input_source: 'fixed_value',
       input_value: '',
       input_variable: 'lead.phone',
-      normalize_as: 'none',
+      normalization: 'strip_phone_formatting',
+      normalize_as: 'strip_phone_formatting',
       match_mode: 'exact_match',
       match_n: 4,
       reference_source: 'fixed_value',
@@ -98,6 +102,7 @@ export const TOOL_TEMPLATES = [
     subtitle: 'Sandbox testing with simulated latency',
     description: 'Test tool calls before your API exists.',
     badge: 'Sandbox',
+    tags: ['Simulated Latency', 'Mock JSON', 'Sandbox'],
     defaultTiming: 'conversation',
     defaultRunMode: 'write',
     defaultConfig: {
@@ -128,6 +133,7 @@ export const TOOL_TEMPLATES = [
     subtitle: 'Model Context Protocol bindings',
     description: 'Bind tools from a connected MCP server.',
     badge: 'Protocol',
+    tags: ['MCP Server', 'Protocol Tools', 'Dynamic Actions'],
     defaultTiming: 'conversation',
     defaultRunMode: 'write',
     defaultConfig: {

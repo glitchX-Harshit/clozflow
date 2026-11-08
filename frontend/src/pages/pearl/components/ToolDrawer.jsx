@@ -270,9 +270,7 @@ export const ToolDrawer = React.memo(({
   onDeleteTool,
   testVariables = {}
 }) => {
-  if (!isOpen || !tool) return null;
-
-  const toolType = tool.tool_type || 'api_tool';
+  const toolType = tool?.tool_type || 'api_tool';
   const meta = ARCHETYPE_META[toolType] || ARCHETYPE_META.api_tool;
 
   const resolveInitialRunMode = (t) => {
@@ -293,42 +291,42 @@ export const ToolDrawer = React.memo(({
   };
 
   // Active form state
-  const [name, setName] = useState(tool.name || meta.defaultName);
-  const [description, setDescription] = useState(tool.description || meta.defaultDesc);
-  const [runTiming, setRunTiming] = useState(tool.run_timing || 'conversation');
+  const [name, setName] = useState(tool?.name || meta.defaultName);
+  const [description, setDescription] = useState(tool?.description || meta.defaultDesc);
+  const [runTiming, setRunTiming] = useState(tool?.run_timing || 'conversation');
   const [runMode, setRunMode] = useState(() => resolveInitialRunMode(tool));
-  const [isActive, setIsActive] = useState(tool.is_active !== false);
+  const [isActive, setIsActive] = useState(tool?.is_active !== false);
   const [fallbackResponse, setFallbackResponse] = useState(
-    tool.fallback_response || tool.config?.fallback_response || "I'm having trouble retrieving that information right now. Let's proceed."
+    tool?.fallback_response || tool?.config?.fallback_response || "I'm having trouble retrieving that information right now. Let's proceed."
   );
-  const [timeoutSeconds, setTimeoutSeconds] = useState(tool.timeout_seconds || tool.config?.timeout_seconds || 10);
-  const [config, setConfig] = useState(tool.config || {});
+  const [timeoutSeconds, setTimeoutSeconds] = useState(tool?.timeout_seconds || tool?.config?.timeout_seconds || 10);
+  const [config, setConfig] = useState(tool?.config || {});
   const [responseTemplate, setResponseTemplate] = useState(
-    tool.config?.response_template || (tool.config?.response_mapping && tool.config.response_mapping.length > 0 
+    tool?.config?.response_template || (tool?.config?.response_mapping && tool.config.response_mapping.length > 0 
       ? tool.config.response_mapping.map(m => `@${m.path}`).join(', ')
       : '')
   );
 
   // Data Verifier state
-  const [inputSource, setInputSource] = useState(tool.config?.input_source || 'fixed_value');
-  const [inputValue, setInputValue] = useState(tool.config?.input_value || '');
-  const [inputVariable, setInputVariable] = useState(tool.config?.input_variable || 'lead.phone');
-  const [normalizeAs, setNormalizeAs] = useState(tool.config?.normalize_as || tool.config?.normalization || 'none');
-  const [matchMode, setMatchMode] = useState(tool.config?.match_mode || 'exact_match');
+  const [inputSource, setInputSource] = useState(tool?.config?.input_source || 'fixed_value');
+  const [inputValue, setInputValue] = useState(tool?.config?.input_value || '');
+  const [inputVariable, setInputVariable] = useState(tool?.config?.input_variable || 'lead.phone');
+  const [normalizeAs, setNormalizeAs] = useState(tool?.config?.normalize_as || tool?.config?.normalization || 'none');
+  const [matchMode, setMatchMode] = useState(tool?.config?.match_mode || 'exact_match');
   const [matchN, setMatchN] = useState(() => {
-    const raw = parseInt(tool.config?.match_n);
+    const raw = parseInt(tool?.config?.match_n);
     return isNaN(raw) || raw <= 0 ? 4 : raw;
   });
-  const [referenceSource, setReferenceSource] = useState(tool.config?.reference_source || 'fixed_value');
-  const [referenceValue, setReferenceValue] = useState(tool.config?.reference_value || '');
+  const [referenceSource, setReferenceSource] = useState(tool?.config?.reference_source || 'fixed_value');
+  const [referenceValue, setReferenceValue] = useState(tool?.config?.reference_value || '');
   const [spokenOnMatch, setSpokenOnMatch] = useState(
-    tool.config?.spoken_responses?.on_match ?? tool.config?.spoken_on_match ?? 'Thanks — that matches our records on file.'
+    tool?.config?.spoken_responses?.on_match ?? tool?.config?.spoken_on_match ?? 'Thanks — that matches our records on file.'
   );
   const [spokenOnNoMatch, setSpokenOnNoMatch] = useState(
-    tool.config?.spoken_responses?.on_no_match ?? tool.config?.spoken_on_mismatch ?? "That doesn't match what we have on record. Could you please double-check?"
+    tool?.config?.spoken_responses?.on_no_match ?? tool?.config?.spoken_on_mismatch ?? "That doesn't match what we have on record. Could you please double-check?"
   );
   const [spokenOnError, setSpokenOnError] = useState(
-    tool.config?.spoken_responses?.on_error ?? tool.config?.spoken_on_error ?? "I'm experiencing an issue checking those details right now. Let's try again in a moment."
+    tool?.config?.spoken_responses?.on_error ?? tool?.config?.spoken_on_error ?? "I'm experiencing an issue checking those details right now. Let's try again in a moment."
   );
 
   // Verifier live testing inputs
@@ -347,7 +345,7 @@ export const ToolDrawer = React.memo(({
   const [curlError, setCurlError] = useState(null);
 
   // Path parameters state
-  const [pathParams, setPathParams] = useState(tool.config?.path_params || {});
+  const [pathParams, setPathParams] = useState(tool?.config?.path_params || {});
 
   // Live Test State
   const [isTesting, setIsTesting] = useState(false);
@@ -1514,6 +1512,8 @@ export const ToolDrawer = React.memo(({
       </div>
     );
   };
+
+  if (!isOpen || !tool) return null;
 
   return (
     <>
