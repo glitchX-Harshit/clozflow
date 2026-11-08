@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
 import { 
-  X, Globe, CheckCircle2, Database, Sliders, 
-  Wrench, ArrowRight, ShieldCheck, Cpu, Code2, Sparkles
+  X, Link2, Check, Shield, Layers, Cable
 } from 'lucide-react';
 import './ToolsStudio.css';
 import { TOOL_TEMPLATES } from '../../../data/toolTemplates.js';
 
 const ICON_MAP = {
-  api_tool: Globe,
-  data_validator: ShieldCheck,
-  data_verifier: Database,
-  mock_api: Sliders,
-  mcp: Cpu
+  api_tool: Link2,
+  data_validator: Check,
+  data_verifier: Shield,
+  mock_api: Layers,
+  mcp: Cable
 };
 
-
-export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
+export const AddToolModal = React.memo(({ isOpen, onClose, onSelectToolType }) => {
   useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape') {
         onClose();
       }
     };
@@ -30,61 +29,45 @@ export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
 
   return (
     <div className="tool-modal-backdrop" onClick={onClose}>
-      <div className="tool-modal-container" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
+      <div className="tool-modal-card" onClick={(e) => e.stopPropagation()}>
+        {/* Header - Minimalist, no artificial badges or clutter */}
         <div className="tool-modal-header">
-          <div>
-            <div className="tool-modal-badge">
-              <Sparkles size={12} />
-              <span>Tool Library</span>
-            </div>
-            <h2 className="tool-modal-title">Add a Tool</h2>
-            <p className="tool-modal-subtitle">
-              Equip your agent with real-time external actions, input format verification, and customer record matching.
-            </p>
-          </div>
+          <h2 className="tool-modal-title">Add a tool</h2>
           <button 
             type="button" 
             className="tool-btn-close"
             onClick={onClose}
-            title="Close modal (Esc)"
+            title="Close (Esc)"
           >
             <X size={18} />
           </button>
         </div>
 
-        {/* Clean Minimalist Cards Grid */}
+        {/* Clean, Non-Technical Card Grid matching Tier-1 SaaS benchmark */}
         <div className="tool-cards-grid">
           {TOOL_TEMPLATES.map((tmpl) => {
-            const Icon = tmpl.icon || ICON_MAP[tmpl.type] || Globe;
+            const Icon = ICON_MAP[tmpl.type] || Link2;
             return (
               <div 
                 key={tmpl.type}
                 className="tool-selection-card"
                 onClick={() => onSelectToolType(tmpl)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectToolType(tmpl);
+                  }
+                }}
               >
-                <div className="tool-card-top">
-                  <div className="tool-card-icon-wrap">
-                    <Icon size={19} />
-                  </div>
-                  {tmpl.badge && (
-                    <span className="tool-card-micro-badge">
-                      {tmpl.badge}
-                    </span>
-                  )}
+                <div className="tool-card-icon-squircle">
+                  <Icon size={18} strokeWidth={1.9} />
                 </div>
 
-                <div className="tool-card-text">
+                <div className="tool-card-content">
                   <h3 className="tool-card-title">{tmpl.title}</h3>
-                  <div className="tool-card-subheading">{tmpl.subtitle}</div>
                   <p className="tool-card-desc">{tmpl.description}</p>
-                </div>
-
-                <div className="tool-card-footer">
-                  <span className="tool-card-select-label">Configure Tool</span>
-                  <div className="tool-card-arrow">
-                    <ArrowRight size={13} />
-                  </div>
                 </div>
               </div>
             );
@@ -93,7 +76,7 @@ export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
       </div>
     </div>
   );
-};
+});
 
 export default AddToolModal;
 export { TOOL_TEMPLATES };

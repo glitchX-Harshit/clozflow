@@ -120,7 +120,7 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
     });
   }, []);
 
-  const handleSelectToolType = (template) => {
+  const handleSelectToolType = useCallback((template) => {
     setShowAddToolModal(false);
     setIsSageOpen(false);
     setShowTestingPanel(false);
@@ -135,16 +135,16 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
       is_active: true
     });
     setIsToolDrawerOpen(true);
-  };
+  }, []);
 
-  const handleEditTool = (tool) => {
+  const handleEditTool = useCallback((tool) => {
     setIsSageOpen(false);
     setShowTestingPanel(false);
     setSelectedDrawerTool(tool);
     setIsToolDrawerOpen(true);
-  };
+  }, []);
 
-  const handleSaveTool = async (savedTool) => {
+  const handleSaveTool = useCallback(async (savedTool) => {
     const isNew = !savedTool.id || String(savedTool.id).startsWith('tool_draft_');
     const token = localStorage.getItem('token');
 
@@ -204,9 +204,9 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
       setIsToolDrawerOpen(false);
       setSelectedDrawerTool(null);
     }
-  };
+  }, [currentId]);
 
-  const handleDeleteTool = async (toolId) => {
+  const handleDeleteTool = useCallback(async (toolId) => {
     const token = localStorage.getItem('token');
     if (currentId && !String(toolId).startsWith('tool_draft_')) {
       try {
@@ -222,9 +222,9 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
     setIsToolDrawerOpen(false);
     setSelectedDrawerTool(null);
     setIsDirty(true);
-  };
+  }, [currentId]);
 
-  const handleToggleToolActive = async (toolId, nextActive) => {
+  const handleToggleToolActive = useCallback(async (toolId, nextActive) => {
     setCustomTools(prev => prev.map(t => t.id === toolId ? { ...t, is_active: nextActive } : t));
     const token = localStorage.getItem('token');
     if (currentId && !String(toolId).startsWith('tool_draft_')) {
@@ -241,7 +241,32 @@ export const AgentEditor = ({ agentId = null, initialArchetypeId = null, onBack 
         console.warn('Failed to patch tool active status:', e);
       }
     }
-  };
+  }, [currentId]);
+
+  const handleAddToolClick = useCallback(() => {
+    setIsSageOpen(false);
+    setShowTestingPanel(false);
+    setShowAddToolModal(true);
+  }, []);
+
+  const handleToggleSystemTool = useCallback((id, checked) => {
+    setSystemTools(prev => prev.map(item => item.id === id ? { ...item, enabled: checked } : item));
+    setIsDirty(true);
+  }, []);
+
+  const handleOpenToolDocs = useCallback(() => {
+    setTemplateNotification('Tools allow your agent to fetch live data, verify caller inputs, and update your CRM directly during phone conversations.');
+    setTimeout(() => setTemplateNotification(null), 3500);
+  }, []);
+
+  const handleCloseAddToolModal = useCallback(() => {
+    setShowAddToolModal(false);
+  }, []);
+
+  const handleCloseDrawer = useCallback(() => {
+    setIsToolDrawerOpen(false);
+    setSelectedDrawerTool(null);
+  }, []);
 
 
   // Telephony & Audio Settings (Matching Sarvam Screenshots 3, 4, 5, 6)
@@ -1630,22 +1655,12 @@ Custom edits can still be made. Do you want to proceed?`
     <ToolsStudio 
       tools={customTools}
       systemTools={systemTools}
-      onAddToolClick={() => {
-        setIsSageOpen(false);
-        setShowTestingPanel(false);
-        setShowAddToolModal(true);
-      }}
+      onAddToolClick={handleAddToolClick}
       onEditTool={handleEditTool}
       onDeleteTool={handleDeleteTool}
       onToggleToolActive={handleToggleToolActive}
-      onToggleSystemTool={(id, checked) => {
-        setSystemTools(prev => prev.map(item => item.id === id ? { ...item, enabled: checked } : item));
-        setIsDirty(true);
-      }}
-      onOpenDocs={() => {
-        setTemplateNotification('Tools allow your agent to fetch live data, verify caller inputs, and update your CRM directly during phone conversations.');
-        setTimeout(() => setTemplateNotification(null), 3500);
-      }}
+      onToggleSystemTool={handleToggleSystemTool}
+      onOpenDocs={handleOpenToolDocs}
     />
   );
 
@@ -2947,17 +2962,14 @@ Custom edits can still be made. Do you want to proceed?`
       {/* 5-Card Add Tool Modal */}
       <AddToolModal 
         isOpen={showAddToolModal}
-        onClose={() => setShowAddToolModal(false)}
+        onClose={handleCloseAddToolModal}
         onSelectToolType={handleSelectToolType}
       />
 
       {/* Comprehensive Tool Drawer with Live Inspector */}
       <ToolDrawer 
         isOpen={isToolDrawerOpen}
-        onClose={() => {
-          setIsToolDrawerOpen(false);
-          setSelectedDrawerTool(null);
-        }}
+        onClose={handleCloseDrawer}
         tool={selectedDrawerTool}
         agentId={currentId}
         onSaveTool={handleSaveTool}

@@ -1,5 +1,8 @@
 import re
 
+_PHONE_CLEAN_RE = re.compile(r'[\s\-\(\)]')
+_E164_RE = re.compile(r'^\+[1-9]\d{1,14}$')
+
 def normalize_indian_phone_number(phone: str) -> str:
     """
     Normalize an Indian phone number to E.164 format.
@@ -8,7 +11,7 @@ def normalize_indian_phone_number(phone: str) -> str:
     if not phone:
         raise ValueError("Phone number cannot be empty")
         
-    cleaned = re.sub(r'[\s\-\(\)]', '', phone)
+    cleaned = _PHONE_CLEAN_RE.sub('', phone)
     
     if cleaned.startswith("+91") and len(cleaned) == 13:
         return cleaned
@@ -22,4 +25,5 @@ def normalize_indian_phone_number(phone: str) -> str:
         raise ValueError("Invalid Indian phone number format")
 
 def is_valid_e164(phone: str) -> bool:
-    return bool(re.match(r'^\+[1-9]\d{1,14}$', phone))
+    return bool(_E164_RE.match(phone))
+

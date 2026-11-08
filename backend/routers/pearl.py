@@ -15,7 +15,8 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, UploadFi
 
 from fastapi.responses import StreamingResponse, Response
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, selectinload
+from sqlalchemy import func
 
 from pydantic import BaseModel
 
@@ -199,6 +200,23 @@ class UpdateAgentRequest(BaseModel):
 
 def tool_to_dict(tool: AgentTool) -> dict:
     """Serialize an AgentTool to dict."""
+    cfg = tool.config
+    if isinstance(cfg, str):
+        try:
+            cfg = json.loads(cfg)
+        except Exception:
+            cfg = {}
+    elif not isinstance(cfg, dict):
+        cfg = {}
+
+    raw_mode = getattr(tool, "run_mode", None)
+    if not raw_mode and isinstance(cfg, dict):
+        raw_mode = cfg.get("run_mode")
+    raw_mode = str(raw_mode or "").lower().strip()
+    is_read = (raw_mode == "read") or (isinstance(cfg, dict) and cfg.get("is_read_tool") is True)
+    mode = "read" if is_read else "write"
+    is_async_write = (not is_read)
+
     return {
         "id": tool.id,
         "agent_id": tool.agent_id,
@@ -206,16 +224,19 @@ def tool_to_dict(tool: AgentTool) -> dict:
         "tool_type": tool.tool_type,
         "description": tool.description,
         "run_timing": tool.run_timing or "conversation",
+        "run_mode": mode,
+        "is_read_tool": is_read,
+        "is_async_write": is_async_write,
         "timeout_seconds": tool.timeout_seconds or 10,
         "fallback_response": tool.fallback_response,
-        "config": tool.config or {},
+        "config": cfg,
         "is_active": bool(tool.is_active) if tool.is_active is not None else True,
         "created_at": tool.created_at.isoformat() if tool.created_at else None,
         "updated_at": tool.updated_at.isoformat() if tool.updated_at else None,
     }
 
 
-def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
+def agent_to_dict(agent: PearlAgent, include_events: bool = False, recent_events: Optional[List[PearlEvent]] = None) -> dict:
 
     """Serialize a PearlAgent to dict for API response."""
 
@@ -297,8 +318,10 @@ def agent_to_dict(agent: PearlAgent, include_events: bool = False) -> dict:
     }
 
     if include_events:
-
-        result["recent_events"] = [event_to_dict(e) for e in (agent.events or [])[:20]]
+        if recent_events is not None:
+            result["recent_events"] = [event_to_dict(e) for e in recent_events]
+        else:
+            result["recent_events"] = [event_to_dict(e) for e in (getattr(agent, "events", None) or [])[:20]]
 
     return result
 
@@ -502,7 +525,10 @@ def list_agents(
 
     """List all Pearl agents for the current user."""
 
-    agents = db.query(PearlAgent).filter(
+    agents = db.query(PearlAgent).options(
+        joinedload(PearlAgent.capsule),
+        selectinload(PearlAgent.tools)
+    ).filter(
 
         PearlAgent.user_id == user.id
 
@@ -530,7 +556,10 @@ def get_agent(
 
     """Get a single agent with recent events."""
 
-    agent = db.query(PearlAgent).filter(
+    agent = db.query(PearlAgent).options(
+        joinedload(PearlAgent.capsule),
+        selectinload(PearlAgent.tools)
+    ).filter(
 
         PearlAgent.id == agent_id,
 
@@ -539,10 +568,13 @@ def get_agent(
     ).first()
 
     if not agent:
-
         raise HTTPException(404, "Agent not found")
 
-    return agent_to_dict(agent, include_events=True)
+    recent_events = db.query(PearlEvent).filter(
+        PearlEvent.agent_id == agent_id
+    ).order_by(PearlEvent.timestamp.desc()).limit(20).all()
+
+    return agent_to_dict(agent, include_events=True, recent_events=recent_events)
 
 
 
@@ -4282,7 +4314,9 @@ def list_campaigns(
 
     """List all campaigns for current user."""
 
-    campaigns = db.query(PearlCampaign).filter(
+    campaigns = db.query(PearlCampaign).options(
+        joinedload(PearlCampaign.agent)
+    ).filter(
 
         PearlCampaign.user_id == user.id
 
@@ -4308,7 +4342,10 @@ def get_campaign(
 
     """Get single campaign details and recipients."""
 
-    campaign = db.query(PearlCampaign).filter(
+    campaign = db.query(PearlCampaign).options(
+        joinedload(PearlCampaign.agent),
+        selectinload(PearlCampaign.recipients)
+    ).filter(
 
         PearlCampaign.id == campaign_id,
 
@@ -4481,29 +4518,17 @@ async def import_campaign_leads_file(
 
 
     if filename.endswith(".csv"):
-
         try:
-
             text = content.decode("utf-8-sig")
-
         except UnicodeDecodeError:
-
             text = content.decode("latin-1", errors="replace")
-
-        raw_rows = parse_csv_file(text)
-
+        raw_rows = await asyncio.to_thread(parse_csv_file, text)
     elif filename.endswith(".xlsx"):
-
         try:
-
-            raw_rows = parse_xlsx_sheets(content)
-
+            raw_rows = await asyncio.to_thread(parse_xlsx_sheets, content)
         except Exception as e:
-
             raise HTTPException(400, f"Failed to parse Excel workbook: {str(e)}")
-
     else:
-
         raise HTTPException(400, "Unsupported file format. Please upload a .csv or .xlsx file")
 
 
@@ -4526,72 +4551,44 @@ async def import_campaign_leads_file(
 
 
 
-    processed, stats = process_lead_batch(raw_rows, source="csv_upload", existing_phone_set=existing_phones)
+    processed, stats = await asyncio.to_thread(
+        process_lead_batch, raw_rows, source="csv_upload", existing_phone_set=existing_phones
+    )
 
-
-
-    # Persist recipients to DB
-
-    new_recipients = []
-
-    for item in processed:
-
-        rec = PearlCampaignRecipient(
-
+    # Persist recipients to DB in batch
+    new_recipients = [
+        PearlCampaignRecipient(
             campaign_id=campaign.id,
-
             name=item.get("name"),
-
             business_name=item.get("business_name"),
-
             company=item.get("company"),
-
             phone_number=item.get("phone_number") or "",
-
             normalized_phone=item.get("normalized_phone") or "",
-
             email=item.get("email"),
-
             website=item.get("website"),
-
             source="csv_upload",
-
             status=item.get("status", "valid"),
-
             validation_error=item.get("validation_error")
-
         )
+        for item in processed
+    ]
 
-        db.add(rec)
-
-        new_recipients.append(rec)
-
-
-
+    db.add_all(new_recipients)
     db.commit()
 
-
-
-    # Recalculate campaign totals
-
-    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
-
-    eligible = db.query(PearlCampaignRecipient).filter(
-
-        PearlCampaignRecipient.campaign_id == campaign_id,
-
-        PearlCampaignRecipient.status == "valid"
-
-    ).count()
-
-
+    # Recalculate campaign totals in single grouped query
+    counts = dict(
+        db.query(PearlCampaignRecipient.status, func.count(PearlCampaignRecipient.id))
+        .filter(PearlCampaignRecipient.campaign_id == campaign_id)
+        .group_by(PearlCampaignRecipient.status)
+        .all()
+    )
+    total = sum(counts.values())
+    eligible = counts.get("valid", 0)
 
     campaign.total_recipients = total
-
     campaign.eligible_recipients = eligible
-
     campaign.source_type = "csv_upload"
-
     db.commit()
 
 
@@ -4617,119 +4614,69 @@ async def import_campaign_leads_file(
 
 
 @router.post("/campaigns/{campaign_id}/import-from-finder")
-
-def import_campaign_leads_from_finder(
-
+async def import_campaign_leads_from_finder(
     campaign_id: str,
-
     req: ImportFromFinderRequest,
-
     db: Session = Depends(get_db),
-
     user: User = Depends(get_current_user)
-
 ):
-
     """
-
     Import leads directly selected from Clozflow Lead Finder into a campaign.
-
     Normalizes phone numbers and deduplicates seamlessly.
-
     """
-
     campaign = db.query(PearlCampaign).filter(
-
         PearlCampaign.id == campaign_id,
-
         PearlCampaign.user_id == user.id
-
     ).first()
-
     if not campaign:
-
         raise HTTPException(404, "Campaign not found")
 
-
-
     if not req.leads:
-
         raise HTTPException(400, "No leads provided in selection")
 
-
-
     existing_recipients = db.query(PearlCampaignRecipient.normalized_phone).filter(
-
         PearlCampaignRecipient.campaign_id == campaign_id
-
     ).all()
-
     existing_phones = {r[0] for r in existing_recipients if r[0]}
 
+    processed, stats = await asyncio.to_thread(
+        process_lead_batch, req.leads, source="lead_finder", existing_phone_set=existing_phones
+    )
 
-
-    processed, stats = process_lead_batch(req.leads, source="lead_finder", existing_phone_set=existing_phones)
-
-
-
-    new_recipients = []
-
-    for item in processed:
-
-        rec = PearlCampaignRecipient(
-
+    # Persist recipients to DB in batch
+    new_recipients = [
+        PearlCampaignRecipient(
             campaign_id=campaign.id,
-
             name=item.get("name"),
-
             business_name=item.get("business_name"),
-
             company=item.get("company"),
-
             phone_number=item.get("phone_number") or "",
-
             normalized_phone=item.get("normalized_phone") or "",
-
             email=item.get("email"),
-
             website=item.get("website"),
-
             source="lead_finder",
-
             status=item.get("status", "valid"),
-
             validation_error=item.get("validation_error")
-
         )
+        for item in processed
+    ]
 
-        db.add(rec)
-
-        new_recipients.append(rec)
-
-
-
+    db.add_all(new_recipients)
     db.commit()
 
-
-
-    total = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.campaign_id == campaign_id).count()
-
-    eligible = db.query(PearlCampaignRecipient).filter(
-
-        PearlCampaignRecipient.campaign_id == campaign_id,
-
-        PearlCampaignRecipient.status == "valid"
-
-    ).count()
-
-
+    # Recalculate campaign totals in single grouped query
+    counts = dict(
+        db.query(PearlCampaignRecipient.status, func.count(PearlCampaignRecipient.id))
+        .filter(PearlCampaignRecipient.campaign_id == campaign_id)
+        .group_by(PearlCampaignRecipient.status)
+        .all()
+    )
+    total = sum(counts.values())
+    eligible = counts.get("valid", 0)
 
     campaign.total_recipients = total
-
     campaign.eligible_recipients = eligible
-
     campaign.source_type = "lead_finder"
-
     db.commit()
 
 
@@ -5639,6 +5586,9 @@ class CreateAgentToolRequest(BaseModel):
     tool_type: str  # api_tool | data_validator | data_verifier | mock_api | mcp
     description: Optional[str] = None
     run_timing: Optional[str] = "conversation"  # call_start | conversation | call_end
+    run_mode: Optional[str] = "write"  # "write" (Pattern A: async non-blocking) | "read" (Pattern B: filler + live lookup)
+    is_read_tool: Optional[bool] = None
+    is_async_write: Optional[bool] = None
     timeout_seconds: Optional[int] = 10
     fallback_response: Optional[str] = None
     config: Optional[dict] = None
@@ -5650,6 +5600,9 @@ class UpdateAgentToolRequest(BaseModel):
     tool_type: Optional[str] = None
     description: Optional[str] = None
     run_timing: Optional[str] = None
+    run_mode: Optional[str] = None
+    is_read_tool: Optional[bool] = None
+    is_async_write: Optional[bool] = None
     timeout_seconds: Optional[int] = None
     fallback_response: Optional[str] = None
     config: Optional[dict] = None
@@ -5699,15 +5652,44 @@ def create_agent_tool(
     if req.tool_type not in valid_types:
         raise HTTPException(400, f"Invalid tool_type '{req.tool_type}'. Must be one of: {', '.join(valid_types)}")
 
+    if not req.name or not req.name.strip():
+        raise HTTPException(400, "Tool name cannot be empty")
+
+    cfg = req.config
+    if isinstance(cfg, str):
+        try:
+            cfg = json.loads(cfg)
+        except Exception:
+            cfg = {}
+    elif not isinstance(cfg, dict):
+        cfg = {}
+
+    # Resolve tool execution mode (Pattern A write vs Pattern B read)
+    mode = "write"
+    if req.run_mode is not None and str(req.run_mode).strip():
+        mode = str(req.run_mode).lower().strip()
+    elif req.is_read_tool is True:
+        mode = "read"
+    elif req.is_async_write is False:
+        mode = "read"
+    elif isinstance(cfg, dict):
+        if cfg.get("run_mode"):
+            mode = str(cfg["run_mode"]).lower().strip()
+        elif cfg.get("is_read_tool") is True:
+            mode = "read"
+    if mode not in ("write", "read"):
+        mode = "write"
+
     tool = AgentTool(
         agent_id=agent_id,
         name=req.name.strip(),
         tool_type=req.tool_type,
         description=req.description,
         run_timing=req.run_timing or "conversation",
+        run_mode=mode,
         timeout_seconds=req.timeout_seconds or 10,
         fallback_response=req.fallback_response,
-        config=req.config or {},
+        config=cfg,
         is_active=True if req.is_active is None else req.is_active
     )
     db.add(tool)
@@ -5752,19 +5734,46 @@ def update_agent_tool(
         raise HTTPException(404, "Tool not found")
 
     if req.name is not None:
-        tool.name = req.name.strip()
+        trimmed = req.name.strip()
+        if not trimmed:
+            raise HTTPException(400, "Tool name cannot be empty")
+        tool.name = trimmed
     if req.tool_type is not None:
         tool.tool_type = req.tool_type
     if req.description is not None:
         tool.description = req.description
     if req.run_timing is not None:
         tool.run_timing = req.run_timing
+    if req.run_mode is not None or req.is_read_tool is not None or req.is_async_write is not None:
+        if req.run_mode is not None and str(req.run_mode).strip():
+            m = str(req.run_mode).lower().strip()
+            tool.run_mode = "read" if m == "read" else "write"
+        elif req.is_read_tool is not None:
+            tool.run_mode = "read" if req.is_read_tool else "write"
+        elif req.is_async_write is not None:
+            tool.run_mode = "write" if req.is_async_write else "read"
     if req.timeout_seconds is not None:
         tool.timeout_seconds = req.timeout_seconds
     if req.fallback_response is not None:
         tool.fallback_response = req.fallback_response
     if req.config is not None:
-        tool.config = req.config
+        upd_cfg = req.config
+        if isinstance(upd_cfg, str):
+            try:
+                upd_cfg = json.loads(upd_cfg)
+            except Exception:
+                upd_cfg = {}
+        elif not isinstance(upd_cfg, dict):
+            upd_cfg = {}
+        tool.config = upd_cfg
+        # If run_mode was not explicitly supplied at top level, inspect config payload
+        if req.run_mode is None and req.is_read_tool is None and req.is_async_write is None and isinstance(upd_cfg, dict):
+            if upd_cfg.get("run_mode"):
+                tool.run_mode = "read" if str(upd_cfg["run_mode"]).lower().strip() == "read" else "write"
+            elif upd_cfg.get("is_read_tool") is not None:
+                tool.run_mode = "read" if upd_cfg["is_read_tool"] else "write"
+            elif upd_cfg.get("is_async_write") is not None:
+                tool.run_mode = "write" if upd_cfg["is_async_write"] else "read"
     if req.is_active is not None:
         tool.is_active = req.is_active
 
@@ -5862,7 +5871,12 @@ def parse_curl_endpoint(
     """Parse raw cURL command into structured API tool configuration."""
     from services.pearl.tool_engine import parse_curl_command
     parsed = parse_curl_command(req.curl_command or "")
-    return parsed
+    has_url = bool(parsed.get("url"))
+    return {
+        "success": has_url,
+        "data": parsed,
+        **parsed
+    }
 
 
 

@@ -44,7 +44,7 @@ class PearlAgent(Base):
     user_id         = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name            = Column(String, nullable=False)
     role            = Column(String, default="outbound_qualification")
-    status          = Column(String, default="draft")  # draft → ready → active → paused → completed → error
+    status          = Column(String, default="draft", index=True)  # draft → ready → active → paused → completed → error
 
     # Knowledge — reference to existing Capsule (not copied)
     capsule_id      = Column(Integer, ForeignKey("capsules.id"), nullable=True)
@@ -82,7 +82,7 @@ class PearlAgent(Base):
     relay_count         = Column(Integer, default=0)
 
     # Timestamps
-    created_at      = Column(DateTime, default=datetime.utcnow)
+    created_at      = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at      = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     deployed_at     = Column(DateTime, nullable=True)
     completed_at    = Column(DateTime, nullable=True)
@@ -107,14 +107,14 @@ class PearlCall(Base):
 
     id                  = Column(String, primary_key=True, default=generate_uuid, index=True)
     agent_id            = Column(String, ForeignKey("pearl_agents.id"), nullable=False, index=True)
-    lead_id             = Column(Integer, ForeignKey("leads.id"), nullable=True)
+    lead_id             = Column(Integer, ForeignKey("leads.id"), nullable=True, index=True)
 
     # Provider
     provider            = Column(String, nullable=False)  # mock | elevenlabs | exotel
     provider_call_id    = Column(String, nullable=True)
 
     # Status
-    status              = Column(String, default="queued")  # queued → initiating → ringing → connected → completed → failed → transferred
+    status              = Column(String, default="queued", index=True)  # queued → initiating → ringing → connected → completed → failed → transferred
     duration_seconds    = Column(Integer, default=0)
     outcome             = Column(String, nullable=True)     # qualified | not_interested | callback | no_answer | voicemail | error
     error_code          = Column(String, nullable=True)
@@ -138,7 +138,7 @@ class PearlCall(Base):
     pulses_30s          = Column(Integer, default=0)
 
     # Timestamps
-    created_at          = Column(DateTime, default=datetime.utcnow)
+    created_at          = Column(DateTime, default=datetime.utcnow, index=True)
     started_at          = Column(DateTime, nullable=True)
     answered_at         = Column(DateTime, nullable=True)
     ended_at            = Column(DateTime, nullable=True)
@@ -286,7 +286,7 @@ class PearlCampaign(Base):
     name                = Column(String, nullable=False)
     objective           = Column(Text, nullable=True)
     description         = Column(Text, nullable=True)
-    status              = Column(String, default="draft") # draft | scheduled | queued | running | paused | completed | failed
+    status              = Column(String, default="draft", index=True) # draft | scheduled | queued | running | paused | completed | failed
     source_type         = Column(String, default="lead_finder") # lead_finder | csv_upload | manual
     
     # Calling & retry configurations
@@ -301,7 +301,7 @@ class PearlCampaign(Base):
     qualified_calls     = Column(Integer, default=0)
 
     # Timestamps
-    created_at          = Column(DateTime, default=datetime.utcnow)
+    created_at          = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at          = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     started_at          = Column(DateTime, nullable=True)
     completed_at        = Column(DateTime, nullable=True)
@@ -334,7 +334,7 @@ class PearlCampaignRecipient(Base):
     source              = Column(String, default="lead_finder") # lead_finder | csv_upload | manual
     
     # Recipient validation and selection state
-    status              = Column(String, default="valid") # valid | invalid | excluded | queued | calling | completed | failed
+    status              = Column(String, default="valid", index=True) # valid | invalid | excluded | queued | calling | completed | failed
     validation_error    = Column(String, nullable=True)
 
     # Execution telemetry
@@ -347,7 +347,7 @@ class PearlCampaignRecipient(Base):
     summary             = Column(Text, nullable=True)
 
     # Timestamps
-    created_at          = Column(DateTime, default=datetime.utcnow)
+    created_at          = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at          = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
@@ -365,26 +365,60 @@ class AgentTool(Base):
       - api_tool: External REST API calls with params/headers/auth/body and @field response mapping
       - data_validator: Regex and format checking (phone, PAN, pincode, custom)
       - data_verifier: Normalizing and matching spoken input against lead data on file
+          Config schema:
+            - input_source: "fixed_value" | "agent_variable" | "let_agent_decide"
+            - input_value: static string (when input_source == "fixed_value")
+            - input_variable: agent memory key (when input_source == "agent_variable")
+            - normalize_as: "none" | "phone" | "date" | "text"
+            - match_mode: "exact_match" | "last_n" | "first_n" | "contains" | "date_equals"
+            - match_n: integer (character count for last_n and first_n, default 4)
+            - reference_source: "fixed_value" | "agent_variable"
+            - reference_value: static string or variable path (e.g. "lead.phone")
+            - spoken_responses: { "on_match": str, "on_no_match": str, "on_error": str }
       - mock_api: Simulated mock endpoints for testing before backend is live
       - mcp: Model Context Protocol dynamic server tools
     """
     __tablename__ = "pearl_agent_tools"
 
     id                  = Column(String, primary_key=True, default=generate_uuid, index=True)
-    agent_id            = Column(String, ForeignKey("pearl_agents.id"), nullable=False, index=True)
+    agent_id            = Column(String, ForeignKey("pearl_agents.id", ondelete="CASCADE"), nullable=False, index=True)
     name                = Column(String, nullable=False)
-    tool_type           = Column(String, nullable=False)  # api_tool | data_validator | data_verifier | mock_api | mcp
+    tool_type           = Column(String, nullable=False, index=True)  # api_tool | data_validator | data_verifier | mock_api | mcp
     description         = Column(Text, nullable=True)
     run_timing          = Column(String, default="conversation")  # call_start | conversation | call_end
     timeout_seconds     = Column(Integer, default=10)
     fallback_response   = Column(Text, nullable=True)
     config              = Column(JSON, nullable=True)     # Tool-specific configuration
-    is_active           = Column(Boolean, default=True)
+    run_mode            = Column(String, default="write", index=True)  # "write" (Pattern A: async non-blocking) | "read" (Pattern B: filler + blocking lookup)
+    is_active           = Column(Boolean, default=True, index=True)
 
-    created_at          = Column(DateTime, default=datetime.utcnow)
+    created_at          = Column(DateTime, default=datetime.utcnow, index=True)
     updated_at          = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     agent               = relationship("PearlAgent", back_populates="tools")
+
+    @property
+    def is_read_tool(self) -> bool:
+        """Pattern B: Live read/lookup tool requiring live data before response."""
+        mode = str(self.run_mode or "").lower().strip()
+        if mode == "read":
+            return True
+        cfg = self.config
+        if isinstance(cfg, str):
+            try:
+                import json
+                cfg = json.loads(cfg)
+            except Exception:
+                cfg = {}
+        if isinstance(cfg, dict):
+            if cfg.get("is_read_tool") is True or str(cfg.get("run_mode") or "").lower().strip() == "read":
+                return True
+        return False
+
+    @property
+    def is_async_write(self) -> bool:
+        """Pattern A: Asynchronous non-blocking write/action tool."""
+        return not self.is_read_tool
 
 

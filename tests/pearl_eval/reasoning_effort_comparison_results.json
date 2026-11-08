@@ -1,0 +1,270 @@
+{
+  "high": [
+    {
+      "scenario_id": "S1",
+      "scenario_name": "Fintech KYC recovery",
+      "reasoning_effort": "high",
+      "avg_ttft_ms": 0.0,
+      "avg_total_ms": 8499.1,
+      "avg_words": 0.0,
+      "turns": [
+        {
+          "turn": 0,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 8314.0,
+          "word_count": 0
+        },
+        {
+          "turn": 1,
+          "speaker": "prospect",
+          "text": "Dekho Rahul bol raha hoon, mera OTP generate nahi ho raha tha aur mujhe laga koi scam na ho. Waise CredPulse ka interest rate kitna hai?"
+        },
+        {
+          "turn": 2,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 8932.3,
+          "word_count": 0
+        },
+        {
+          "turn": 3,
+          "speaker": "prospect",
+          "text": "Acha link direct mere WhatsApp par aayega kya? Aur usme mera koi data misuse toh nahi hoga na?"
+        },
+        {
+          "turn": 4,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 8250.9,
+          "word_count": 0
+        }
+      ]
+    },
+    {
+      "scenario_id": "S2",
+      "scenario_name": "D2C COD verification",
+      "reasoning_effort": "high",
+      "avg_ttft_ms": 0.0,
+      "avg_total_ms": 12021.2,
+      "avg_words": 0.0,
+      "turns": [
+        {
+          "turn": 0,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 16654.8,
+          "word_count": 0
+        },
+        {
+          "turn": 1,
+          "speaker": "prospect",
+          "text": "Haan Pooja bol rahi hoon. Main Snitch ki shirt ke liye COD hi rakhna chahti hoon, online payment mein fraud hone ka darr rehta hai."
+        },
+        {
+          "turn": 2,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 3176.9,
+          "word_count": 0
+        },
+        {
+          "turn": 3,
+          "speaker": "prospect",
+          "text": "Agar prepaid kiya toh kitna discount milega, aur delivery Monday tak pakka ho jayegi South Extension mein?"
+        },
+        {
+          "turn": 4,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 16231.8,
+          "word_count": 0
+        }
+      ]
+    },
+    {
+      "scenario_id": "S4",
+      "scenario_name": "B2B discovery + meeting booking",
+      "reasoning_effort": "high",
+      "avg_ttft_ms": 0.0,
+      "avg_total_ms": 9098.7,
+      "avg_words": 0.0,
+      "turns": [
+        {
+          "turn": 0,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 8764.5,
+          "word_count": 0
+        },
+        {
+          "turn": 1,
+          "speaker": "prospect",
+          "text": "Amit here. Main abhi ek production incident meeting mein hoon aur hum already Datadog use kar rahe hain, we don't need another tool right now."
+        },
+        {
+          "turn": 2,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 8218.6,
+          "word_count": 0
+        },
+        {
+          "turn": 3,
+          "speaker": "prospect",
+          "text": "Datadog mein cost ka thoda issue toh hai. Agar 10 minute ka quick walk-through ho toh kal afternoon 3 baje slot mil sakta hai."
+        },
+        {
+          "turn": 4,
+          "speaker": "agent",
+          "text": "",
+          "ttft_ms": null,
+          "total_ms": 10313.0,
+          "word_count": 0
+        }
+      ]
+    }
+  ],
+  "none": [
+    {
+      "scenario_id": "S1",
+      "scenario_name": "Fintech KYC recovery",
+      "reasoning_effort": "none",
+      "avg_ttft_ms": 389.6,
+      "avg_total_ms": 457.7,
+      "avg_words": 21.3,
+      "turns": [
+        {
+          "turn": 0,
+          "speaker": "agent",
+          "text": "Hi Rahul, Ritu here from CredPulse Financial. Aapka dhai lakh ka pre-approved limit ready hai, bas Aadhaar OTP mein thoda issue hua tha.",
+          "ttft_ms": 422.2,
+          "total_ms": 489.1,
+          "word_count": 23
+        },
+        {
+          "turn": 1,
+          "speaker": "prospect",
+          "text": "Dekho Rahul bol raha hoon, mera OTP generate nahi ho raha tha aur mujhe laga koi scam na ho. Waise CredPulse ka interest rate kitna hai?"
+        },
+        {
+          "turn": 2,
+          "speaker": "agent",
+          "text": "Bilkul, samajh sakti hoon. Interest rate mere system mein nahi hai, woh aapko WhatsApp link mein clear dikhega.",
+          "ttft_ms": 280.1,
+          "total_ms": 354.8,
+          "word_count": 18
+        },
+        {
+          "turn": 3,
+          "speaker": "prospect",
+          "text": "Acha link direct mere WhatsApp par aayega kya? Aur usme mera koi data misuse toh nahi hoga na?"
+        },
+        {
+          "turn": 4,
+          "speaker": "agent",
+          "text": "Haan, link direct WhatsApp par aayega. Data security ke baare mein mere paas koi claim nahi hai, par official CredPulse channel hi hai.",
+          "ttft_ms": 466.4,
+          "total_ms": 529.2,
+          "word_count": 23
+        }
+      ]
+    },
+    {
+      "scenario_id": "S2",
+      "scenario_name": "D2C COD verification",
+      "reasoning_effort": "none",
+      "avg_ttft_ms": 1466.2,
+      "avg_total_ms": 1541.7,
+      "avg_words": 23.3,
+      "turns": [
+        {
+          "turn": 0,
+          "speaker": "agent",
+          "text": "Hi Aakash, Priya Snitch se. Aapka Oversized Linen Shirt ka order confirm karne ke liye call kiya hai, ek minute dete hain?",
+          "ttft_ms": 240.7,
+          "total_ms": 311.6,
+          "word_count": 22
+        },
+        {
+          "turn": 1,
+          "speaker": "prospect",
+          "text": "Haan Pooja bol rahi hoon. Main Snitch ki shirt ke liye COD hi rakhna chahti hoon, online payment mein fraud hone ka darr rehta hai."
+        },
+        {
+          "turn": 2,
+          "speaker": "agent",
+          "text": "Bilkul, COD bilkul safe hai. Bas address aur landmark confirm kar lu, phir delivery 3-4 din mein ho jayegi. Aapka delivery address kya hai?",
+          "ttft_ms": 1216.2,
+          "total_ms": 1298.2,
+          "word_count": 24
+        },
+        {
+          "turn": 3,
+          "speaker": "prospect",
+          "text": "Agar prepaid kiya toh kitna discount milega, aur delivery Monday tak pakka ho jayegi South Extension mein?"
+        },
+        {
+          "turn": 4,
+          "speaker": "agent",
+          "text": "Prepay par Rs 100 off milega. Delivery 3-4 din mein hoti hai, guaranteed date nahi de sakti. Aapka South Extension mein landmark kya hai?",
+          "ttft_ms": 2941.8,
+          "total_ms": 3015.2,
+          "word_count": 24
+        }
+      ]
+    },
+    {
+      "scenario_id": "S4",
+      "scenario_name": "B2B discovery + meeting booking",
+      "reasoning_effort": "none",
+      "avg_ttft_ms": 11768.7,
+      "avg_total_ms": 11891.8,
+      "avg_words": 30.3,
+      "turns": [
+        {
+          "turn": 0,
+          "speaker": "agent",
+          "text": "Hi Siddharth, Aditya here from Clozflow. Dekhiye, aap ke outbound team ki call handling main ek quick efficiency upgrade discuss karna chahta h. Ek minute mil jayega?",
+          "ttft_ms": 16880.1,
+          "total_ms": 16984.7,
+          "word_count": 27
+        },
+        {
+          "turn": 1,
+          "speaker": "prospect",
+          "text": "Amit here. Main abhi ek production incident meeting mein hoon aur hum already Datadog use kar rahe hain, we don't need another tool right now."
+        },
+        {
+          "turn": 2,
+          "speaker": "agent",
+          "text": "Bilkul, incident priority hai. Haan haan, Datadog monitoring ke liye best hai, par hum uski jagah nahi. Hum sirf outbound sales calls automate karte hain, monitoring nahi. Aapka monthly call volume kitna rehta hai?",
+          "ttft_ms": 2841.0,
+          "total_ms": 3004.9,
+          "word_count": 34
+        },
+        {
+          "turn": 3,
+          "speaker": "prospect",
+          "text": "Datadog mein cost ka thoda issue toh hai. Agar 10 minute ka quick walk-through ho toh kal afternoon 3 baje slot mil sakta hai."
+        },
+        {
+          "turn": 4,
+          "speaker": "agent",
+          "text": "10 minute perfect hai, no pressure. Kal 3 baje IST slot main check karta hoon. Bas pehle aapka work email bata dijiye, wahan se confirm karke deck bhi bhej doon.",
+          "ttft_ms": 15585.0,
+          "total_ms": 15685.9,
+          "word_count": 30
+        }
+      ]
+    }
+  ]
+}
