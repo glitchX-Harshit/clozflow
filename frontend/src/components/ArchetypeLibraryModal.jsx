@@ -173,7 +173,7 @@ export const ArchetypeLibraryModal = ({ isOpen, onClose, onApplyArchetype, curre
                     {activeArchetype.recommendedVoices?.[0]?.name || 'Ritu'}
                   </span>
                   <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                    ({activeArchetype.defaultLanguage} · Bulbul v4)
+                    ({activeArchetype.defaultLanguage} · Native Voice)
                   </span>
                 </div>
               </div>
@@ -183,7 +183,7 @@ export const ArchetypeLibraryModal = ({ isOpen, onClose, onApplyArchetype, curre
             <div className="archetype-preview-section">
               <div className="preview-section-title">
                 <MessageSquare size={14} color="#0f172a" />
-                <span>2-Yes Fixed Opening Script Preview</span>
+                <span>Fixed Opening Script Preview</span>
               </div>
               <div className="archetype-greeting-box">
                 {greetingSegments.map((seg, idx) => {

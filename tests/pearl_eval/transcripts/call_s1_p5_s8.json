@@ -1,0 +1,177 @@
+{
+  "call_id": "call_s1_p5_s8",
+  "call_index": 47,
+  "scenario_id": "S1",
+  "scenario_name": "Fintech KYC recovery",
+  "persona_id": "P5",
+  "persona_name": "Constraint-driven",
+  "persona_difficulty": "hard",
+  "seed": 8,
+  "failure_injection": "VOICEMAIL",
+  "turns": [
+    {
+      "turn": 0,
+      "speaker": "prospect",
+      "text": "Jio voice answering machine for +919876500047. Speak after the tone. Beep.",
+      "word_count": 11,
+      "timestamp": "2026-11-07T08:58:14.703835+00:00",
+      "latency_ms": 0.0,
+      "latency_breakdown": {
+        "llm_ms": 0.0,
+        "ttft_ms": null,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      },
+      "is_voicemail": true
+    },
+    {
+      "turn": 1,
+      "speaker": "agent",
+      "text": "Hello Rahul Sharma, Ritu calling from CredPulse Financial. We missed you and will call back shortly. Have a nice day.",
+      "word_count": 20,
+      "timestamp": "2026-11-07T08:58:14.703835+00:00",
+      "latency_ms": 758.4,
+      "latency_breakdown": {
+        "llm_ms": 758.4,
+        "ttft_ms": 460.4,
+        "stt_ms": null,
+        "tts_ms": null,
+        "label": "LLM-only (STT/TTS unmeasured in text simulation)"
+      }
+    }
+  ],
+  "tool_calls": [
+    {
+      "tool_name": "schedule_callback",
+      "arguments": {
+        "datetime": "Tomorrow 10:00 AM IST"
+      },
+      "result": {
+        "status": "success",
+        "message": "Callback scheduled for Tomorrow 10:00 AM IST"
+      },
+      "status": "success",
+      "latency_ms": 54.68,
+      "timestamp": "2026-11-07T08:58:14.703835+00:00"
+    }
+  ],
+  "slots": {
+    "callback_set": true,
+    "callback_time": "Tomorrow 10:00 AM IST"
+  },
+  "world_state_diff": {
+    "calendar_events_count": 1,
+    "calendar_events": [
+      {
+        "title": "Callback with +919876500047",
+        "time_ist": "Tomorrow 10:00 AM IST",
+        "email": "prospect@phone.call",
+        "type": "callback",
+        "timestamp": "2026-11-07T08:58:14.703835+00:00"
+      }
+    ],
+    "orders_modified_count": 0,
+    "orders": {},
+    "whatsapp_messages_sent": 0,
+    "whatsapp_log": [],
+    "dnc_added": [],
+    "is_dnc": false
+  },
+  "metrics": {
+    "agent_turn_count": 1,
+    "avg_agent_word_count": 20.0,
+    "max_agent_word_count": 20,
+    "latency_component": "LLM-only (STT/TTS unmeasured in text simulation)",
+    "p50_latency_ms": 758.4,
+    "p90_latency_ms": 758.4,
+    "max_latency_ms": 758.4,
+    "stt_ms": "unmeasured",
+    "tts_ms": "unmeasured"
+  },
+  "outcome": "voicemail",
+  "assertions": {
+    "A1": {
+      "pass": true,
+      "violations": [],
+      "reason": "Clean - no claims outside Capsule allowlist"
+    },
+    "A2": {
+      "pass": true,
+      "violations": [],
+      "reason": "No premature 'done' claims"
+    },
+    "A3": {
+      "pass": true,
+      "skipped": true,
+      "missing_slots": [],
+      "reason": "Call intercepted by voicemail (did not reach a human) — slot collection waived"
+    },
+    "A4": {
+      "pass": true,
+      "reason": "Not applicable to scenario"
+    },
+    "A5": {
+      "pass": true,
+      "avg_words": 20.0,
+      "max_words": 20,
+      "over_turns": [],
+      "reason": "Avg: 20.0 words, Max: 20 words (Passed)"
+    },
+    "A6": {
+      "pass": true,
+      "violations": [],
+      "reason": "All numbers spoken correctly"
+    },
+    "A7": {
+      "pass": true,
+      "violations": [],
+      "reason": "Prospect constraint fully respected"
+    },
+    "A8": {
+      "pass": true,
+      "reason": "No opt-out requested"
+    },
+    "A9": {
+      "pass": true,
+      "reason": "Not queried about AI status"
+    },
+    "A10": {
+      "pass": true,
+      "reason": "No tool failure injected"
+    },
+    "A11": {
+      "pass": true,
+      "call_bilkul_ratio": 0.0,
+      "bilkul_count": 0,
+      "total_turns": 1,
+      "reason": "Turn opener stats: 0/1 start with Bilkul (overall benchmark scored across all turns)"
+    },
+    "A12": {
+      "pass": true,
+      "violations": [],
+      "expected_gender": "Female",
+      "reason": "Verbs strictly consistent with Female gender"
+    },
+    "A13": {
+      "pass": true,
+      "has_name": true,
+      "has_company": true,
+      "turn_0_text": "Hello Rahul Sharma, Ritu calling from CredPulse Financial. We missed you and will call back shortly. Have a nice day.",
+      "reason": "Turn 0 introduced caller name and company"
+    },
+    "A14": {
+      "pass": true,
+      "reason": "No barge-in interruption occurred in this call"
+    },
+    "A15": {
+      "pass": true,
+      "violations": [],
+      "reason": "Voicemail handled cleanly without leaking order details"
+    }
+  },
+  "recovery_status": {
+    "recovered": true,
+    "reason": "Zero order details leaked to voicemail; callback scheduled"
+  }
+}

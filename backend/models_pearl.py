@@ -94,6 +94,9 @@ class PearlAgent(Base):
     calls           = relationship("PearlCall", back_populates="agent", cascade="all, delete-orphan")
     events          = relationship("PearlEvent", back_populates="agent", cascade="all, delete-orphan",
                                    order_by="PearlEvent.timestamp.desc()")
+    tools           = relationship("AgentTool", back_populates="agent", cascade="all, delete-orphan",
+                                   order_by="AgentTool.created_at.asc()")
+
 
 
 class PearlCall(Base):
@@ -351,4 +354,37 @@ class PearlCampaignRecipient(Base):
     campaign            = relationship("PearlCampaign", back_populates="recipients")
     lead                = relationship("Lead")
     call                = relationship("PearlCall")
+
+
+# ── Agent Tools (API Tool, Data Validator, Data Verifier, Mock API, MCP) ────
+
+class AgentTool(Base):
+    """
+    Tools configured on an agent for real-time execution during or at start/end of sales calls.
+    Types:
+      - api_tool: External REST API calls with params/headers/auth/body and @field response mapping
+      - data_validator: Regex and format checking (phone, PAN, pincode, custom)
+      - data_verifier: Normalizing and matching spoken input against lead data on file
+      - mock_api: Simulated mock endpoints for testing before backend is live
+      - mcp: Model Context Protocol dynamic server tools
+    """
+    __tablename__ = "pearl_agent_tools"
+
+    id                  = Column(String, primary_key=True, default=generate_uuid, index=True)
+    agent_id            = Column(String, ForeignKey("pearl_agents.id"), nullable=False, index=True)
+    name                = Column(String, nullable=False)
+    tool_type           = Column(String, nullable=False)  # api_tool | data_validator | data_verifier | mock_api | mcp
+    description         = Column(Text, nullable=True)
+    run_timing          = Column(String, default="conversation")  # call_start | conversation | call_end
+    timeout_seconds     = Column(Integer, default=10)
+    fallback_response   = Column(Text, nullable=True)
+    config              = Column(JSON, nullable=True)     # Tool-specific configuration
+    is_active           = Column(Boolean, default=True)
+
+    created_at          = Column(DateTime, default=datetime.utcnow)
+    updated_at          = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    agent               = relationship("PearlAgent", back_populates="tools")
+
 
