@@ -30,6 +30,9 @@ except ImportError:
 from utils.telephony import normalize_indian_phone_number, is_valid_e164
 
 
+_CLEAN_PHONE_RE = re.compile(r'[\s\-\(\)\.]')
+
+
 def validate_and_normalize_phone(raw_phone: str) -> Tuple[bool, str, Optional[str]]:
     """
     Validates and normalizes phone number to E.164.
@@ -39,7 +42,7 @@ def validate_and_normalize_phone(raw_phone: str) -> Tuple[bool, str, Optional[st
     if not raw_phone:
         return False, "", "Phone number is missing or empty"
 
-    cleaned = re.sub(r'[\s\-\(\)\.]', '', str(raw_phone).strip())
+    cleaned = _CLEAN_PHONE_RE.sub('', str(raw_phone).strip())
     if not cleaned:
         return False, "", "Phone number contains no digits"
 
@@ -168,16 +171,36 @@ _WEBSITE_ALIASES = ["website", "site", "web", "url", "domain"]
 _CITY_ALIASES = ["city", "location", "address", "state", "region"]
 
 
-def extract_field(row: Dict[str, Any], aliases: List[str]) -> str:
+def extract_field(row: Dict[str, Any], aliases: List[str], clean_row: Optional[Dict[str, str]] = None) -> str:
     """Finds first matching alias in row keys."""
+    # Fast path if pre-cleaned lowercase dict is provided
+    if clean_row is not None:
+        for alias in aliases:
+            v = clean_row.get(alias)
+            if v:
+                return v
+        for k, v in clean_row.items():
+            if v and any(alias in k for alias in aliases):
+                return v
+        return ""
+
+    # 1. Fast direct O(1) key lookups
     for alias in aliases:
-        if alias in row and row[alias]:
-            return str(row[alias]).strip()
-    # Partial matching
-    for k, v in row.items():
-        k_lower = str(k).lower()
-        if any(alias in k_lower for alias in aliases) and v:
-            return str(v).strip()
+        if alias in row:
+            v = row[alias]
+            if v is not None and str(v).strip():
+                return str(v).strip()
+    # 2. Case-insensitive key matching
+    row_lower = {str(k).lower().strip(): str(v).strip() for k, v in row.items() if k is not None and v is not None}
+    for alias in aliases:
+        if alias in row_lower:
+            v = row_lower[alias]
+            if v:
+                return v
+    # 3. Partial matching only if direct key matching yields nothing
+    for k_lower, v in row_lower.items():
+        if v and any(alias in k_lower for alias in aliases):
+            return v
     return ""
 
 
@@ -185,12 +208,17 @@ def canonicalize_lead_row(raw_row: Dict[str, Any], source: str = "csv_upload") -
     """
     Normalizes a raw dictionary row into canonical Lead record schema.
     """
-    name = extract_field(raw_row, _NAME_ALIASES)
-    business = extract_field(raw_row, _BUSINESS_ALIASES)
-    phone_raw = extract_field(raw_row, _PHONE_ALIASES)
-    email = extract_field(raw_row, _EMAIL_ALIASES)
-    website = extract_field(raw_row, _WEBSITE_ALIASES)
-    city = extract_field(raw_row, _CITY_ALIASES)
+    clean_row = {
+        str(k).strip().lower(): str(v).strip()
+        for k, v in raw_row.items()
+        if k is not None and v is not None and str(v).strip()
+    }
+    name = extract_field(raw_row, _NAME_ALIASES, clean_row=clean_row)
+    business = extract_field(raw_row, _BUSINESS_ALIASES, clean_row=clean_row)
+    phone_raw = extract_field(raw_row, _PHONE_ALIASES, clean_row=clean_row)
+    email = extract_field(raw_row, _EMAIL_ALIASES, clean_row=clean_row)
+    website = extract_field(raw_row, _WEBSITE_ALIASES, clean_row=clean_row)
+    city = extract_field(raw_row, _CITY_ALIASES, clean_row=clean_row)
 
     # If only business is present, use for name or vice versa
     display_name = name or business or "Prospect"

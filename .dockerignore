@@ -9,6 +9,13 @@ hexagon.db
 klyro.db
 logs
 test
+tests/
+backend/test_*.py
+frontend/test-*.js
+backend/hexagon.db
+backend/*.db
+*.sqlite
+*.sqlite3
 frontend/node_modules
 frontend/dist
 whatsapp-bridge/node_modules

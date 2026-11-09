@@ -107,15 +107,18 @@ YOUR ARCHITECTURAL CORE:
    }
 """
 
+_JSON_CODE_BLOCK_RE = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
+_GENERIC_CODE_BLOCK_RE = re.compile(r"```\s*(.*?)\s*```", re.DOTALL)
+
 def _clean_json_text(raw: str) -> str:
     """Extract clean JSON text from LLM response containing markdown code blocks."""
     cleaned = raw.strip()
     if "```json" in cleaned:
-        match = re.search(r"```json\s*(.*?)\s*```", cleaned, re.DOTALL)
+        match = _JSON_CODE_BLOCK_RE.search(cleaned)
         if match:
             return match.group(1).strip()
     if "```" in cleaned:
-        match = re.search(r"```\s*(.*?)\s*```", cleaned, re.DOTALL)
+        match = _GENERIC_CODE_BLOCK_RE.search(cleaned)
         if match:
             return match.group(1).strip()
     # Find start '{' and end '}'

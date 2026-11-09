@@ -9,9 +9,14 @@ Formal per-session orchestration layer ensuring:
 """
 import asyncio
 import time
+import json
 from enum import Enum
-from typing import Optional, Callable, Awaitable, Dict, Any, List
+from typing import Optional, Callable, Awaitable, Dict, Any, List, Set, Union
 from .phrase_chunker import PhraseChunker
+try:
+    from .tool_engine import ToolDispatcher, RUN_MODE_READ, RUN_MODE_WRITE, get_conversational_filler
+except (ImportError, ValueError):
+    from services.pearl.tool_engine import ToolDispatcher, RUN_MODE_READ, RUN_MODE_WRITE, get_conversational_filler
 
 class SessionState(str, Enum):
     IDLE = "IDLE"
@@ -42,7 +47,9 @@ class PearlVoiceSession:
         tts_provider=None,
         on_audio_out: Optional[Callable[[bytes], Awaitable[None]]] = None,
         on_state_change: Optional[Callable[[SessionState], Awaitable[None]]] = None,
-        max_audio_queue: int = 50
+        max_audio_queue: int = 50,
+        tools: Optional[List[Any]] = None,
+        tool_dispatcher: Optional[Any] = None
     ):
         self.session_id = session_id
         self.engine = engine
@@ -61,6 +68,21 @@ class PearlVoiceSession:
         self.audio_queue: asyncio.Queue[Optional[AudioPacket]] = asyncio.Queue(maxsize=max_audio_queue)
         self.chunker = PhraseChunker()
         
+        # Tool Orchestrator & Dual Pattern Dispatcher
+        engine_dispatcher = getattr(engine, "tool_dispatcher", None)
+        engine_tools = getattr(engine, "tools", None)
+        engine_gender = getattr(engine, "gender", "Female")
+        self.tool_dispatcher: ToolDispatcher = tool_dispatcher or engine_dispatcher or ToolDispatcher(
+            tools=tools or engine_tools,
+            gender=engine_gender
+        )
+        if tools and self.tool_dispatcher:
+            for t in tools:
+                self.tool_dispatcher.register_tool(t)
+        self._active_write_tasks: Set[asyncio.Task] = set()
+        self._active_read_task: Optional[asyncio.Task] = None
+        self.last_turn_tool: Optional[Dict[str, Any]] = None
+
         # Task Management
         self._active_llm_task: Optional[asyncio.Task] = None
         self._tts_consumer_task: Optional[asyncio.Task] = None
@@ -152,6 +174,11 @@ class PearlVoiceSession:
             self._active_llm_task.cancel()
             self._active_llm_task = None
 
+        # Cancel active Pattern B read task
+        if self._active_read_task and not self._active_read_task.done():
+            self._active_read_task.cancel()
+            self._active_read_task = None
+
         # Reset TTS stateful buffers
         if hasattr(self.tts, 'cancel'):
             asyncio.create_task(self.tts.cancel())
@@ -204,11 +231,109 @@ class PearlVoiceSession:
         return current_gen
 
     async def _execute_generation_turn(self, user_transcript: str, gen_id: int):
-        """Stream response from LLM, chunk phrases adaptively, and feed TTS."""
+        """
+        Stream response from LLM, chunk phrases adaptively, and feed TTS.
+        Implements Dual Pattern A + Pattern B tool architecture:
+        - Pattern A (Write Tools): Dialogue streamed immediately to TTS (~230ms TTFT, zero dead air),
+          while the tool executes asynchronously in the background as a non-blocking task (asyncio.create_task).
+        - Pattern B (Read Tools): Plays immediate natural conversational filler from randomized Hinglish pool
+          to eliminate dead air while the API fetches live data in parallel, then feeds fetched data into
+          the conversation stream so the agent speaks the accurate answer.
+        """
         try:
             self.engine.add_turn("prospect", user_transcript)
-            full_response = ""
 
+            # Check if a tool is required for this turn
+            tool_match = None
+            if self.tool_dispatcher:
+                tool_match = self.tool_dispatcher.match_tool_by_intent(user_transcript)
+
+            if tool_match:
+                tool_name, tool_args = tool_match
+                run_mode = self.tool_dispatcher.get_run_mode(tool_name)
+                lead_ctx = getattr(self.engine, "lead", {})
+
+                if run_mode == RUN_MODE_READ:
+                    # ── PATTERN B: Read / Lookup Tool (Zero Dead Air with Filler) ──
+                    filler_phrase = self.tool_dispatcher.get_filler_phrase(tool_name)
+                    if gen_id != self.generation_id or self._cancellation_event.is_set():
+                        return
+
+                    # 1. Concurrently launch live data fetch in the background FIRST!
+                    read_timeout = self.tool_dispatcher.get_timeout(tool_name)
+                    read_task = asyncio.create_task(
+                        self.tool_dispatcher.execute_read(
+                            tool_name,
+                            arguments=tool_args,
+                            context=lead_ctx,
+                            timeout_seconds=read_timeout
+                        )
+                    )
+                    self._active_read_task = read_task
+
+                    # 2. Concurrently stream natural conversational filler to eliminate dead air
+                    await self.tts.send_text(filler_phrase)
+
+                    # 3. Await parallel lookup completion with cancellation handling
+                    try:
+                        tool_result = await read_task
+                    except asyncio.CancelledError:
+                        if read_task and not read_task.done():
+                            read_task.cancel()
+                        raise
+                    except Exception as e:
+                        tool_result = {"success": False, "error": str(e), "tool_name": tool_name}
+                    finally:
+                        if self._active_read_task == read_task:
+                            self._active_read_task = None
+
+                    self.last_turn_tool = {
+                        "name": tool_name,
+                        "mode": RUN_MODE_READ,
+                        "filler": filler_phrase,
+                        "result": tool_result
+                    }
+
+                    if gen_id != self.generation_id or self._cancellation_event.is_set():
+                        return
+
+                    # If read tool failed or timed out, and provided fallback spoken feedback,
+                    # deliver the fallback immediately without dead air or LLM latency!
+                    if not tool_result.get("success"):
+                        fallback_feedback = tool_result.get("spoken_feedback") or tool_result.get("fallback_response")
+                        if fallback_feedback:
+                            await self.tts.send_text(fallback_feedback)
+                            if hasattr(self.tts, 'flush'):
+                                await self.tts.flush()
+                            self.engine.add_turn("agent", fallback_feedback)
+                            return
+
+                    # Feed live data into conversation stream, instructing LLM not to repeat filler
+                    if hasattr(self.engine, "inject_tool_result"):
+                        self.engine.inject_tool_result(tool_name, tool_result, filler_phrase=filler_phrase)
+                    else:
+                        self.engine.history.append({
+                            "role": "system",
+                            "content": f"[Live Data for {tool_name}]: {json.dumps(tool_result, ensure_ascii=False)}"
+                        })
+
+                else:
+                    # ── PATTERN A: Write / Action Tool (Zero Dead Air with Async Task) ──
+                    write_task = self.tool_dispatcher.dispatch_write(
+                        tool_name,
+                        arguments=tool_args,
+                        context=lead_ctx
+                    )
+                    self._active_write_tasks.add(write_task)
+                    write_task.add_done_callback(lambda t: self._active_write_tasks.discard(t))
+                    self.last_turn_tool = {
+                        "name": tool_name,
+                        "mode": RUN_MODE_WRITE,
+                        "task": write_task
+                    }
+                    # Spoken dialogue streams immediately without awaiting write_task!
+
+            full_response = ""
             async for token in self.engine.generate_response_stream():
                 # Invariant: Discard if generation was cancelled or advanced
                 if gen_id != self.generation_id or self._cancellation_event.is_set():
@@ -311,9 +436,18 @@ class PearlVoiceSession:
         self.state = SessionState.CLOSED
         self._cancellation_event.set()
 
+        if self._active_read_task and not self._active_read_task.done():
+            self._active_read_task.cancel()
+            self._active_read_task = None
+
         for task in (self._active_llm_task, self._tts_consumer_task, self._audio_dispatcher_task):
             if task and not task.done():
                 task.cancel()
+
+        for task in list(self._active_write_tasks):
+            if not task.done():
+                task.cancel()
+        self._active_write_tasks.clear()
 
         if hasattr(self.tts, 'close'):
             try:

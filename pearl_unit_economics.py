@@ -75,25 +75,25 @@ PRICING = {
 
     # ── Upstream Provider Infrastructure Costs (COGS Incurred by ClozFlow) ──
     "vobiz": {
-        "plan": "Developer Plan",
+        "plan": "Production Tier",
         "unit": "30s_pulse",
         "pulse_seconds": 30,
-        "price_per_pulse_inr": 0.25,           # ₹0.25 per 30-second pulse (India PSTN Mobile/Landline)
-        "effective_per_min_inr": 0.50,         # ₹0.50 / minute (2x 30s pulses)
+        "price_per_pulse_inr": 0.20,           # ₹0.20 per 30-second pulse (India PSTN Mobile/Landline)
+        "effective_per_min_inr": 0.40,         # ₹0.40 / minute (2x 30s pulses)
         "did_monthly_cost_usd": 1.00,          # $1.00 / month from Vobiz for virtual phone number
         "did_monthly_cost_inr": 84.00,         # ₹84.00 / month ($1.00 * ₹84.00)
         "currency": "INR",
-        "source": "Vobiz Developer Plan Rate Card",
-        "last_updated": "2026-11-01"
+        "source": "Vobiz Production Rate Card",
+        "last_updated": "2026-11-08"
     },
 
     "sarvam_tts": {
         "model": "bulbul:v4-flash",
         "unit": "characters",
-        "price_per_unit_inr": 0.002,           # ₹20 per 10,000 characters (₹0.002 / char)
+        "price_per_unit_inr": 0.002,           # ₹2.00 per 1,000 characters / ₹20 per 10,000 characters (₹0.002 / char)
         "currency": "INR",
-        "source": "Sarvam Bulbul v4 Flash Pricing Matrix",
-        "last_updated": "2026-10-14"
+        "source": "Sarvam Bulbul v4 Flash Official Rate (₹2/1k chars)",
+        "last_updated": "2026-11-08"
     },
 
     "gemini_stt": {
@@ -333,9 +333,9 @@ class UnitEconomicsReport:
 
         # 3. 1-Minute Live Call (Bundled: Voice AI + Vobiz PSTN Trunk) - ₹3.00 flat
         rev_1m_bundled = self.pricing["customer_rates"]["pearl_call_per_min_inr"]  # ₹3.00
-        cogs_1m_vobiz = 2 * self.pricing["vobiz"]["price_per_pulse_inr"]           # ₹0.50 (2x 30s pulses)
+        cogs_1m_vobiz = 2 * self.pricing["vobiz"]["price_per_pulse_inr"]           # ₹0.40 (2x 30s pulses @ ₹0.20)
         cogs_1m_stt = 60 * self.pricing["gemini_stt"]["price_per_unit_inr"]        # ₹0.30 (60s audio)
-        cogs_1m_tts = 260 * self.pricing["sarvam_tts"]["price_per_unit_inr"]       # ₹0.52 (~260 chars with natural conversational pacing & pauses)
+        cogs_1m_tts = 260 * self.pricing["sarvam_tts"]["price_per_unit_inr"]       # ₹0.52 (~260 chars @ ₹2.00/1k chars)
         cogs_1m_llm = (2500 / 1e6 * 0.15 + 180 / 1e6 * 0.20) * self.pricing["usd_to_inr"] # ₹0.0345 (Groq ~2.7k tokens)
         cogs_1m_infra = 0.05                                                       # ₹0.05 Hostinger WebSocket ingress
         total_cogs_1m_bundled = cogs_1m_vobiz + cogs_1m_stt + cogs_1m_tts + cogs_1m_llm + cogs_1m_infra
@@ -386,7 +386,7 @@ class UnitEconomicsReport:
 
         print(f"3. 1-Minute Live Call (Bundled: Voice AI + Vobiz Trunk):")
         print(f"   • Customer Billed : ₹{rev_1m_bundled:.2f} (3.00 credits / minute)")
-        print(f"   • Upstream COGS   : ₹{total_cogs_1m_bundled:.4f} (Vobiz ₹0.50 + STT ₹0.30 + TTS ₹0.60 + LLM ₹0.035 + Host ₹0.05)")
+        print(f"   • Upstream COGS   : ₹{total_cogs_1m_bundled:.4f} (Vobiz ₹0.40 + STT ₹0.30 + Sarvam TTS ₹0.52 + Groq LLM ₹0.035 + Host ₹0.05)")
         print(f"   • Gross Profit    : ₹{gp_1m_bundled:.4f} | GROSS MARGIN: {gm_1m_bundled:.1f}%\n")
 
         print(f"4. 30-Second Dropped Call (Rejection / Voicemail):")
@@ -539,7 +539,8 @@ THE REVENUE MOAT:
   working capital and generating breakage profit on unburned credits.
 """)
         tiers = self.pricing.get("subscription_tiers", {})
-        cogs_1m = 1.4845  # Live call upstream COGS / min (Vobiz + Sarvam + Gemini + Groq + Host)
+        # Upstream COGS / min (Vobiz ₹0.40 + Sarvam Bulbul ₹0.052 + Gemini STT ₹0.30 + Groq ₹0.035 + Host ₹0.05)
+        cogs_1m = (2 * self.pricing["vobiz"]["price_per_pulse_inr"]) + (60 * self.pricing["gemini_stt"]["price_per_unit_inr"]) + (260 * self.pricing["sarvam_tts"]["price_per_unit_inr"]) + 0.0345 + 0.05
         did_cogs = self.pricing["vobiz"]["did_monthly_cost_inr"]  # ₹84.00
 
         print("-" * 115)

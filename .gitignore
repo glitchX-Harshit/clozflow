@@ -1,6 +1,61 @@
-.venv
+# Python virtual environments & dependencies
+.venv/
+venv/
+ENV/
+env/
+
+# Environment secrets
 .env
-node_modules
-__pycache__
-*.pyc
+.env.*
+!.env.example
+
+# Node dependencies & caches
+node_modules/
+.npm
+.eslintcache
+
+# Frontend build outputs
+dist/
+frontend/dist/
+build/
+
+# Byte-compiled / optimized / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Test coverage & runner outputs
+.coverage
+.coverage.*
+htmlcov/
+test-results/
+coverage/
+
+# Test evaluation run artifacts (transcripts, benchmark dumps, binary reports)
+# NOTE: Test code (harness, assertions, scenarios) is kept in git;
+# only generated run outputs and heavy eval artifacts are ignored.
+tests/pearl_eval/transcripts/
+tests/pearl_eval/*.pdf
+tests/pearl_eval/*_results.json
+tests/pearl_eval/report*.md
+
+# Logs & SQLite temp databases
+*.log
+*.db-shm
+*.db-wal
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Documentation
 documentation/
+
+# OS metadata & IDEs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

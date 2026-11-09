@@ -1,0 +1,125 @@
+[
+  {
+    "call_id": "OAT_CALL_1",
+    "title": "Chai/Coffee Splitting & Watery Texture Objection",
+    "prospect_name": "Karan Malhotra",
+    "turns": [
+      {
+        "turn": 0,
+        "speaker": "agent",
+        "text": "Karan, hello. Pearl here from Dancing Cow. Quick check—kyunki aap dairy-free segment mein operate karte ho, Oatish ki creamy blend aapke current lineup mein kaise fit ho rahi hai?",
+        "ttft_ms": 408.6,
+        "total_ms": 498.2,
+        "word_count": 29
+      },
+      {
+        "turn": 1,
+        "speaker": "prospect",
+        "text": "Listen, maine pehle do brands ke oat milk try kiye the. Chai mein daalte hi curdle ho gaya aur bilkul watery paani jaisa taste tha. Main regular cow milk hi theek hoon."
+      },
+      {
+        "turn": 2,
+        "speaker": "agent",
+        "text": "Bilkul samajh rahi hoon, woh frustration common hai. Lekin Oatish mein millets aur mung beans ka proprietary blend hai, jisse chai mein curdle nahi hota aur texture extra creamy aata hai.",
+        "ttft_ms": 296.3,
+        "total_ms": 408.3,
+        "word_count": 31
+      },
+      {
+        "turn": 3,
+        "speaker": "prospect",
+        "text": "Acha yeh guarantee hai ki adrak wali kadak chai mein nahi phatega? Aur pack of 12 bohot bada commitment hai try karne ke liye."
+      },
+      {
+        "turn": 4,
+        "speaker": "agent",
+        "text": "Guarantee deta hoon, adrak wali kadak chai mein bhi split nahi hoga. Aur 12 pack try karne ke liye hai, kyunki har pack ke saath free mug aur chocolates milte hain.",
+        "ttft_ms": 541.4,
+        "total_ms": 654.5,
+        "word_count": 31
+      }
+    ]
+  },
+  {
+    "call_id": "OAT_CALL_2",
+    "title": "Price Objection vs Regular Dairy Milk",
+    "prospect_name": "Rhea Sen",
+    "turns": [
+      {
+        "turn": 0,
+        "speaker": "agent",
+        "text": "Rhea, haan, Pearl yahan se. Aapke Dancing Cow ke baare mein ek chhoti si creative idea share karna tha, sirf 10 second milega na?",
+        "ttft_ms": 247.9,
+        "total_ms": 336.4,
+        "word_count": 24
+      },
+      {
+        "turn": 1,
+        "speaker": "prospect",
+        "text": "Hi, dekhiye Amul cow milk toh 60-70 rupaye ka packet aata hai. Oat milk 3 guna mehenga lena mere monthly grocery budget ke liye sense nahi banata."
+      },
+      {
+        "turn": 2,
+        "speaker": "agent",
+        "text": "Bilkul valid point hai, Rhea. Lekin yeh direct Amul se compare nahi hoga. Oatish ka blend oats, millets aur mung beans ka hai, isliye foam barista-grade creamy hota hai, jo regular chai mein split nahi hota.",
+        "ttft_ms": 341.5,
+        "total_ms": 459.8,
+        "word_count": 36
+      },
+      {
+        "turn": 3,
+        "speaker": "prospect",
+        "text": "Acha Pack of 12 mein koi discount ya introductory offer chal raha hai kya abhi?"
+      },
+      {
+        "turn": 4,
+        "speaker": "agent",
+        "text": "Haan, abhi Pack of 12 ke saath ek free mug aur do Oatish chocolates bilkul free milegi. Yeh limited offer hai, isliye main aapko WhatsApp par direct order link bhej doon?",
+        "ttft_ms": 15595.6,
+        "total_ms": 15694.5,
+        "word_count": 31
+      }
+    ]
+  },
+  {
+    "call_id": "OAT_CALL_3",
+    "title": "Clean Label & Seed Oil Skepticism",
+    "prospect_name": "Dr. Sameer Kapoor",
+    "turns": [
+      {
+        "turn": 0,
+        "speaker": "agent",
+        "text": "Namaste, yeh Pearl Dancing Cow se. Dekhiye, main aapke chai ke time ke liye ek quick question poochne aayi hoon—bilkul no pitch, haan?",
+        "ttft_ms": 7997.2,
+        "total_ms": 8079.8,
+        "word_count": 23
+      },
+      {
+        "turn": 1,
+        "speaker": "prospect",
+        "text": "Dekhiye market mein jitne oat milk hain sabme refined palm oil ya canola oil aur synthetic gums daale hote hain to make it thick. Oatish mein aisa kuch toh nahi hai na? Sugar kitna hai?"
+      },
+      {
+        "turn": 2,
+        "speaker": "agent",
+        "text": "Bilkul sahi sawaal hai. Humne pure oils ya gums ka use hi nahi kiya. Creaminess millets aur mung beans se aati hai. Sugar zero hai, bas oats ki natural sweetness hai.",
+        "ttft_ms": 15692.4,
+        "total_ms": 15779.3,
+        "word_count": 31
+      },
+      {
+        "turn": 3,
+        "speaker": "prospect",
+        "text": "Calcium aur Vitamin B12 actual dairy milk jitna hai ya sirf marketing claim hai?"
+      },
+      {
+        "turn": 4,
+        "speaker": "agent",
+        "text": "Marketing nahi, lab verified hai. Dairy jitna calcium aur B12 fortified hai. Aapke chai ya coffee mein split nahi hoga, kyunki humari blend barista-grade hai.",
+        "ttft_ms": 7928.0,
+        "total_ms": 8027.8,
+        "word_count": 25
+      }
+    ]
+  }
+]

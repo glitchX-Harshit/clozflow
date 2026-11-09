@@ -242,12 +242,26 @@
   overflow-y: auto;
   padding: 32px 48px;
   position: relative;
+  transition: padding 0.2s ease;
 }
 
 .sarvam-panel-content {
-  max-width: 780px;
+  max-width: 860px;
+  width: 100%;
   margin: 0 auto;
   padding-bottom: 80px;
+}
+
+@media (max-width: 1100px) {
+  .agent-editor-center {
+    padding: 24px 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .agent-editor-center {
+    padding: 16px 14px;
+  }
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -1769,38 +1783,32 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   RESPONSIVE LAYOUT & SMOOTH SLIDING DRAWER (FIX 4)
+   RESPONSIVE LAYOUT & SMOOTH SLIDING SAGE DRAWER
    ────────────────────────────────────────────────────────────────────────── */
 .sage-drawer-backdrop {
-  display: none;
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  animation: fadeInBackdrop 0.2s ease forwards;
 }
 
-@media (max-width: 1366px) {
-  .agent-editor-right.sage-drawer-mode {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 420px;
-    max-width: 90vw;
-    height: 100vh;
-    z-index: 10000;
-    background-color: #ffffff;
-    box-shadow: -8px 0 32px rgba(15, 23, 42, 0.18);
-    border-left: 1px solid #e2e8f0;
-    transform: translateX(0);
-    animation: slideInDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .sage-drawer-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(2px);
-    z-index: 9999;
-    animation: fadeInBackdrop 0.2s ease forwards;
-  }
+.agent-editor-right.sage-drawer-mode {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 440px;
+  max-width: 90vw;
+  height: 100vh;
+  z-index: 10000;
+  background-color: #ffffff;
+  box-shadow: -10px 0 36px rgba(15, 23, 42, 0.16);
+  border-left: 1px solid #e2e8f0;
+  transform: translateX(0);
+  animation: slideInDrawer 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes slideInDrawer {
@@ -1823,11 +1831,18 @@
     border-bottom: 1px solid #f1f5f9;
     padding: 8px 16px;
   }
+  .agent-editor-left .agent-tabs,
   .agent-editor-left .sarvam-nav {
     flex-direction: row;
     overflow-x: auto;
-    gap: 4px;
+    gap: 6px;
     padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .agent-editor-left .agent-tab {
+    white-space: nowrap;
+    padding: 6px 12px;
+    flex-shrink: 0;
   }
   .agent-editor-right.sage-drawer-mode {
     width: 100vw;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -46,6 +46,16 @@ import RelayBuilder from './RelayBuilder';
 import './DashboardOverview.css';
 import pearlLogo from '../assets/pearl-logo.png';
 
+const DASHBOARD_NAV_ITEMS = [
+    { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
+    { id: 'leads',      label: 'Lead Finder',   icon: Search },
+    { id: 'history',    label: 'Session History', icon: History },
+    { id: 'relay',      label: 'Relay',          icon: Send },
+    { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
+    { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
+    { id: 'wallet',     label: 'Wallet & Billing', icon: Wallet },
+    { id: 'settings',   label: 'Settings',       icon: Settings },
+];
 
 const getModuleIcon = (id) => {
     switch(id) {
@@ -56,7 +66,7 @@ const getModuleIcon = (id) => {
     }
 };
 
-const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, stats, modules }) => (
+const OverviewTab = memo(({ user, navigate, recentCalls, loadingCalls, onViewAll, stats, modules }) => (
     <div className="overview-container">
         <header className="ov-clean-header">
             <div className="ov-header-text">
@@ -159,7 +169,7 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, sta
             </div>
         </div>
     </div>
-);
+));
 
 const Dashboard = () => {
     const { activeTab, setActiveTab } = useDashboardStore();
@@ -181,6 +191,13 @@ const Dashboard = () => {
     const [currentLeadForOutreach, setCurrentLeadForOutreach] = useState(null);
     const [outreachUserOffer, setOutreachUserOffer] = useState('');
     const [menuOpen, setMenuOpen] = useState(false);
+    const [relayCallId, setRelayCallId] = useState(null);
+    const [walletBalance, setWalletBalance] = useState(0.0);
+    const [isSuperuser, setIsSuperuser] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const userPillRef = useRef(null);
+    const popoverMenuRef = useRef(null);
+    const [popoverPos, setPopoverPos] = useState({ bottom: 76, left: 16, width: 220 });
 
     useEffect(() => {
         setCurrentLeadForOutreach(null);
@@ -197,7 +214,7 @@ const Dashboard = () => {
     const [pearlSubTab, setPearlSubTab] = useState('agents');
 
     // GSAP hover expand/collapse for primary menu bar
-    const handleSidebarMouseEnter = () => {
+    const handleSidebarMouseEnter = useCallback(() => {
         setSidebarHovered(true);
         if (sidebarRef.current) {
             gsap.killTweensOf(sidebarRef.current);
@@ -222,9 +239,9 @@ const Dashboard = () => {
                 ease: 'power2.out'
             });
         }
-    };
+    }, []);
 
-    const handleSidebarMouseLeave = () => {
+    const handleSidebarMouseLeave = useCallback(() => {
         if (userMenuOpen) return;
         setSidebarHovered(false);
         if (sidebarRef.current) {
@@ -249,7 +266,7 @@ const Dashboard = () => {
                 ease: 'power2.out'
             });
         }
-    };
+    }, [userMenuOpen]);
 
     // Awwwards elastic/rotational entrance animation
     useEffect(() => {
@@ -341,15 +358,7 @@ const Dashboard = () => {
         }
     }, [activeTab]);
 
-    const [relayCallId, setRelayCallId] = useState(null);
-    const [walletBalance, setWalletBalance] = useState(0.0);
-    const [isSuperuser, setIsSuperuser] = useState(false);
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const userPillRef = useRef(null);
-    const popoverMenuRef = useRef(null);
-    const [popoverPos, setPopoverPos] = useState({ bottom: 76, left: 16, width: 220 });
-
-    const updatePopoverPosition = () => {
+    const updatePopoverPosition = useCallback(() => {
         if (!userPillRef.current) return;
         const rect = userPillRef.current.getBoundingClientRect();
         const isCollapsed = rect.width < 140;
@@ -369,7 +378,7 @@ const Dashboard = () => {
                 width: Math.max(220, rect.width)
             });
         }
-    };
+    }, []);
 
     useEffect(() => {
         if (userMenuOpen) {
@@ -425,16 +434,8 @@ const Dashboard = () => {
         return () => window.removeEventListener('open-wallet-tab', handleOpenWallet);
     }, []);
 
-    const navItems = [
-        { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
-        { id: 'leads',      label: 'Lead Finder',   icon: Search },
-        { id: 'history',    label: 'Session History', icon: History },
-        { id: 'relay',      label: 'Relay',          icon: Send },
-        { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
-        { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
-        { id: 'wallet',     label: 'Wallet & Billing', icon: Wallet },
-        { id: 'settings',   label: 'Settings',       icon: Settings },
-    ];
+    const navItems = DASHBOARD_NAV_ITEMS;
+    const handleViewAllHistory = useCallback(() => setActiveTab('history'), []);
 
     return (
         <div className="db-layout" data-lenis-prevent="true">
@@ -617,7 +618,7 @@ const Dashboard = () => {
                         navigate={navigate} 
                         recentCalls={recentCalls}
                         loadingCalls={loadingCalls}
-                        onViewAll={() => setActiveTab('history')}
+                        onViewAll={handleViewAllHistory}
                         stats={statsData}
                         modules={modulesData}
                     />

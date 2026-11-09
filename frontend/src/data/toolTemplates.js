@@ -1,6 +1,6 @@
 /**
  * Clozflow Agent Tool Blueprints & Configuration Schemas
- * Defines the 5 core tool archetypes:
+ * Defines the 5 core tool archetypes matching Tier-1 standard:
  * 1. API Tool (External REST API)
  * 2. Data Validator (Format & Regex checks)
  * 3. Data Verifier (Match spoken against records on file)
@@ -11,15 +11,18 @@
 export const TOOL_TEMPLATES = [
   {
     type: 'api_tool',
-    name: 'REST API Tool',
+    name: 'API Tool',
     title: 'API Tool',
-    subtitle: 'Call external REST API (GET/POST/PUT/DELETE)',
-    description: 'Execute live HTTP endpoints during or at start/end of call. Parse cURL commands, authenticate, and map @fields into prompt variables.',
-    badge: 'REST & Webhook',
-    badgeColor: 'blue',
-    tags: ['REST API', 'cURL Import', '@field Mapping', 'Live Send'],
+    subtitle: 'Call external REST endpoints',
+    description: "Call your API to fetch or update data, such as a caller's booking details.",
+    badge: 'REST API',
+    tags: ['REST API', 'Webhooks', 'CRM Actions'],
     defaultTiming: 'conversation',
+    defaultRunMode: 'write', // 'write' (Pattern A: async non-blocking) | 'read' (Pattern B: filler + live lookup)
     defaultConfig: {
+      run_mode: 'write',
+      is_read_tool: false,
+      is_async_write: true,
       method: 'POST',
       url: 'https://api.example.com/v1/orders/lookup',
       params: [{ key: 'format', value: 'json', enabled: true }],
@@ -36,15 +39,18 @@ export const TOOL_TEMPLATES = [
   },
   {
     type: 'data_validator',
-    name: 'Format Validator',
+    name: 'Data Validator',
     title: 'Data Validator',
-    subtitle: 'Format & validity check',
-    description: 'Inspect spoken inputs against regular expressions (Indian phone, PAN card, 6-digit Pincode, Email, or custom regex) with tailored spoken replies.',
-    badge: 'Regex & Integrity',
-    badgeColor: 'emerald',
-    tags: ['Indian Phone', 'PAN Card', 'Pincode', 'Context Aware'],
+    subtitle: 'Inspect formats with regular expressions',
+    description: "Check a value's format and validity, such as an email or phone number.",
+    badge: 'Validation',
+    tags: ['Indian Phone', 'PIN Code', 'Email'],
     defaultTiming: 'conversation',
+    defaultRunMode: 'read',
     defaultConfig: {
+      run_mode: 'read',
+      is_read_tool: true,
+      is_async_write: false,
       data_type: 'string',
       preset: 'indian_phone',
       input_source: 'caller_phone_number',
@@ -57,68 +63,88 @@ export const TOOL_TEMPLATES = [
   },
   {
     type: 'data_verifier',
-    name: 'Identity Verifier',
+    name: 'Data Verifier',
     title: 'Data Verifier',
-    subtitle: 'Match spoken value against lead data on file',
-    description: 'Cross-reference spoken information against lead file records (last 4 digits of phone, DOB, order ID) with phone normalization & match modes.',
-    badge: 'Lead Verification',
-    badgeColor: 'violet',
-    tags: ['Phone Normalizer', 'Exact Match', 'Contains Mode', 'Lead On File'],
+    subtitle: 'Cross-reference caller details against records',
+    description: 'Verify caller information against records on file, such as account numbers or last digits of phone.',
+    badge: 'Verification',
+    tags: ['Customer Record', 'Exact Match', 'Phone Normalizer'],
     defaultTiming: 'conversation',
+    defaultRunMode: 'read',
     defaultConfig: {
-      reference_source: 'lead.phone',
-      match_mode: 'exact_match',
+      run_mode: 'read',
+      is_read_tool: true,
+      is_async_write: false,
+      input_source: 'fixed_value',
+      input_value: '',
+      input_variable: 'lead.phone',
       normalization: 'strip_phone_formatting',
-      reference_value: '+91 98765 43210',
-      spoken_on_match: 'Thank you, that matches our records perfectly.',
-      spoken_on_mismatch: "I'm sorry, that does not match what we have on file. Could you please double check?",
-      spoken_on_error: 'I am unable to verify that at this moment.',
+      normalize_as: 'strip_phone_formatting',
+      match_mode: 'exact_match',
+      match_n: 4,
+      reference_source: 'fixed_value',
+      reference_value: '',
+      spoken_responses: {
+        on_match: 'Thanks — that matches our records on file.',
+        on_no_match: "That doesn't match what we have on record. Could you please double-check?",
+        on_error: "I'm experiencing an issue checking those details right now. Let's try again in a moment."
+      },
+      spoken_on_match: 'Thanks — that matches our records on file.',
+      spoken_on_mismatch: "That doesn't match what we have on record. Could you please double-check?",
+      spoken_on_error: "I'm experiencing an issue checking those details right now. Let's try again in a moment.",
       include_in_context: true
     }
   },
   {
     type: 'mock_api',
-    name: 'Sandbox Mock Tool',
+    name: 'Mock API',
     title: 'Mock API',
-    subtitle: 'Test tool calls before real API exists',
-    description: 'Simulate external HTTP endpoints, test simulated latency, mock JSON payloads, and calibrate response mapping before the backend goes live.',
-    badge: 'Latency & Sandbox',
-    badgeColor: 'amber',
-    tags: ['Simulated Latency', 'Mock JSON', 'Dry Run', 'Schema Map'],
+    subtitle: 'Sandbox testing with simulated latency',
+    description: 'Test tool calls before your API exists.',
+    badge: 'Sandbox',
+    tags: ['Simulated Latency', 'Mock JSON', 'Sandbox'],
     defaultTiming: 'conversation',
+    defaultRunMode: 'write',
     defaultConfig: {
+      run_mode: 'write',
+      is_read_tool: false,
+      is_async_write: true,
       method: 'POST',
       url: 'https://mock.clozflow.ai/api/v1/orders/status',
       simulated_latency_ms: 180,
       mock_response_body: JSON.stringify({
-        status: 'out_for_delivery',
+        order_status: 'Out for delivery',
         delivery_partner: 'BlueDart Express',
-        expected_delivery: 'Today before 6 PM',
-        cod_amount_due: 0
+        expected_eta: 'Today before 6 PM',
+        cod_amount_due: '0'
       }, null, 2),
       response_mapping: [
-        { path: 'status', variable: 'order_status', description: 'Current shipment status' },
-        { path: 'expected_delivery', variable: 'expected_eta', description: 'Delivery ETA' }
+        { path: 'order_status', variable: 'order_status', description: 'Current shipment status' },
+        { path: 'expected_eta', variable: 'delivery_eta', description: 'Estimated delivery timeline' }
       ],
       timeout_seconds: 5,
-      fallback_response: 'Mock service is temporarily unreachable.'
+      fallback_response: 'Mock service is temporarily unavailable.'
     }
   },
   {
     type: 'mcp',
-    name: 'MCP Integration Tool',
+    name: 'MCP Tool',
     title: 'MCP',
-    subtitle: 'Bind tools dynamically from connected MCP servers',
-    description: 'Connect standard Model Context Protocol servers to dynamically expose database queries, CRM lookups, and specialized internal tools to your agent.',
-    badge: 'Protocol Standard',
-    badgeColor: 'indigo',
-    tags: ['Dynamic Schemas', 'External Servers', 'Enterprise Tools'],
+    subtitle: 'Model Context Protocol bindings',
+    description: 'Bind tools from a connected MCP server.',
+    badge: 'Protocol',
+    tags: ['MCP Server', 'Protocol Tools', 'Dynamic Actions'],
     defaultTiming: 'conversation',
+    defaultRunMode: 'write',
     defaultConfig: {
+      run_mode: 'write',
+      is_read_tool: false,
+      is_async_write: true,
       server_id: '',
-      server_name: '',
       server_tool_name: '',
-      parameters_schema: {}
+      parameters: {},
+      timeout_seconds: 15,
+      fallback_response: 'Unable to communicate with MCP integration service.'
     }
   }
 ];

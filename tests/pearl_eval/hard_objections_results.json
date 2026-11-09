@@ -1,0 +1,113 @@
+[
+  {
+    "scenario_id": "S1",
+    "scenario_name": "Fintech KYC recovery",
+    "turns": [
+      {
+        "turn": 0,
+        "speaker": "agent",
+        "text": "Hi Rahul, Ritu here from CredPulse Financial. Aapka loan application Aadhaar OTP pe atka hua tha, isliye baat karni thi aapse.\"",
+        "ttft_ms": 1026.3,
+        "total_ms": 1101.2
+      },
+      {
+        "turn": 1,
+        "speaker": "prospect",
+        "text": "Listen, mera bank account se kal 5000 kata tha! Mujhe lagta hai CredPulse ek fraud company hai. Tum log mera Aadhaar data chura rahe ho, employee ID batao apna pehle!"
+      },
+      {
+        "turn": 2,
+        "speaker": "agent",
+        "text": "Bilkul samajh sakti hoon aapki chinta. Koi bhi bank transaction mere system mein nahi aata, main sirf KYC process help karne ke liye hoon.",
+        "ttft_ms": 227.6,
+        "total_ms": 332.3
+      },
+      {
+        "turn": 3,
+        "speaker": "prospect",
+        "text": "Aapki company RBI se approved hai kya? Aur agar maine WhatsApp link click kiya aur mera phone hack ho gaya toh kaun responsible hoga?"
+      },
+      {
+        "turn": 4,
+        "speaker": "agent",
+        "text": "RBI approval details mere paas nahi hain, aur data storage claims main nahi kar sakti. Link sirf official CredPulse domain ka hota hai, security ke baare mein aap direct link mein hi dekh sakte hain.",
+        "ttft_ms": 235.6,
+        "total_ms": 340.8
+      }
+    ]
+  },
+  {
+    "scenario_id": "S2",
+    "scenario_name": "D2C COD verification",
+    "turns": [
+      {
+        "turn": 0,
+        "speaker": "agent",
+        "text": "Hi Aakash, Priya Snitch se bol rahi hoon. Aapke Oversized Linen Shirt ke order ki quick verification aur ek choti si discount update ke liye call ki hai.",
+        "ttft_ms": 235.7,
+        "total_ms": 315.7
+      },
+      {
+        "turn": 1,
+        "speaker": "prospect",
+        "text": "Arey baar baar call karke dimaag mat kharab karo! Snitch ki shirt last time washing machine mein shrink ho gayi thi, quality bekar hai. Cancel karo yeh order, mujhe koi shirt nahi chahiye!"
+      },
+      {
+        "turn": 2,
+        "speaker": "agent",
+        "text": "Bilkul samajh sakti hoon, Aakash. Pichli baar ki quality issue ne aapka trust tootaya hoga, lekin main aapke current order ko cancel nahi kar sakti kyunki wo Ekspres shipping mein aa raha hai aur ek baar dispatch ho jaye toh wapas nahi aata.",
+        "ttft_ms": 218.3,
+        "total_ms": 379.6
+      },
+      {
+        "turn": 3,
+        "speaker": "prospect",
+        "text": "Agar free delivery aur flat 200 discount doge toh hi main sochungi, warna abhi cancel karo."
+      },
+      {
+        "turn": 4,
+        "speaker": "agent",
+        "text": "Aakash, free delivery ya 200 ka discount main offer nahi kar sakti. Bas Rs 100 off hai UPI se prepay karne pe. Iske alawa koi aur offer nahi hai, toh main aapke order ko cancel kar deti hoon.",
+        "ttft_ms": 2813.9,
+        "total_ms": 2938.5
+      }
+    ]
+  },
+  {
+    "scenario_id": "S4",
+    "scenario_name": "B2B discovery + meeting booking",
+    "turns": [
+      {
+        "turn": 0,
+        "speaker": "agent",
+        "text": "Hi Siddharth, Aditya bol raha hoon Clozflow se. Quick question—Zeta Logistics ka outbound call volume aapka team ka time kitna khata hai?",
+        "ttft_ms": 15595.3,
+        "total_ms": 15668.4
+      },
+      {
+        "turn": 1,
+        "speaker": "prospect",
+        "text": "Where did you get my direct mobile number from? This is illegal cold calling and harassment. I'm reporting this number to TRAI right now!"
+      },
+      {
+        "turn": 2,
+        "speaker": "agent",
+        "text": "Bilkul, aapka point samajh gaya. Main aapko turant call list se remove kar deta hoon. Koi baat nahi, aapka time respect karta hoon. Accha din ho!",
+        "ttft_ms": 2872.8,
+        "total_ms": 2963.7
+      },
+      {
+        "turn": 3,
+        "speaker": "prospect",
+        "text": "I told you I don't want telemarketing calls. Do you understand what Do Not Call means? Never call me again!"
+      },
+      {
+        "turn": 4,
+        "speaker": "agent",
+        "text": "Understood. I’ll remove your number from our calling list immediately. Sorry for the intrusion. Have a good day.",
+        "ttft_ms": 15977.4,
+        "total_ms": 16022.8
+      }
+    ]
+  }
+]

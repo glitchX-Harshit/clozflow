@@ -1,86 +1,73 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
-  X, Globe, CheckCircle2, Database, Sliders, 
-  Wrench, ArrowRight, ShieldCheck, Cpu, Code2, Sparkles
+  X, Link2, Check, Shield, Layers, Cable
 } from 'lucide-react';
 import './ToolsStudio.css';
 import { TOOL_TEMPLATES } from '../../../data/toolTemplates.js';
 
 const ICON_MAP = {
-  api_tool: Globe,
-  data_validator: ShieldCheck,
-  data_verifier: Database,
-  mock_api: Sliders,
-  mcp: Cpu
+  api_tool: Link2,
+  data_validator: Check,
+  data_verifier: Shield,
+  mock_api: Layers,
+  mcp: Cable
 };
 
+export const AddToolModal = React.memo(({ isOpen, onClose, onSelectToolType }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
-export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
   if (!isOpen) return null;
 
   return (
     <div className="tool-modal-backdrop" onClick={onClose}>
-      <div className="tool-modal-container" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
+      <div className="tool-modal-card" onClick={(e) => e.stopPropagation()}>
+        {/* Header - Minimalist, no artificial badges or clutter */}
         <div className="tool-modal-header">
-          <div>
-            <div className="tool-modal-badge">
-              <Sparkles size={13} />
-              <span>Agent Action Capabilities</span>
-            </div>
-            <h2 className="tool-modal-title">Add a Tool</h2>
-            <p className="tool-modal-subtitle">
-              Choose a tool module to equip your agent with real-time external actions, data validation, and database verification.
-            </p>
-          </div>
+          <h2 className="tool-modal-title">Add a tool</h2>
           <button 
             type="button" 
             className="tool-btn-close"
             onClick={onClose}
-            title="Close modal (Esc)"
+            title="Close (Esc)"
           >
             <X size={18} />
           </button>
         </div>
 
-        {/* 5 Cards Grid */}
+        {/* Clean, Non-Technical Card Grid matching Tier-1 SaaS benchmark */}
         <div className="tool-cards-grid">
           {TOOL_TEMPLATES.map((tmpl) => {
-            const Icon = tmpl.icon || ICON_MAP[tmpl.type] || Globe;
+            const Icon = ICON_MAP[tmpl.type] || Link2;
             return (
               <div 
                 key={tmpl.type}
-                className={`tool-selection-card card-${tmpl.badgeColor}`}
+                className="tool-selection-card"
                 onClick={() => onSelectToolType(tmpl)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectToolType(tmpl);
+                  }
+                }}
               >
-                <div className="tool-card-top">
-                  <div className={`tool-card-icon-wrap icon-${tmpl.badgeColor}`}>
-                    <Icon size={22} />
-                  </div>
-                  <span className={`tool-badge-pill pill-${tmpl.badgeColor}`}>
-                    {tmpl.badge}
-                  </span>
+                <div className="tool-card-icon-squircle">
+                  <Icon size={18} strokeWidth={1.9} />
                 </div>
 
-                <div className="tool-card-text">
+                <div className="tool-card-content">
                   <h3 className="tool-card-title">{tmpl.title}</h3>
-                  <div className="tool-card-subheading">{tmpl.subtitle}</div>
                   <p className="tool-card-desc">{tmpl.description}</p>
-                </div>
-
-                <div className="tool-card-tags">
-                  {tmpl.tags.map((tag) => (
-                    <span key={tag} className="tool-tag-chip">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="tool-card-footer">
-                  <span className="tool-card-select-label">Configure Tool</span>
-                  <div className="tool-card-arrow">
-                    <ArrowRight size={14} />
-                  </div>
                 </div>
               </div>
             );
@@ -89,7 +76,7 @@ export const AddToolModal = ({ isOpen, onClose, onSelectToolType }) => {
       </div>
     </div>
   );
-};
+});
 
 export default AddToolModal;
 export { TOOL_TEMPLATES };
