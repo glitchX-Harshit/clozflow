@@ -6,7 +6,8 @@ import {
   CheckCircle2, Sparkles, ChevronDown, ChevronUp,
   Save, Loader2, Check, Database, Mic,
   Trash2, Plus, Search, Volume2, VolumeX, Globe, 
-  Clock, X, Send, Sliders, AlertCircle, PhoneCall, Copy, ThumbsUp, ThumbsDown, RotateCcw
+  Clock, X, Send, Sliders, AlertCircle, PhoneCall, Copy, ThumbsUp, ThumbsDown, RotateCcw,
+  Play
 } from 'lucide-react';
 import './AgentEditor.css';
 import AgentTestingPanel from './AgentTestingPanel';
@@ -16,6 +17,7 @@ import ArchetypeLibraryModal from '../../components/ArchetypeLibraryModal';
 import ToolsStudio from './components/ToolsStudio';
 import AddToolModal from './components/AddToolModal';
 import ToolDrawer from './components/ToolDrawer';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import { 
   extractVariables, 
   substituteVariables, 
@@ -2864,11 +2866,13 @@ Custom edits can still be made. Do you want to proceed?`
 
         {/* Center Panel */}
         <div className="agent-editor-center">
-          {activeTab === 'instructions' && renderInstructionsTab()}
-          {activeTab === 'variables' && renderVariablesTab()}
-          {activeTab === 'tools' && renderToolsTab()}
-          {activeTab === 'settings' && renderSettingsTab()}
-          {activeTab === 'tests' && renderTestsTab()}
+          <ErrorBoundary title="Agent Editor Section Error">
+            {activeTab === 'instructions' && renderInstructionsTab()}
+            {activeTab === 'variables' && renderVariablesTab()}
+            {activeTab === 'tools' && renderToolsTab()}
+            {activeTab === 'settings' && renderSettingsTab()}
+            {activeTab === 'tests' && renderTestsTab()}
+          </ErrorBoundary>
 
           {/* Floating Center Bottom Button: Review Agent */}
           <div className="floating-review-btn-wrap">
