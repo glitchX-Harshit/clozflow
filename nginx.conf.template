@@ -1,3 +1,8 @@
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
 server {
     listen ${PORT};
     server_name _;
@@ -5,6 +10,22 @@ server {
     # Serve Frontend static files
     root /app/frontend_dist;
     index index.html;
+
+    # Dedicated high-throughput WebSocket proxy for real-time voice & telemetry
+    location ~ ^/(api/pearl/calls/.*/(audio|stream)|api/pearl/test-sessions/.*/voice|ws) {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
 
     # Proxy specific backend auth endpoints (NOT /auth/callback which is a frontend route)
     location ~ ^/auth/(login|register|me)$ {
@@ -18,10 +39,16 @@ server {
     # Proxy all other API routes to Python Backend (FastAPI)
     location ~ ^/(calls|user|leads|outreach|api|pearl|capsules|call|health) {
         proxy_pass http://127.0.0.1:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_buffering off;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
     }
 
     # Proxy /static (avatars, uploads) to backend
@@ -29,20 +56,6 @@ server {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-    }
-
-    # WebSocket endpoints — need upgrade headers and long timeouts
-    location ~ ^/ws {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 3600s;
-        proxy_send_timeout 3600s;
     }
 
     # Frontend SPA fallback — must be last

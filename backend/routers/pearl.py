@@ -22,7 +22,7 @@ from pydantic import BaseModel
 
 from typing import Optional, List, Dict, Any
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import asyncio
 
@@ -2609,6 +2609,13 @@ async def exotel_webhook(request: Request, db: Session = Depends(get_db)):
 
             call.outcome = call.status
 
+            # Sync recipient status for campaign concurrency tracking
+            rec = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.call_id == call.id).first()
+            if rec:
+                rec.status = "completed" if call.status == "completed" else "failed"
+                if call.status != "completed":
+                    rec.error_reason = call.outcome or call.status
+
             if duration and duration.isdigit():
 
                 call.duration_seconds = int(duration)
@@ -5050,6 +5057,18 @@ async def _dispatch_campaign_worker(campaign_id: str):
             caller_id = os.getenv("EXOTEL_CALLER_ID", "01140844774")
             print(f"[Campaign Dispatch Worker] Using Exotel Telephony provider (Account SID: {provider.account_sid}, Caller ID: {caller_id})")
 
+        # Determine campaign concurrency limit (e.g. 10 channels for this client) and server ceiling
+        raw_concurrency = campaign.call_settings.get("concurrency_limit", 1) if campaign.call_settings else 1
+        try:
+            concurrency_limit = max(1, int(raw_concurrency))
+        except (ValueError, TypeError):
+            concurrency_limit = 1
+
+        # Max safety limit on 2 vCPU KVM (default 20 concurrent calls)
+        max_server_limit = int(os.getenv("MAX_SERVER_CONCURRENCY", "20"))
+        effective_limit = min(concurrency_limit, max_server_limit)
+        print(f"[Campaign Dispatch Worker] Concurrency governor active: Campaign limit={concurrency_limit}, Effective limit={effective_limit}")
+
         recipients = s.query(PearlCampaignRecipient).filter(
             PearlCampaignRecipient.campaign_id == campaign_id,
             PearlCampaignRecipient.status == "valid"
@@ -5058,6 +5077,51 @@ async def _dispatch_campaign_worker(campaign_id: str):
         for rec in recipients:
             # Check if campaign was paused or cancelled mid-execution
             s.refresh(campaign)
+            if campaign.status in ("paused", "completed", "failed"):
+                break
+
+            # ── CONCURRENCY THROTTLE GOVERNOR ──
+            # Wait while active calls for this campaign or across the server hit limits
+            while True:
+                s.refresh(campaign)
+                if campaign.status in ("paused", "completed", "failed"):
+                    break
+
+                # Auto-heal: Fail stale calls older than 180s that never answered or received webhooks
+                stale_threshold = datetime.utcnow() - timedelta(seconds=180)
+                stale_calls = s.query(PearlCall).filter(
+                    PearlCall.status.in_(["queued", "dialing"]),
+                    PearlCall.created_at < stale_threshold
+                ).all()
+                if stale_calls:
+                    for sc in stale_calls:
+                        sc.status = "failed"
+                        sc.error_code = "Dialing timeout / Stale"
+                        stale_rec = s.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.call_id == sc.id).first()
+                        if stale_rec and stale_rec.status == "calling":
+                            stale_rec.status = "failed"
+                            stale_rec.error_reason = "No carrier response"
+                    s.commit()
+
+                # Count active calls currently in progress for this campaign
+                active_campaign_calls = s.query(PearlCall).join(
+                    PearlCampaignRecipient, PearlCampaignRecipient.call_id == PearlCall.id
+                ).filter(
+                    PearlCampaignRecipient.campaign_id == campaign_id,
+                    PearlCall.status.in_(["queued", "dialing", "ringing", "in-progress", "active"])
+                ).count()
+
+                # Count total active calls running across the entire server
+                global_active_calls = s.query(PearlCall).filter(
+                    PearlCall.status.in_(["queued", "dialing", "ringing", "in-progress", "active"])
+                ).count()
+
+                if active_campaign_calls < effective_limit and global_active_calls < max_server_limit:
+                    break
+
+                # Active limit reached - sleep 1.0s and poll again so CPU is not burned
+                await asyncio.sleep(1.0)
+
             if campaign.status in ("paused", "completed", "failed"):
                 break
 
@@ -5209,6 +5273,13 @@ async def vobiz_events_webhook(
                 elif status in ("busy", "no-answer", "failed", "rejected", "timeout"):
                     call.status = "failed"
                     call.error_code = f"Vobiz event: {status}"
+
+                # Sync recipient status for campaign concurrency tracking
+                rec = db.query(PearlCampaignRecipient).filter(PearlCampaignRecipient.call_id == event_call_id).first()
+                if rec:
+                    rec.status = "completed" if call.status == "completed" else "failed"
+                    if call.status != "completed":
+                        rec.error_reason = call.error_code or call.status
                 db.commit()
     except Exception as e:
         print(f"[Vobiz Events] Error processing event: {e}")

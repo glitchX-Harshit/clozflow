@@ -7,6 +7,15 @@ from datetime import datetime, timedelta
 # Add parent directory to sys.path to allow importing sibling modules like 'rag'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# Tune PyTorch thread pool for 2-vCPU KVM servers to prevent CPU thread thrashing
+try:
+    import torch
+    torch.set_num_threads(1)
+    if hasattr(torch, "set_num_interop_threads"):
+        torch.set_num_interop_threads(1)
+except Exception:
+    pass
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
