@@ -14,6 +14,7 @@ const PricingPage = React.lazy(() => import('./pages/PricingPage'));
 const Footer = React.lazy(() => import('./components/Footer'));
 const MarqueePathSection = React.lazy(() => import('./components/MarqueePathSection'));
 import SmoothScroll from './components/SmoothScroll';
+import ErrorBoundary from './components/ErrorBoundary';
 const LiveCopilotPopup = React.lazy(() => import('./components/LiveCopilotPopup'));
 import WebPreload from './components/WebPreload';
 
@@ -178,7 +179,8 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <SmoothScroll />
-                <div className="app-root">
+                <ErrorBoundary>
+                    <div className="app-root">
                     <Suspense fallback={null}>
                         <LiveCopilotPopup />
                     </Suspense>
@@ -246,6 +248,7 @@ function App() {
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>
+                </ErrorBoundary>
             </BrowserRouter>
         </AuthProvider>
     );
