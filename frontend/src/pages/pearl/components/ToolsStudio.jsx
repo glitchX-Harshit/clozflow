@@ -93,15 +93,15 @@ const ToolCardRow = React.memo(({ tool, onEditTool, onToggleToolActive, onDelete
   }, [onEditTool, tool]);
 
   const handleToggle = useCallback((e) => {
-    onToggleToolActive(tool.id, e.target.checked);
-  }, [onToggleToolActive, tool.id]);
+    if (tool?.id) onToggleToolActive(tool.id, e.target.checked);
+  }, [onToggleToolActive, tool?.id]);
 
   const handleDelete = useCallback((e) => {
     e.stopPropagation();
-    if (window.confirm(`Delete tool "${tool.name}"?`)) {
-      onDeleteTool(tool.id);
+    if (window.confirm(`Delete tool "${tool?.name || ''}"?`)) {
+      if (tool?.id) onDeleteTool(tool.id);
     }
-  }, [onDeleteTool, tool.id, tool.name]);
+  }, [onDeleteTool, tool?.id, tool?.name]);
 
   return (
     <div 
@@ -164,8 +164,8 @@ const ToolCardRow = React.memo(({ tool, onEditTool, onToggleToolActive, onDelete
 
 const SystemToolRow = React.memo(({ tool, onToggleSystemTool }) => {
   const handleToggle = useCallback((e) => {
-    onToggleSystemTool(tool.id, e.target.checked);
-  }, [onToggleSystemTool, tool.id]);
+    if (tool?.id) onToggleSystemTool(tool.id, e.target.checked);
+  }, [onToggleSystemTool, tool?.id]);
 
   return (
     <div className="tool-card-row system-card-row">

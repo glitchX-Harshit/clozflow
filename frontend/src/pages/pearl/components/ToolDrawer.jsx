@@ -302,7 +302,7 @@ export const ToolDrawer = React.memo(({
   const [timeoutSeconds, setTimeoutSeconds] = useState(tool?.timeout_seconds || tool?.config?.timeout_seconds || 10);
   const [config, setConfig] = useState(tool?.config || {});
   const [responseTemplate, setResponseTemplate] = useState(
-    tool?.config?.response_template || (tool?.config?.response_mapping && tool.config.response_mapping.length > 0 
+    tool?.config?.response_template || (tool?.config?.response_mapping && tool?.config?.response_mapping.length > 0 
       ? tool.config.response_mapping.map(m => `@${m.path}`).join(', ')
       : '')
   );
@@ -663,7 +663,7 @@ export const ToolDrawer = React.memo(({
     }
 
     const payload = {
-      tool_id: tool.id || null,
+      tool_id: tool?.id || null,
       tool_type: toolType,
       config: mergedConfig,
       test_input: testInputPayload,
@@ -704,7 +704,7 @@ export const ToolDrawer = React.memo(({
     inputValue, inputVariable, normalizeAs, matchMode, referenceSource,
     referenceValue, spokenOnMatch, spokenOnNoMatch, spokenOnError,
     pathParams, responseTemplate, testInputs, testVerifierInput, testVerifierRef,
-    tool.id, agentId
+    tool?.id, agentId
   ]);
 
   // Helper to append/insert field into response template
@@ -781,7 +781,7 @@ export const ToolDrawer = React.memo(({
     };
 
     const payload = {
-      id: tool.id,
+      id: tool?.id,
       name: name.trim(),
       tool_type: toolType,
       description: description.trim(),
@@ -800,7 +800,7 @@ export const ToolDrawer = React.memo(({
     name, toolType, referenceValue, timeoutSeconds, fallbackResponse,
     matchN, responseTemplate, config, inputSource, inputValue, inputVariable,
     normalizeAs, matchMode, referenceSource, spokenOnMatch, spokenOnNoMatch,
-    spokenOnError, pathParams, tool.id, description, runTiming, runMode, isActive, onSaveTool
+    spokenOnError, pathParams, tool?.id, description, runTiming, runMode, isActive, onSaveTool
   ]);
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -1839,7 +1839,7 @@ export const ToolDrawer = React.memo(({
           {/* Sticky Drawer Footer */}
           <div className="tool-drawer-footer">
             <div className="footer-left">
-              {tool.id && onDeleteTool && (
+              {tool?.id && onDeleteTool && (
                 <button 
                   type="button" 
                   className="btn-footer-delete"
@@ -1868,7 +1868,7 @@ export const ToolDrawer = React.memo(({
                 className="btn-footer-save"
                 onClick={handleSave}
               >
-                <span>{tool.id ? 'Save changes' : 'Add tool'}</span>
+                <span>{tool?.id ? 'Save changes' : 'Add tool'}</span>
               </button>
             </div>
           </div>
