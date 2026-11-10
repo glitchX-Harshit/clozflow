@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "test": "node test-archetypes-and-parser.js",
+    "test": "node test-archetypes-and-parser.js && node test-docs.js",
+    "test:docs": "node test-docs.js",
     "preview": "vite preview"
   },
   "dependencies": {

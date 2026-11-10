@@ -87,6 +87,15 @@ export default function Navbar() {
         navigate('/pricing');
       },
     },
+    {
+      label: 'Docs',
+      href: '/docs',
+      active: location.pathname.startsWith('/docs'),
+      onClick: (e) => {
+        e.preventDefault();
+        navigate('/docs');
+      },
+    },
   ];
 
   return (

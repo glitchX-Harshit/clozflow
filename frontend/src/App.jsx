@@ -28,6 +28,7 @@ const OutreachStudioPage = React.lazy(() => import('./pages/OutreachStudioPage')
 const RelayPublic = React.lazy(() => import('./pages/RelayPublic'));
 const HowItWorksPage = React.lazy(() => import('./pages/HowItWorksPage'));
 const AgentEditorPage = React.lazy(() => import('./pages/pearl/AgentEditorPage'));
+const DocsPage = React.lazy(() => import('./pages/DocsPage'));
 
 // ── Admin Intelligence Module ──
 const AdminProtectedRoute = React.lazy(() => import('./admin/components/AdminProtectedRoute'));
@@ -107,6 +108,14 @@ function LandingPage() {
                             onClick: (e) => {
                                 e.preventDefault();
                                 navigate('/pricing');
+                            }
+                        },
+                        { 
+                            label: "Docs", 
+                            href: "/docs",
+                            onClick: (e) => {
+                                e.preventDefault();
+                                navigate('/docs');
                             }
                         },
                     ]}
@@ -222,6 +231,9 @@ function App() {
                         <Route path="/relay/:slug" element={<Suspense fallback={null}><RelayPublic /></Suspense>} />
                         <Route path="/how-it-works" element={<Suspense fallback={null}><HowItWorksPage /></Suspense>} />
                         <Route path="/pricing" element={<Suspense fallback={null}><PricingPage /></Suspense>} />
+                        {/* Developer Documentation Portal */}
+                        <Route path="/docs" element={<Suspense fallback={null}><DocsPage /></Suspense>} />
+                        <Route path="/docs/:sectionId" element={<Suspense fallback={null}><DocsPage /></Suspense>} />
 
                         {/* Admin Intelligence Protected Portal */}
                         <Route path="/admin" element={

@@ -135,6 +135,7 @@ const Footer = () => {
                                 <li><a href="/live-call">Live Copilot</a></li>
                                 <li><a href="/how-it-works">How it Works</a></li>
                                 <li><a href="/pricing">Pricing</a></li>
+                                <li><a href="/docs">Documentation</a></li>
                             </ul>
                         </div>
 
