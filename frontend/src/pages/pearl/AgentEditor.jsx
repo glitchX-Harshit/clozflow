@@ -633,7 +633,16 @@ Custom edits can still be made. Do you want to proceed?`
     fetch(`${window.APP_API_BASE || ''}/api/pearl/agents/${currentId}`, {
       headers: { Authorization: token ? `Bearer ${token}` : '' }
     })
-      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (!res.ok) {
+          if (res.status === 404) {
+            console.warn(`Agent ${currentId} was not found, redirecting to fresh agent draft.`);
+            navigate('/agent-editor', { replace: true });
+          }
+          return null;
+        }
+        return res.json();
+      })
       .then(data => {
         if (data) {
           setAgentName(data.name || 'Conversation Agent 6613');

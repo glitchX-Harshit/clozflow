@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { PhoneCall, Sparkles, X } from 'lucide-react';
 import DocsHeader from './DocsHeader';
 import DocsSidebar from './DocsSidebar';
 import DocsContent from './DocsContent';
@@ -20,6 +21,7 @@ export default function DocsLayout() {
   const [activeHeadingId, setActiveHeadingId] = useState('');
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [assistantDismissed, setAssistantDismissed] = useState(false);
 
   // Synchronize route param with activeTopicId & gracefully redirect invalid paths
   useEffect(() => {
@@ -27,7 +29,6 @@ export default function DocsLayout() {
       if (DOCS_PAGES[sectionId]) {
         setActiveTopicId(sectionId);
       } else {
-        // Fallback for unrecognized route params
         setActiveTopicId('overview');
         navigate('/docs/overview', { replace: true });
       }
@@ -52,12 +53,15 @@ export default function DocsLayout() {
     }
   }, [location.hash, activeTopicId]);
 
-  // Global Ctrl + K listener
+  // Global Ctrl + K / '/' listener
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setSearchModalOpen((prev) => !prev);
+      } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        setSearchModalOpen(true);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -134,6 +138,37 @@ export default function DocsLayout() {
         onClose={() => setSearchModalOpen(false)}
         onSelectTopic={handleSelectTopic}
       />
+
+      {/* Floating Kiki Voice Assistant Widget (Sarvam AI style) */}
+      {!assistantDismissed && (
+        <div className="docs-floating-assistant" role="complementary" aria-label="Interactive voice tester">
+          <button
+            type="button"
+            className="docs-floating-assistant__close"
+            onClick={() => setAssistantDismissed(true)}
+            aria-label="Dismiss assistant widget"
+          >
+            <X size={12} />
+          </button>
+          <div className="flex items-center gap-2.5">
+            <div className="docs-floating-assistant__avatar">
+              <Sparkles size={14} className="text-white" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-white">Kiki Voice Assistant</div>
+              <div className="text-[11px] text-zinc-400">11+ Indian Languages</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="docs-floating-assistant__action-btn"
+            onClick={() => handleSelectTopic('models-overview', 'interactive-voice-tester')}
+          >
+            <PhoneCall size={13} />
+            <span>Audition Kiki</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

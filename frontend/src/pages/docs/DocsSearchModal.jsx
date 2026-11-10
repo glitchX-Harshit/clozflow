@@ -168,13 +168,13 @@ export default function DocsSearchModal({ isOpen, onClose, onSelectTopic }) {
                 >
                   <div className="docs-search-item-icon">
                     {item.type === 'heading' ? (
-                      <Hash size={14} className="text-slate-400" />
+                      <Hash size={14} className="text-zinc-400" />
                     ) : item.method ? (
-                      <Terminal size={14} className="text-blue-400" />
+                      <Terminal size={14} className="text-zinc-400" />
                     ) : item.category.includes('Model') ? (
-                      <Sparkles size={14} className="text-amber-400" />
+                      <Sparkles size={14} className="text-zinc-400" />
                     ) : (
-                      <BookOpen size={14} className="text-emerald-400" />
+                      <BookOpen size={14} className="text-zinc-400" />
                     )}
                   </div>
 

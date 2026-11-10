@@ -59,11 +59,11 @@ const SAMPLE_VOICES = [
     speechLang: 'mr-IN'
   },
   {
-    id: 'bhavik_gu_closer',
-    name: 'Bhavik',
+    id: 'jigna_gu_sales',
+    name: 'Jigna',
     lang: 'Gujarati',
-    tag: 'Commercial Negotiation',
-    text: 'Namaste Patel bhai, ClozFlow thi vaat karu chhu. Tamara customer follow-ups automate karva mate call karyo hato.',
+    tag: 'Commercial Advisory',
+    text: 'Namaste Patel bhai, ClozFlow mathi vat karu chhu. Tamara sales team mate direct pipeline automation joiye chhe?',
     speechLang: 'gu-IN'
   }
 ];
@@ -71,35 +71,31 @@ const SAMPLE_VOICES = [
 export default function InteractiveAudioPlayer() {
   const [selectedVoice, setSelectedVoice] = useState(SAMPLE_VOICES[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [modelType, setModelType] = useState('kiki-v2-pro');
   const [speed, setSpeed] = useState(1.0);
   const [emotion, setEmotion] = useState('calm_authority');
-  const [modelType, setModelType] = useState('kiki-v2-pro');
   const utteranceRef = useRef(null);
   const safetyTimerRef = useRef(null);
 
   useEffect(() => {
     return () => {
       if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-      if (window.speechSynthesis) {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
     };
   }, []);
 
   const handlePlayToggle = () => {
-    if (isPlaying) {
-      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-      setIsPlaying(false);
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      setIsPlaying((prev) => !prev);
       return;
     }
 
-    if (!('speechSynthesis' in window)) {
-      // Fallback simulation if speech synthesis is not supported
-      setIsPlaying(true);
-      safetyTimerRef.current = setTimeout(() => setIsPlaying(false), 3500);
+    if (isPlaying) {
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
       return;
     }
 
@@ -111,19 +107,20 @@ export default function InteractiveAudioPlayer() {
 
       const utterance = new SpeechSynthesisUtterance(selectedVoice.text);
       utterance.rate = speed;
-      utterance.pitch = emotion === 'calm_authority' ? 0.92 : emotion === 'soft_challenge' ? 1.05 : 1.0;
-      utterance.lang = selectedVoice.speechLang;
+      utterance.pitch = emotion === 'warm_rapport' ? 1.05 : emotion === 'soft_challenge' ? 0.95 : 1.0;
+      utterance.lang = selectedVoice.speechLang || 'hi-IN';
 
-      // Try to find matching voice
       const voices = window.speechSynthesis.getVoices();
       const match = voices.find(
-        (v) => v.lang.startsWith(selectedVoice.speechLang) || v.lang.includes('IN')
+        (v) =>
+          v.lang === selectedVoice.speechLang ||
+          v.lang.replace('_', '-').startsWith(selectedVoice.speechLang.split('-')[0])
       );
-      if (match) {
-        utterance.voice = match;
-      }
+      if (match) utterance.voice = match;
 
-      utterance.onstart = () => setIsPlaying(true);
+      utterance.onstart = () => {
+        setIsPlaying(true);
+      };
       utterance.onend = () => {
         if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
         setIsPlaying(false);
@@ -136,7 +133,6 @@ export default function InteractiveAudioPlayer() {
       utteranceRef.current = utterance;
       window.speechSynthesis.speak(utterance);
 
-      // Safety fallback timer: reset isPlaying if onend fails to fire in 7 seconds
       safetyTimerRef.current = setTimeout(() => {
         setIsPlaying(false);
       }, 7000);
@@ -150,12 +146,12 @@ export default function InteractiveAudioPlayer() {
     <div className="docs-audio-previewer">
       <div className="docs-audio-previewer__header">
         <div className="flex items-center gap-2">
-          <Volume2 size={16} className="text-emerald-400" />
-          <span className="font-semibold text-slate-200 text-sm">Interactive Voice Synthesizer Tester</span>
-          <span className="docs-audio-pill">Live Preview</span>
+          <Volume2 size={16} className="text-zinc-300" />
+          <span className="font-semibold text-zinc-100 text-sm">Interactive Voice Synthesizer Tester</span>
+          <span className="docs-audio-pill">Live Audition</span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-slate-400">
-          <Sparkles size={13} className="text-amber-400" />
+        <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <Sparkles size={13} className="text-zinc-400" />
           <span>Real-time Neural Vocoder</span>
         </div>
       </div>
@@ -183,7 +179,7 @@ export default function InteractiveAudioPlayer() {
 
         {/* Model and Emotion Selector */}
         <div className="flex items-center gap-2 mt-3">
-          <div className="flex items-center gap-1 text-xs text-slate-400">
+          <div className="flex items-center gap-1 text-xs text-zinc-400">
             <span>Model:</span>
             <select
               className="docs-audio-select"
@@ -195,7 +191,7 @@ export default function InteractiveAudioPlayer() {
             </select>
           </div>
 
-          <div className="flex items-center gap-1 text-xs text-slate-400">
+          <div className="flex items-center gap-1 text-xs text-zinc-400">
             <Sliders size={12} />
             <span>Tone:</span>
             <select
@@ -209,7 +205,7 @@ export default function InteractiveAudioPlayer() {
             </select>
           </div>
 
-          <div className="flex items-center gap-1 text-xs text-slate-400">
+          <div className="flex items-center gap-1 text-xs text-zinc-400">
             <span>Speed:</span>
             <select
               className="docs-audio-select"
@@ -232,17 +228,17 @@ export default function InteractiveAudioPlayer() {
           onClick={handlePlayToggle}
           title={isPlaying ? 'Pause audio' : 'Play sample'}
         >
-          {isPlaying ? <Pause size={18} /> : <Play size={18} className="translate-x-[1px]" />}
+          {isPlaying ? <Pause size={17} /> : <Play size={17} className="translate-x-[1px]" />}
         </button>
 
         <div className="flex-1 min-w-0">
-          <p className="docs-audio-text font-mono text-xs text-slate-300">
+          <p className="docs-audio-text font-mono text-xs text-zinc-200">
             &quot;{selectedVoice.text}&quot;
           </p>
-          <div className="flex items-center gap-3 mt-1.5 text-[11px] text-slate-400">
-            <span className="text-emerald-400 font-semibold">{selectedVoice.tag}</span>
+          <div className="flex items-center gap-3 mt-1.5 text-[11px] text-zinc-400">
+            <span className="text-zinc-200 font-medium">{selectedVoice.tag}</span>
             <span>•</span>
-            <span>Sample Rate: 24,000 Hz</span>
+            <span>Sampling: 24,000 Hz</span>
             <span>•</span>
             <span>Est. TTFA: {modelType === 'kiki-v1-flash' ? '82ms' : '178ms'}</span>
           </div>

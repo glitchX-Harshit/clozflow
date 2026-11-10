@@ -556,16 +556,15 @@ def get_agent(
 
     """Get a single agent with recent events."""
 
-    agent = db.query(PearlAgent).options(
+    query = db.query(PearlAgent).options(
         joinedload(PearlAgent.capsule),
         selectinload(PearlAgent.tools)
-    ).filter(
+    ).filter(PearlAgent.id == agent_id)
 
-        PearlAgent.id == agent_id,
+    if not getattr(user, 'is_admin', False):
+        query = query.filter(PearlAgent.user_id == user.id)
 
-        PearlAgent.user_id == user.id
-
-    ).first()
+    agent = query.first()
 
     if not agent:
         raise HTTPException(404, "Agent not found")
@@ -596,13 +595,10 @@ def update_agent(
 
     """Update agent configuration. Only allowed when agent is draft or paused."""
 
-    agent = db.query(PearlAgent).filter(
-
-        PearlAgent.id == agent_id,
-
-        PearlAgent.user_id == user.id
-
-    ).first()
+    query = db.query(PearlAgent).filter(PearlAgent.id == agent_id)
+    if not getattr(user, 'is_admin', False):
+        query = query.filter(PearlAgent.user_id == user.id)
+    agent = query.first()
 
     if not agent:
 

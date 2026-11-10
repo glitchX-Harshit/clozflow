@@ -83,8 +83,8 @@ export default function DocsCodeSnippet({ tabs, singleSnippet, language = 'bash'
         >
           {copied ? (
             <>
-              <Check size={14} className="text-emerald-400" />
-              <span>Copied!</span>
+              <Check size={14} className="text-zinc-200" />
+              <span className="text-zinc-200">Copied!</span>
             </>
           ) : (
             <>

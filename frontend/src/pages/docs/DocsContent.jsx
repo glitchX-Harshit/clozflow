@@ -127,11 +127,11 @@ export default function DocsContent({ activeTopicId, onSelectTopic }) {
           <p className="docs-content__lead">{renderMarkdownInline(pageData.summary)}</p>
         )}
 
-        <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
+        <div className="flex items-center gap-4 mt-3 text-xs text-zinc-400">
           <span>Last updated: {pageData.lastUpdated}</span>
           <span>•</span>
-          <span className="flex items-center gap-1 text-emerald-400">
-            <ShieldCheck size={14} /> Production Verified
+          <span className="flex items-center gap-1 text-zinc-300">
+            <ShieldCheck size={14} className="text-zinc-400" /> Production Verified
           </span>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default function DocsContent({ activeTopicId, onSelectTopic }) {
             {section.heading && (
               <h2 className="docs-section__heading group">
                 <a href={`#${section.id}`} className="docs-section__anchor" title="Direct link to section">
-                  <Hash size={16} className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400" />
+                  <Hash size={15} className="opacity-0 group-hover:opacity-100 transition-opacity text-zinc-400" />
                 </a>
                 <span>{section.heading}</span>
               </h2>
@@ -171,7 +171,7 @@ export default function DocsContent({ activeTopicId, onSelectTopic }) {
                   title="Copy endpoint URL"
                 >
                   {copiedEndpointUrl === section.endpoint.path ? (
-                    <Check size={14} className="text-emerald-400" />
+                    <Check size={14} className="text-zinc-200" />
                   ) : (
                     <Copy size={14} />
                   )}
@@ -316,9 +316,9 @@ export default function DocsContent({ activeTopicId, onSelectTopic }) {
 
       {/* Bottom Compliance & Security Disclaimer */}
       <div className="docs-footer-security">
-        <div className="flex items-center gap-2 text-xs text-slate-400">
-          <Terminal size={14} className="text-slate-500" />
-          <span>Need custom high-concurrency capacity? Reach out to <a href="mailto:api@clozflow.in" className="text-emerald-400 hover:underline">api@clozflow.in</a></span>
+        <div className="flex items-center gap-2 text-xs text-zinc-400">
+          <Terminal size={14} className="text-zinc-500" />
+          <span>Need custom high-concurrency capacity? Reach out to <a href="mailto:api@clozflow.in" className="text-zinc-200 underline hover:text-white">api@clozflow.in</a></span>
         </div>
         <p className="text-[11px] text-slate-500 mt-1">
           © 2026 ClozFlow AI Inc. All API keys shown in code snippets are dummy placeholders. Telephony compliant with TRAI NDNC and ISO/IEC 27001 standards.
