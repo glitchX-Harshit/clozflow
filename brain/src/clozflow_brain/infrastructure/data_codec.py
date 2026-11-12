@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from functools import lru_cache
 from pathlib import Path
 from threading import RLock
@@ -15,6 +16,9 @@ _key_lock = RLock()
 
 
 def _dpapi(data: bytes, *, decrypt: bool = False) -> bytes:
+    if sys.platform != "win32":
+        raise OSError("Windows DPAPI-protected data keys require Windows")
+
     import ctypes
     from ctypes import wintypes
     class Blob(ctypes.Structure):
