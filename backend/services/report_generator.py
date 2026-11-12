@@ -1,10 +1,18 @@
-import json
 from io import BytesIO
 from datetime import datetime
+from xml.sax.saxutils import escape
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+
+from services.transcript_manager import parse_transcript, parse_insights, as_number, as_text
+
+
+def _markup(value) -> str:
+    """Text safe to embed in a reportlab Paragraph (which parses <, > and & as markup)."""
+    return escape(as_text(value))
+
 
 def generate_call_report(call_log):
     """
@@ -65,29 +73,26 @@ def generate_call_report(call_log):
     elements.append(Paragraph("ClozFlow Deep Research Report", title_style))
     elements.append(Spacer(1, 12))
     
-    date_str = call_log.timestamp.strftime("%B %d, %Y at %I:%M %p")
+    # Stored timestamps are naive UTC
+    date_str = call_log.timestamp.strftime("%B %d, %Y at %I:%M %p UTC") if call_log.timestamp else "Unknown"
     elements.append(Paragraph(f"<b>Session Date:</b> {date_str}", styles['Normal']))
     elements.append(Paragraph(f"<b>Session ID:</b> #{call_log.id}", styles['Normal']))
     elements.append(Spacer(1, 24))
-    
-    # Parse Data
-    transcript_data = json.loads(call_log.transcript or "[]")
-    ai_data = json.loads(call_log.ai_suggestions or "[]")
-    
+
+    # Parse Data: [{"speaker","text","timestamp"}] and [{"payload","timestamp"}]
+    transcript_data = parse_transcript(call_log.transcript)
+    ai_data = parse_insights(call_log.ai_suggestions)
+
     # Calculate Real Metrics (No dummy data)
     avg_conf = 0
     objection_score = 0
     momentum_drops = 0
-    
+
     if len(ai_data) > 0:
-        conf_sum = sum(float(item["data"].get("payload", {}).get("confidence", 0.5)) for item in ai_data if "data" in item)
-        avg_conf = conf_sum / len(ai_data)
+        confidences = [as_number(item["payload"].get("confidence"), 0.5) for item in ai_data]
+        avg_conf = sum(confidences) / len(confidences)
         objection_score = int((1.0 - avg_conf) * 100)
-        
-        for item in ai_data:
-            c = float(item.get("data", {}).get("payload", {}).get("confidence", 0.5))
-            if c < 0.45:
-                momentum_drops += 1
+        momentum_drops = sum(1 for c in confidences if c < 0.45)
                 
     closing_prob = max(0, int(avg_conf * 100))
     verdict = "High" if closing_prob > 75 else ("Moderate" if closing_prob > 50 else "Low")
@@ -122,23 +127,21 @@ def generate_call_report(call_log):
     for entry in ai_data:
         timeline.append({"type": "ai", "data": entry})
         
-    try:
-        timeline.sort(key=lambda x: x["data"].get("timestamp", ""))
-    except Exception:
-        pass 
+    # Stable sort: entries without a timestamp keep their recorded order
+    timeline.sort(key=lambda x: x["data"].get("timestamp") or "")
 
     for item in timeline:
         if item["type"] == "transcript":
-            text = item["data"].get("text", "")
-            speaker = item["data"].get("speaker", "prospect").capitalize()
+            text = _markup(item["data"].get("text"))
+            speaker = _markup(as_text(item["data"].get("speaker"), "prospect").capitalize())
             elements.append(Paragraph(f"<b>{speaker}:</b> \"{text}\"", prospect_style))
         else:
             payload = item["data"].get("payload", {})
-            strategy = payload.get("strategy", "General")
-            response = payload.get("suggested_response", "")
-            tip = payload.get("coaching_tip", payload.get("quick_tip", ""))
-            concern = payload.get("hidden_concern", "N/A")
-            
+            strategy = _markup(as_text(payload.get("strategy"), "General"))
+            response = _markup(payload.get("suggested_response"))
+            tip = _markup(payload.get("coaching_tip") or payload.get("quick_tip"))
+            concern = _markup(as_text(payload.get("hidden_concern"), "N/A"))
+
             ai_content = f"<b>AI Insight ({strategy}):</b><br/>"
             if response:
                 ai_content += f"<i>Suggested Path:</i> \"{response}\"<br/>"

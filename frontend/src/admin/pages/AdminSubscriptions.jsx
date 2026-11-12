@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   CreditCard,
   Download,
@@ -7,40 +7,26 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
+import { formatServerDate } from '../../lib/dates';
+import { useAdminQuery } from '../services/useAdminQuery';
 import StatusBadge from '../components/StatusBadge';
 import EmptyState from '../components/EmptyState';
 
 export default function AdminSubscriptions() {
-  const [subs, setSubs] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
   const [planFilter, setPlanFilter] = useState('');
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchSubscriptions = async () => {
-    setLoading(true);
-    try {
-      const res = await adminApi.getSubscriptions({
-        status: statusFilter,
-        plan: planFilter,
-        page,
-        pageSize: 25
-      });
-      setSubs(res.items || []);
-      setTotal(res.total || 0);
-      setTotalPages(res.total_pages || 1);
-    } catch (err) {
-      console.error('Failed to load subscriptions:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSubscriptions();
-  }, [page, statusFilter, planFilter]);
+  const query = useAdminQuery(JSON.stringify([statusFilter, planFilter, page]), () => adminApi.getSubscriptions({
+    status: statusFilter,
+    plan: planFilter,
+    page,
+    pageSize: 25
+  }));
+  const subs = query.data?.items || [];
+  const total = query.data?.total || 0;
+  const totalPages = query.data?.total_pages || 1;
+  const loading = query.loading;
 
   const handleExport = () => {
     adminApi.downloadExport('subscriptions').catch((err) => alert(err.message));
@@ -94,8 +80,14 @@ export default function AdminSubscriptions() {
             </div>
           </div>
 
+          {query.error && (
+            <div role="alert" style={{ margin: '0 0 16px', padding: '12px 16px', borderRadius: '10px', backgroundColor: 'var(--admin-danger-dim)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#f87171', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+              <span>{query.error}</span>
+              <button type="button" className="admin-btn" onClick={query.reload}>Retry</button>
+            </div>
+          )}
           <div className="admin-table-container">
-            {loading ? (
+            {loading && subs.length === 0 ? (
               <div style={{ padding: '48px', display: 'flex', justifyContent: 'center' }}>
                 <Loader2 size={28} style={{ animation: 'spin 1s linear infinite', color: 'var(--admin-accent)' }} />
               </div>
@@ -127,9 +119,9 @@ export default function AdminSubscriptions() {
                       <td className="mono">₹{(s.amount || 0).toLocaleString()}</td>
                       <td><StatusBadge status={s.status} /></td>
                       <td style={{ fontSize: '12px' }}>
-                        {s.current_period_start ? new Date(s.current_period_start).toLocaleDateString() : '—'}
+                        {formatServerDate(s.current_period_start)}
                         {' → '}
-                        {s.current_period_end ? new Date(s.current_period_end).toLocaleDateString() : '—'}
+                        {formatServerDate(s.current_period_end)}
                       </td>
                       <td style={{ textTransform: 'capitalize' }}>{s.provider}</td>
                     </tr>

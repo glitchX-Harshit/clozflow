@@ -141,11 +141,24 @@ OUTPUT SCHEMA (Must return valid JSON ONLY):
 
 class IntelligenceEngine:
     def __init__(self):
-        self.client = AsyncOpenAI(
-            api_key=os.getenv("GROQ_API_KEY"),
-            base_url="https://api.groq.com/openai/v1"
-        )
+        # Created lazily: constructing AsyncOpenAI without a key raises, which
+        # used to break KnowledgeJobManager.get_instance() (and every crawl /
+        # upload request) on servers without GROQ_API_KEY.
+        self._client = None
         self.model = os.getenv("PEARL_EXTRACTION_MODEL", "qwen/qwen3.8-27b")
+
+    @property
+    def client(self) -> AsyncOpenAI:
+        if self._client is None:
+            api_key = (os.getenv("GROQ_API_KEY") or "").strip()
+            if not api_key:
+                raise RuntimeError("GROQ_API_KEY is not configured")
+            self._client = AsyncOpenAI(
+                api_key=api_key,
+                base_url="https://api.groq.com/openai/v1",
+                timeout=90.0,
+            )
+        return self._client
 
     async def _call_llm_with_retry(
         self,

@@ -11,7 +11,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
  * Completely destroys Lenis on internal app/dashboard/admin routes to prevent scroll hijacking,
  * wheel trapping (preventDefault), and class-based clipping.
  */
-const MARKETING_ROUTES = ['/', '/how-it-works', '/pricing'];
+const MARKETING_ROUTES = ['/', '/how-it-works', '/pricing', '/terms', '/privacy', '/ai-voice-policy', '/contact'];
 
 const isMarketingRoute = (pathname) => {
     if (MARKETING_ROUTES.includes(pathname)) return true;

@@ -10,6 +10,7 @@ import {
   Check
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
+import { copyText } from '../../lib/clipboard';
 
 export default function AdminSettings() {
   const [adminUser, setAdminUser] = useState(null);
@@ -20,7 +21,7 @@ export default function AdminSettings() {
   }, []);
 
   const copyCommand = (cmd) => {
-    navigator.clipboard.writeText(cmd);
+    copyText(cmd);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

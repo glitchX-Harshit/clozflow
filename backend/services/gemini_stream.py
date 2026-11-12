@@ -197,10 +197,11 @@ class GeminiStream:
                         if content.input_transcription:
                             transcript = content.input_transcription.text or ""
                             if transcript.strip():
+                                # Length only: transcripts are personal data and never logged.
                                 print(
-                                    f"[PROSPECT] TRANSCRIPT "
-                                    f"(is_final=True, speech_final={turn_complete}): "
-                                    f"{transcript}"
+                                    f"[STT] transcript segment "
+                                    f"(is_final=True, speech_final={turn_complete}, "
+                                    f"{len(transcript.split())} words)"
                                 )
                                 await self.transcript_callback(
                                     "prospect",
@@ -233,7 +234,7 @@ class GeminiStream:
                         #     pass
 
                     except Exception as e:
-                        print("Transcript processing error:", e)
+                        print("Transcript processing error:", type(e).__name__)
 
                 # ── async generator ended normally — session expired ──
                 if not self._closed:

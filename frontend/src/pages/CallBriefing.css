@@ -217,6 +217,33 @@
     border: 1px solid rgba(239,68,68,0.15);
 }
 
+.cb-error-action {
+    display: block;
+    margin: 0.5rem auto 0;
+    background: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    border-radius: var(--r-md);
+    padding: 0.35rem 0.9rem;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cb-input[aria-invalid="true"],
+.cb-textarea[aria-invalid="true"] {
+    border-color: rgba(220, 38, 38, 0.55);
+}
+
+/* Visible keyboard focus (inputs keep their border/shadow focus style). */
+.cb-capsule-pill:focus-visible,
+.cb-back:focus-visible,
+.cb-error-action:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
 .cb-footnote {
     text-align: center;
     font-size: 0.8125rem;

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useEffectEvent, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Search,
@@ -25,21 +25,32 @@ import {
     Palette,
     Bot,
     Megaphone,
-    Send,
-    ChevronDown,
-    ChevronUp,
     Mail,
     Download,
     Clock,
+    X,
 } from 'lucide-react';
 import { useLeadFinderStore } from '../store/useLeadFinderStore';
-import { useLeadIntelligenceStore } from '../store/useLeadIntelligenceStore';
 import LeadIntelligencePanel from '../components/LeadIntelligencePanel';
 import MagButton from '../components/MagButton';
+import { ApiError, SESSION_EXPIRED_MESSAGE, apiFetch, apiRequest, apiStream, isAbortError } from '../lib/apiFetch';
+import { createSseParser, parseEventData } from '../lib/sse';
+import { leadsCsvFilename, leadsToCsv } from '../lib/leadsCsv';
+import { isAiEnriched, isSampleLead, normalizeLeadResults, sampleHeaderOf } from '../lib/leadSearch';
+import { copyText } from '../lib/clipboard';
 import { gsap } from 'gsap';
 import './LeadFinder.css';
 
-const API_BASE = window.APP_API_BASE;
+/** Keyboard activation for non-button rows (Enter / Space). */
+const onActivateKey = (handler) => (e) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handler();
+    }
+};
+
+const searchErrorMessage = (err, fallback) => (err instanceof ApiError ? err.message : fallback);
 
 /* ══════════════════════════════════════════════════════════════════
    SEARCH EXAMPLES — quick-fill chips
@@ -151,21 +162,31 @@ const SkeletonCard = () => (
 const LeadListItem = ({ lead, isSelected, isSaved, onSelect, onSaveToggle }) => {
     const score = lead.opportunity_score ?? lead.lead_score ?? 0;
     const tier = scoreTier(score);
+    const sample = isSampleLead(lead);
 
     return (
-        <div 
+        <div
             className={`lf__workspace-item lf__workspace-item--${tier} ${isSelected ? 'selected' : ''}`}
             onClick={onSelect}
+            onKeyDown={onActivateKey(onSelect)}
+            role="button"
+            tabIndex={0}
+            aria-pressed={!!isSelected}
+            aria-label={`${lead.business_name}${lead.city ? `, ${lead.city}` : ''} — fit score ${score}${sample ? ' (sample data)' : ''}`}
         >
             <div className="lf__item-top">
                 <span className="lf__item-name" title={lead.business_name}>{lead.business_name}</span>
-                <button 
+                {sample && <span className="lf__sample-tag">Sample</span>}
+                <button
+                    type="button"
                     className={`lf__item-save-btn ${isSaved ? 'saved' : ''}`}
                     onClick={(e) => {
                         e.stopPropagation();
                         onSaveToggle();
                     }}
                     title={isSaved ? "Saved" : "Save lead"}
+                    aria-label={isSaved ? `Remove ${lead.business_name} from saved leads` : `Save ${lead.business_name}`}
+                    aria-pressed={!!isSaved}
                 >
                     <Bookmark size={16} fill={isSaved ? "currentColor" : "none"} />
                 </button>
@@ -205,7 +226,8 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
     const score = lead.opportunity_score ?? lead.lead_score ?? 0;
     const tier = scoreTier(score);
     const signals = lead.opportunity_signals || [];
-    
+    const sample = isSampleLead(lead);
+
     const handleCopyClick = (e) => {
         e.stopPropagation();
         onCopy(lead);
@@ -226,6 +248,7 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
                 <div className="lf__detail-header-left">
                     <div className="lf__detail-brand-row">
                         <h2 className="lf__detail-title" title={lead.business_name}>{lead.business_name}</h2>
+                        {sample && <span className="lf__sample-tag" title="Generated example, not a real business">Sample data</span>}
                         {lead.buying_probability && (
                             <span className={`lf__buying-badge lf__buying-badge--${buyingColor(lead.buying_probability)}`}>
                                 <Zap size={12} /> {lead.buying_probability} Fit
@@ -282,7 +305,12 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
             <div className="lf__detail-channels">
                 <div className="lf__channels-label">TELEMETRY & REACH CHANNELS:</div>
                 <div className="lf__channels-list">
-                    {lead.phone_number ? (
+                    {lead.phone_number && sample ? (
+                        <span className="lf__channel-link disabled" title="Sample data — this is not a real number">
+                            <Phone size={15} />
+                            <span>Sample number (not dialable)</span>
+                        </span>
+                    ) : lead.phone_number ? (
                         <a href={`tel:${lead.phone_number}`} className="lf__channel-link" title={lead.phone_number}>
                             <Phone size={15} />
                             <span>{lead.phone_number}</span>
@@ -408,6 +436,7 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
                         className="lf__action-btn lf__action-btn--primary"
                         label="Live Copilot"
                         hoverLabel="Start Call"
+                        aria-label="Live Copilot — start a call"
                         icon={<Sparkles size={16} />}
                         onClick={() => onStartCall(lead)}
                         variant="custom"
@@ -417,6 +446,7 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
                         className="lf__action-btn lf__action-btn--outreach"
                         label="Outreach"
                         hoverLabel="Send Message"
+                        aria-label="Outreach — write a message"
                         icon={<Mail size={16} />}
                         onClick={() => onOutreach(lead)}
                         variant="custom"
@@ -424,17 +454,23 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
                     />
                 </div>
                 <div className="lf__detail-actions-right">
-                    <button 
-                        className={`lf__action-btn lf__action-btn--square ${copied ? 'lf__action-btn--copied' : ''}`} 
-                        onClick={handleCopyClick} 
+                    <button
+                        type="button"
+                        className={`lf__action-btn lf__action-btn--square ${copied ? 'lf__action-btn--copied' : ''}`}
+                        onClick={handleCopyClick}
                         title="Copy contact info"
+                        aria-label="Copy contact info"
                     >
                         {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
                     </button>
-                    <button 
-                        className={`lf__action-btn lf__action-btn--square ${isSaved ? 'lf__action-btn--saved' : ''}`} 
-                        onClick={() => onSave(lead)} 
-                        title={isSaved ? "Saved" : "Save lead"}
+                    <button
+                        type="button"
+                        className={`lf__action-btn lf__action-btn--square ${isSaved ? 'lf__action-btn--saved' : ''}`}
+                        onClick={() => onSave(lead)}
+                        title={sample ? "Sample leads can't be saved" : isSaved ? "Saved" : "Save lead"}
+                        aria-label={isSaved ? 'Remove from saved leads' : 'Save lead'}
+                        aria-pressed={!!isSaved}
+                        disabled={sample}
                     >
                         <Bookmark size={16} fill={isSaved ? "currentColor" : "none"} />
                     </button>
@@ -448,62 +484,53 @@ const LeadDetailPanel = ({ lead, isSaved, onStartCall, onCopy, onSave, onOutreac
 /* ══════════════════════════════════════════════════════════════════
    FINDING LEADS PROGRESS / ANIMATION
    ══════════════════════════════════════════════════════════════════ */
-const FindingLeadsProgress = ({ query }) => {
-    const QUOTES = [
-        "“Every sale has five basic obstacles: no need, no money, no hurry, no desire, no trust.” – Zig Ziglar",
-        "“Timid salesmen have skinny kids.” – Judge Ziglar",
-        "“Quality performance starts with a positive attitude.” – Jeffrey Gitomer",
-        "“Don’t watch the clock; do what it does. Keep going.” – Sam Levenson",
-        "“Success is walking from failure to failure with no loss of enthusiasm.” – Winston Churchill",
-        "“The harder the conflict, the more glorious the triumph.” – Thomas Paine",
-        "“Innovation distinguishes between a leader and a follower.” – Steve Jobs",
-        "“Opportunities don't happen. You create them.” – Chris Grosser"
-    ];
+const LOADING_QUOTES = [
+    "“Every sale has five basic obstacles: no need, no money, no hurry, no desire, no trust.” – Zig Ziglar",
+    "“Timid salesmen have skinny kids.” – Judge Ziglar",
+    "“Quality performance starts with a positive attitude.” – Jeffrey Gitomer",
+    "“Don’t watch the clock; do what it does. Keep going.” – Sam Levenson",
+    "“Success is walking from failure to failure with no loss of enthusiasm.” – Winston Churchill",
+    "“The harder the conflict, the more glorious the triumph.” – Thomas Paine",
+    "“Innovation distinguishes between a leader and a follower.” – Steve Jobs",
+    "“Opportunities don't happen. You create them.” – Chris Grosser"
+];
 
+/* The request reports no progress, so this shows an indeterminate bar and real elapsed time. */
+const FindingLeadsProgress = ({ query }) => {
     const [quoteIndex, setQuoteIndex] = useState(0);
-    const [progress, setProgress] = useState(5);
+    const [elapsed, setElapsed] = useState(0);
 
     useEffect(() => {
+        const startedAt = Date.now();
         const quoteInterval = setInterval(() => {
-            setQuoteIndex((prev) => (prev + 1) % QUOTES.length);
+            setQuoteIndex((prev) => (prev + 1) % LOADING_QUOTES.length);
         }, 3000);
-
-        const progressInterval = setInterval(() => {
-            setProgress((prev) => {
-                if (prev < 85) {
-                    return prev + Math.random() * 4 + 1;
-                } else if (prev < 99) {
-                    return prev + Math.random() * 0.5;
-                }
-                return prev;
-            });
-        }, 500);
+        const clockInterval = setInterval(() => {
+            setElapsed(Math.floor((Date.now() - startedAt) / 1000));
+        }, 1000);
 
         return () => {
             clearInterval(quoteInterval);
-            clearInterval(progressInterval);
+            clearInterval(clockInterval);
         };
     }, []);
 
     const displayName = query ? query.trim() : "target businesses";
 
     return (
-        <div className="lf__premium-flat-loader animate-fade-in" style={{ padding: '1rem 0' }}>
+        <div className="lf__premium-flat-loader animate-fade-in" style={{ padding: '1rem 0' }} role="status" aria-label={`Searching for ${displayName}`}>
             <div className="lf__flat-loader-header" style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.75rem' }}>
-                <span className="lf__flat-loader-pct" style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text)' }}>
-                    {Math.round(progress)}%
+                <span className="lf__flat-loader-pct" style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text)' }} aria-hidden="true">
+                    {elapsed}s
                 </span>
-                <span className="lf__flat-loader-status" style={{ fontStyle: 'italic', opacity: 0.8, minHeight: '3rem', maxWidth: '80%', lineHeight: '1.4' }}>
-                    {QUOTES[quoteIndex]}
+                <span className="lf__flat-loader-status" style={{ fontStyle: 'italic', opacity: 0.8, minHeight: '3rem', maxWidth: '80%', lineHeight: '1.4' }} aria-hidden="true">
+                    {LOADING_QUOTES[quoteIndex]}
                 </span>
             </div>
 
-            {/* Flat progress line */}
-            <div className="lf__flat-bar-wrapper">
-                <div 
-                    className="lf__flat-bar" 
-                    style={{ width: `${progress}%`, transition: 'width 0.5s ease-out' }}
-                />
+            {/* Indeterminate progress line */}
+            <div className="lf__flat-bar-wrapper" aria-hidden="true">
+                <div className="lf__flat-bar lf__flat-bar--indeterminate" />
             </div>
 
             <div className="lf__flat-loader-footer" style={{ justifyContent: 'center' }}>
@@ -529,6 +556,9 @@ const LeadFinder = ({ onOutreach }) => {
         viewMode, setViewMode,
         scrollPosition, setScrollPosition,
         lastUpdated,
+        resultsSample, setResultsSample,
+        setLastSearchedQuery,
+        searchRequest,
         searchHistory, addSearchHistory, clearSearchHistory
     } = useLeadFinderStore();
 
@@ -540,25 +570,31 @@ const LeadFinder = ({ onOutreach }) => {
     const [deepSearchActive, setDeepSearchActive] = useState(false);
     const [deepSearchProgress, setDeepSearchProgress] = useState(null);
     const abortControllerRef = useRef(null);
+    const searchSeqRef = useRef(0);
     const deepLeadsRef = useRef([]);
+    const toastTimerRef = useRef(null);
     const [deepSearchEnabled, setDeepSearchEnabled] = useState(false);
     const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
 
-    // ── Intelligence Panel: listen for search commands from the AI panel ──────
-    const { setPanelState: setIntelPanelState } = useLeadIntelligenceStore();
+    // A stream or request that outlives this view must never write results afterwards.
+    useEffect(() => () => {
+        searchSeqRef.current += 1;
+        abortControllerRef.current?.abort();
+        clearTimeout(toastTimerRef.current);
+    }, []);
+
+    // ── Intelligence Panel: run searches it requests through the store ────────
+    // (requests made before this view mounted are ignored)
+    const handledSearchRequestRef = useRef(searchRequest?.id ?? 0);
+    const runRequestedSearch = useEffectEvent((requestedQuery) => {
+        handleSearch(requestedQuery);
+    });
 
     useEffect(() => {
-        const handleLISearch = (e) => {
-            const { query: newQuery } = e.detail || {};
-            if (newQuery) {
-                setQuery(newQuery);
-                // Small delay so store updates propagate first
-                setTimeout(() => handleSearch(newQuery), 50);
-            }
-        };
-        window.addEventListener('li:execute-search', handleLISearch);
-        return () => window.removeEventListener('li:execute-search', handleLISearch);
-    }, []);
+        if (!searchRequest || searchRequest.id === handledSearchRequestRef.current) return;
+        handledSearchRequestRef.current = searchRequest.id;
+        if (searchRequest.query) runRequestedSearch(searchRequest.query);
+    }, [searchRequest]);
 
     // Sync selected lead when viewMode, leads, or savedLeads change
     useEffect(() => {
@@ -684,29 +720,21 @@ const LeadFinder = ({ onOutreach }) => {
 
     /* ── Toast helper ────────────────────────────────── */
     const showToast = useCallback((msg, icon) => {
+        clearTimeout(toastTimerRef.current);
         setToast({ msg, icon });
-        setTimeout(() => setToast(null), 2500);
-    }, []);
-
-    const getAuthHeaders = useCallback(() => {
-        const token = localStorage.getItem('token');
-        return token ? { 'Authorization': `Bearer ${token}` } : {};
+        toastTimerRef.current = setTimeout(() => setToast(null), msg && msg.length > 60 ? 4500 : 2500);
     }, []);
 
     /* ── Fetch Saved Leads ───────────────────────────── */
     const fetchSavedLeads = useCallback(async () => {
         try {
-            const resp = await fetch(`${API_BASE}/leads/saved`, {
-                headers: getAuthHeaders(),
-            });
-            if (resp.ok) {
-                const data = await resp.json();
-                setSavedLeads(data);
-            }
+            const data = await apiFetch('/leads/saved');
+            setSavedLeads(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Failed to fetch saved leads:', err);
+            if (err?.status === 401) showToast(SESSION_EXPIRED_MESSAGE, '⚠️');
         }
-    }, []);
+    }, [showToast]);
 
     useEffect(() => {
         fetchSavedLeads();
@@ -744,163 +772,152 @@ const LeadFinder = ({ onOutreach }) => {
     const effectiveOffer = userOffer.trim() || '';
 
     /* ── Search ──────────────────────────────────────── */
-    const handleDeepSearch = async (searchQuery) => {
-        const q = (searchQuery || query).trim();
-        if (!q || q.length < 2) return;
-        
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-        }
-        
+    // One controller and one sequence number for both kinds of search: a new search
+    // aborts the previous one, and only the current search may write results.
+    const beginSearch = () => {
+        abortControllerRef.current?.abort();
         const controller = new AbortController();
         abortControllerRef.current = controller;
-        
+        const seq = ++searchSeqRef.current;
+        return { controller, isCurrent: () => seq === searchSeqRef.current };
+    };
+
+    const finishSearch = (run) => {
+        if (!run.isCurrent()) return;
+        setLoading(false);
+        setDeepSearchActive(false);
+        setDeepSearchProgress(null);
+        abortControllerRef.current = null;
+    };
+
+    const stopDeepSearch = () => {
+        abortControllerRef.current?.abort();
+    };
+
+    const handleDeepSearch = async (searchQuery) => {
+        const q = (searchQuery || useLeadFinderStore.getState().query).trim();
+        if (!q || q.length < 2) return;
+
+        // Read mode / filters / offer at call time — the Intelligence chat may have just set them.
+        const { activeFilters: filters, searchMode: mode, userOffer: offer } = useLeadFinderStore.getState();
+        const run = beginSearch();
+
         setLoading(true);
         setDeepSearchActive(true);
         setDeepSearchProgress(null);
         setLeads([]);
+        setResultsSample(false);
         setSearched(true);
         if (searchQuery) setQuery(searchQuery);
-        
+
         deepLeadsRef.current = [];
-        const effectiveOfferStr = userOffer.trim() || '';
-        
+        let terminated = false; // the server sends exactly one `complete` or `error`
+        let sample = false;
+        const recordHistory = (count) => {
+            setLastSearchedQuery(q);
+            addSearchHistory({ query: q, timestamp: Date.now(), results: count, mode: 'Deep Search' });
+        };
+
         try {
-            const response = await fetch(`${API_BASE}/leads/deep-search`, {
+            const response = await apiStream('/leads/deep-search', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+                body: {
                     query: q,
-                    filters: activeFilters,
-                    search_mode: searchMode,
-                    user_offer: effectiveOfferStr,
-                }),
-                signal: controller.signal,
+                    filters,
+                    search_mode: mode,
+                    user_offer: (offer || '').trim(),
+                },
+                signal: run.controller.signal,
             });
-            
-            if (!response.ok) throw new Error('Deep search failed');
-            
+
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
-            let buffer = '';
-            
+            const parser = createSseParser((event) => {
+                if (!run.isCurrent()) return;
+                const parsed = parseEventData(event);
+                if (parsed === undefined || parsed === null) return;
+
+                if (event.type === 'searching') {
+                    setDeepSearchProgress(parsed);
+                    if (parsed.sample === true && !sample) {
+                        sample = true;
+                        setResultsSample(true);
+                    }
+                } else if (event.type === 'lead_found') {
+                    if (typeof parsed !== 'object') return;
+                    deepLeadsRef.current = [...deepLeadsRef.current, parsed];
+                    sample = sample || isSampleLead(parsed);
+                    setLeads(deepLeadsRef.current);
+                    setResultsSample(sample);
+                } else if (event.type === 'area_done') {
+                    setDeepSearchProgress(prev => prev ? { ...prev, leads_found: parsed.total_leads } : prev);
+                } else if (event.type === 'complete') {
+                    terminated = true;
+                    const result = Array.isArray(parsed.leads)
+                        ? normalizeLeadResults({ leads: parsed.leads, sample: parsed.sample })
+                        : normalizeLeadResults(deepLeadsRef.current);
+                    sample = sample || result.sample;
+                    deepLeadsRef.current = result.leads;
+                    setLeads(result.leads);
+                    setResultsSample(sample);
+                    recordHistory(result.leads.length);
+                } else if (event.type === 'error') {
+                    // Terminal failure (quota, provider, internal). Leads already streamed stay valid.
+                    terminated = true;
+                    if (parsed.sample === true) {
+                        sample = true;
+                        setResultsSample(true);
+                    }
+                    recordHistory(deepLeadsRef.current.length);
+                    const kept = deepLeadsRef.current.length;
+                    const detail = typeof parsed.detail === 'string' && parsed.detail.trim()
+                        ? parsed.detail.trim()
+                        : 'Deep search stopped early.';
+                    showToast(kept > 0 ? `${detail} Showing the ${kept} leads found so far.` : detail, '⚠️');
+                }
+            });
+
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
-                
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split('\n');
-                buffer = lines.pop() || '';
-                
-                let eventType = '';
-                let eventData = '';
-                
-                for (const line of lines) {
-                    if (line.startsWith('event: ')) {
-                        eventType = line.slice(7).trim();
-                    } else if (line.startsWith('data: ')) {
-                        eventData = line.slice(6).trim();
-                    } else if (line === '' && eventType && eventData) {
-                        try {
-                            const parsed = JSON.parse(eventData);
-                            
-                            if (eventType === 'searching') {
-                                setDeepSearchProgress(parsed);
-                            } else if (eventType === 'lead_found') {
-                                deepLeadsRef.current = [...deepLeadsRef.current, parsed];
-                                setLeads(deepLeadsRef.current);
-                            } else if (eventType === 'area_done') {
-                                setDeepSearchProgress(prev => prev ? { ...prev, leads_found: parsed.total_leads } : prev);
-                            } else if (eventType === 'complete') {
-                                const finalLeads = parsed.leads || deepLeadsRef.current;
-                                setLeads(finalLeads);
-                                addSearchHistory({
-                                    query: q,
-                                    timestamp: Date.now(),
-                                    results: finalLeads.length,
-                                    mode: 'Deep Search'
-                                });
-                            }
-                        } catch (e) {
-                            console.warn('SSE parse error:', e);
-                        }
-                        eventType = '';
-                        eventData = '';
-                    }
+                if (!run.isCurrent()) {
+                    reader.cancel().catch(() => {});
+                    return;
                 }
+                parser.push(decoder.decode(value, { stream: true }));
             }
+            parser.push(decoder.decode());
+            parser.flush();
+
+            // The stream ended without a terminal event: keep what arrived and still record the search.
+            if (run.isCurrent() && !terminated) recordHistory(deepLeadsRef.current.length);
         } catch (err) {
-            if (err.name !== 'AbortError') {
-                console.error('Deep search error:', err);
-                showToast('Deep search failed. Try regular search.', '⚠️');
+            if (isAbortError(err)) {
+                // "Stop" keeps the leads found so far; a superseded search just goes quiet.
+                if (run.isCurrent() && deepLeadsRef.current.length > 0) recordHistory(deepLeadsRef.current.length);
+                return;
             }
+            if (!run.isCurrent()) return;
+            console.error('Deep search error:', err);
+            showToast(searchErrorMessage(err, 'Deep search failed. Try regular search.'), '⚠️');
         } finally {
-            setLoading(false);
-            setDeepSearchActive(false);
-            setDeepSearchProgress(null);
-            abortControllerRef.current = null;
+            finishSearch(run);
         }
     };
 
-    const handleExportToExcel = () => {
+    const handleExportCsv = () => {
         const targetList = viewMode === 'saved' ? savedLeads : leads;
         if (!targetList || targetList.length === 0) return;
-        
-        const headers = [
-            'Business Name',
-            'Category',
-            'Rating',
-            'Reviews Count',
-            'Phone',
-            'Website',
-            'Instagram',
-            'Opportunity Score',
-            'Buying Probability',
-            'Address',
-            'AI Summary',
-            'Likely Pain Point',
-            'Outreach Angle',
-            'Service Fit Reason',
-            'Insights'
-        ];
-        
-        const rows = targetList.map(lead => [
-            lead.business_name || '',
-            lead.category || '',
-            lead.google_rating || '',
-            lead.reviews_count || '',
-            lead.phone_number || '',
-            lead.website || '',
-            lead.instagram || '',
-            lead.opportunity_score || '',
-            lead.buying_probability || '',
-            lead.address || '',
-            lead.ai_summary || '',
-            lead.likely_pain_point || '',
-            lead.outreach_angle || '',
-            lead.service_fit_reason || '',
-            lead.insights ? lead.insights.join('; ') : ''
-        ]);
-        
-        const csvContent = [
-            headers.join(','),
-            ...rows.map(row => row.map(val => {
-                const escaped = String(val).replace(/"/g, '""');
-                return `"${escaped}"`;
-            }).join(','))
-        ].join('\n');
-        
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        const blob = new Blob([leadsToCsv(targetList)], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.setAttribute('href', url);
-        const filename = viewMode === 'saved' 
-            ? 'clozflow_saved_leads.csv' 
-            : `clozflow_leads_${query.toLowerCase().replace(/[^a-z0-9]/g, '_')}.csv`;
-        link.setAttribute('download', filename);
+        link.setAttribute('download', leadsCsvFilename(viewMode, query));
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 0);
     };
 
     const handleSearch = async (searchQuery) => {
@@ -908,47 +925,57 @@ const LeadFinder = ({ onOutreach }) => {
             return handleDeepSearch(searchQuery);
         }
 
-        const q = (searchQuery || query).trim();
+        const q = (searchQuery || useLeadFinderStore.getState().query).trim();
         if (!q || q.length < 2) return;
 
+        const { activeFilters: filters, searchMode: mode, userOffer: offer } = useLeadFinderStore.getState();
+        const run = beginSearch();
+
         setLoading(true);
+        setDeepSearchActive(false);
+        setDeepSearchProgress(null);
         setSearched(true);
         if (searchQuery) setQuery(searchQuery);
 
         try {
             const body = {
                 query: q,
-                filters: activeFilters,
-                search_mode: searchMode,
+                filters,
+                search_mode: mode,
             };
-            if (effectiveOffer) {
-                body.user_offer = effectiveOffer;
+            const offerText = (offer || '').trim();
+            if (offerText) {
+                body.user_offer = offerText;
             }
 
-            const resp = await fetch(`${API_BASE}/leads/search`, {
+            const { data, headers } = await apiRequest('/leads/search', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
+                body,
+                signal: run.controller.signal,
             });
+            if (!run.isCurrent()) return;
 
-            if (!resp.ok) throw new Error('Search failed');
+            // Sample data is flagged per lead and by the X-Sample-Data response header.
+            const { leads: found, sample } = normalizeLeadResults(data, { sampleHeader: sampleHeaderOf(headers) });
+            setLeads(found);
+            setResultsSample(sample);
+            setLastSearchedQuery(q);
 
-            const data = await resp.json();
-            setLeads(data);
-            
-            const activeModeLabel = SEARCH_MODES.find(m => m.value === searchMode)?.label || 'Search';
+            const modeLabel = SEARCH_MODES.find(m => m.value === mode)?.label || 'Search';
             addSearchHistory({
                 query: q,
                 timestamp: Date.now(),
-                results: data.length,
-                mode: activeModeLabel
+                results: found.length,
+                mode: modeLabel
             });
         } catch (err) {
+            if (isAbortError(err) || !run.isCurrent()) return;
             console.error('Lead search error:', err);
-            showToast('Search failed: check backend connection', '⚠️');
+            showToast(searchErrorMessage(err, 'Search failed — please try again.'), '⚠️');
             setLeads([]);
+            setResultsSample(false);
         } finally {
-            setLoading(false);
+            finishSearch(run);
         }
     };
 
@@ -988,33 +1015,18 @@ const LeadFinder = ({ onOutreach }) => {
         });
     };
 
-    const handleOutreach = (lead) => {
+    // The Intelligence panel passes the offer described there; the offer chips win when set.
+    const handleOutreach = (lead, offerOverride) => {
+        const offer = effectiveOffer || (typeof offerOverride === 'string' ? offerOverride.trim() : '');
         if (onOutreach) {
-            onOutreach(lead, effectiveOffer);
+            onOutreach(lead, offer);
         } else {
             saveScrollState();
-            navigate('/outreach-studio', { state: { lead, userOffer: effectiveOffer, query } });
+            navigate('/outreach-studio', { state: { lead, userOffer: offer, query } });
         }
     };
 
-    const fallbackCopyText = (text, callback) => {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            callback();
-        } catch (err) {
-            console.error('Fallback copy failed:', err);
-        }
-        document.body.removeChild(textArea);
-    };
-
-    const handleCopy = (lead) => {
+    const handleCopy = async (lead) => {
         const text = [
             lead.business_name,
             lead.phone_number,
@@ -1022,62 +1034,47 @@ const LeadFinder = ({ onOutreach }) => {
             lead.instagram,
         ].filter(Boolean).join('\n');
 
-        const doShowToast = () => showToast('Contact info copied', '✓');
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text)
-                .then(doShowToast)
-                .catch(() => fallbackCopyText(text, doShowToast));
-        } else {
-            fallbackCopyText(text, doShowToast);
-        }
+        const ok = await copyText(text);
+        showToast(ok ? 'Contact info copied' : 'Could not copy — select the text manually', ok ? '✓' : '⚠️');
     };
 
     const handleSave = async (lead) => {
+        if (isSampleLead(lead)) {
+            // The saved-leads table cannot keep the flag, so a saved sample would look real later.
+            showToast("Sample leads can't be saved", '⚠️');
+            return;
+        }
         const savedInstance = getSavedLead(lead);
 
         if (savedInstance) {
             // Unsave/Delete
             try {
-                const resp = await fetch(`${API_BASE}/leads/saved/${savedInstance.id}`, {
-                    method: 'DELETE',
-                    headers: getAuthHeaders(),
-                });
-                if (resp.ok) {
-                    showToast('Lead removed from saved', '✓');
-                    setSavedLeads((prev) => prev.filter((s) => s.id !== savedInstance.id));
-                } else {
-                    throw new Error('Failed to delete');
-                }
+                await apiFetch(`/leads/saved/${encodeURIComponent(savedInstance.id)}`, { method: 'DELETE' });
+                showToast('Lead removed from saved', '✓');
+                setSavedLeads((prev) => prev.filter((s) => s.id !== savedInstance.id));
             } catch (err) {
                 console.error('Delete error:', err);
-                showToast('Could not remove lead', '⚠️');
+                showToast(err?.status === 401 ? SESSION_EXPIRED_MESSAGE : 'Could not remove lead', '⚠️');
             }
         } else {
             // Save
             try {
-                const resp = await fetch(`${API_BASE}/leads/save`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-                    body: JSON.stringify(lead),
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    showToast('Lead saved successfully', '✓');
-                    setSavedLeads((prev) => [...prev, { ...lead, id: data.id }]);
-                } else {
-                    throw new Error('Failed to save');
-                }
+                const data = await apiFetch('/leads/save', { method: 'POST', body: lead });
+                showToast('Lead saved successfully', '✓');
+                setSavedLeads((prev) => [...prev, { ...lead, id: data?.id }]);
             } catch (err) {
                 console.error('Save error:', err);
-                showToast('Could not save lead', '⚠️');
+                const message = err?.status === 401
+                    ? SESSION_EXPIRED_MESSAGE
+                    : err instanceof ApiError && err.status === 422 ? `Could not save lead — ${err.message}` : 'Could not save lead';
+                showToast(message, '⚠️');
             }
         }
     };
 
     /* ── Key handler ─────────────────────────────────── */
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') handleSearch();
+        if (e.key === 'Enter' && !loading) handleSearch();
     };
 
     /* ── Active filter count ─────────────────────────── */
@@ -1104,18 +1101,24 @@ const LeadFinder = ({ onOutreach }) => {
 
             {/* ── Segmented Sliding Tabs ── */}
             <div className="lf__tabs-container">
-                <div className="lf__tabs-wrapper" ref={tabsRef}>
-                    <div className="lf__tabs-slider" ref={sliderRef} />
-                    <button 
+                <div className="lf__tabs-wrapper" ref={tabsRef} role="tablist" aria-label="Lead views">
+                    <div className="lf__tabs-slider" ref={sliderRef} aria-hidden="true" />
+                    <button
+                        type="button"
                         ref={tabDiscoverRef}
+                        role="tab"
+                        aria-selected={viewMode === 'discover'}
                         className={`lf__tab ${viewMode === 'discover' ? 'active' : ''}`}
                         onClick={() => setViewMode('discover')}
                     >
                         <Search size={13} />
                         <span>Discover Leads</span>
                     </button>
-                    <button 
+                    <button
+                        type="button"
                         ref={tabSavedRef}
+                        role="tab"
+                        aria-selected={viewMode === 'saved'}
                         className={`lf__tab ${viewMode === 'saved' ? 'active' : ''}`}
                         onClick={() => setViewMode('saved')}
                     >
@@ -1152,8 +1155,10 @@ const LeadFinder = ({ onOutreach }) => {
                                 const isActive = userOffer === preset.label;
                                 return (
                                     <button
+                                        type="button"
                                         key={preset.label}
                                         className={`lf__offer-chip ${isActive ? 'active' : ''}`}
+                                        aria-pressed={isActive}
                                         onClick={() => handleSelectPreset(preset.label)}
                                     >
                                         <Icon size={12} />
@@ -1166,6 +1171,7 @@ const LeadFinder = ({ onOutreach }) => {
                             <input
                                 className="lf__offer-custom"
                                 type="text"
+                                aria-label="Custom value proposition"
                                 placeholder="Or specify your custom value proposition..."
                                 value={OFFER_PRESETS.some((p) => p.label === userOffer) ? '' : customOffer}
                                 onChange={handleCustomOfferChange}
@@ -1182,6 +1188,7 @@ const LeadFinder = ({ onOutreach }) => {
                                 id="lead-search-input"
                                 className="lf__search-input"
                                 type="text"
+                                aria-label="Search for leads"
                                 placeholder="e.g. Find bakery shops in Delhi..."
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
@@ -1190,16 +1197,21 @@ const LeadFinder = ({ onOutreach }) => {
                             />
                             <div className="lf__search-btn-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <button
+                                    type="button"
                                     className={`lf__deep-toggle ${showHistoryDropdown ? 'active' : ''}`}
                                     onClick={() => setShowHistoryDropdown(prev => !prev)}
                                     title="View Recent Searches"
+                                    aria-label="Recent searches"
+                                    aria-expanded={showHistoryDropdown}
                                     style={{ padding: '0.5rem' }}
                                 >
                                     <Clock size={14} />
                                 </button>
                                 <button
+                                    type="button"
                                     className={`lf__deep-toggle ${deepSearchEnabled ? 'active' : ''}`}
                                     onClick={() => setDeepSearchEnabled(prev => !prev)}
+                                    aria-pressed={deepSearchEnabled}
                                     title="Deep Search: iterates through city neighborhoods to find leads without websites"
                                 >
                                     <Crosshair size={14} />
@@ -1209,6 +1221,7 @@ const LeadFinder = ({ onOutreach }) => {
                                     id="lead-search-btn"
                                     className="lf__search-btn"
                                     label={loading ? "Searching" : "Search"}
+                                    aria-label={loading ? 'Searching' : 'Search'}
                                     icon={!loading && <ArrowRight size={14} />}
                                     onClick={() => handleSearch()}
                                     disabled={loading || query.trim().length < 2}
@@ -1228,14 +1241,21 @@ const LeadFinder = ({ onOutreach }) => {
                                     </div>
                                     <div className="lf__history-list">
                                         {searchHistory.map((h, idx) => (
-                                            <div 
+                                            <div
                                                 key={idx}
                                                 className="lf__history-item"
+                                                role="button"
+                                                tabIndex={0}
                                                 onClick={() => {
                                                     setQuery(h.query);
                                                     setShowHistoryDropdown(false);
                                                     handleSearch(h.query);
                                                 }}
+                                                onKeyDown={onActivateKey(() => {
+                                                    setQuery(h.query);
+                                                    setShowHistoryDropdown(false);
+                                                    handleSearch(h.query);
+                                                })}
                                             >
                                                 <div className="lf__history-query-wrap">
                                                     <Clock size={15} className="lf__history-icon" />
@@ -1264,14 +1284,21 @@ const LeadFinder = ({ onOutreach }) => {
                                     const isActive = !!activeFilters[f.key];
                                     return (
                                         <button
+                                            type="button"
                                             key={f.key}
                                             className={`lf__filter-chip ${isActive ? 'active' : ''}`}
+                                            aria-pressed={isActive}
                                             onClick={() => toggleFilter(f.key, f.value)}
                                         >
                                             <Icon size={11} /> {f.label}
                                         </button>
                                     );
                                 })}
+                                {filterCount > 0 && (
+                                    <button type="button" className="lf__filter-clear" onClick={() => setActiveFilters({})}>
+                                        <X size={11} /> Clear filters
+                                    </button>
+                                )}
                             </div>
 
                             {/* Search Mode Selector */}
@@ -1282,8 +1309,10 @@ const LeadFinder = ({ onOutreach }) => {
                                 <div className="lf__mode-chips">
                                     {SEARCH_MODES.map((mode) => (
                                         <button
+                                            type="button"
                                             key={mode.value}
                                             className={`lf__mode-chip ${searchMode === mode.value ? 'active' : ''}`}
+                                            aria-pressed={searchMode === mode.value}
                                             onClick={() => setSearchMode(mode.value)}
                                         >
                                             {mode.label}
@@ -1307,25 +1336,40 @@ const LeadFinder = ({ onOutreach }) => {
                     {/* Results */}
                     {(!loading || deepSearchActive) && searched && (leads.length > 0 || deepSearchActive) && (
                         <div className="lf__results-wrapper animate-fade-in">
-                            {deepSearchActive && deepSearchProgress && (
-                                <div className="lf__deep-progress">
+                            {deepSearchActive && (
+                                <div className="lf__deep-progress" role="status">
                                     <div className="lf__deep-progress-header">
                                         <Crosshair size={18} className="lf__deep-progress-icon spinning" />
-                                        <span>Deep Searching: {deepSearchProgress.level_name || 'Neighborhood'}</span>
+                                        <span>Deep Searching: {deepSearchProgress?.level_name || 'Neighborhood'}</span>
+                                        <button type="button" className="lf__deep-stop-btn" onClick={stopDeepSearch} title="Stop and keep the leads found so far">
+                                            <X size={12} /> Stop
+                                        </button>
                                     </div>
                                     <div className="lf__deep-progress-area">
-                                        Scanning: <strong>{deepSearchProgress.area}</strong>
+                                        {deepSearchProgress?.area
+                                            ? <>Scanning: <strong>{deepSearchProgress.area}</strong></>
+                                            : 'Preparing the area list…'}
                                     </div>
                                     <div className="lf__clean-deep-bar-wrapper">
-                                        <div 
-                                            className="lf__clean-deep-bar" 
-                                            style={{ width: `${(deepSearchProgress.area_index / deepSearchProgress.total_areas) * 100}%` }}
+                                        <div
+                                            className="lf__clean-deep-bar"
+                                            style={{ width: `${deepSearchProgress?.total_areas ? Math.min(100, (deepSearchProgress.area_index / deepSearchProgress.total_areas) * 100) : 0}%` }}
                                         />
                                     </div>
-                                    <div className="lf__deep-progress-stats">
-                                        <span>Level {deepSearchProgress.level || 1} · Areas: {deepSearchProgress.area_index}/{deepSearchProgress.total_areas}</span>
-                                        <span>Leads found: {deepSearchProgress.leads_found}/20</span>
-                                    </div>
+                                    {deepSearchProgress && (
+                                        <div className="lf__deep-progress-stats">
+                                            <span>Level {deepSearchProgress.level || 1} · Areas: {deepSearchProgress.area_index}/{deepSearchProgress.total_areas}</span>
+                                            <span>Leads found: {leads.length}/20</span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            {leads.length > 0 && resultsSample && (
+                                <div className="lf__sample-notice" role="status">
+                                    <AlertTriangle size={15} />
+                                    <span>
+                                        <strong>Sample data.</strong> Live lead search isn't configured on this server, so these businesses and phone numbers are generated examples — don't contact or save them.
+                                    </span>
                                 </div>
                             )}
                             {leads.length > 0 && (
@@ -1338,10 +1382,11 @@ const LeadFinder = ({ onOutreach }) => {
                                             )}
                                         </span>
                                         <div className="lf__results-badges" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                            <button 
+                                            <button
+                                                type="button"
                                                 className="lf__export-btn"
-                                                onClick={handleExportToExcel}
-                                                title="Extract all leads into Excel (CSV) file"
+                                                onClick={handleExportCsv}
+                                                title="Download all leads as a CSV file (opens in Excel)"
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -1359,12 +1404,19 @@ const LeadFinder = ({ onOutreach }) => {
                                                 }}
                                             >
                                                 <Download size={12} />
-                                                <span>Export Excel</span>
+                                                <span>Export CSV</span>
                                             </button>
-                                            <span className="lf__results-badge">
-                                                <span className="lf__results-badge-dot" />
-                                                AI Enriched
-                                            </span>
+                                            {resultsSample ? (
+                                                <span className="lf__results-badge lf__results-badge--sample">
+                                                    <span className="lf__results-badge-dot" />
+                                                    Sample Data
+                                                </span>
+                                            ) : isAiEnriched(leads, resultsSample) && (
+                                                <span className="lf__results-badge">
+                                                    <span className="lf__results-badge-dot" />
+                                                    AI Enriched
+                                                </span>
+                                            )}
                                             <span className="lf__results-mode-badge">
                                                 {activeModeLabel}
                                             </span>
@@ -1445,13 +1497,19 @@ const LeadFinder = ({ onOutreach }) => {
                                     </div>
                                     <div className="lf__history-list">
                                         {searchHistory.map((h, idx) => (
-                                            <div 
-                                                key={idx} 
+                                            <div
+                                                key={idx}
                                                 className="lf__history-item"
+                                                role="button"
+                                                tabIndex={0}
                                                 onClick={() => {
                                                     setQuery(h.query);
                                                     handleSearch(h.query);
                                                 }}
+                                                onKeyDown={onActivateKey(() => {
+                                                    setQuery(h.query);
+                                                    handleSearch(h.query);
+                                                })}
                                             >
                                                 <div className="lf__history-query-wrap">
                                                     <Clock size={15} className="lf__history-icon" />
@@ -1498,10 +1556,11 @@ const LeadFinder = ({ onOutreach }) => {
                                     You have <strong>{savedLeads.length}</strong> saved leads
                                 </span>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                    <button 
+                                    <button
+                                        type="button"
                                         className="lf__export-btn"
-                                        onClick={handleExportToExcel}
-                                        title="Extract all saved leads into Excel (CSV) file"
+                                        onClick={handleExportCsv}
+                                        title="Download all saved leads as a CSV file (opens in Excel)"
                                         style={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -1519,7 +1578,7 @@ const LeadFinder = ({ onOutreach }) => {
                                         }}
                                     >
                                         <Download size={12} />
-                                        <span>Export Excel</span>
+                                        <span>Export CSV</span>
                                     </button>
                                     <span className="lf__results-badge" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>
                                         TARGET PIPELINE
@@ -1570,15 +1629,16 @@ const LeadFinder = ({ onOutreach }) => {
                                 Bookmarked leads will be compiled here as your core outreach pipeline. Start exploring in the Discover tab.
                             </p>
                             <div style={{ marginTop: '2rem' }}>
-                                <button 
-                                    className="lf__action-btn lf__action-btn--primary lf__action-btn--centered" 
+                                {/* MagButton supplies the dark fill (.mag-btn::before) — a plain button was white on white. */}
+                                <MagButton
+                                    className="lf__action-btn lf__action-btn--primary lf__action-btn--centered"
+                                    label="Start Discovering Leads"
+                                    hoverLabel="Explore Now"
+                                    aria-label="Start discovering leads"
+                                    variant="custom"
+                                    magnetStrength={0.2}
                                     onClick={() => setViewMode('discover')}
-                                >
-                                    <span className="lf__btn-text-roll">
-                                        <span className="lf__btn-text-main">Start Discovering Leads</span>
-                                        <span className="lf__btn-text-hover">Explore Now</span>
-                                    </span>
-                                </button>
+                                />
                             </div>
                         </div>
                     )}
@@ -1586,7 +1646,7 @@ const LeadFinder = ({ onOutreach }) => {
             )}
 
             {toast && (
-                <div className="lf__toast">
+                <div className="lf__toast" role="status" aria-live="polite">
                     {toast.icon === '✓' ? <CheckCircle2 size={14} color="#22c55e" /> : <span style={{fontSize: '0.8rem'}}>{toast.icon}</span>}
                     <span>{toast.msg}</span>
                 </div>

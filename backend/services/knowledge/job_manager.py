@@ -1,7 +1,8 @@
 import asyncio
 import json
-from datetime import datetime
-from typing import Dict, Any, List, Optional
+from collections import OrderedDict
+from datetime import datetime, timedelta
+from typing import Dict, Any, List, Optional, Tuple
 from sqlalchemy.orm import Session
 
 from database import SessionLocal
@@ -10,6 +11,53 @@ from models_knowledge import KnowledgeSource, KnowledgePage, KnowledgeFact, Caps
 from services.knowledge.crawler import WebsiteCrawler
 from services.knowledge.document_parser import parse_uploaded_file
 from services.knowledge.intelligence_engine import IntelligenceEngine
+
+MAX_CACHED_JOBS = 1000
+TERMINAL_JOB_STATUSES = ("completed", "failed")
+
+# Imports run as tasks of this process. A source row still "connecting" / "extracting" that no
+# live task owns was abandoned: the server restarted mid-import (its last update predates this
+# process) or it stopped making progress. Production runs one backend process (supervisord
+# --workers 1); with several processes an import running in another one could look abandoned.
+INTERRUPTED_IMPORT_ERROR = "Import interrupted: the server restarted before it finished. Start the import again."
+STALLED_IMPORT_ERROR = "Import stopped making progress and was marked as failed. Start the import again."
+CANCELLED_IMPORT_ERROR = "Import cancelled."
+STALLED_IMPORT_AFTER = timedelta(minutes=30)
+PROCESS_STARTED_AT = datetime.utcnow()
+
+
+def fail_abandoned_imports(db: Session, *, user_id: Optional[int] = None,
+                           source_ids: Optional[List[str]] = None, now: Optional[datetime] = None) -> int:
+    """Mark knowledge imports that no task of this process is running as failed (with a clear
+    ``error_message``). Returns how many rows were changed (committed)."""
+    now = now or datetime.utcnow()
+    mgr = KnowledgeJobManager.get_instance()
+    q = db.query(KnowledgeSource).filter(
+        (KnowledgeSource.status.is_(None)) | (KnowledgeSource.status.notin_(TERMINAL_JOB_STATUSES))
+    )
+    if user_id is not None:
+        q = q.filter(KnowledgeSource.user_id == user_id)
+    if source_ids is not None:
+        q = q.filter(KnowledgeSource.id.in_(list(source_ids)))
+    changed = 0
+    for source in q.all():
+        if mgr.is_job_active(source.id):
+            continue
+        last = source.updated_at or source.created_at
+        if last is None or last < PROCESS_STARTED_AT:
+            source.error_message = INTERRUPTED_IMPORT_ERROR
+        elif now - last > STALLED_IMPORT_AFTER:
+            source.error_message = STALLED_IMPORT_ERROR
+        else:
+            continue
+        source.status = "failed"
+        changed += 1
+    if changed:
+        db.commit()
+    return changed
+
+# How a new ingestion treats capsules created by earlier ingestions.
+KNOWLEDGE_MERGE_STRATEGY = "merge_by_source"
 
 
 STAGES = [
@@ -36,16 +84,43 @@ class KnowledgeJobManager:
     def __init__(self):
         # In-memory subscriber queues for SSE streams: job_id -> list of asyncio.Queue
         self._listeners: Dict[str, List[asyncio.Queue]] = {}
-        # Cached in-memory status snapshots: job_id -> dict
-        self._job_cache: Dict[str, Dict[str, Any]] = {}
+        # Cached in-memory status snapshots: job_id -> dict (bounded LRU)
+        self._job_cache: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
         # Active background tasks: job_id -> asyncio.Task
         self._active_tasks: Dict[str, asyncio.Task] = {}
         self._job_user_map: Dict[str, int] = {}
+        # Owner of every job seen by this process (kept after the task ends so
+        # status/stream endpoints can enforce ownership). Bounded LRU.
+        self._job_owners: "OrderedDict[str, int]" = OrderedDict()
         self.engine = IntelligenceEngine()
 
-    def _cleanup_task(self, job_id: str):
+    def _cleanup_task(self, job_id: str, task: Optional[asyncio.Task] = None):
+        # Only forget the job if the finished task is still the registered one;
+        # a re-sync registers a new task under the same id before the
+        # cancelled one finishes.
+        if task is not None and self._active_tasks.get(job_id) is not task:
+            return
         self._active_tasks.pop(job_id, None)
         self._job_user_map.pop(job_id, None)
+
+    def _remember_owner(self, job_id: str, user_id: int):
+        self._job_owners[job_id] = user_id
+        self._job_owners.move_to_end(job_id)
+        while len(self._job_owners) > MAX_CACHED_JOBS:
+            self._job_owners.popitem(last=False)
+
+    def get_job_owner(self, job_id: str) -> Optional[int]:
+        return self._job_owners.get(job_id)
+
+    def is_job_active(self, job_id: str) -> bool:
+        task = self._active_tasks.get(job_id)
+        return bool(task and not task.done())
+
+    def active_job_count(self, user_id: int) -> int:
+        return sum(
+            1 for jid, uid in list(self._job_user_map.items())
+            if uid == user_id and self.is_job_active(jid)
+        )
 
     def cancel_job(self, job_id: str):
         task = self._active_tasks.pop(job_id, None)
@@ -59,8 +134,52 @@ class KnowledgeJobManager:
         for jid in jobs_to_cancel:
             self.cancel_job(jid)
 
+    @staticmethod
+    def _source_still_wanted(db: Session, job_id: str) -> bool:
+        """False once the source row was deleted / reset, or the import was cancelled (marked
+        failed) while this task was working."""
+        row = db.query(KnowledgeSource.status).filter(KnowledgeSource.id == job_id).first()
+        return row is not None and row[0] != "failed"
+
+    async def cancel_import(self, db: Session, job_id: str, source: Optional[KnowledgeSource]) -> bool:
+        """Stop an import (keeping its source row and whatever it already stored), mark the
+        source failed with ``CANCELLED_IMPORT_ERROR`` and end its streams. Returns whether a
+        running task was cancelled."""
+        was_running = self.is_job_active(job_id)
+        self.cancel_job(job_id)
+        if source is not None:
+            source.status = "failed"
+            source.error_message = CANCELLED_IMPORT_ERROR
+            db.commit()
+        await self.emit_job_event(job_id, {
+            "stage": -1, "status": "failed", "progress": 0, "cancelled": True,
+            "error": CANCELLED_IMPORT_ERROR, "message": CANCELLED_IMPORT_ERROR,
+        })
+        return was_running
+
     def get_cached_job(self, job_id: str) -> Optional[Dict[str, Any]]:
         return self._job_cache.get(job_id)
+
+    def _register_task(self, job_id: str, user_id: int, task: asyncio.Task):
+        self._active_tasks[job_id] = task
+        self._job_user_map[job_id] = user_id
+        self._remember_owner(job_id, user_id)
+        task.add_done_callback(lambda t: self._cleanup_task(job_id, t))
+
+    async def _handle_cancellation(self, job_id: str):
+        """Tell stream listeners the job ended — unless a newer task (re-sync)
+        has taken over this job id, or ``cancel_import`` already sent the
+        cancelled event (one terminal event per cancel, in its wording)."""
+        current = self._active_tasks.get(job_id)
+        if current is not None and current is not asyncio.current_task():
+            return
+        last = self._job_cache.get(job_id)
+        if last and last.get("cancelled"):
+            return
+        await self.emit_job_event(job_id, {
+            "stage": -1, "status": "failed", "progress": 0, "cancelled": True,
+            "error": "Ingestion was cancelled.", "message": "Ingestion was cancelled.",
+        })
 
     def subscribe(self, job_id: str) -> asyncio.Queue:
         q = asyncio.Queue()
@@ -79,6 +198,9 @@ class KnowledgeJobManager:
         """Publish event to all active SSE queues for this job and update cache."""
         event_data["timestamp"] = datetime.utcnow().isoformat()
         self._job_cache[job_id] = event_data
+        self._job_cache.move_to_end(job_id)
+        while len(self._job_cache) > MAX_CACHED_JOBS:
+            self._job_cache.popitem(last=False)
 
         if job_id in self._listeners:
             for q in list(self._listeners[job_id]):
@@ -97,9 +219,7 @@ class KnowledgeJobManager:
         # Cancel any previous job for same ID if active
         self.cancel_job(job_id)
         task = asyncio.create_task(self._run_website_pipeline(job_id, user_id, website_url))
-        self._active_tasks[job_id] = task
-        self._job_user_map[job_id] = user_id
-        task.add_done_callback(lambda t: self._cleanup_task(job_id))
+        self._register_task(job_id, user_id, task)
 
     async def start_document_ingestion_job(
         self,
@@ -110,9 +230,7 @@ class KnowledgeJobManager:
         """Asynchronously processes uploaded documents and generates capsules."""
         self.cancel_job(job_id)
         task = asyncio.create_task(self._run_document_pipeline(job_id, user_id, files_data))
-        self._active_tasks[job_id] = task
-        self._job_user_map[job_id] = user_id
-        task.add_done_callback(lambda t: self._cleanup_task(job_id))
+        self._register_task(job_id, user_id, task)
 
     async def _run_website_pipeline(self, job_id: str, user_id: int, website_url: str):
         db: Session = SessionLocal()
@@ -129,6 +247,11 @@ class KnowledgeJobManager:
                     status="connecting"
                 )
                 db.add(source)
+                db.commit()
+            else:
+                # Re-sync: this run starts afresh (a previous failure / cancel no longer applies).
+                source.status = "connecting"
+                source.error_message = None
                 db.commit()
 
             # STAGE 1: Connecting
@@ -191,9 +314,9 @@ class KnowledgeJobManager:
                 })
                 return
 
-            # Verify source still exists before proceeding (avoids race condition if deleted/reset)
-            if not db.query(KnowledgeSource.id).filter(KnowledgeSource.id == job_id).first():
-                print(f"[Knowledge Pipeline Cancelled] Source {job_id} was removed.")
+            # Verify source still exists before proceeding (avoids race condition if deleted/reset/cancelled)
+            if not self._source_still_wanted(db, job_id):
+                print(f"[Knowledge Pipeline Cancelled] Source {job_id} was removed or cancelled.")
                 return
 
             source.status = "extracting"
@@ -223,11 +346,14 @@ class KnowledgeJobManager:
                 "title": STAGES[7]["title"], "message": "Generating Company Capsule & Product Capsules..."
             })
 
-            if not db.query(KnowledgeSource.id).filter(KnowledgeSource.id == job_id).first():
-                print(f"[Knowledge Pipeline Cancelled] Source {job_id} was removed before saving capsules.")
+            if not self._source_still_wanted(db, job_id):
+                print(f"[Knowledge Pipeline Cancelled] Source {job_id} was removed or cancelled before saving capsules.")
                 return
 
-            created_capsules = self._persist_capsules_and_facts(db, user_id, website_url, intel_data, crawled_pages)
+            merge_report: Dict[str, Any] = {}
+            created_capsules = self._persist_capsules_and_facts(
+                db, user_id, website_url, intel_data, crawled_pages, source_id=job_id, merge_report=merge_report
+            )
 
             # STAGE 9: Ready for Review
             source.status = "completed"
@@ -240,7 +366,8 @@ class KnowledgeJobManager:
                 "capsules": [
                     {"id": c.id, "name": c.name, "type": c.capsule_type, "product_name": c.product_name}
                     for c in created_capsules
-                ]
+                ],
+                "knowledge_merge": merge_report,
             })
 
         except asyncio.CancelledError:
@@ -249,6 +376,7 @@ class KnowledgeJobManager:
                 db.rollback()
             except Exception:
                 pass
+            await self._handle_cancellation(job_id)
             return
         except Exception as e:
             print(f"[Knowledge Pipeline Failed] {e}")
@@ -304,8 +432,25 @@ class KnowledgeJobManager:
             })
 
             corpus_pages = []
+            parse_errors: List[str] = []
             for fname, fbytes in files_data:
-                parsed = parse_uploaded_file(fbytes, fname)
+                # PDF/DOCX/XLSX parsing is CPU-bound: run it off the event loop.
+                try:
+                    parsed = await asyncio.to_thread(parse_uploaded_file, fbytes, fname)
+                except ValueError as parse_err:
+                    # One unreadable file must not sink the whole batch.
+                    parse_errors.append(str(parse_err))
+                    db.add(KnowledgePage(
+                        source_id=job_id,
+                        url=f"document://{fname}",
+                        title=fname,
+                        clean_text="",
+                        page_type="document",
+                        status="failed",
+                        http_status=422,
+                        error_message=str(parse_err)[:500],
+                    ))
+                    continue
                 kp = KnowledgePage(
                     source_id=job_id,
                     url=f"document://{fname}",
@@ -326,6 +471,9 @@ class KnowledgeJobManager:
             source.pages_processed = len(corpus_pages)
             db.commit()
 
+            if not corpus_pages:
+                raise ValueError("; ".join(parse_errors) or "No readable text found in the uploaded documents.")
+
             async def doc_notifier(evt: Dict[str, Any]):
                 await self.emit_job_event(job_id, {
                     "stage": evt.get("stage", 4),
@@ -343,12 +491,14 @@ class KnowledgeJobManager:
                 "message": "Building product capsules from documentation..."
             })
 
-            if not db.query(KnowledgeSource.id).filter(KnowledgeSource.id == job_id).first():
-                print(f"[Document Pipeline Cancelled] Source {job_id} was removed.")
+            if not self._source_still_wanted(db, job_id):
+                print(f"[Document Pipeline Cancelled] Source {job_id} was removed or cancelled.")
                 return
 
+            merge_report: Dict[str, Any] = {}
             created_capsules = self._persist_capsules_and_facts(
-                db, user_id, f"document://{filenames[0]}", intel_data, corpus_pages
+                db, user_id, f"document://{filenames[0]}", intel_data, corpus_pages,
+                source_id=job_id, merge_report=merge_report,
             )
 
             source.status = "completed"
@@ -361,7 +511,9 @@ class KnowledgeJobManager:
                 "capsules": [
                     {"id": c.id, "name": c.name, "type": c.capsule_type, "product_name": c.product_name}
                     for c in created_capsules
-                ]
+                ],
+                "knowledge_merge": merge_report,
+                "skipped_files": parse_errors,
             })
 
         except asyncio.CancelledError:
@@ -370,6 +522,7 @@ class KnowledgeJobManager:
                 db.rollback()
             except Exception:
                 pass
+            await self._handle_cancellation(job_id)
             return
         except Exception as e:
             print(f"[Document Pipeline Failed] {e}")
@@ -402,11 +555,18 @@ class KnowledgeJobManager:
         user_id: int,
         source_url: str,
         intel: Dict[str, Any],
-        pages: List[Dict[str, Any]]
+        pages: List[Dict[str, Any]],
+        source_id: Optional[str] = None,
+        merge_report: Optional[Dict[str, Any]] = None,
     ) -> List[Capsule]:
         """
         Creates Company Capsule and Product Capsule(s) plus fine-grained facts and versioning.
         Preserves complete backward compatibility with existing Capsule schema.
+
+        Merge-by-source: earlier knowledge is kept. Only unreviewed drafts that a
+        previous ingestion of the SAME source produced are superseded (see
+        ``_supersede_previous_drafts``). ``merge_report`` (if given) is filled
+        with what happened.
         """
         biz = intel.get("business_intelligence", {}) if isinstance(intel, dict) else {}
         if isinstance(biz, list):
@@ -470,20 +630,16 @@ class KnowledgeJobManager:
 
         created_capsules = []
 
-        # Remove previous draft capsules for this company/domain to prevent duplicate overviews
-        try:
-            old_caps = db.query(Capsule).filter(
-                Capsule.user_id == user_id,
-                (Capsule.company_name == company_name) | (Capsule.name.ilike(f"{company_name}%"))
-            ).all()
-            if old_caps:
-                old_ids = [c.id for c in old_caps]
-                db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id.in_(old_ids)).delete(synchronize_session=False)
-                db.query(KnowledgeFact).filter(KnowledgeFact.capsule_id.in_(old_ids)).delete(synchronize_session=False)
-                db.query(Capsule).filter(Capsule.id.in_(old_ids)).delete(synchronize_session=False)
-                db.flush()
-        except Exception:
-            pass
+        # Merge-by-source (replaces the old "delete every capsule whose company
+        # name matches", which wiped earlier knowledge, published capsules and
+        # user edits whenever more knowledge was added for the same company).
+        superseded, preserved = self._supersede_previous_drafts(db, user_id, source_id, source_url)
+        if merge_report is not None:
+            merge_report.update({
+                "strategy": KNOWLEDGE_MERGE_STRATEGY,
+                "superseded_capsule_ids": superseded,
+                "preserved_capsule_ids": preserved,
+            })
 
         # 1. COMPANY CAPSULE (Shared context)
         company_capsule = Capsule(
@@ -503,6 +659,7 @@ class KnowledgeJobManager:
             status="draft",
             intelligence_data={
                 "source_url": source_url,
+                "source_id": source_id,
                 "business_intelligence": biz,
                 "customer_intelligence": cust,
                 "sales_intelligence": sales
@@ -545,7 +702,7 @@ class KnowledgeJobManager:
                 brand_tone=brand_tone,
                 version=1,
                 status="draft",
-                intelligence_data={"source_url": source_url, "product": p, "sales": sales}
+                intelligence_data={"source_url": source_url, "source_id": source_id, "product": p, "sales": sales}
             )
             db.add(prod_capsule)
             db.flush()
@@ -588,6 +745,63 @@ class KnowledgeJobManager:
 
         db.commit()
         return created_capsules
+
+    def _supersede_previous_drafts(
+        self,
+        db: Session,
+        user_id: int,
+        source_id: Optional[str],
+        source_url: Optional[str],
+    ) -> Tuple[List[int], List[int]]:
+        """Remove only replaceable capsules from an earlier ingestion of the
+        same source and return (superseded_ids, preserved_same_source_ids).
+
+        Same source = same KnowledgeSource id (re-sync) or the same source URL
+        (the same website / document name ingested again). A same-source
+        capsule is replaced only when it is still an unreviewed ``draft``, has
+        no user-confirmed facts and is not bound to a Pearl agent. Capsules
+        from other sources and manual capsules are never touched.
+        """
+        candidates = db.query(Capsule).filter(
+            Capsule.user_id == user_id,
+            Capsule.capsule_type.in_(("company", "product")),
+        ).all()
+        same_source = []
+        for c in candidates:
+            intel = c.intelligence_data if isinstance(c.intelligence_data, dict) else {}
+            if (source_id and intel.get("source_id") == source_id) or (source_url and intel.get("source_url") == source_url):
+                same_source.append(c)
+        if not same_source:
+            return [], []
+
+        ids = [c.id for c in same_source]
+        user_edited = {
+            cid for (cid,) in db.query(KnowledgeFact.capsule_id).filter(
+                KnowledgeFact.capsule_id.in_(ids),
+                KnowledgeFact.inference_type == "user_confirmed",
+            ).distinct()
+        }
+        bound = set()
+        try:
+            from models_pearl import PearlAgent
+            bound = {
+                cid for (cid,) in db.query(PearlAgent.capsule_id).filter(PearlAgent.capsule_id.in_(ids)).distinct()
+            }
+        except Exception:
+            bound = set(ids)  # cannot tell → treat as in use, keep them
+
+        superseded = [
+            c.id for c in same_source
+            if (c.status or "draft") == "draft" and c.id not in user_edited and c.id not in bound
+        ]
+        preserved = [cid for cid in ids if cid not in superseded]
+        if superseded:
+            db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id.in_(superseded)).delete(synchronize_session=False)
+            db.query(KnowledgeFact).filter(KnowledgeFact.capsule_id.in_(superseded)).delete(synchronize_session=False)
+            db.query(KnowledgeChunk).filter(KnowledgeChunk.capsule_id.in_(superseded)).delete(synchronize_session=False)
+            db.query(Capsule).filter(Capsule.id.in_(superseded), Capsule.user_id == user_id).delete(synchronize_session=False)
+            db.flush()
+        return superseded, preserved
 
     def _insert_capsule_facts(
         self,

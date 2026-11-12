@@ -97,6 +97,9 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--text-dim);
+    /* The backend sends Title Case for empty accounts and UPPERCASE otherwise: render one way. */
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .ov-metric-value-wrap {

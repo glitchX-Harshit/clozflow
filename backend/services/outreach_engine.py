@@ -18,18 +18,68 @@ CHANGELOG V4:
 """
 
 import os
+import re
 import json
 import random
-from typing import Dict, List, Any
+from collections import OrderedDict
+from typing import Dict, List, Any, Optional
 from difflib import SequenceMatcher
 
-GENERATED_HISTORY: Dict[str, Dict[str, Any]] = {}
+# Recent drafts per (user, lead), used to avoid repeating an angle/message.
+# Bounded LRU so it cannot grow without limit; keyed per user so one
+# tenant's history never influences another tenant's drafts.
+GENERATED_HISTORY: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
+MAX_HISTORY_ENTRIES = 5000
+
+OUTREACH_LLM_TIMEOUT_SECONDS = float(os.getenv("OUTREACH_LLM_TIMEOUT_SECONDS", "30") or 30)
 
 try:
     from openai import AsyncOpenAI
     HAS_OPENAI = True
 except ImportError:
     HAS_OPENAI = False
+
+
+class OutreachGenerationError(Exception):
+    """No real draft could be produced; maps to an HTTP error (never a fake draft)."""
+
+    def __init__(self, detail: str, *, status_code: int = 502, retry_after: Optional[int] = None, code: str = "provider_error"):
+        super().__init__(detail)
+        self.detail = detail
+        self.status_code = status_code
+        self.retry_after = retry_after
+        self.code = code
+
+
+def _is_quota_error(exc: Exception) -> bool:
+    status_code = getattr(exc, "status_code", None)
+    if status_code == 429:
+        return True
+    text = str(exc).lower()
+    return "rate_limit" in text or "rate limit" in text or "quota" in text or "resource_exhausted" in text
+
+
+def _history_entry(key: str) -> Dict[str, Any]:
+    entry = GENERATED_HISTORY.get(key)
+    if entry is None:
+        entry = {"messages": [], "last_angle_index": -1}
+        GENERATED_HISTORY[key] = entry
+        while len(GENERATED_HISTORY) > MAX_HISTORY_ENTRIES:
+            GENERATED_HISTORY.popitem(last=False)
+    else:
+        GENERATED_HISTORY.move_to_end(key)
+    return entry
+
+
+def _parse_llm_json(content: str) -> Dict[str, Any]:
+    text = (content or "").strip()
+    fenced = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", text)
+    if fenced:
+        text = fenced.group(1).strip()
+    parsed = json.loads(text)
+    if not isinstance(parsed, dict):
+        raise ValueError("LLM returned a non-object JSON payload")
+    return parsed
 
 CHANNEL_CONFIG = {
     "whatsapp": {
@@ -86,9 +136,9 @@ SCORING_WEIGHTS = {
 
 
 def _score_message(message: str, lead_data: dict, channel: str) -> dict:
-    business_name = lead_data.get("business_name", "")
-    category = lead_data.get("category", "")
-    city = lead_data.get("city", "")
+    business_name = str(lead_data.get("business_name") or "")
+    category = str(lead_data.get("category") or "")
+    city = str(lead_data.get("city") or "")
     msg_lower = message.lower()
 
     # Originality score — penalize template reuse (0-100)
@@ -117,7 +167,7 @@ def _score_message(message: str, lead_data: dict, channel: str) -> dict:
         relevance += 20
     if city and city.lower() in msg_lower:
         relevance += 15
-    if lead_data.get("instagram") and lead_data["instagram"].lower() in msg_lower:
+    if lead_data.get("instagram") and str(lead_data["instagram"]).lower() in msg_lower:
         relevance += 15
     relevance = min(100, relevance + 20)  # base 20
 
@@ -174,10 +224,10 @@ def _score_message(message: str, lead_data: dict, channel: str) -> dict:
     }
 
 def detect_available_channels(lead_data: dict) -> dict:
-    phone = (lead_data.get("phone_number") or "").strip()
-    instagram = (lead_data.get("instagram") or "").strip()
-    email = (lead_data.get("email") or "").strip()
-    linkedin = (lead_data.get("linkedin") or "").strip()
+    phone = str(lead_data.get("phone_number") or "").strip()
+    instagram = str(lead_data.get("instagram") or "").strip()
+    email = str(lead_data.get("email") or "").strip()
+    linkedin = str(lead_data.get("linkedin") or "").strip()
     return {
         "whatsapp": {"available": bool(phone), "contact": phone},
         "instagram": {"available": bool(instagram), "contact": instagram},
@@ -203,9 +253,9 @@ def _build_outreach_prompt(
     opp_signals  = lead_data.get("opportunity_signals", "") or ""
     website      = lead_data.get("website", "") or ""
     instagram    = lead_data.get("instagram", "") or ""
-    biz_name     = lead_data.get("business_name", "this business")
-    category     = lead_data.get("category", "")
-    city         = lead_data.get("city", "")
+    biz_name     = str(lead_data.get("business_name") or "this business")
+    category     = str(lead_data.get("category") or "")
+    city         = str(lead_data.get("city") or "")
 
     # Build a dynamic "what we know" block so the model can't ignore specifics
     known_signals = []
@@ -310,59 +360,64 @@ Return ONLY valid JSON:
 }}"""
 
 
-def _generate_fallback_message(lead_data: dict, channel: str, user_offer: str) -> dict:
-    return {
-        "observation": "Quota limit exceeded.",
-        "message": "ClozFlow quota limit exceeded.",
-        "expected_reply": "None",
-        "confidence": "Low"
-    }
+def _llm_config():
+    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "").strip()
+    if not api_key or not HAS_OPENAI:
+        return None
+    if api_key.startswith("AIza") or api_key.startswith("AQ"):
+        return api_key, "https://generativelanguage.googleapis.com/v1beta/openai/", "gemini-3.5-flash"
+    if api_key.startswith("gsk_"):
+        return api_key, "https://api.groq.com/openai/v1", "openai/gpt-oss-120b"
+    return api_key, "https://api.openai.com/v1", "gpt-4o-mini"
+
+
+def _text(value, default: str = "") -> str:
+    if value is None:
+        return default
+    return value if isinstance(value, str) else str(value)
 
 
 async def generate_outreach_message(
     lead_data: dict,
     channel: str,
     user_offer: str = "",
-    language: str = "english"
+    language: str = "english",
+    user_id: Optional[int] = None,
 ) -> dict:
+    """Generate one outreach draft.
+
+    Raises OutreachGenerationError when no real draft can be produced (AI not
+    configured, provider quota exhausted, provider failure). It never returns
+    an error string dressed up as a draft.
+    """
     channel = channel.lower() if channel else "whatsapp"
 
-    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
+    config = _llm_config()
+    if not config:
+        raise OutreachGenerationError(
+            "Outreach generation is not available: no AI provider is configured on the server.",
+            status_code=503, code="not_configured",
+        )
+    api_key, base_url, model = config
 
-    # Identify the lead to track history
+    # Identify the lead to track history (scoped to the requesting user)
     lead_id = (
-        lead_data.get("phone_number") or 
-        lead_data.get("instagram") or 
-        lead_data.get("website") or 
-        lead_data.get("business_name") or 
+        lead_data.get("phone_number") or
+        lead_data.get("instagram") or
+        lead_data.get("website") or
+        lead_data.get("business_name") or
         "default_lead"
     )
-
-    if lead_id not in GENERATED_HISTORY:
-        GENERATED_HISTORY[lead_id] = {
-            "messages": [],
-            "last_angle_index": -1
-        }
+    history = _history_entry(f"{user_id if user_id is not None else '-'}:{lead_id}")
 
     # Cycle to the next angle index
-    angle_index = (GENERATED_HISTORY[lead_id]["last_angle_index"] + 1) % len(ANGLE_VECTORS)
+    angle_index = (history["last_angle_index"] + 1) % len(ANGLE_VECTORS)
 
-    result = None
-    mapped_result = {}
-    scores = {}
+    best_draft = None   # last real draft produced (even if it failed a quality gate)
+    best_scores = {}
+    last_error: Optional[Exception] = None
 
-    if api_key and HAS_OPENAI:
-        if api_key.startswith("AIza") or api_key.startswith("AQ"):
-            base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
-            model = "gemini-3.5-flash"
-        elif api_key.startswith("gsk_"):
-            base_url = "https://api.groq.com/openai/v1"
-            model = "openai/gpt-oss-120b"
-        else:
-            base_url = "https://api.openai.com/v1"
-            model = "gpt-4o-mini"
-        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
-
+    async with AsyncOpenAI(api_key=api_key, base_url=base_url, timeout=OUTREACH_LLM_TIMEOUT_SECONDS, max_retries=1) as client:
         for attempt in range(3):
             try:
                 # Cycle angle index on retries to ensure a different prompt structure is tried
@@ -376,23 +431,23 @@ async def generate_outreach_message(
                     max_tokens=800,
                     response_format={"type": "json_object"},
                 )
-                content = response.choices[0].message.content.strip()
-                if "```" in content:
-                    content = content.split("```")[1].replace("json", "").strip()
-                result = json.loads(content)
-                
+                result = _parse_llm_json(response.choices[0].message.content or "")
+
                 mapped_result = {
-                    "observation": result.get("observation", ""),
-                    "opening_message": result.get("message", ""),
-                    "likely_reply": result.get("expected_reply", ""),
-                    "reply_probability": result.get("confidence", "Medium"),
+                    "observation": _text(result.get("observation")),
+                    "opening_message": _text(result.get("message")).strip(),
+                    "likely_reply": _text(result.get("expected_reply")),
+                    "reply_probability": _text(result.get("confidence"), "Medium") or "Medium",
                 }
-                
-                scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
-                
+                if not mapped_result["opening_message"]:
+                    raise ValueError("LLM returned an empty message")
+
+                scores = _score_message(mapped_result["opening_message"], lead_data, channel)
+                best_draft, best_scores = mapped_result, scores
+
                 # Check similarity against past generated messages for this lead
                 is_duplicate = False
-                for past_msg in GENERATED_HISTORY[lead_id]["messages"]:
+                for past_msg in history["messages"]:
                     if SequenceMatcher(None, mapped_result["opening_message"].lower(), past_msg.lower()).ratio() > 0.6:
                         is_duplicate = True
                         break
@@ -405,35 +460,31 @@ async def generate_outreach_message(
                 if scores.get("insight_score", 100) >= 65:
                     print(f"[OutreachEngine] Passed originality gate on attempt {attempt+1} (Score: {scores.get('insight_score')})")
                     # Update cache state
-                    GENERATED_HISTORY[lead_id]["last_angle_index"] = current_angle_index
-                    GENERATED_HISTORY[lead_id]["messages"].append(mapped_result["opening_message"])
-                    if len(GENERATED_HISTORY[lead_id]["messages"]) > 5:
-                        GENERATED_HISTORY[lead_id]["messages"].pop(0)
+                    history["last_angle_index"] = current_angle_index
+                    history["messages"].append(mapped_result["opening_message"])
+                    if len(history["messages"]) > 5:
+                        history["messages"].pop(0)
                     break
                 else:
                     print(f"[OutreachEngine] Failed originality gate on attempt {attempt+1} (Score: {scores.get('insight_score')}). Retrying...")
             except Exception as e:
-                print(f"LLM error on attempt {attempt+1}: {e}")
-                if attempt == 2:
-                    result = _generate_fallback_message(lead_data, channel, user_offer)
-                    mapped_result = {
-                        "observation": result.get("observation", ""),
-                        "opening_message": result.get("message", ""),
-                        "likely_reply": result.get("expected_reply", ""),
-                        "reply_probability": result.get("confidence", "Medium"),
-                    }
-                    scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
-    else:
-        result = _generate_fallback_message(lead_data, channel, user_offer)
-        mapped_result = {
-            "observation": result.get("observation", ""),
-            "opening_message": result.get("message", ""),
-            "likely_reply": result.get("expected_reply", ""),
-            "reply_probability": result.get("confidence", "Medium"),
-        }
-        scores = _score_message(mapped_result.get("opening_message", ""), lead_data, channel)
+                last_error = e
+                print(f"[OutreachEngine] LLM error on attempt {attempt+1}: {type(e).__name__}")
+                if _is_quota_error(e):
+                    break  # retrying a quota/rate-limit error only burns more quota
+
+    if best_draft is None:
+        if last_error is not None and _is_quota_error(last_error):
+            raise OutreachGenerationError(
+                "The AI provider's quota is exhausted right now. Please try again in a minute.",
+                status_code=503, retry_after=60, code="provider_quota",
+            )
+        raise OutreachGenerationError(
+            "Message generation failed at the AI provider. Please try again.",
+            status_code=502, code="provider_error",
+        )
 
     return {
-        **mapped_result,
-        **scores
+        **best_draft,
+        **best_scores
     }

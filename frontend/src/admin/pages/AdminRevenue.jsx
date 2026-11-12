@@ -10,7 +10,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
-import { useAdminPeriod } from '../components/AdminLayout';
+import { useAdminPeriod } from '../components/adminPeriod';
 import KPICard from '../components/KPICard';
 import PeriodSelector from '../components/PeriodSelector';
 import EmptyState from '../components/EmptyState';
@@ -19,7 +19,7 @@ export default function AdminRevenue() {
   const { period, setPeriod } = useAdminPeriod();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -27,9 +27,9 @@ export default function AdminRevenue() {
       setLoading(true);
       try {
         const res = await adminApi.getRevenueAnalytics(period, 'INR');
-        if (isMounted) setData(res);
+        if (isMounted) { setData(res); setLoadError(null); }
       } catch (err) {
-        if (isMounted) setError(err.message);
+        if (isMounted) setLoadError(`Error loading revenue intelligence: ${err.message}`);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -79,6 +79,11 @@ export default function AdminRevenue() {
       </header>
 
       <div className="admin-content">
+        {loadError && (
+          <div role="alert" style={{ marginBottom: '24px', padding: '14px 18px', borderRadius: '12px', backgroundColor: 'var(--admin-danger-dim)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#f87171', fontSize: '13px' }}>
+            {loadError}
+          </div>
+        )}
         {/* Core Financial Totals */}
         <div className="admin-kpi-grid">
           <KPICard

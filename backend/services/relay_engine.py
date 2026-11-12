@@ -14,13 +14,27 @@ try:
 except ImportError:
     pass
 
-# Use Groq endpoint — same pattern as sales_ai_engine.py
-client = AsyncOpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
-)
-
 MODEL = "openai/gpt-oss-120b"
+RELAY_LLM_TIMEOUT_SECONDS = float(os.getenv("RELAY_LLM_TIMEOUT_SECONDS", "90") or 90)
+
+_client = None
+
+
+def _get_client():
+    """Groq client, created on first use (importing this module must not fail
+    when GROQ_API_KEY is missing). Returns None when no key is configured."""
+    global _client
+    api_key = (os.getenv("GROQ_API_KEY") or "").strip()
+    if not api_key:
+        return None
+    if _client is None:
+        # Use Groq endpoint — same pattern as sales_ai_engine.py
+        _client = AsyncOpenAI(
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1",
+            timeout=RELAY_LLM_TIMEOUT_SECONDS,
+        )
+    return _client
 
 
 async def generate_relay_content(
@@ -37,9 +51,17 @@ async def generate_relay_content(
     Returns: {summary, benefits: [...], next_step}
     """
 
+    # Stored call JSON is not guaranteed to be a list of objects.
+    if not isinstance(transcript_data, list):
+        transcript_data = []
+    if not isinstance(ai_data, list):
+        ai_data = []
+
     # ── Build conversation text from transcript ────────────────
     conversation_lines = []
     for entry in transcript_data[:40]:  # Cap to avoid token overflow
+        if not isinstance(entry, dict):
+            continue
         speaker = entry.get("speaker", entry.get("role", "Unknown"))
         text = entry.get("text", entry.get("content", ""))
         if text:
@@ -50,6 +72,8 @@ async def generate_relay_content(
     insights = []
     for item in ai_data[:15]:
         payload = item.get("payload", item) if isinstance(item, dict) else {}
+        if not isinstance(payload, dict):
+            payload = {}
         concern = payload.get("hidden_concern", "")
         tip = payload.get("coaching_tip", "")
         strategy = payload.get("strategy", "")
@@ -110,6 +134,9 @@ SELLER: {seller_name or 'Unknown'} ({seller_company or 'Unknown company'})
 Generate the Relay follow-up context. Return ONLY valid JSON."""
 
     try:
+        client = _get_client()
+        if client is None:
+            raise RuntimeError("GROQ_API_KEY is not configured")
         response = await client.chat.completions.create(
             model=MODEL,
             messages=[
@@ -122,8 +149,10 @@ Generate the Relay follow-up context. Return ONLY valid JSON."""
         )
 
         content = response.choices[0].message.content
-        result = json.loads(content)
-        
+        result = json.loads(content or "")
+        if not isinstance(result, dict):
+            raise ValueError("Relay AI returned a non-object JSON payload")
+
         return {
             "primary_need": result.get("primary_need", ""),
             "interest": result.get("interest", ""),
@@ -137,8 +166,10 @@ Generate the Relay follow-up context. Return ONLY valid JSON."""
         }
 
     except Exception as e:
-        print(f"Relay AI generation error: {e}")
+        print(f"Relay AI generation error: {type(e).__name__}")
+        # Generic placeholder copy: flagged so the seller UI can warn before publishing.
         return {
+            "ai_fallback": True,
             "primary_need": "Unclear from transcript.",
             "interest": "Pending further discussion.",
             "concern": "None explicitly stated.",

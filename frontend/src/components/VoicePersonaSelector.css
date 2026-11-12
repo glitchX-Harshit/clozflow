@@ -361,3 +361,34 @@
   font-size: 0.78rem;
   color: #a1a1aa;
 }
+
+/* Keyboard focus & active option (listbox navigation) */
+.aw-voice-trigger:focus-visible,
+.aw-trigger-preview-btn:focus-visible,
+.aw-filter-tab:focus-visible,
+.aw-clear-search:focus-visible {
+  outline: 2px solid #18181b;
+  outline-offset: 2px;
+}
+
+.aw-voice-dropdown:focus {
+  outline: none;
+}
+
+.aw-voice-option.is-active {
+  background: #f4f4f5;
+  box-shadow: inset 0 0 0 1px #e4e4e7;
+}
+
+/* Preview failure note */
+.aw-preview-status {
+  margin: 6px 2px 0;
+  font-size: 0.74rem;
+  color: #b91c1c;
+}
+
+.aw-preview-status-inline {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  color: #b91c1c;
+}

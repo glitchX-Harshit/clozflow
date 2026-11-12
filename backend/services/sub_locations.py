@@ -111,9 +111,10 @@ def get_sub_locations(city: str) -> list[str]:
         ]
     }
     
-    # Return matched city or fallback format
+    # Return matched city or fallback format ("" or 1-2 letters must not match
+    # an arbitrary city by substring)
     for key in locations:
-        if key in city or city in key:
+        if key in city or (len(city) >= 3 and city in key):
             return locations[key]
             
     c = city.title()

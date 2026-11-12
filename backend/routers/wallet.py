@@ -1,7 +1,7 @@
 """
 ClozFlow Wallet & Credits Router
 Handles credit balance queries, transaction history, top-ups (1 INR = 1 Credit),
-metering estimates, and phone number rentals.
+metering estimates, and phone number rentals (not available yet).
 """
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -10,14 +10,13 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
-from database import get_db
+from database import get_db, utc_isoformat
 from models import User
 from admin.models import CreditTransaction
 from routers.auth import get_current_user
 from services.credit_service import (
     get_balance,
     add_credits,
-    deduct_credits,
     calculate_call_metering,
     RATE_PER_TEST_SIMULATION,
     RATE_PEARL_CALL_PER_MIN,
@@ -27,11 +26,18 @@ from services.credit_service import (
 
 router = APIRouter(prefix="/api/wallet", tags=["wallet"])
 
+# There is no number-provisioning integration yet, so renting must not charge.
+PHONE_RENTAL_AVAILABLE = False
+PHONE_RENTAL_UNAVAILABLE_DETAIL = (
+    "Number rental isn't available yet. You have not been charged; "
+    "calls use the shared ClozFlow caller ID for now."
+)
+
 
 # ── Pydantic Request / Response Schemas ────────────────────────────────────────
 
 class TopUpRequest(BaseModel):
-    amount: float = Field(..., gt=0, description="Amount in INR (1 INR = 1 Credit)")
+    amount: float = Field(..., gt=0, le=1_000_000, description="Amount in INR (1 INR = 1 Credit)")
     payment_method: str = "razorpay"
     payment_id: Optional[str] = None
 
@@ -61,7 +67,7 @@ def get_wallet_balance(
 ):
     """Fetch user's current credit balance, superuser status, and canonical metering rates."""
     is_super = bool(getattr(current_user, "is_admin", False) or getattr(current_user, "admin_role", "user") in ["admin", "super_admin"])
-    balance = float(current_user.credit_balance or 0.0)
+    balance = get_balance(db, current_user.id)
 
     return {
         "credit_balance": balance,
@@ -69,6 +75,7 @@ def get_wallet_balance(
         "is_unlimited": is_super,
         "currency": "INR",
         "conversion_rule": "1 INR = 1 Credit",
+        "phone_rental_available": PHONE_RENTAL_AVAILABLE,
         "rates": {
             "test_simulation": RATE_PER_TEST_SIMULATION,
             "pearl_call_per_minute": RATE_PEARL_CALL_PER_MIN,
@@ -87,7 +94,7 @@ def get_transaction_history(
     """Fetch user's recent credit deductions, top-ups, and rentals."""
     txns = db.query(CreditTransaction).filter(
         CreditTransaction.user_id == current_user.id
-    ).order_by(desc(CreditTransaction.created_at)).limit(limit).all()
+    ).order_by(desc(CreditTransaction.created_at), desc(CreditTransaction.id)).limit(limit).all()
 
     return {
         "total": len(txns),
@@ -98,7 +105,7 @@ def get_transaction_history(
                 "balance_after": round(float(t.balance_after), 2),
                 "type": t.type,
                 "description": t.description or "",
-                "created_at": t.created_at.isoformat() if t.created_at else None,
+                "created_at": utc_isoformat(t.created_at),
             }
             for t in txns
         ]
@@ -159,27 +166,15 @@ def estimate_call_cost(req: CallCostEstimateRequest):
     }
 
 
-@router.post("/rent-phone-number")
+@router.post("/rent-phone-number", status_code=501)
 def rent_phone_number(
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
 ):
     """
-    Rent a dedicated virtual phone number for 30 days.
-    Deducts ₹199 (199 Credits) from the user's balance.
-    """
-    cost = RATE_PHONE_RENTAL_MONTHLY
-    new_balance = deduct_credits(
-        db=db,
-        user_id=current_user.id,
-        amount=cost,
-        description=f"Dedicated Phone Number Rental (30 Days) - Business Plan",
-        category="phone_rental"
-    )
+    Rent a dedicated virtual phone number for 30 days (₹179 / month once live).
 
-    return {
-        "ok": True,
-        "deducted": cost,
-        "new_balance": new_balance,
-        "message": f"Dedicated caller ID provisioned. ₹{cost:.2f} deducted for 30 days rental."
-    }
+    No telephony provider is wired up to provision numbers yet, so this used to
+    charge the user and provision nothing. It now always answers 501 with a
+    clear message and never touches the balance.
+    """
+    raise HTTPException(status_code=501, detail=PHONE_RENTAL_UNAVAILABLE_DETAIL)

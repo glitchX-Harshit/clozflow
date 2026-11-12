@@ -37,7 +37,7 @@ def bootstrap_admin(email: str, role: str = "super_admin", password: Optional[st
 
         password_updated = False
         if password:
-            user.password_hash = get_password_hash(password)
+            user.password_hash = get_password_hash(password) 
             password_updated = True
 
         # Record audit log

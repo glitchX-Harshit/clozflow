@@ -701,6 +701,69 @@ body {
   letter-spacing: 0.08em;
 }
 
+/* ── Seller replies to the buyer's questions ─────────────────────── */
+h2.rp-beat-tag {
+  margin: 0;
+}
+
+.rp-thread {
+  margin-top: 48px;
+}
+
+.rp-thread-label {
+  font-family: var(--rp-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rp-text-muted);
+  margin-bottom: 14px;
+}
+
+.rp-thread-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rp-stroke-faint);
+}
+
+.rp-thread-item:first-child {
+  border-top: 1px solid var(--rp-stroke-faint);
+}
+
+.rp-thread-question {
+  font-family: var(--rp-font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--rp-text-main);
+  overflow-wrap: anywhere;
+}
+
+.rp-thread-answer {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--rp-text-main);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rp-thread-pending {
+  margin-top: 10px;
+  font-family: var(--rp-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--rp-text-muted);
+}
+
+.rp-slot-slab-item:focus-visible,
+.rp-btn-bold:focus-visible {
+  outline: 2px solid var(--rp-accent-electric);
+  outline-offset: 2px;
+}
+
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .rp-story-container { padding: 0 20px; }

@@ -5,12 +5,15 @@ Lead Discovery & Opportunity Scoring Engine
 • enrich_lead_ai(lead, offer)     → AI analysis via Groq (OpenAI-compatible)
 • _compute_opportunity_score()    → Rule-based opportunity scoring (no API)
 • _filter_enterprises()           → Remove large enterprises / franchises
-• Graceful fallback to realistic mock data when keys are missing
+• Sample (fabricated) leads ONLY when no Places API key is configured; every
+  such lead carries ``is_sample: True``. When a key IS configured, provider
+  failures raise ``PlacesProviderError`` instead of silently returning fakes.
 """
 
 import os
 import re
 import json
+import time
 import hashlib
 import asyncio
 from datetime import datetime
@@ -24,10 +27,61 @@ except ImportError:
     HAS_HTTPX = False
 
 try:
-    from openai import OpenAI
+    from openai import AsyncOpenAI
+    try:
+        from openai import BadRequestError as _OpenAIBadRequest
+    except ImportError:  # pragma: no cover - very old SDKs
+        _OpenAIBadRequest = None
     HAS_OPENAI = True
 except ImportError:
     HAS_OPENAI = False
+    _OpenAIBadRequest = None
+
+
+# Bounded parallelism for AI enrichment (each lead = one LLM call).
+LEAD_ENRICH_CONCURRENCY = max(1, int(os.getenv("LEAD_ENRICH_CONCURRENCY", "3") or 3))
+LEAD_ENRICH_TIMEOUT_SECONDS = float(os.getenv("LEAD_ENRICH_TIMEOUT_SECONDS", "30") or 30)
+
+# Deep search spends one paid Places call per area: cap areas and wall time.
+DEEP_SEARCH_MAX_AREAS = max(1, int(os.getenv("DEEP_SEARCH_MAX_AREAS", "40") or 40))
+DEEP_SEARCH_TIME_BUDGET_SECONDS = float(os.getenv("DEEP_SEARCH_TIME_BUDGET_SECONDS", "300") or 300)
+DEEP_SEARCH_MAX_CONSECUTIVE_PROVIDER_ERRORS = 3
+
+
+class PlacesProviderError(Exception):
+    """The Google Places API is configured but the call failed."""
+
+    def __init__(self, message: str, *, quota: bool = False, status_code: Optional[int] = None):
+        super().__init__(message)
+        self.quota = quota
+        self.status_code = status_code
+
+    @property
+    def code(self) -> str:
+        return "provider_quota" if self.quota else "provider_error"
+
+    @property
+    def public_detail(self) -> str:
+        if self.quota:
+            return "Lead search quota is exhausted right now. Please try again later."
+        return "The lead search provider failed to respond. Please try again."
+
+
+def places_api_configured() -> bool:
+    """True when real Google Places lookups are possible (otherwise: sample data)."""
+    return HAS_HTTPX and bool(os.getenv("GOOGLE_PLACES_API_KEY", "").strip())
+
+
+def _as_float(value) -> Optional[float]:
+    try:
+        return float(value) if value not in (None, "") else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _sse(event: str, payload: Dict) -> str:
+    """One complete server-sent event frame."""
+    return f"event: {event}\ndata: {json.dumps(payload, default=str)}\n\n"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -539,9 +593,23 @@ PLACES_FIELD_MASK = ",".join([
 ])
 
 
+def _localized_text(value) -> str:
+    """Places v1 returns LocalizedText objects ({"text": ...}); tolerate anything else."""
+    if isinstance(value, dict):
+        text = value.get("text")
+        return text if isinstance(text, str) else ""
+    return value if isinstance(value, str) else ""
+
+
 async def _search_google_places(business_type: str, location: str) -> List[Dict]:
-    """Fetch businesses using Google Places API v1 (Text Search)."""
-    api_key = os.getenv("GOOGLE_PLACES_API_KEY", "")
+    """Fetch businesses using Google Places API v1 (Text Search).
+
+    Returns [] when no API key is configured (callers then use sample data).
+    Raises PlacesProviderError when the configured API fails (quota, auth,
+    timeout, bad response) so callers never substitute fabricated businesses
+    for real results. A successful call with zero matches returns [].
+    """
+    api_key = os.getenv("GOOGLE_PLACES_API_KEY", "").strip()
     if not api_key or not HAS_HTTPX:
         return []
 
@@ -561,19 +629,32 @@ async def _search_google_places(business_type: str, location: str) -> List[Dict]
     try:
         async with httpx.AsyncClient(timeout=15) as client:
             resp = await client.post(PLACES_TEXT_SEARCH_URL, json=body, headers=headers)
-            if resp.status_code != 200:
-                print(f"[LeadEngine] Google Places API error: {resp.status_code} — {resp.text[:200]}")
-                return []
-            data = resp.json()
-    except Exception as e:
-        print(f"[LeadEngine] Google Places API request failed: {e}")
-        return []
+    except httpx.HTTPError as e:
+        print(f"[LeadEngine] Google Places API request failed: {type(e).__name__}")
+        raise PlacesProviderError("Google Places request failed") from e
+
+    if resp.status_code != 200:
+        quota = resp.status_code == 429 or "RESOURCE_EXHAUSTED" in resp.text[:4000]
+        print(f"[LeadEngine] Google Places API error: HTTP {resp.status_code}")
+        raise PlacesProviderError(
+            f"Google Places returned HTTP {resp.status_code}", quota=quota, status_code=resp.status_code
+        )
+    try:
+        data = resp.json()
+    except ValueError as e:
+        raise PlacesProviderError("Google Places returned an invalid response") from e
+
+    places = data.get("places") if isinstance(data, dict) else None
+    if not isinstance(places, list):
+        places = []
 
     results = []
     seen = set()
-    for place in data.get("places", []):
-        name = place.get("displayName", {}).get("text", "")
-        address = place.get("formattedAddress", "")
+    for place in places:
+        if not isinstance(place, dict):
+            continue
+        name = _localized_text(place.get("displayName"))
+        address = place.get("formattedAddress", "") or ""
         dedup_key = hashlib.md5(f"{name}{address}".lower().encode()).hexdigest()
         if dedup_key in seen:
             continue
@@ -581,7 +662,7 @@ async def _search_google_places(business_type: str, location: str) -> List[Dict]
 
         # Extract category from primaryTypeDisplayName or primaryType
         category = (
-            place.get("primaryTypeDisplayName", {}).get("text")
+            _localized_text(place.get("primaryTypeDisplayName"))
             or place.get("primaryType", "")
             or business_type.title()
         )
@@ -595,9 +676,10 @@ async def _search_google_places(business_type: str, location: str) -> List[Dict]
             "phone_number": place.get("internationalPhoneNumber", "") or place.get("nationalPhoneNumber", ""),
             "website": place.get("websiteUri", ""),
             "instagram": "",   # Google Places doesn't return social handles
-            "google_rating": place.get("rating", 0),
-            "reviews_count": place.get("userRatingCount", 0),
+            "google_rating": place.get("rating", 0) or 0,
+            "reviews_count": place.get("userRatingCount", 0) or 0,
             "address": place.get("shortFormattedAddress", "") or address,
+            "is_sample": False,
         })
 
     print(f"[LeadEngine] Google Places returned {len(results)} results for '{query_str}'")
@@ -605,8 +687,14 @@ async def _search_google_places(business_type: str, location: str) -> List[Dict]
 
 
 def _search_mock(business_type: str, location: str) -> List[Dict]:
-    """Dynamically generate realistic mock leads for any business type + city."""
-    return _generate_mock_leads(business_type, location)
+    """Generate SAMPLE leads (fabricated, flagged ``is_sample``) for any business type + city.
+
+    Only used when no Google Places API key is configured.
+    """
+    leads = _generate_mock_leads(business_type, location)
+    for lead in leads:
+        lead["is_sample"] = True
+    return leads
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -700,29 +788,48 @@ def _parse_json_safely(raw_text: str) -> Optional[Dict]:
     return extracted if extracted else None
 
 
-async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
-    """Enrich a single lead with AI analysis via Groq / Gemini / OpenAI."""
-    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "")
+class _PromptFields(dict):
+    """format_map() source that renders missing lead fields as empty strings."""
 
+    def __missing__(self, key):
+        return ""
+
+
+def _research_llm_config() -> Optional[tuple]:
+    """(api_key, base_url, model) for HEXAGON_RESEARCH_API_KEY, or None."""
+    api_key = os.getenv("HEXAGON_RESEARCH_API_KEY", "").strip()
     if not api_key or not HAS_OPENAI:
+        return None
+    # Detect Gemini key (starts with AIza or AQ) or Groq key (starts with gsk_)
+    if api_key.startswith("AIza") or api_key.startswith("AQ"):
+        return api_key, "https://generativelanguage.googleapis.com/v1beta/openai/", "gemini-3.5-flash"
+    if api_key.startswith("gsk_"):
+        return api_key, "https://api.groq.com/openai/v1", "openai/gpt-oss-120b"
+    return api_key, "https://api.openai.com/v1", "gpt-3.5-turbo"
+
+
+def _bounded_int(value, default: int = 50) -> int:
+    try:
+        return max(1, min(100, int(float(value))))
+    except (TypeError, ValueError):
+        return default
+
+
+async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
+    """Enrich a single lead with AI analysis via Groq / Gemini / OpenAI.
+
+    Uses the async client so the event loop is never blocked and a cancelled
+    request (e.g. a closed deep-search stream) cancels the in-flight call.
+    Falls back to rule-based text (``ai_enriched: False``) on any failure.
+    """
+    config = _research_llm_config()
+    if not config:
         return _mock_enrich(lead, user_offer)
+    api_key, base_url, model = config
 
     try:
-        # Detect Gemini key (starts with AIza or AQ) or Groq key (starts with gsk_)
-        if api_key.startswith("AIza") or api_key.startswith("AQ"):
-            base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
-            model = "gemini-3.5-flash"
-        elif api_key.startswith("gsk_"):
-            base_url = "https://api.groq.com/openai/v1"
-            model = "openai/gpt-oss-120b"
-        else:
-            base_url = "https://api.openai.com/v1"
-            model = "gpt-3.5-turbo"
-
-        client = OpenAI(api_key=api_key, base_url=base_url)
-
-        prompt_data = {**lead, "user_offer": user_offer or "general business services"}
-        prompt = ENRICHMENT_PROMPT.format(**prompt_data)
+        prompt_data = _PromptFields({**lead, "user_offer": user_offer or "general business services"})
+        prompt = ENRICHMENT_PROMPT.format_map(prompt_data)
 
         kwargs = {
             "model": model,
@@ -731,40 +838,60 @@ async def enrich_lead_ai(lead: Dict, user_offer: str = "") -> Dict:
             "max_tokens": 1500,
         }
 
-        # Try with JSON object mode first; fall back to standard if unsupported
-        try:
-            response = client.chat.completions.create(
-                **kwargs,
-                response_format={"type": "json_object"}
-            )
-        except Exception:
-            response = client.chat.completions.create(**kwargs)
+        async with AsyncOpenAI(
+            api_key=api_key, base_url=base_url, timeout=LEAD_ENRICH_TIMEOUT_SECONDS, max_retries=1
+        ) as client:
+            # Try with JSON object mode first; fall back to standard only if the
+            # provider rejects the parameter (not on rate limits / timeouts).
+            try:
+                response = await client.chat.completions.create(
+                    **kwargs,
+                    response_format={"type": "json_object"}
+                )
+            except Exception as exc:
+                if _OpenAIBadRequest is None or not isinstance(exc, _OpenAIBadRequest):
+                    raise
+                response = await client.chat.completions.create(**kwargs)
 
-        content = response.choices[0].message.content.strip()
+        content = (response.choices[0].message.content or "").strip()
 
         enrichment = _parse_json_safely(content)
         if not enrichment:
-            print(f"[LeadEngine] AI enrichment parse failed for content: {content[:100]}... falling back to mock")
+            print("[LeadEngine] AI enrichment parse failed; using rule-based enrichment")
             return _mock_enrich(lead, user_offer)
 
-        lead["ai_summary"] = enrichment.get("ai_summary", "")
-        lead["likely_pain_point"] = enrichment.get("likely_pain_point", "")
-        lead["outreach_angle"] = enrichment.get("outreach_angle", "")
-        lead["lead_score"] = max(1, min(100, int(enrichment.get("lead_score", 50))))
-        lead["opportunity_summary"] = enrichment.get("opportunity_summary", "")
-        lead["service_fit_reason"] = enrichment.get("service_fit_reason", "")
+        lead["ai_summary"] = str(enrichment.get("ai_summary", "") or "")
+        lead["likely_pain_point"] = str(enrichment.get("likely_pain_point", "") or "")
+        lead["outreach_angle"] = str(enrichment.get("outreach_angle", "") or "")
+        lead["lead_score"] = _bounded_int(enrichment.get("lead_score", 50))
+        lead["opportunity_summary"] = str(enrichment.get("opportunity_summary", "") or "")
+        lead["service_fit_reason"] = str(enrichment.get("service_fit_reason", "") or "")
+        lead["ai_enriched"] = True
         print(f"[LeadEngine] AI enriched '{lead.get('business_name')}' (score: {lead['lead_score']})")
         return lead
 
     except Exception as e:
-        print(f"[LeadEngine] AI enrichment error: {e}")
+        print(f"[LeadEngine] AI enrichment error: {type(e).__name__}")
         return _mock_enrich(lead, user_offer)
+
+
+async def _enrich_all(leads: List[Dict], user_offer: str) -> List[Dict]:
+    """Enrich leads concurrently (bounded), preserving order."""
+    if not leads:
+        return []
+    semaphore = asyncio.Semaphore(LEAD_ENRICH_CONCURRENCY)
+
+    async def _one(lead: Dict) -> Dict:
+        async with semaphore:
+            return await enrich_lead_ai(lead, user_offer)
+
+    return list(await asyncio.gather(*(_one(lead) for lead in leads)))
 
 
 def _mock_enrich(lead: Dict, user_offer: str = "") -> Dict:
     """Generate deterministic mock enrichment based on lead data and user offer."""
     name = lead.get("business_name", "")
-    rating = lead.get("google_rating", 0)
+    rating = _as_float(lead.get("google_rating")) or 0
     has_website = bool(lead.get("website", ""))
     has_ig = bool(lead.get("instagram", ""))
     category = lead.get("category", "Business")
@@ -833,6 +960,7 @@ def _mock_enrich(lead: Dict, user_offer: str = "") -> Dict:
     lead["lead_score"] = score
     lead["opportunity_summary"] = opportunity_summaries[tier]
     lead["service_fit_reason"] = service_fit_reason
+    lead["ai_enriched"] = False  # rule-based text, not an AI analysis
 
     print(f"[LeadEngine] Mock enriched '{name}' (score: {score}, tier: {tier})")
     return lead
@@ -850,20 +978,24 @@ async def search_leads(
 ) -> List[Dict]:
     """
     Search for business leads from a natural-language query.
-    Uses Google Places API when available, falls back to mock data.
+
+    Uses Google Places when GOOGLE_PLACES_API_KEY is set. Without a key it
+    returns SAMPLE leads, each flagged ``is_sample: True``. With a key, a
+    provider failure raises PlacesProviderError (never fabricated leads) and a
+    query with no matches returns [].
 
     Pipeline:
         1. Parse query → extract business_type + location
-        2. Fetch leads (Google Places or mock, pool of 20)
+        2. Fetch leads (Google Places, or sample data without a key; pool of 20)
         3. Apply enterprise/franchise filter
-        4. Compute opportunity scores for each lead
-        5. Enrich with AI (pass user_offer)
-        6. Apply search mode sorting/filtering
-        7. Apply user filters
+        4. Compute opportunity scores for each lead (rule-based, free)
+        5. Apply search mode sorting/filtering
+        6. Apply user filters
+        7. Enrich ONLY the surviving leads with AI (one paid call per lead)
         8. Return results
     """
     print(f"[LeadEngine] ── Search started ──────────────────────────────────")
-    print(f"[LeadEngine] Query: '{query}' | Offer: '{user_offer}' | Mode: '{search_mode}'")
+    print(f"[LeadEngine] Mode: '{search_mode}'")
 
     # ── Step 1: Parse query ──────────────────────────────────────────────────
     parsed = parse_search_query(query)
@@ -880,12 +1012,12 @@ async def search_leads(
     print(f"[LeadEngine] Parsed → type='{business_type}', location='{location}'")
 
     # ── Step 2: Fetch leads ──────────────────────────────────────────────────
-    results = await _search_google_places(business_type, location)
-
-    # Fallback to mock
-    if not results:
-        print("[LeadEngine] Google Places returned nothing — using mock data")
+    sample_mode = not places_api_configured()
+    if sample_mode:
+        print("[LeadEngine] No GOOGLE_PLACES_API_KEY — returning SAMPLE leads (is_sample=True)")
         results = _search_mock(business_type, location)
+    else:
+        results = await _search_google_places(business_type, location)  # may raise PlacesProviderError
 
     print(f"[LeadEngine] Raw candidate pool: {len(results)} leads")
 
@@ -893,41 +1025,43 @@ async def search_leads(
     results = _filter_enterprises(results)
 
     # ── Step 4: Compute opportunity scores ───────────────────────────────────
-    print(f"[LeadEngine] Computing opportunity scores (offer: '{user_offer}')...")
     for lead in results:
         _compute_opportunity_score(lead, user_offer)
 
-    # ── Step 5: AI enrichment ────────────────────────────────────────────────
+    # ── Steps 5-6: Search mode + user filters (before paying for enrichment) ─
+    results = _apply_search_mode(results, search_mode)
+    results = _apply_user_filters(results, filters, user_offer)
+
+    # ── Step 7: AI enrichment ────────────────────────────────────────────────
     print(f"[LeadEngine] Enriching {len(results)} leads with AI...")
-    enriched = []
-    for lead in results:
-        enriched_lead = await enrich_lead_ai(lead, user_offer)
-        enriched.append(enriched_lead)
+    enriched = await _enrich_all(results, user_offer)
+    for lead in enriched:
+        lead["is_sample"] = bool(lead.get("is_sample", sample_mode))
 
-    # ── Step 6: Apply search mode ────────────────────────────────────────────
-    enriched = _apply_search_mode(enriched, search_mode)
+    print(f"[LeadEngine] ── Search complete: returning {len(enriched)} leads ──")
+    return enriched
 
-    # ── Step 7: Apply user filters ───────────────────────────────────────────
+
+def _apply_user_filters(leads: List[Dict], filters: Optional[Dict], user_offer: str) -> List[Dict]:
+    """User filters + strict website filters derived from the offer text."""
     if filters:
-        min_rating = filters.get("rating")
+        min_rating = _as_float(filters.get("rating"))
         if min_rating:
-            enriched = [r for r in enriched if (r.get("google_rating", 0) or 0) >= float(min_rating)]
+            leads = [r for r in leads if (_as_float(r.get("google_rating")) or 0) >= min_rating]
         if filters.get("website_presence"):
-            enriched = [r for r in enriched if r.get("website")]
+            leads = [r for r in leads if r.get("website")]
         if filters.get("instagram_presence"):
-            enriched = [r for r in enriched if r.get("instagram")]
-            
+            leads = [r for r in leads if r.get("instagram")]
+
     # Apply STRICT filters based on user_offer text
     offer_lower = user_offer.lower() if user_offer else ""
     if "no website" in offer_lower or "without website" in offer_lower:
         print("[LeadEngine] STRICT FILTER: Dropping leads that already have a website.")
-        enriched = [r for r in enriched if not r.get("website")]
+        leads = [r for r in leads if not r.get("website")]
     elif "must have website" in offer_lower or "with website" in offer_lower:
         print("[LeadEngine] STRICT FILTER: Keeping only leads that have a website.")
-        enriched = [r for r in enriched if r.get("website")]
-
-    print(f"[LeadEngine] ── Search complete: returning {len(enriched)} leads ──")
-    return enriched
+        leads = [r for r in leads if r.get("website")]
+    return leads
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1023,7 +1157,9 @@ async def deep_search_leads(
     user_offer: str = "",
     search_mode: str = "high_fit_leads",
     target_count: int = 20,
-) -> AsyncGenerator:
+    max_areas: Optional[int] = None,
+    time_budget_seconds: Optional[float] = None,
+) -> AsyncGenerator[str, None]:
     """
     Multi-level deep area iteration search with dynamic geographic discovery.
     Works globally for ANY city — no hardcoding required.
@@ -1047,15 +1183,20 @@ async def deep_search_leads(
     At every level:
       - Only collect leads WITHOUT websites
       - Deduplicate across all levels
-      - Stop immediately once target_count is reached
+      - Apply the user's filters BEFORE the (paid) AI enrichment
+      - Stop once target_count is reached, after ``max_areas`` paid area
+        lookups, or when the wall-clock budget is spent
     ─────────────────────────────────────────────────────────────
+
+    Yields complete SSE frames as soon as each one is ready:
+      searching / lead_found / area_done, then exactly one terminal frame:
+      ``complete`` ({total_leads, areas_searched, leads, sample, stopped_reason})
+      or ``error`` ({detail, code, total_leads, areas_searched, sample}).
     """
     from services.sub_locations import get_sub_locations
-    import json
 
     print(f"[DeepSearch] ══════════════════════════════════════════════════")
     print(f"[DeepSearch] Multi-level deep search started")
-    print(f"[DeepSearch] Query: '{query}' | Offer: '{user_offer}'")
 
     # ── Parse query ──────────────────────────────────────────────────────
     parsed = parse_search_query(query)
@@ -1073,31 +1214,67 @@ async def deep_search_leads(
 
     print(f"[DeepSearch] Business: '{business_type}' | City: '{location}'")
 
+    sample_mode = not places_api_configured()
+    area_cap = max_areas or DEEP_SEARCH_MAX_AREAS
+    budget = time_budget_seconds or DEEP_SEARCH_TIME_BUDGET_SECONDS
+    started = time.monotonic()
+    min_rating = _as_float((filters or {}).get("rating"))
+    need_instagram = bool((filters or {}).get("instagram_presence"))
+
     # ── State tracking ───────────────────────────────────────────────────
-    collected = []
+    collected: List[Dict] = []
     seen_hashes = set()          # dedup leads by name+address hash
     seen_area_names = set()      # dedup area names across all levels
-    areas_searched = 0
+    counters = {"areas": 0, "consecutive_errors": 0}
+    stop = {"reason": None}
     level2_queue = []            # (micro_area, parent_neighborhood)
     level3_queue = []            # (street, parent_micro_area, parent_neighborhood)
 
-    # ── Helper: search one area, process leads, return (events, raw_results) ─
-    async def _search_and_process(area_label, search_query_loc, level, total_est):
-        nonlocal areas_searched
-        areas_searched += 1
+    def _should_stop() -> bool:
+        if len(collected) >= target_count:
+            stop["reason"] = "target_reached"
+            return True
+        if counters["areas"] >= area_cap:
+            stop["reason"] = "area_limit"
+            return True
+        if time.monotonic() - started >= budget:
+            stop["reason"] = "time_limit"
+            return True
+        return False
 
+    # ── Helper: search one area, yielding frames as they are produced ────
+    async def _search_area(area_label, search_query_loc, level, total_est, raw_out: list):
+        counters["areas"] += 1
         level_labels = {1: "Neighborhood", 2: "Micro-Area", 3: "Street"}
         level_name = level_labels.get(level, "Area")
-        events = []
 
-        events.append(
-            f"event: searching\ndata: {json.dumps({'area': area_label, 'area_index': areas_searched, 'total_areas': total_est, 'leads_found': len(collected), 'level': level, 'level_name': level_name})}\n\n"
-        )
+        yield _sse("searching", {
+            "area": area_label,
+            "area_index": counters["areas"],
+            "total_areas": total_est,
+            "leads_found": len(collected),
+            "level": level,
+            "level_name": level_name,
+            "sample": sample_mode,
+        })
 
-        results = await _search_google_places(business_type, search_query_loc)
-        if not results:
+        if sample_mode:
             results = _search_mock(business_type, search_query_loc)
+        else:
+            try:
+                results = await _search_google_places(business_type, search_query_loc)
+            except PlacesProviderError as exc:
+                counters["consecutive_errors"] += 1
+                yield _sse("area_done", {
+                    "area": area_label, "new_leads": 0, "total_leads": len(collected),
+                    "level": level, "error": exc.code,
+                })
+                if exc.quota or counters["consecutive_errors"] >= DEEP_SEARCH_MAX_CONSECUTIVE_PROVIDER_ERRORS:
+                    raise
+                return
+            counters["consecutive_errors"] = 0
 
+        raw_out.extend(results)
         await asyncio.sleep(0.3)
 
         # Filter enterprises
@@ -1120,113 +1297,111 @@ async def deep_search_leads(
                 continue
             seen_hashes.add(dedup_key)
 
+            # User filters first: never pay for enriching a lead we would drop.
+            if min_rating and (_as_float(lead.get("google_rating")) or 0) < min_rating:
+                continue
+            if need_instagram and not lead.get("instagram"):
+                continue
+
             # Score and enrich
             _compute_opportunity_score(lead, user_offer)
             enriched_lead = await enrich_lead_ai(lead, user_offer)
-
-            # Apply user filters
-            skip = False
-            if filters:
-                min_rating = filters.get("rating")
-                if min_rating and (enriched_lead.get("google_rating", 0) or 0) < float(min_rating):
-                    skip = True
-                if filters.get("instagram_presence") and not enriched_lead.get("instagram"):
-                    skip = True
-
-            if skip:
-                continue
+            enriched_lead["is_sample"] = bool(enriched_lead.get("is_sample", sample_mode))
 
             collected.append(enriched_lead)
             new_count += 1
-            events.append(f"event: lead_found\ndata: {json.dumps(enriched_lead)}\n\n")
+            yield _sse("lead_found", enriched_lead)
 
-        events.append(
-            f"event: area_done\ndata: {json.dumps({'area': area_label, 'new_leads': new_count, 'total_leads': len(collected), 'level': level})}\n\n"
-        )
+        yield _sse("area_done", {
+            "area": area_label, "new_leads": new_count, "total_leads": len(collected), "level": level,
+        })
 
-        return events, results  # Return both SSE events and raw results
+    try:
+        # ═════════════════════════════════════════════════════════════════
+        # LEVEL 1 — NEIGHBORHOODS
+        # ═════════════════════════════════════════════════════════════════
+        level1_areas = get_sub_locations(location)
+        for a in level1_areas:
+            seen_area_names.add(a.lower().strip())
 
-    # ═════════════════════════════════════════════════════════════════════
-    # LEVEL 1 — NEIGHBORHOODS
-    # ═════════════════════════════════════════════════════════════════════
-    level1_areas = get_sub_locations(location)
-    for a in level1_areas:
-        seen_area_names.add(a.lower().strip())
+        total_estimate = min(len(level1_areas), area_cap)
+        print(f"[DeepSearch] Level 1: {len(level1_areas)} neighborhoods for '{location}'")
 
-    total_estimate = len(level1_areas)
-    print(f"[DeepSearch] Level 1: {len(level1_areas)} neighborhoods for '{location}'")
-
-    for area in level1_areas:
-        if len(collected) >= target_count:
-            break
-
-        search_loc = f"{area}, {location}"
-        events, raw_results = await _search_and_process(area, search_loc, 1, total_estimate)
-
-        for event in events:
-            yield event
-
-        # Extract micro-areas from these results for Level 2
-        if raw_results:
-            micro_areas = _extract_sub_areas_from_results(raw_results, location, seen_area_names)
-            for ma in micro_areas:
-                level2_queue.append((ma, area))
-            if micro_areas:
-                print(f"[DeepSearch]   └─ Discovered {len(micro_areas)} micro-areas from {area}: {micro_areas[:5]}...")
-
-    # ═════════════════════════════════════════════════════════════════════
-    # LEVEL 2 — MICRO-AREAS (dynamically discovered from Level 1)
-    # ═════════════════════════════════════════════════════════════════════
-    if len(collected) < target_count and level2_queue:
-        total_estimate = areas_searched + len(level2_queue)
-        print(f"[DeepSearch] Level 2: {len(level2_queue)} micro-areas discovered")
-
-        for micro_area, parent in level2_queue:
-            if len(collected) >= target_count:
+        for area in level1_areas:
+            if _should_stop():
                 break
+            raw_results: list = []
+            async for frame in _search_area(area, f"{area}, {location}", 1, total_estimate, raw_results):
+                yield frame
 
-            search_loc = f"{micro_area}, {parent}, {location}"
-            events, raw_results = await _search_and_process(
-                f"{micro_area} ({parent})", search_loc, 2, total_estimate
-            )
-
-            for event in events:
-                yield event
-
-            # Extract street-level areas for Level 3
+            # Extract micro-areas from these results for Level 2
             if raw_results:
-                streets = _extract_sub_areas_from_results(raw_results, location, seen_area_names)
-                for st in streets:
-                    level3_queue.append((st, micro_area, parent))
-                if streets:
-                    print(f"[DeepSearch]     └─ Discovered {len(streets)} streets from {micro_area}: {streets[:5]}...")
+                micro_areas = _extract_sub_areas_from_results(raw_results, location, seen_area_names)
+                for ma in micro_areas:
+                    level2_queue.append((ma, area))
 
-    # ═════════════════════════════════════════════════════════════════════
-    # LEVEL 3 — STREETS (dynamically discovered from Level 2)
-    # ═════════════════════════════════════════════════════════════════════
-    if len(collected) < target_count and level3_queue:
-        total_estimate = areas_searched + len(level3_queue)
-        print(f"[DeepSearch] Level 3: {len(level3_queue)} street-level areas discovered")
+        # ═════════════════════════════════════════════════════════════════
+        # LEVEL 2 — MICRO-AREAS (dynamically discovered from Level 1)
+        # ═════════════════════════════════════════════════════════════════
+        if not _should_stop() and level2_queue:
+            total_estimate = min(counters["areas"] + len(level2_queue), area_cap)
+            print(f"[DeepSearch] Level 2: {len(level2_queue)} micro-areas discovered")
 
-        for street, micro_area, parent in level3_queue:
-            if len(collected) >= target_count:
-                break
+            for micro_area, parent in level2_queue:
+                if _should_stop():
+                    break
+                raw_results = []
+                async for frame in _search_area(
+                    f"{micro_area} ({parent})", f"{micro_area}, {parent}, {location}", 2, total_estimate, raw_results
+                ):
+                    yield frame
 
-            search_loc = f"{street}, {micro_area}, {parent}, {location}"
-            events, _ = await _search_and_process(
-                f"{street} ({micro_area}, {parent})", search_loc, 3, total_estimate
-            )
+                # Extract street-level areas for Level 3
+                if raw_results:
+                    streets = _extract_sub_areas_from_results(raw_results, location, seen_area_names)
+                    for st in streets:
+                        level3_queue.append((st, micro_area, parent))
 
-            for event in events:
-                yield event
+        # ═════════════════════════════════════════════════════════════════
+        # LEVEL 3 — STREETS (dynamically discovered from Level 2)
+        # ═════════════════════════════════════════════════════════════════
+        if not _should_stop() and level3_queue:
+            total_estimate = min(counters["areas"] + len(level3_queue), area_cap)
+            print(f"[DeepSearch] Level 3: {len(level3_queue)} street-level areas discovered")
+
+            for street, micro_area, parent in level3_queue:
+                if _should_stop():
+                    break
+                async for frame in _search_area(
+                    f"{street} ({micro_area}, {parent})", f"{street}, {micro_area}, {parent}, {location}",
+                    3, total_estimate, [],
+                ):
+                    yield frame
+
+    except PlacesProviderError as exc:
+        print(f"[DeepSearch] Stopped by provider error ({exc.code}) after {counters['areas']} areas")
+        yield _sse("error", {
+            "detail": exc.public_detail,
+            "code": exc.code,
+            "total_leads": len(collected),
+            "areas_searched": counters["areas"],
+            "sample": sample_mode,
+        })
+        return
 
     # ═════════════════════════════════════════════════════════════════════
     # FINAL — Apply search mode and return
     # ═════════════════════════════════════════════════════════════════════
+    if stop["reason"] is None:
+        stop["reason"] = "target_reached" if len(collected) >= target_count else "areas_exhausted"
     collected = _apply_search_mode(collected, search_mode)
 
-    print(f"[DeepSearch] ══════════════════════════════════════════════════")
-    print(f"[DeepSearch] Complete: {len(collected)} leads from {areas_searched} areas searched")
+    print(f"[DeepSearch] Complete: {len(collected)} leads from {counters['areas']} areas ({stop['reason']})")
 
-    yield f"event: complete\ndata: {json.dumps({'total_leads': len(collected), 'areas_searched': areas_searched, 'leads': collected})}\n\n"
-
+    yield _sse("complete", {
+        "total_leads": len(collected),
+        "areas_searched": counters["areas"],
+        "leads": collected,
+        "sample": sample_mode,
+        "stopped_reason": stop["reason"],
+    })

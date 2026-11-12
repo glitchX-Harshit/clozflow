@@ -85,9 +85,11 @@ def create_capsule(
             Capsule.is_default == True,
         ).update({"is_default": False})
 
+    values = data.dict()
+    values["is_default"] = bool(values.get("is_default"))
     capsule = Capsule(
         user_id=current_user.id,
-        **data.dict(),
+        **values,
     )
     db.add(capsule)
     db.commit()
@@ -127,6 +129,10 @@ def update_capsule(
         raise HTTPException(status_code=404, detail="Capsule not found")
 
     update_data = data.dict(exclude_unset=True)
+    # Explicit nulls for required fields would make the response invalid (500).
+    for required in ("name", "product_name", "is_default"):
+        if required in update_data and update_data[required] is None:
+            update_data.pop(required)
 
     # If setting this as default, unset any existing default first
     if update_data.get("is_default"):

@@ -42,12 +42,16 @@ def _get_ai_client() -> Tuple[Optional[object], Optional[str]]:
         base_url = "https://api.openai.com/v1"
         model = "gpt-4o-mini"
 
-    client = OpenAI(api_key=api_key, base_url=base_url)
+    client = OpenAI(api_key=api_key, base_url=base_url, timeout=30.0, max_retries=1)
     return client, model
 
 
 def _call_ai(messages: List[Dict], max_tokens: int = 1200) -> Optional[str]:
-    """Call AI and return text content, or None on failure."""
+    """Call AI and return text content, or None on failure.
+
+    Synchronous (blocking) — the router runs these functions in a worker
+    thread so the event loop is never blocked.
+    """
     client, model = _get_ai_client()
     if not client:
         return None
@@ -60,12 +64,60 @@ def _call_ai(messages: List[Dict], max_tokens: int = 1200) -> Optional[str]:
         }
         try:
             resp = client.chat.completions.create(**kwargs, response_format={"type": "json_object"})
-        except Exception:
+        except Exception as exc:
+            # Only retry without JSON mode when the provider rejected the request
+            # shape (400); retrying rate limits / timeouts just burns quota.
+            if getattr(exc, "status_code", None) != 400:
+                raise
             resp = client.chat.completions.create(**kwargs)
-        return resp.choices[0].message.content.strip()
+        return (resp.choices[0].message.content or "").strip()
     except Exception as e:
-        print(f"[Intelligence] AI call failed: {e}")
+        print(f"[Intelligence] AI call failed: {type(e).__name__}")
         return None
+    finally:
+        try:
+            client.close()
+        except Exception:
+            pass
+
+
+# Roles accepted from clients for conversation history. The web client sends
+# "ai" for model turns; the OpenAI-compatible APIs only accept "assistant".
+_HISTORY_ROLE_ALIASES = {
+    "user": "user",
+    "human": "user",
+    "assistant": "assistant",
+    "ai": "assistant",
+    "bot": "assistant",
+    "model": "assistant",
+}
+MAX_HISTORY_MESSAGES = 6
+MAX_HISTORY_MESSAGE_CHARS = 2000
+
+
+def normalize_conversation_history(history) -> List[Dict[str, str]]:
+    """Map client roles onto user/assistant, drop anything else (incl. client
+    supplied "system" turns), trim content, keep the last few turns."""
+    normalized: List[Dict[str, str]] = []
+    if not isinstance(history, list):
+        return normalized
+    for msg in history:
+        if not isinstance(msg, dict):
+            continue
+        role = _HISTORY_ROLE_ALIASES.get(str(msg.get("role", "")).strip().lower())
+        content = msg.get("content")
+        if role is None or not isinstance(content, str) or not content.strip():
+            continue
+        normalized.append({"role": role, "content": content.strip()[:MAX_HISTORY_MESSAGE_CHARS]})
+    return normalized[-MAX_HISTORY_MESSAGES:]
+
+
+def _str_list(value) -> List[str]:
+    if isinstance(value, list):
+        return [str(v) for v in value if v not in (None, "")]
+    if isinstance(value, str) and value.strip():
+        return [value]
+    return []
 
 
 def _parse_json(text: str) -> Optional[Dict]:
@@ -249,8 +301,8 @@ def process_chat_message(
     print(f"[Intelligence] Processing chat: '{user_message}'")
 
     icp_summary = ""
-    if icp:
-        icp_summary = f"{icp.get('primaryCustomer', '')} — segments: {', '.join(icp.get('segments', [])[:3])}"
+    if isinstance(icp, dict) and icp:
+        icp_summary = f"{icp.get('primaryCustomer', '') or ''} — segments: {', '.join(_str_list(icp.get('segments'))[:3])}"
 
     system_prompt = CHAT_SYSTEM_PROMPT.format(
         user_offer=user_offer or "not specified",
@@ -260,10 +312,8 @@ def process_chat_message(
 
     messages = [{"role": "system", "content": system_prompt}]
 
-    # Include recent conversation history
-    if conversation_history:
-        for msg in conversation_history[-6:]:  # last 3 turns
-            messages.append({"role": msg["role"], "content": msg["content"]})
+    # Include recent conversation history (roles normalised: "ai" → "assistant")
+    messages.extend(normalize_conversation_history(conversation_history))
 
     messages.append({"role": "user", "content": user_message})
 
@@ -379,7 +429,7 @@ def explain_lead(lead: Dict, user_offer: str = "") -> Dict:
     """Explain why a specific lead is (or isn't) relevant."""
     print(f"[Intelligence] Explaining lead: {lead.get('business_name')}")
 
-    signals_str = ", ".join(lead.get("opportunity_signals", [])[:4]) or "none detected"
+    signals_str = ", ".join(_str_list(lead.get("opportunity_signals"))[:4]) or "none detected"
 
     raw = _call_ai([
         {"role": "system", "content": "You are a sales intelligence AI. Return only valid JSON."},
@@ -416,11 +466,14 @@ def explain_lead(lead: Dict, user_offer: str = "") -> Dict:
 
 def _fallback_why_lead(lead: Dict, user_offer: str) -> Dict:
     """Generate why-this-lead explanation from existing scored data."""
-    score = lead.get("opportunity_score", 0)
-    signals = lead.get("opportunity_signals", [])[:4]
-    reason = lead.get("opportunity_reason", "")
-    outreach = lead.get("outreach_angle", "")
-    prob = lead.get("buying_probability", "Medium")
+    try:
+        score = float(lead.get("opportunity_score") or 0)
+    except (TypeError, ValueError):
+        score = 0
+    signals = _str_list(lead.get("opportunity_signals"))[:4]
+    reason = str(lead.get("opportunity_reason") or "")
+    outreach = str(lead.get("outreach_angle") or "")
+    prob = str(lead.get("buying_probability") or "Medium")
 
     if score >= 70:
         headline = f"Strong prospect — {prob.lower()} buying probability based on {len(signals)} signals."

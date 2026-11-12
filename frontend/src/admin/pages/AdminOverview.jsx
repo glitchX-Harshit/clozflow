@@ -12,7 +12,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
-import { useAdminPeriod } from '../components/AdminLayout';
+import { useAdminPeriod } from '../components/adminPeriod';
 import KPICard from '../components/KPICard';
 import PeriodSelector from '../components/PeriodSelector';
 import EmptyState from '../components/EmptyState';
@@ -80,7 +80,6 @@ export default function AdminOverview() {
   const revTimeseries = data?.revenue_timeseries || [];
   const userTimeseries = data?.user_timeseries || [];
   const plans = data?.plans_breakdown || [];
-  const pearlBreakdown = data?.pearl_breakdown || {};
   const unitEconomics = data?.unit_economics || {};
 
   return (

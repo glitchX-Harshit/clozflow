@@ -39,24 +39,6 @@
   letter-spacing: -0.01em;
 }
 
-.pearl-sec-dock-btn {
-  background: transparent;
-  border: none;
-  color: #71717a;
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: color 0.15s ease, background 0.15s ease;
-}
-
-.pearl-sec-dock-btn:hover {
-  color: #09090b;
-  background: #f4f4f5;
-}
-
 /* ── Navigation List ── */
 .pearl-sec-nav {
   flex: 1;
@@ -175,6 +157,18 @@
   padding: 0.1rem 0.45rem;
   border-radius: 9999px;
   letter-spacing: 0.02em;
+}
+
+/* Sections that are not built yet. */
+.pearl-sec-badge.soon {
+  color: #52525b;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+}
+
+.pearl-sec-btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
 }
 
 /* ── Mobile Responsive Adaptation ── */

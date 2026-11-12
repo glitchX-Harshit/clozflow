@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -17,22 +17,23 @@ import {
   Menu,
   X
 } from 'lucide-react';
-import { adminApi } from '../services/adminApi';
+import { adminApi, clearAdminSession } from '../services/adminApi';
+import { AdminPeriodContext } from './adminPeriod';
 import '../styles/admin.css';
-
-export const AdminPeriodContext = createContext({
-  period: '30d',
-  setPeriod: () => {}
-});
-
-export const useAdminPeriod = () => useContext(AdminPeriodContext);
 
 export default function AdminLayout() {
   const [period, setPeriod] = useState('30d');
   const [adminUser, setAdminUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuPath, setMenuPath] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Auto-close mobile drawer when route changes
+  if (menuPath !== location.pathname) {
+    setMenuPath(location.pathname);
+    if (mobileMenuOpen) setMobileMenuOpen(false);
+  }
 
   useEffect(() => {
     async function loadAdminProfile() {
@@ -46,11 +47,6 @@ export default function AdminLayout() {
     loadAdminProfile();
   }, []);
 
-  // Auto-close mobile drawer when route changes
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
-
   // Handle ESC key to close drawer
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -63,7 +59,7 @@ export default function AdminLayout() {
   }, [mobileMenuOpen]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    clearAdminSession();
     window.location.href = '/admin';
   };
 
@@ -184,6 +180,7 @@ export default function AdminLayout() {
                 <button
                   type="button"
                   onClick={handleLogout}
+                  aria-label="Log out of the admin console"
                   title="Log out"
                   style={{
                     background: 'transparent',

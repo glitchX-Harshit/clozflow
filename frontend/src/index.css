@@ -413,7 +413,7 @@ section {
 .eyebrow-accent {
   color: var(--accent);
   background: var(--accent-dim);
-  border-color: rgba(220, 38, 38, 0.15);
+  border-color: rgba(30, 64, 175, 0.15);
 }
 
 /* ══ INTERACTIVE ════════════════════════════════════ */

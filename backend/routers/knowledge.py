@@ -1,28 +1,115 @@
 import uuid
 import json
 import asyncio
+import logging
+from contextlib import asynccontextmanager
 from typing import List, Optional
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl
+from starlette.concurrency import run_in_threadpool
 
 from database import get_db
 from models import User, Capsule
 from models_knowledge import KnowledgeSource, KnowledgePage, KnowledgeFact, CapsuleVersion, KnowledgeChunk
 from routers.auth import get_current_user
-from services.knowledge.crawler import validate_url_security
-from services.knowledge.job_manager import KnowledgeJobManager, STAGES
+from services.knowledge.url_safety import validate_url_security_async
+from services.knowledge.document_parser import (
+    LEGACY_EXTENSIONS,
+    SUPPORTED_EXTENSIONS,
+    file_extension,
+    sanitize_upload_filename,
+    sniff_document_problem,
+)
+from services.knowledge.job_manager import (
+    KnowledgeJobManager, STAGES, TERMINAL_JOB_STATUSES, CANCELLED_IMPORT_ERROR, fail_abandoned_imports,
+)
+from services.usage_limits import WindowRateLimiter, user_key
 
-router = APIRouter(prefix="/api/knowledge", tags=["knowledge"])
+logger = logging.getLogger("routers.knowledge")
+
+
+def _fail_imports_abandoned_by_restart() -> int:
+    from database import SessionLocal
+    with SessionLocal() as db:
+        return fail_abandoned_imports(db)
+
+
+@asynccontextmanager
+async def lifespan(app):
+    # Imports that were running when the previous server process stopped can never finish:
+    # mark them failed (with a clear error) instead of "running" forever.
+    try:
+        count = await run_in_threadpool(_fail_imports_abandoned_by_restart)
+        if count:
+            logger.info("[Knowledge] Marked %d interrupted import(s) as failed", count)
+    except Exception as exc:  # never block startup on this
+        logger.warning("[Knowledge] Could not check for interrupted imports: %s", exc)
+    yield
+
+
+router = APIRouter(prefix="/api/knowledge", tags=["knowledge"], lifespan=lifespan)
+
+# ── Limits ────────────────────────────────────────────────────────────────────
+MAX_UPLOAD_FILES = 10
+MAX_UPLOAD_FILE_BYTES = 20 * 1024 * 1024      # 20 MB per document
+MAX_UPLOAD_TOTAL_BYTES = 100 * 1024 * 1024    # per request
+MAX_ACTIVE_JOBS_PER_USER = 2
+_READ_CHUNK = 1024 * 1024
+
+# Each ingestion runs a crawl plus three LLM extraction passes.
+_ingestion_limiter = WindowRateLimiter(
+    "knowledge-ingest", 10, 600,
+    "Too many knowledge imports. Please wait a few minutes before starting another one.",
+)
+
+
+def _start_ingestion_guard(current_user: User) -> None:
+    _ingestion_limiter.hit(user_key(current_user))
+    if KnowledgeJobManager.get_instance().active_job_count(current_user.id) >= MAX_ACTIVE_JOBS_PER_USER:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"You already have {MAX_ACTIVE_JOBS_PER_USER} knowledge imports running. Wait for one to finish.",
+            headers={"Retry-After": "30"},
+        )
+
+
+def _job_visible_to(job_id: str, user: User, db: Session) -> bool:
+    """A job is visible to its owner only (other users get 404)."""
+    owner = KnowledgeJobManager.get_instance().get_job_owner(job_id)
+    if owner is not None:
+        return owner == user.id
+    return db.query(KnowledgeSource.id).filter(
+        KnowledgeSource.id == job_id,
+        KnowledgeSource.user_id == user.id,
+    ).first() is not None
+
+
+async def _read_upload_capped(upload: UploadFile, name: str) -> bytes:
+    """Read at most MAX_UPLOAD_FILE_BYTES (+1 to detect overflow) without
+    loading an arbitrarily large upload into memory."""
+    if upload.size is not None and upload.size > MAX_UPLOAD_FILE_BYTES:
+        raise HTTPException(status_code=413, detail=f"File {name} exceeds the 20 MB size limit.")
+    chunks = []
+    size = 0
+    while True:
+        chunk = await upload.read(_READ_CHUNK)
+        if not chunk:
+            break
+        size += len(chunk)
+        if size > MAX_UPLOAD_FILE_BYTES:
+            raise HTTPException(status_code=413, detail=f"File {name} exceeds the 20 MB size limit.")
+        chunks.append(chunk)
+    return b"".join(chunks)
 
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
 
 class CrawlRequest(BaseModel):
-    url: str
+    url: str = Field(..., max_length=2048)
 
 class FactUpdateRequest(BaseModel):
     value: Optional[str] = None
@@ -31,9 +118,9 @@ class FactUpdateRequest(BaseModel):
 
 class CreateFactRequest(BaseModel):
     capsule_id: int
-    category: str  # business | product | customer | sales
-    field_name: str
-    value: str
+    category: str = Field(..., max_length=40)  # business | product | customer | sales
+    field_name: str = Field(..., min_length=1, max_length=200)
+    value: str = Field(..., min_length=1, max_length=3000)
     inference_type: Optional[str] = "user_confirmed"
 
 class RollbackRequest(BaseModel):
@@ -50,13 +137,15 @@ async def start_website_crawl(
 ):
     """
     Validates URL security against SSRF and launches real-time crawler.
+    (The crawler re-validates every connection, incl. redirects, at connect time.)
     """
-    is_safe, res = validate_url_security(req.url)
+    is_safe, res = await validate_url_security_async(req.url)
     if not is_safe:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Security check failed: {res}"
         )
+    _start_ingestion_guard(current_user)
 
     job_id = str(uuid.uuid4())
     job_mgr = KnowledgeJobManager.get_instance()
@@ -78,24 +167,52 @@ async def upload_documents(
 ):
     """
     Accepts multiple business documents (PDF, DOCX, XLSX, CSV, JSON, TXT, MD, HTML).
+
+    Limits: at most 10 files, 20 MB per file, 100 MB per request; empty files
+    are rejected. The type is checked by extension AND content. Errors:
+    400 (no/too many/empty files), 413 (too large), 415 (unsupported type or
+    content that does not match the extension).
     """
-    if not files:
-        raise HTTPException(400, "No files uploaded")
+    try:
+        if not files:
+            raise HTTPException(400, "No files uploaded")
+        if len(files) > MAX_UPLOAD_FILES:
+            raise HTTPException(400, f"Too many files: upload at most {MAX_UPLOAD_FILES} documents at a time.")
 
-    ALLOWED_EXTS = {"pdf", "docx", "doc", "xlsx", "xls", "csv", "json", "txt", "md", "markdown", "html", "htm"}
-    files_data = []
+        files_data = []
+        total_bytes = 0
+        for f in files:
+            name = sanitize_upload_filename(f.filename)
+            ext = file_extension(name)
+            if ext in LEGACY_EXTENSIONS:
+                raise HTTPException(
+                    status_code=415,
+                    detail=f"Legacy .{ext} files are not supported ({name}). Save it as .{LEGACY_EXTENSIONS[ext]} and upload it again."
+                )
+            if ext not in SUPPORTED_EXTENSIONS:
+                raise HTTPException(
+                    status_code=415,
+                    detail=f"Unsupported format '{ext}' in file {name}. Allowed formats: PDF, DOCX, XLSX, CSV, JSON, TXT, MD, HTML."
+                )
+            fbytes = await _read_upload_capped(f, name)
+            if not fbytes:
+                raise HTTPException(400, f"File {name} is empty.")
+            total_bytes += len(fbytes)
+            if total_bytes > MAX_UPLOAD_TOTAL_BYTES:
+                raise HTTPException(413, "The upload exceeds the 100 MB total size limit. Upload fewer files at a time.")
+            problem = await run_in_threadpool(sniff_document_problem, fbytes, ext)
+            if problem:
+                raise HTTPException(415, f"File {name} {problem}.")
+            files_data.append((name, fbytes))
+    finally:
+        # Release the spooled temp files right away (also on errors).
+        for f in files or []:
+            try:
+                await f.close()
+            except Exception:
+                pass
 
-    for f in files:
-        ext = f.filename.split(".")[-1].lower() if "." in f.filename else ""
-        if ext not in ALLOWED_EXTS:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Unsupported format '{ext}' in file {f.filename}. Allowed formats: PDF, DOCX, XLSX, CSV, JSON, TXT, MD, HTML."
-            )
-        fbytes = await f.read()
-        if len(fbytes) > 20 * 1024 * 1024:  # 20MB limit
-            raise HTTPException(400, f"File {f.filename} exceeds 20MB size limit.")
-        files_data.append((f.filename, fbytes))
+    _start_ingestion_guard(current_user)
 
     job_id = str(uuid.uuid4())
     job_mgr = KnowledgeJobManager.get_instance()
@@ -112,18 +229,22 @@ async def upload_documents(
 # ── Job Status & Real-time SSE Stream ─────────────────────────────────────────
 
 @router.get("/jobs/{job_id}")
-async def get_job_status(
+def get_job_status(
     job_id: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Fetch current status and progress of an ingestion job."""
+    """Fetch current status and progress of an ingestion job (owner only)."""
+    if not _job_visible_to(job_id, current_user, db):
+        raise HTTPException(404, "Knowledge job not found")
     job_mgr = KnowledgeJobManager.get_instance()
     cached = job_mgr.get_cached_job(job_id)
     if cached:
         return cached
 
-    # Fallback to database query if job finished earlier
+    # Fallback to database query if job finished earlier (an import abandoned by a server
+    # restart is reported - and stored - as failed instead of running forever)
+    fail_abandoned_imports(db, user_id=current_user.id, source_ids=[job_id])
     source = db.query(KnowledgeSource).filter(
         KnowledgeSource.id == job_id,
         KnowledgeSource.user_id == current_user.id
@@ -143,15 +264,42 @@ async def get_job_status(
     }
 
 
+def _db_job_snapshot(job_id: str, user_id: int) -> Optional[dict]:
+    """Final status from the DB for a job that is no longer running (own session)."""
+    from database import SessionLocal
+    with SessionLocal() as db:
+        fail_abandoned_imports(db, user_id=user_id, source_ids=[job_id])
+        source = db.query(KnowledgeSource).filter(
+            KnowledgeSource.id == job_id, KnowledgeSource.user_id == user_id
+        ).first()
+        if not source:
+            return None
+        terminal = source.status if source.status in TERMINAL_JOB_STATUSES else "failed"
+        return {
+            "job_id": source.id,
+            "status": terminal,
+            "progress": 100 if terminal == "completed" else 0,
+            "pages_discovered": source.pages_discovered,
+            "pages_processed": source.pages_processed,
+            "error": source.error_message or (None if terminal == "completed" else "Ingestion stopped before completing."),
+            "message": "Ingestion finished." if terminal == "completed" else (source.error_message or "Ingestion stopped before completing."),
+        }
+
+
 @router.get("/jobs/{job_id}/stream")
 async def stream_job_events(
     job_id: str,
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
     """
     Real-time Server-Sent Events (SSE) stream for progressive ingestion UI.
     Allows clients to see live stage transitions and page discoveries.
+    The stream always ends after a `completed` / `failed` status event.
     """
+    if not _job_visible_to(job_id, current_user, db):
+        raise HTTPException(404, "Knowledge job not found")
+    user_id = current_user.id
     job_mgr = KnowledgeJobManager.get_instance()
     queue = job_mgr.subscribe(job_id)
 
@@ -160,20 +308,32 @@ async def stream_job_events(
             # Yield initial snapshot if available
             cached = job_mgr.get_cached_job(job_id)
             if cached:
-                yield f"data: {json.dumps(cached)}\n\n"
+                yield f"data: {json.dumps(cached, default=str)}\n\n"
+                if cached.get("status") in TERMINAL_JOB_STATUSES:
+                    return
 
             while True:
                 # Wait for next event or send heartbeat
                 try:
                     event = await asyncio.wait_for(queue.get(), timeout=15.0)
-                    yield f"data: {json.dumps(event)}\n\n"
-                    if event.get("status") in ("completed", "failed"):
+                    yield f"data: {json.dumps(event, default=str)}\n\n"
+                    if event.get("status") in TERMINAL_JOB_STATUSES:
                         break
                 except asyncio.TimeoutError:
+                    if not job_mgr.is_job_active(job_id) and queue.empty():
+                        # The job is gone (finished in another process, cancelled
+                        # or the server restarted): end with a terminal snapshot.
+                        final = job_mgr.get_cached_job(job_id)
+                        if not final or final.get("status") not in TERMINAL_JOB_STATUSES:
+                            final = await run_in_threadpool(_db_job_snapshot, job_id, user_id) or {
+                                "job_id": job_id, "status": "failed", "progress": 0,
+                                "error": "Ingestion job is no longer running.",
+                                "message": "Ingestion job is no longer running.",
+                            }
+                        yield f"data: {json.dumps(final, default=str)}\n\n"
+                        break
                     # Heartbeat keep-alive
                     yield ": ping\n\n"
-        except asyncio.CancelledError:
-            pass
         finally:
             job_mgr.unsubscribe(job_id, queue)
 
@@ -197,7 +357,9 @@ def get_knowledge_overview(
 ):
     """
     Full Knowledge Base overview: Company Capsule, Product Capsules, Sources, Pages, Stats.
+    ``sources[].error_message`` says why an import failed / was cancelled (null otherwise).
     """
+    fail_abandoned_imports(db, user_id=current_user.id)
     sources = db.query(KnowledgeSource).filter(
         KnowledgeSource.user_id == current_user.id
     ).order_by(KnowledgeSource.created_at.desc()).all()
@@ -216,6 +378,7 @@ def get_knowledge_overview(
     total_pages = db.query(KnowledgePage).join(KnowledgeSource).filter(
         KnowledgeSource.user_id == current_user.id
     ).count()
+    total_facts = db.query(KnowledgeFact).filter(KnowledgeFact.user_id == current_user.id).count()
 
     return {
         "stats": {
@@ -223,7 +386,7 @@ def get_knowledge_overview(
             "total_products": len(product_capsules),
             "total_sources": len(sources),
             "total_pages": total_pages,
-            "total_facts": len(facts),
+            "total_facts": total_facts,
             "last_synced_at": sources[0].created_at.isoformat() if sources else None
         },
         "company_capsule": {
@@ -260,6 +423,7 @@ def get_knowledge_overview(
                 "title": s.title,
                 "url": s.source_url,
                 "status": s.status,
+                "error_message": s.error_message,
                 "pages_discovered": s.pages_discovered,
                 "pages_processed": s.pages_processed,
                 "created_at": s.created_at.isoformat()
@@ -377,13 +541,27 @@ def create_custom_fact(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Add a custom user-confirmed fact to a Capsule."""
+    """Add a custom user-confirmed fact to a Capsule (the caller's own capsule only)."""
+    capsule = db.query(Capsule.id).filter(
+        Capsule.id == req.capsule_id,
+        Capsule.user_id == current_user.id
+    ).first()
+    if not capsule:
+        raise HTTPException(404, "Capsule not found")
+    category = req.category.strip().lower()
+    if category not in ("business", "product", "customer", "sales"):
+        raise HTTPException(400, "category must be one of: business, product, customer, sales")
+    field_name = req.field_name.strip()
+    value = req.value.strip()
+    if not field_name or not value:
+        raise HTTPException(400, "field_name and value are required")
+
     fact = KnowledgeFact(
         user_id=current_user.id,
         capsule_id=req.capsule_id,
-        category=req.category,
-        field_name=req.field_name,
-        value=req.value,
+        category=category,
+        field_name=field_name,
+        value=value,
         confidence=1.0,
         inference_type="user_confirmed",
         approval_status="approved"
@@ -486,22 +664,63 @@ async def resync_source(
     current_user: User = Depends(get_current_user)
 ):
     """Re-runs crawl and intelligence extraction for an existing source."""
-    try:
-        from services.knowledge.job_manager import KnowledgeJobManager
-        KnowledgeJobManager.get_instance().cancel_job(source_id)
-    except Exception:
-        pass
-
+    # Ownership first: never let another user's request cancel this job.
     source = db.query(KnowledgeSource).filter(
         KnowledgeSource.id == source_id,
         KnowledgeSource.user_id == current_user.id
     ).first()
-    if not source or not source.source_url:
+    if not source:
+        raise HTTPException(404, "Source not found")
+    if not source.source_url or source.source_type != "website":
         raise HTTPException(400, "Cannot re-sync non-website source")
 
+    is_safe, res = await validate_url_security_async(source.source_url)
+    if not is_safe:
+        raise HTTPException(status_code=400, detail=f"Security check failed: {res}")
+    _ingestion_limiter.hit(user_key(current_user))
+
     job_mgr = KnowledgeJobManager.get_instance()
-    await job_mgr.start_website_ingestion_job(source.id, current_user.id, source.source_url)
+    await job_mgr.start_website_ingestion_job(source.id, current_user.id, res)
     return {"job_id": source.id, "status": "crawling", "message": "Re-synchronization started"}
+
+
+@router.post("/jobs/{job_id}/cancel")
+@router.post("/sources/{job_id}/cancel")
+async def cancel_knowledge_import(
+    job_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Cancel a running import (upload, crawl or re-sync) WITHOUT deleting its source. The
+    source stays in the overview as ``status: "failed"``, ``error_message: "Import cancelled."``;
+    pages it already stored are kept, no capsules are created. Open job streams end with
+    ``{"status": "failed", "cancelled": true}``. The job id is the source id.
+
+    404 for an unknown import or another user's; 409 when it already finished.
+    """
+    mgr = KnowledgeJobManager.get_instance()
+    source = db.query(KnowledgeSource).filter(
+        KnowledgeSource.id == job_id,
+        KnowledgeSource.user_id == current_user.id
+    ).first()
+    owner = mgr.get_job_owner(job_id)
+    if owner is not None and owner != current_user.id:
+        raise HTTPException(404, "Import not found")
+    if source is None and not (owner == current_user.id and mgr.is_job_active(job_id)):
+        raise HTTPException(404, "Import not found")
+    if source is not None and source.status in TERMINAL_JOB_STATUSES and not mgr.is_job_active(job_id):
+        raise HTTPException(409, f"This import already {'completed' if source.status == 'completed' else 'failed'}; there is nothing to cancel.")
+
+    was_running = await mgr.cancel_import(db, job_id, source)
+    return {
+        "ok": True,
+        "job_id": job_id,
+        "status": "failed",
+        "cancelled": True,
+        "was_running": was_running,
+        "error_message": CANCELLED_IMPORT_ERROR,
+    }
 
 
 @router.delete("/capsules/{capsule_id}")
@@ -538,13 +757,14 @@ def delete_knowledge_source(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Deletes a crawled or uploaded knowledge source, its pages, and derived capsules."""
-    try:
-        from services.knowledge.job_manager import KnowledgeJobManager
-        KnowledgeJobManager.get_instance().cancel_job(source_id)
-    except Exception:
-        pass
+    """Deletes a crawled or uploaded knowledge source, its pages, and derived capsules.
 
+    Only knowledge derived from THIS source is removed: capsules tagged with
+    this source id (or, for capsules created before source ids were recorded,
+    the same exact source URL), their facts/chunks/versions, and the pages.
+    Knowledge from other sources and manual capsules is kept.
+    """
+    # Ownership first: never let another user's request cancel this job.
     source = db.query(KnowledgeSource).filter(
         KnowledgeSource.id == source_id,
         KnowledgeSource.user_id == current_user.id
@@ -552,39 +772,67 @@ def delete_knowledge_source(
     if not source:
         raise HTTPException(404, "Source not found")
 
-    domain = source.title.lower() if source.title else ""
-    source_url = source.source_url or ""
+    try:
+        KnowledgeJobManager.get_instance().cancel_job(source_id)
+    except Exception:
+        pass
 
-    # 1. Delete pages
-    db.query(KnowledgePage).filter(KnowledgePage.source_id == source_id).delete(synchronize_session=False)
+    # URL the ingestion stored on its capsules/facts.
+    if source.source_url:
+        source_ref_url = source.source_url
+    else:
+        files = (source.metadata_info or {}).get("files") if isinstance(source.metadata_info, dict) else None
+        source_ref_url = f"document://{files[0]}" if files else None
+    page_urls = [u for (u,) in db.query(KnowledgePage.url).filter(KnowledgePage.source_id == source_id).all()]
 
-    # 2. Delete facts matching source
-    if domain or source_url:
-        db.query(KnowledgeFact).filter(
-            KnowledgeFact.user_id == current_user.id,
-            (KnowledgeFact.source_url.ilike(f"%{domain}%")) | (KnowledgeFact.source_url == source_url)
-        ).delete(synchronize_session=False)
-
-    # 3. Delete chunks matching source
-    if domain or source_url:
-        db.query(KnowledgeChunk).filter(
-            KnowledgeChunk.user_id == current_user.id,
-            (KnowledgeChunk.source_url.ilike(f"%{domain}%")) | (KnowledgeChunk.source_url == source_url)
-        ).delete(synchronize_session=False)
-
-    # 4. Find and delete capsules associated with this source
-    capsules = db.query(Capsule).filter(Capsule.user_id == current_user.id).all()
+    # 1. Capsules derived from this source
     capsules_to_delete = []
-    for c in capsules:
-        c_source_id = (c.intelligence_data or {}).get("source_id") if isinstance(c.intelligence_data, dict) else None
-        c_company = (c.company_name or "").lower()
-        c_name = (c.name or "").lower()
-        if c_source_id == source_id or (domain and (domain in c_company or domain in c_name)):
+    for c in db.query(Capsule).filter(Capsule.user_id == current_user.id).all():
+        intel = c.intelligence_data if isinstance(c.intelligence_data, dict) else {}
+        c_source_id = intel.get("source_id")
+        if c_source_id == source_id or (not c_source_id and source_ref_url and intel.get("source_url") == source_ref_url):
             capsules_to_delete.append(c.id)
 
+    # 2. Delete pages
+    db.query(KnowledgePage).filter(KnowledgePage.source_id == source_id).delete(synchronize_session=False)
+
+    # 3. Facts / chunks of those capsules (+ unattached legacy rows of this exact source)
     if capsules_to_delete:
+        db.query(KnowledgeFact).filter(
+            KnowledgeFact.user_id == current_user.id,
+            KnowledgeFact.capsule_id.in_(capsules_to_delete)
+        ).delete(synchronize_session=False)
+        db.query(KnowledgeChunk).filter(
+            KnowledgeChunk.user_id == current_user.id,
+            KnowledgeChunk.capsule_id.in_(capsules_to_delete)
+        ).delete(synchronize_session=False)
+    if source_ref_url:
+        db.query(KnowledgeFact).filter(
+            KnowledgeFact.user_id == current_user.id,
+            KnowledgeFact.capsule_id.is_(None),
+            KnowledgeFact.source_url == source_ref_url
+        ).delete(synchronize_session=False)
+    if page_urls:
+        db.query(KnowledgeChunk).filter(
+            KnowledgeChunk.user_id == current_user.id,
+            KnowledgeChunk.capsule_id.is_(None),
+            KnowledgeChunk.source_url.in_(page_urls)
+        ).delete(synchronize_session=False)
+
+    # 4. Unbind agents, then delete the capsules
+    if capsules_to_delete:
+        try:
+            from models_pearl import PearlAgent
+            db.query(PearlAgent).filter(
+                PearlAgent.capsule_id.in_(capsules_to_delete)
+            ).update({"capsule_id": None}, synchronize_session=False)
+        except Exception:
+            pass
         db.query(CapsuleVersion).filter(CapsuleVersion.capsule_id.in_(capsules_to_delete)).delete(synchronize_session=False)
-        db.query(Capsule).filter(Capsule.id.in_(capsules_to_delete)).delete(synchronize_session=False)
+        db.query(Capsule).filter(
+            Capsule.id.in_(capsules_to_delete),
+            Capsule.user_id == current_user.id
+        ).delete(synchronize_session=False)
 
     db.delete(source)
     db.commit()

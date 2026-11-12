@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring, animate } from 'framer-motion';
+import { motion as Motion, useMotionValue, useSpring } from 'framer-motion';
 import './FramerAnimationLoader.css';
 
 /**
@@ -89,7 +89,7 @@ export default function FramerAnimationLoader({
       aria-live="polite"
       aria-label="Loading page"
     >
-      <motion.div
+      <Motion.div
         className="framer-loader-mask"
         style={{
           backgroundColor: background,
@@ -122,7 +122,7 @@ export default function FramerAnimationLoader({
         <div className="framer-loader-content">
           {/* Top Brand Name */}
           <div className="framer-loader-top">
-            <motion.h1
+            <Motion.h1
               className="framer-loader-brand"
               initial={{ filter: 'blur(10px)', opacity: 0, y: 10 }}
               animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
@@ -135,7 +135,7 @@ export default function FramerAnimationLoader({
               }}
             >
               {brandName}
-            </motion.h1>
+            </Motion.h1>
           </div>
 
           {/* Middle Synchronized Bar Line */}
@@ -146,7 +146,7 @@ export default function FramerAnimationLoader({
                 backgroundColor: 'rgba(0, 0, 0, 0.06)',
               }}
             >
-              <motion.div
+              <Motion.div
                 className="framer-loader-bar-fill"
                 style={{
                   backgroundColor: textColor,
@@ -170,7 +170,7 @@ export default function FramerAnimationLoader({
             </div>
           </div>
         </div>
-      </motion.div>
+      </Motion.div>
     </div>
   );
 }

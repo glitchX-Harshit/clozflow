@@ -7,7 +7,6 @@ export default function KPICard({
   prefix = '',
   suffix = '',
   percentageChange = null,
-  previousPeriodValue = null,
   footnote = '',
   to = null,
   icon: Icon = null

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Users,
@@ -11,49 +11,40 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
+import { formatServerDate } from '../../lib/dates';
+import { useAdminQuery } from '../services/useAdminQuery';
 import StatusBadge from '../components/StatusBadge';
 import EmptyState from '../components/EmptyState';
 
 export default function AdminUsers() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [appliedSearch, setAppliedSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [isPayingFilter, setIsPayingFilter] = useState('');
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await adminApi.getUsers({
-        search,
-        status: statusFilter,
-        role: roleFilter,
-        isPaying: isPayingFilter === '' ? null : isPayingFilter === 'true',
-        page,
-        pageSize: 20
-      });
-      setUsers(res.items || []);
-      setTotal(res.total || 0);
-      setTotalPages(res.total_pages || 1);
-    } catch (err) {
-      console.error('Failed to load users:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [page, statusFilter, roleFilter, isPayingFilter]);
+  const query = useAdminQuery(
+    JSON.stringify([appliedSearch, statusFilter, roleFilter, isPayingFilter, page]),
+    () => adminApi.getUsers({
+      search: appliedSearch,
+      status: statusFilter,
+      role: roleFilter,
+      isPaying: isPayingFilter === '' ? null : isPayingFilter === 'true',
+      page,
+      pageSize: 20
+    })
+  );
+  const users = query.data?.items || [];
+  const total = query.data?.total || 0;
+  const totalPages = query.data?.total_pages || 1;
+  const loading = query.loading;
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setPage(1);
-    fetchUsers();
+    if (search.trim() === appliedSearch) query.reload();
+    else setAppliedSearch(search.trim());
   };
 
   const handleExport = () => {
@@ -130,8 +121,14 @@ export default function AdminUsers() {
             </div>
           </div>
 
+          {query.error && (
+            <div role="alert" style={{ margin: '0 0 16px', padding: '12px 16px', borderRadius: '10px', backgroundColor: 'var(--admin-danger-dim)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#f87171', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+              <span>{query.error}</span>
+              <button type="button" className="admin-btn" onClick={query.reload}>Retry</button>
+            </div>
+          )}
           <div className="admin-table-container">
-            {loading ? (
+            {loading && users.length === 0 ? (
               <div style={{ padding: '48px', display: 'flex', justifyContent: 'center' }}>
                 <Loader2 size={28} style={{ animation: 'spin 1s linear infinite', color: 'var(--admin-accent)' }} />
               </div>
@@ -179,7 +176,7 @@ export default function AdminUsers() {
                       <td className="mono">₹{(u.lifetime_revenue_inr || 0).toLocaleString()}</td>
                       <td>{u.pearl_calls_count}</td>
                       <td style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>
-                        {u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}
+                        {formatServerDate(u.created_at)}
                       </td>
                       <td style={{ textAlign: 'right' }}>
                         <Link

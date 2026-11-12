@@ -1,15 +1,36 @@
-.venv
-node_modules
-__pycache__
-*.pyc
+# Patterns without **/ only match at the context root, so nested copies
+# (backend/.venv, backend/__pycache__, ...) need the **/ form.
+**/.venv
+**/venv
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
 .git
 .vscode
-.env
-hexagon.db
-klyro.db
+.idea
+
+# Secrets and local data (never bake into the image)
+**/.env
+**/.env.*
+!.env.example
+**/*.db
+**/*.db-wal
+**/*.db-shm
+**/*.sqlite
+**/*.sqlite3
+**/*.log
 logs
+backend/static/avatars/*
+backend/out*.txt
+
+# Tests and dev-only files
 test
-frontend/node_modules
+tests/
+backend/tests/
+backend/conftest.py
+backend/test_*.py
+frontend/test-*.js
 frontend/dist
 whatsapp-bridge/node_modules
 whatsapp-bridge/auth_info

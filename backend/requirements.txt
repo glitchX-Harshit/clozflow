@@ -1,17 +1,4 @@
-fastapi
-uvicorn
-websockets
-python-dotenv
-sqlalchemy
-asyncpg
-google-genai
-openai
-pydantic
-pydantic-settings
-passlib[bcrypt]
-PyJWT
-reportlab==4.1.0
-httpx
-silero-vad>=5.1
-onnxruntime>=1.17.0
-numpy>=1.24.0
+# The backend needs the full dependency set to start (e.g. python-multipart for
+# uploads, beautifulsoup4 for the knowledge router, psycopg2 for Postgres), so
+# this file just includes it. Keep the list itself in requirements_full.txt.
+-r requirements_full.txt

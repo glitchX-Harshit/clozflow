@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
@@ -131,10 +132,11 @@ const Footer = () => {
                         <div className="ft__nav-col">
                             <span className="ft__nav-heading">Explore</span>
                             <ul className="ft__nav-links">
-                                <li><a href="/dashboard">Dashboard</a></li>
-                                <li><a href="/live-call">Live Copilot</a></li>
-                                <li><a href="/how-it-works">How it Works</a></li>
-                                <li><a href="/pricing">Pricing</a></li>
+                                <li><Link to="/dashboard">Dashboard</Link></li>
+                                {/* /live-call needs a prepared session; the copilot is launched from the dashboard */}
+                                <li><Link to="/dashboard">Live Copilot</Link></li>
+                                <li><Link to="/how-it-works">How it Works</Link></li>
+                                <li><Link to="/pricing">Pricing</Link></li>
                             </ul>
                         </div>
 
@@ -197,8 +199,8 @@ const Footer = () => {
                                 © 2026 ClozFlow AI, made for closers
                             </span>
                             <div className="ft__legal-group">
-                                <a href="/privacy">Privacy</a>
-                                <a href="/terms">Terms</a>
+                                <Link to="/privacy">Privacy</Link>
+                                <Link to="/terms">Terms</Link>
                             </div>
                         </div>
                     </div>

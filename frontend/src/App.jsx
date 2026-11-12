@@ -1,32 +1,38 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import SculptureHero from './components/SculptureHero';
 const HowItWorks = React.lazy(() => import('./components/HowItWorks'));
 const Integrations = React.lazy(() => import('./components/Integrations'));
-const ObjectionHandling = React.lazy(() => import('./components/ObjectionHandling'));
-const ResponseSuggestion = React.lazy(() => import('./components/ResponseSuggestion'));
 const IntegrationHero = React.lazy(() => import('./components/ui/integration-hero'));
 const UseCases = React.lazy(() => import('./components/UseCases'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage'));
 const Footer = React.lazy(() => import('./components/Footer'));
 const MarqueePathSection = React.lazy(() => import('./components/MarqueePathSection'));
 import SmoothScroll from './components/SmoothScroll';
+import ErrorBoundary from './components/ErrorBoundary';
 const LiveCopilotPopup = React.lazy(() => import('./components/LiveCopilotPopup'));
 import WebPreload from './components/WebPreload';
 
-const ThreeBackground = React.lazy(() => import('./components/ThreeBackground'));
 const AuthPage = React.lazy(() => import('./pages/AuthPage'));
 const BrainWorkspace = React.lazy(() => import('./pages/BrainWorkspace'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard'));
 const CallBriefing = React.lazy(() => import('./pages/CallBriefing'));
 const LiveCall = React.lazy(() => import('./pages/LiveCall'));
-const PostCallSummary = React.lazy(() => import('./pages/PostCallSummary'));
+const SummaryRoute = React.lazy(() => import('./pages/SummaryRoute'));
+// Meeting Wizard (the dashboard's Wizard tab stays the entry; these are the full pages)
+const WizardPage = React.lazy(() => import('./pages/WizardPage'));
+const NewMeetingPage = React.lazy(() => import('./pages/wizard/NewMeetingPage'));
+const BriefPage = React.lazy(() => import('./pages/wizard/BriefPage'));
+const BattlecardsPage = React.lazy(() => import('./pages/wizard/BattlecardsPage'));
+const WizardSettingsPage = React.lazy(() => import('./pages/wizard/WizardSettingsPage'));
 const OutreachStudioPage = React.lazy(() => import('./pages/OutreachStudioPage'));
 const RelayPublic = React.lazy(() => import('./pages/RelayPublic'));
 const HowItWorksPage = React.lazy(() => import('./pages/HowItWorksPage'));
+const AgentEditorPage = React.lazy(() => import('./pages/pearl/AgentEditorPage'));
+const LegalPage = React.lazy(() => import('./pages/LegalPage'));
 
 // ── Admin Intelligence Module ──
 const AdminProtectedRoute = React.lazy(() => import('./admin/components/AdminProtectedRoute'));
@@ -46,6 +52,7 @@ const AdminSettings = React.lazy(() => import('./admin/pages/AdminSettings'));
 
 function LandingPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [loadRest, setLoadRest] = React.useState(false);
 
     React.useEffect(() => {
@@ -57,6 +64,31 @@ function LandingPage() {
             return () => clearTimeout(t);
         }
     }, []);
+
+    // `/#integrations` etc. (marketing navbar on other pages): the sections are lazy,
+    // so wait for the target to exist before scrolling to it.
+    React.useEffect(() => {
+        if (!loadRest || !location.hash) return undefined;
+        let targetId = '';
+        try {
+            targetId = decodeURIComponent(location.hash.slice(1));
+        } catch {
+            return undefined;
+        }
+        let tries = 0;
+        let timer = null;
+        const attempt = () => {
+            const target = targetId && document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            tries += 1;
+            if (tries < 20) timer = setTimeout(attempt, 150);
+        };
+        attempt();
+        return () => clearTimeout(timer);
+    }, [loadRest, location.hash]);
 
     return (
         <main className="landing-main" style={{ position: 'relative', width: '100%', overflowX: 'clip' }}>
@@ -78,10 +110,10 @@ function LandingPage() {
                     navLinks={[
                         { 
                             label: "Product", 
-                            href: "#objections",
+                            href: "#how-it-works",
                             onClick: (e) => {
                                 e.preventDefault();
-                                document.getElementById('objections')?.scrollIntoView({ behavior: 'smooth' });
+                                document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
                             }
                         },
                         { 
@@ -178,7 +210,8 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <SmoothScroll />
-                <div className="app-root">
+                <ErrorBoundary>
+                    <div className="app-root">
                     <Suspense fallback={null}>
                         <LiveCopilotPopup />
                     </Suspense>
@@ -198,16 +231,51 @@ function App() {
                         <Route path="/live-call" element={
                             <ProtectedRoute><Suspense fallback={null}><LiveCall /></Suspense></ProtectedRoute>
                         } />
+                        {/* /summary?meeting=<id> → Debrief; plain /summary → legacy post-call summary */}
                         <Route path="/summary" element={
-                            <ProtectedRoute><Suspense fallback={null}><PostCallSummary /></Suspense></ProtectedRoute>
+                            <ProtectedRoute><Suspense fallback={null}><SummaryRoute /></Suspense></ProtectedRoute>
+                        } />
+                        {/* Meeting Wizard */}
+                        <Route path="/wizard" element={
+                            <ProtectedRoute><Suspense fallback={null}><WizardPage standalone /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/wizard/new" element={
+                            <ProtectedRoute><Suspense fallback={null}><NewMeetingPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/wizard/meetings/:id" element={
+                            <ProtectedRoute><Suspense fallback={null}><BriefPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/wizard/battlecards" element={
+                            <ProtectedRoute><Suspense fallback={null}><BattlecardsPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/wizard/settings" element={
+                            <ProtectedRoute><Suspense fallback={null}><WizardSettingsPage /></Suspense></ProtectedRoute>
                         } />
                         <Route path="/outreach-studio" element={
                             <ProtectedRoute><Suspense fallback={null}><OutreachStudioPage /></Suspense></ProtectedRoute>
+                        } />
+                        {/* Dedicated Full-Screen Agent Editor */}
+                        <Route path="/agent-editor/:id" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/agent-editor" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/pearl/agent-editor/:id" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
+                        } />
+                        <Route path="/pearl/agent-editor" element={
+                            <ProtectedRoute><Suspense fallback={null}><AgentEditorPage /></Suspense></ProtectedRoute>
                         } />
                         {/* Public Relay page — NO auth required (buyer-facing) */}
                         <Route path="/relay/:slug" element={<Suspense fallback={null}><RelayPublic /></Suspense>} />
                         <Route path="/how-it-works" element={<Suspense fallback={null}><HowItWorksPage /></Suspense>} />
                         <Route path="/pricing" element={<Suspense fallback={null}><PricingPage /></Suspense>} />
+                        {/* Legal & contact pages (linked from auth, footer and How It Works) */}
+                        <Route path="/terms" element={<Suspense fallback={null}><LegalPage page="terms" /></Suspense>} />
+                        <Route path="/privacy" element={<Suspense fallback={null}><LegalPage page="privacy" /></Suspense>} />
+                        <Route path="/ai-voice-policy" element={<Suspense fallback={null}><LegalPage page="ai-voice-policy" /></Suspense>} />
+                        <Route path="/contact" element={<Suspense fallback={null}><LegalPage page="contact" /></Suspense>} />
 
                         {/* Admin Intelligence Protected Portal */}
                         <Route path="/admin" element={
@@ -234,6 +302,7 @@ function App() {
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                 </div>
+                </ErrorBoundary>
             </BrowserRouter>
         </AuthProvider>
     );

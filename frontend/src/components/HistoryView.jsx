@@ -1,5 +1,73 @@
-import { useState, useEffect } from 'react';
-import { Download, Clock, MessageCircle, Zap, FileText, ChevronRight, Loader2, ArrowLeft, Target, Activity, Lightbulb, Gavel, AlertTriangle, Trash2, Send } from 'lucide-react';
+import { useState, useEffect, useId, useRef } from 'react';
+import { Download, Clock, MessageCircle, Zap, FileText, Loader2, ArrowLeft, Activity, Lightbulb, AlertTriangle, Trash2, Send, RotateCcw } from 'lucide-react';
+import { SESSION_EXPIRED_EVENT, apiFetch, apiUrl, authHeaders } from '../lib/apiFetch';
+import { formatServerDate, formatServerTime } from '../lib/dates';
+
+const DEFAULT_VERDICT = { probability: 'Unknown', pct: 0, color: '#f59e0b', blocker: 'None', nextMove: 'Keep going.' };
+
+const speakerLabel = (speaker) => {
+    const value = String(speaker || '').trim().toLowerCase();
+    if (!value || value === 'unknown') return 'Speaker';
+    if (['rep', 'user', 'seller', 'salesperson', 'agent', 'you'].includes(value)) return 'You';
+    if (['prospect', 'buyer', 'client', 'customer'].includes(value)) return 'Prospect';
+    return value.charAt(0).toUpperCase() + value.slice(1);
+};
+
+/** The saved transcript (`GET /calls/{id}/transcript`), turn by turn. */
+const SessionTranscript = ({ callId }) => {
+    const [state, setState] = useState({ id: null, turns: [], error: null });
+    const [reload, setReload] = useState(0);
+    const loading = state.id !== `${callId}:${reload}`;
+
+    useEffect(() => {
+        let cancelled = false;
+        const key = `${callId}:${reload}`;
+        apiFetch(`/calls/${encodeURIComponent(callId)}/transcript`)
+            .then((data) => {
+                if (!cancelled) setState({ id: key, turns: Array.isArray(data?.transcript) ? data.transcript : [], error: null });
+            })
+            .catch((err) => {
+                if (!cancelled) setState({ id: key, turns: [], error: err?.message || 'Could not load the transcript.' });
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [callId, reload]);
+
+    return (
+        <div className="hv-card" style={{ padding: '2.5rem', marginBottom: '2rem' }}>
+            <div style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-dim)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <MessageCircle size={14} aria-hidden="true" /> Transcript
+            </div>
+            {loading ? (
+                <div role="status" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-dim)', fontSize: '0.85rem' }}>
+                    <Loader2 size={16} className="animate-spin" aria-hidden="true" /> Loading transcript...
+                </div>
+            ) : state.error ? (
+                <div role="alert" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', fontSize: '0.85rem', color: '#dc2626' }}>
+                    {state.error}
+                    <button type="button" className="btn btn-outline" onClick={() => setReload((n) => n + 1)} style={{ fontSize: '0.8rem' }}>
+                        <RotateCcw size={13} aria-hidden="true" /> Retry
+                    </button>
+                </div>
+            ) : state.turns.length === 0 ? (
+                <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-dim)' }}>No transcript was saved for this session.</p>
+            ) : (
+                <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: 420, overflowY: 'auto' }} data-lenis-prevent="true">
+                    {state.turns.map((turn, i) => (
+                        <li key={i} style={{ display: 'grid', gridTemplateColumns: 'minmax(70px, auto) 1fr', gap: '0.75rem', alignItems: 'baseline' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-dim)' }}>
+                                {speakerLabel(turn?.speaker)}
+                                {turn?.timestamp && <span style={{ display: 'block', fontWeight: 500, letterSpacing: 0, textTransform: 'none', marginTop: 2 }}>{formatServerTime(turn.timestamp)}</span>}
+                            </span>
+                            <span style={{ fontSize: '0.875rem', color: 'var(--text)', lineHeight: 1.55, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{turn?.text || ''}</span>
+                        </li>
+                    ))}
+                </ol>
+            )}
+        </div>
+    );
+};
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
@@ -9,29 +77,25 @@ const MiniBar = ({ pct, color }) => (
     </div>
 );
 
-const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay }) => {
-    const d = call.details || {
-        verdict: { probability: 'Unknown', pct: 0, color: '#f59e0b', blocker: 'None', nextMove: 'Keep going.' },
-        objectionScore: 0,
-        momentumBreaks: [],
-        opportunityBranches: [],
-        strategyTimeline: []
+const SessionDetail = ({ call, onBack, onDownload, downloading, downloadError, onCreateRelay }) => {
+    const raw = call.details || {};
+    const d = {
+        verdict: { ...DEFAULT_VERDICT, ...(raw.verdict || {}) },
+        objectionScore: Number(raw.objectionScore) || 0,
+        momentumBreaks: Array.isArray(raw.momentumBreaks) ? raw.momentumBreaks : [],
+        opportunityBranches: Array.isArray(raw.opportunityBranches) ? raw.opportunityBranches : [],
+        strategyTimeline: Array.isArray(raw.strategyTimeline) ? raw.strategyTimeline : [],
     };
-    const typeColors = {
-        good:   { bg: 'var(--surface)', border: 'var(--border)', text: 'var(--text)' },
-        warn:   { bg: 'var(--surface)', border: 'var(--border)', text: 'var(--text)' },
-        danger: { bg: 'var(--surface)', border: 'var(--border)', text: 'var(--text)' },
-    };
-    const resColors = { good: 'var(--text)', warn: 'var(--text-muted)', danger: 'var(--text-dim)', neutral: 'var(--text-muted)' };
 
     return (
         <div className="animate-fade-in">
             {/* Back button */}
             <button
+                type="button"
                 onClick={onBack}
                 style={{ display:'flex', alignItems:'center', gap:'0.5rem', background:'none', border:'none', color:'var(--text-dim)', cursor:'pointer', fontSize:'0.875rem', fontWeight:600, marginBottom:'2rem', padding:0 }}
             >
-                <ArrowLeft size={16} /> Back to history
+                <ArrowLeft size={16} aria-hidden="true" /> Back to history
             </button>
 
             {/* Session header */}
@@ -40,7 +104,7 @@ const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay })
                     <div style={{ fontSize:'0.64rem', fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-dim)', marginBottom:'0.75rem' }}>Session Analysis</div>
                     <h2 style={{ fontSize:'clamp(1.75rem,3vw,2.25rem)', fontWeight:900, letterSpacing:'-0.04em', marginBottom:'0.5rem' }}>Session #{call.id}</h2>
                     <div style={{ display:'flex', gap:'1rem', color:'var(--text-dim)', fontSize:'0.8125rem', flexWrap:'wrap' }}>
-                        <span style={{ display:'flex', alignItems:'center', gap:'0.4rem' }}><Clock size={13} />{new Date(call.timestamp).toLocaleDateString()} at {new Date(call.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                        <span style={{ display:'flex', alignItems:'center', gap:'0.4rem' }}><Clock size={13} aria-hidden="true" />{formatServerDate(call.timestamp, undefined, 'Unknown date')}{call.timestamp ? ` at ${formatServerTime(call.timestamp)}` : ''}</span>
                         <span style={{ display:'flex', alignItems:'center', gap:'0.4rem' }}><MessageCircle size={13} />{call.message_count} messages</span>
                         <span style={{ display:'flex', alignItems:'center', gap:'0.4rem' }}><Zap size={13} />{call.insight_count} insights</span>
                     </div>
@@ -48,6 +112,7 @@ const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay })
                 <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0, flexWrap: 'wrap' }}>
                     {onCreateRelay && (
                         <button
+                            type="button"
                             onClick={() => onCreateRelay(call.id)}
                             style={{
                                 display:'flex', alignItems:'center', gap:'0.5rem', borderRadius:12,
@@ -62,15 +127,19 @@ const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay })
                         </button>
                     )}
                     <button
+                        type="button"
                         onClick={() => onDownload(call.id)}
                         disabled={downloading === call.id}
                         className="hv-export-btn"
                         style={{ display:'flex', alignItems:'center', gap:'0.5rem', borderRadius:12, padding:'0.875rem 1.5rem', fontSize:'0.875rem', fontWeight:700, cursor:'pointer', flexShrink:0 }}
                     >
-                        {downloading === call.id ? <><Loader2 size={15} className="animate-spin" /> Generating...</> : <><Download size={15} /> Export Report</>}
+                        {downloading === call.id ? <><Loader2 size={15} className="animate-spin" aria-hidden="true" /> Generating...</> : <><Download size={15} aria-hidden="true" /> Export Report</>}
                     </button>
                 </div>
             </div>
+            {downloadError && (
+                <div role="alert" style={{ marginTop: '-1rem', marginBottom: '1.5rem', fontSize: '0.85rem', color: '#dc2626' }}>{downloadError}</div>
+            )}
 
             {/* Header + Stats Split Container */}
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '1.5rem', marginBottom: '2rem' }} className="hv-header-split">
@@ -130,6 +199,8 @@ const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay })
                     </div>
                 </div>
             </div>
+
+            <SessionTranscript callId={call.id} />
 
             {/* Strategy Timeline */}
             {d.strategyTimeline.length > 0 && (
@@ -360,63 +431,118 @@ const SessionDetail = ({ call, onBack, onDownload, downloading, onCreateRelay })
 
 // ── Main History View ─────────────────────────────────────────────────────────
 
-const HistoryView = ({ onCreateRelay }) => {
-    const [calls, setCalls] = useState([]);
-    const [loading, setLoading] = useState(true);
+/** Download the PDF report with the bearer token (a plain link can't send it). */
+const downloadReport = async (callId) => {
+    let res;
+    try {
+        res = await fetch(apiUrl(`/calls/${encodeURIComponent(callId)}/report`), { headers: authHeaders() });
+    } catch {
+        throw new Error('Could not reach the server. Check your connection and try again.');
+    }
+    if (res.status === 401) {
+        window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT));
+        throw new Error('Your session expired — sign in again.');
+    }
+    if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(typeof body?.detail === 'string' ? body.detail : 'Report generation failed');
+    }
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `clozflow_report_${callId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    // Revoking immediately can cancel the download in some browsers.
+    setTimeout(() => window.URL.revokeObjectURL(url), 30000);
+};
+
+const HistoryView = ({ onCreateRelay, initialCallId = null, onInitialCallHandled }) => {
+    const [reloadKey, setReloadKey] = useState(0);
+    const [list, setList] = useState({ key: -1, calls: [], error: null });
+    const [selected, setSelected] = useState(() => initialCallId ?? null);
+    const [detailsReload, setDetailsReload] = useState(0);
+    const [details, setDetails] = useState({ key: null, data: null, error: null });
     const [downloading, setDownloading] = useState(null);
-    const [error, setError] = useState(null);
-    const [selected, setSelected] = useState(null);
-    const [selectedDetails, setSelectedDetails] = useState(null);
-    const [loadingDetails, setLoadingDetails] = useState(false);
+    const [downloadError, setDownloadError] = useState(null);
     const [sessionToDelete, setSessionToDelete] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState(null);
+    const dialogTitleId = useId();
+    const cancelButtonRef = useRef(null);
 
-    useEffect(() => { fetchHistory(); }, []);
+    const loading = list.key !== reloadKey;
+    const calls = list.calls;
+    const error = loading ? null : list.error;
+    const detailsKey = selected == null ? null : `${selected}:${detailsReload}`;
+    const loadingDetails = selected != null && details.key !== detailsKey;
 
-    const fetchHistory = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${window.APP_API_BASE}/calls/`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (!res.ok) throw new Error('Failed to fetch history');
-            const data = await res.json();
-            setCalls(data);
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // The Overview "Recent Sessions" row opened this view for one session.
+    useEffect(() => {
+        if (initialCallId != null) onInitialCallHandled?.();
+        // Mount only: the initial selection is taken by useState above.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    const handleSelectSession = async (callId) => {
+    useEffect(() => {
+        let cancelled = false;
+        apiFetch('/calls/')
+            .then((data) => {
+                if (!cancelled) setList({ key: reloadKey, calls: Array.isArray(data) ? data : [], error: null });
+            })
+            .catch((err) => {
+                if (!cancelled) setList((prev) => ({ key: reloadKey, calls: prev.calls, error: err?.message || 'Failed to fetch history' }));
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [reloadKey]);
+
+    // Session detail: keyed by id so a slow response for an earlier click can't replace a later one.
+    useEffect(() => {
+        if (selected == null) return undefined;
+        let cancelled = false;
+        const key = `${selected}:${detailsReload}`;
+        apiFetch(`/calls/${encodeURIComponent(selected)}`)
+            .then((data) => {
+                if (!cancelled) setDetails({ key, data, error: null });
+            })
+            .catch((err) => {
+                if (!cancelled) setDetails({ key, data: null, error: err?.status === 404 ? 'This session could not be found. It may have been deleted.' : (err?.message || 'Failed to fetch session details') });
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [selected, detailsReload]);
+
+    // Delete dialog: Escape cancels; focus starts on "Cancel".
+    useEffect(() => {
+        if (sessionToDelete == null) return undefined;
+        cancelButtonRef.current?.focus();
+        const onKey = (e) => {
+            if (e.key === 'Escape' && !deleting) {
+                setSessionToDelete(null);
+                setDeleteError(null);
+            }
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [sessionToDelete, deleting]);
+
+    const handleSelectSession = (callId) => {
+        setDownloadError(null);
         setSelected(callId);
-        setLoadingDetails(true);
-        setSelectedDetails(null);
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${window.APP_API_BASE}/calls/${callId}`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (!res.ok) throw new Error('Failed to fetch session details');
-            const data = await res.json();
-            setSelectedDetails(data);
-        } catch (err) {
-            alert('Error loading details: ' + err.message);
-        } finally {
-            setLoadingDetails(false);
-        }
     };
 
     const handleDownload = async (callId) => {
         setDownloading(callId);
+        setDownloadError(null);
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${window.APP_API_BASE}/calls/${callId}/report`, { headers: { 'Authorization': `Bearer ${token}` } });
-            if (!res.ok) throw new Error('Report generation failed');
-            const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `clozflow_report_${callId}.pdf`;
-            document.body.appendChild(a); a.click();
-            window.URL.revokeObjectURL(url); document.body.removeChild(a);
+            await downloadReport(callId);
         } catch (err) {
-            alert('Error downloading report: ' + err.message);
+            setDownloadError(`Error downloading report: ${err.message}`);
         } finally {
             setDownloading(null);
         }
@@ -424,60 +550,74 @@ const HistoryView = ({ onCreateRelay }) => {
 
     const handleDeleteRequest = (e, callId) => {
         e.stopPropagation();
+        setDeleteError(null);
         setSessionToDelete(callId);
+    };
+
+    const closeDeleteDialog = () => {
+        if (deleting) return;
+        setSessionToDelete(null);
+        setDeleteError(null);
     };
 
     const confirmDelete = async () => {
         if (!sessionToDelete) return;
+        setDeleting(true);
+        setDeleteError(null);
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${window.APP_API_BASE}/calls/${sessionToDelete}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Failed to delete history item');
-            
-            // Remove from state immediately
-            setCalls(prev => prev.filter(c => c.id !== sessionToDelete));
-        } catch (err) {
-            alert('Error deleting session: ' + err.message);
-        } finally {
+            await apiFetch(`/calls/${encodeURIComponent(sessionToDelete)}`, { method: 'DELETE' });
+            setList((prev) => ({ ...prev, calls: prev.calls.filter(c => c.id !== sessionToDelete) }));
             setSessionToDelete(null);
+        } catch (err) {
+            // e.g. 409 "This call is linked to a Relay page. Delete the Relay first, then delete the call."
+            setDeleteError(err?.message || 'Failed to delete history item');
+        } finally {
+            setDeleting(false);
         }
     };
 
-    if (loading) return (
-        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'400px', gap:'1rem' }}>
-            <Loader2 className="animate-spin" size={32} color="var(--accent)" />
+    if (loading && calls.length === 0) return (
+        <div role="status" style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'400px', gap:'1rem' }}>
+            <Loader2 className="animate-spin" size={32} color="var(--accent)" aria-hidden="true" />
             <p style={{ color:'var(--text-dim)', fontWeight:500 }}>Retrieving your intelligence history...</p>
         </div>
     );
 
-    if (error) return (
-        <div style={{ background:'var(--bg)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:20, padding:'3rem', textAlign:'center' }}>
-            <AlertTriangle size={32} color="#ef4444" style={{ marginBottom:'1rem' }} />
-            <p style={{ color:'#ef4444', fontWeight:600, marginBottom:'1rem' }}>{error}</p>
-            <button className="btn btn-outline" onClick={fetchHistory}>Try Again</button>
+    if (error && calls.length === 0) return (
+        <div role="alert" style={{ background:'var(--bg)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:20, padding:'3rem', textAlign:'center' }}>
+            <AlertTriangle size={32} color="#ef4444" style={{ marginBottom:'1rem' }} aria-hidden="true" />
+            <p style={{ color:'#dc2626', fontWeight:600, marginBottom:'1rem' }}>{error}</p>
+            <button type="button" className="btn btn-outline" onClick={() => setReloadKey((k) => k + 1)}>Try Again</button>
         </div>
     );
 
-    if (selected) {
+    if (selected != null) {
         if (loadingDetails) {
             return (
-                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'400px', gap:'1rem' }}>
-                    <Loader2 className="animate-spin" size={32} color="var(--accent)" />
+                <div role="status" style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'400px', gap:'1rem' }}>
+                    <Loader2 className="animate-spin" size={32} color="var(--accent)" aria-hidden="true" />
                     <p style={{ color:'var(--text-dim)', fontWeight:500 }}>Analyzing session data...</p>
                 </div>
             );
         }
-        if (selectedDetails) {
-            return <SessionDetail call={selectedDetails} onBack={() => setSelected(null)} onDownload={handleDownload} downloading={downloading} onCreateRelay={onCreateRelay} />;
+        if (details.data) {
+            return <SessionDetail call={details.data} onBack={() => setSelected(null)} onDownload={handleDownload} downloading={downloading} downloadError={downloadError} onCreateRelay={onCreateRelay} />;
         }
+        return (
+            <div role="alert" style={{ background:'var(--bg)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:20, padding:'3rem', textAlign:'center' }}>
+                <AlertTriangle size={32} color="#ef4444" style={{ marginBottom:'1rem' }} aria-hidden="true" />
+                <p style={{ color:'#dc2626', fontWeight:600, marginBottom:'1rem' }}>Error loading details: {details.error}</p>
+                <div style={{ display:'flex', gap:'0.75rem', justifyContent:'center', flexWrap:'wrap' }}>
+                    <button type="button" className="btn btn-outline" onClick={() => setSelected(null)}>Back to history</button>
+                    <button type="button" className="btn btn-outline" onClick={() => setDetailsReload((n) => n + 1)}>Try Again</button>
+                </div>
+            </div>
+        );
     }
 
     if (calls.length === 0) return (
         <div style={{ background:'var(--bg)', border:'1px solid var(--border)', borderRadius:20, padding:'6rem 2rem', textAlign:'center' }}>
-            <div style={{ marginBottom:'1.5rem', opacity:0.1 }}><Clock size={64} /></div>
+            <div style={{ marginBottom:'1.5rem', opacity:0.1 }} aria-hidden="true"><Clock size={64} /></div>
             <h3 style={{ fontWeight:800, fontSize:'1.5rem', marginBottom:'0.75rem' }}>No conversations analyzed yet</h3>
             <p style={{ fontSize:'0.9375rem', color:'var(--text-dim)', maxWidth:'380px', margin:'0 auto' }}>
                 Every conversation leaves behavioral signals behind. The intelligence layer activates once conversations begin.
@@ -513,6 +653,7 @@ const HistoryView = ({ onCreateRelay }) => {
                         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'none'; }}
                     >
                         <button
+                            type="button"
                             onClick={() => handleSelectSession(call.id)}
                             className="hv-session-btn"
                             style={{
@@ -521,7 +662,7 @@ const HistoryView = ({ onCreateRelay }) => {
                                 display:'flex', alignItems:'center', gap:'1.5rem', width:'100%', fontFamily: 'inherit'
                             }}
                         >
-                            <div className="hv-session-icon" style={{ width:52, height:52, borderRadius:14, background:'var(--surface)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'var(--accent)' }}>
+                            <div className="hv-session-icon" aria-hidden="true" style={{ width:52, height:52, borderRadius:14, background:'var(--surface)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color:'var(--accent)' }}>
                                 <FileText size={22} />
                             </div>
                             <div style={{ flex:1 }}>
@@ -530,29 +671,31 @@ const HistoryView = ({ onCreateRelay }) => {
                                     <span style={{ padding:'0.2rem 0.625rem', background:'var(--accent-dim)', color:'var(--accent)', borderRadius:99, fontSize:'0.65rem', fontWeight:800, letterSpacing:'0.08em', textTransform:'uppercase' }}>Analyzed</span>
                                 </div>
                                 <div style={{ display:'flex', gap:'1rem', color:'var(--text-dim)', fontSize:'0.8125rem', flexWrap:'wrap' }}>
-                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Clock size={13} />{new Date(call.timestamp).toLocaleDateString()} · {new Date(call.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
-                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><MessageCircle size={13} />{call.message_count} messages</span>
-                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Zap size={13} />{call.insight_count} AI insights</span>
+                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Clock size={13} aria-hidden="true" />{formatServerDate(call.timestamp, undefined, 'Unknown date')}{call.timestamp ? ` · ${formatServerTime(call.timestamp)}` : ''}</span>
+                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><MessageCircle size={13} aria-hidden="true" />{call.message_count ?? 0} messages</span>
+                                    <span style={{ display:'flex', alignItems:'center', gap:'0.375rem' }}><Zap size={13} aria-hidden="true" />{call.insight_count ?? 0} AI insights</span>
                                 </div>
                             </div>
                         </button>
 
                         {/* Separate Delete Button */}
                         <button
+                            type="button"
                             onClick={(e) => handleDeleteRequest(e, call.id)}
                             title="Delete session log"
+                            aria-label={`Delete session #${call.id}`}
                             className="hv-delete-btn"
                             style={{
                                 background:'transparent', border:'none', padding:'1rem',
-                                color:'var(--text-muted)', cursor:'pointer', marginRight:'1.5rem',
+                                color:'var(--text-dim)', cursor:'pointer', marginRight:'1.5rem',
                                 display:'flex', alignItems:'center', justifyContent:'center',
                                 borderRadius:'10px', transition:'all 0.2s', flexShrink:0,
-                                outline: 'none', WebkitTapHighlightColor: 'transparent'
+                                WebkitTapHighlightColor: 'transparent'
                             }}
                             onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.06)'; }}
-                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.background = 'transparent'; }}
                         >
-                            <Trash2 size={16} />
+                            <Trash2 size={16} aria-hidden="true" />
                         </button>
                     </div>
                 ))}
@@ -567,8 +710,8 @@ const HistoryView = ({ onCreateRelay }) => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     zIndex: 9999, animation: 'fadeIn 0.2s ease-out'
                 }}>
-                    <div style={{
-                        background: 'rgba(15, 15, 18, 0.85)', 
+                    <div role="dialog" aria-modal="true" aria-labelledby={dialogTitleId} style={{
+                        background: 'rgba(15, 15, 18, 0.85)',
                         backdropFilter: 'blur(16px)',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: '20px', padding: '2rem', maxWidth: '400px', width: '90%',
@@ -577,26 +720,35 @@ const HistoryView = ({ onCreateRelay }) => {
                         position: 'relative', overflow: 'hidden'
                     }}>
                         {/* Subtle red glow at top */}
-                        <div style={{ position:'absolute', top:0, left:'20%', right:'20%', height:'1px', background:'linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)', filter:'blur(2px)' }} />
+                        <div aria-hidden="true" style={{ position:'absolute', top:0, left:'20%', right:'20%', height:'1px', background:'linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)', filter:'blur(2px)' }} />
 
                         <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
                             <div style={{ display:'flex', alignItems:'center', gap:'1rem' }}>
-                                <div style={{ width:'42px', height:'42px', borderRadius:'12px', background:'rgba(239, 68, 68, 0.1)', border:'1px solid rgba(239, 68, 68, 0.2)', display:'flex', alignItems:'center', justifyContent:'center', color:'#ef4444', flexShrink:0 }}>
+                                <div aria-hidden="true" style={{ width:'42px', height:'42px', borderRadius:'12px', background:'rgba(239, 68, 68, 0.1)', border:'1px solid rgba(239, 68, 68, 0.2)', display:'flex', alignItems:'center', justifyContent:'center', color:'#ef4444', flexShrink:0 }}>
                                     <Trash2 size={20} />
                                 </div>
                                 <div style={{ textAlign:'left' }}>
-                                    <h3 style={{ fontSize:'1.125rem', fontWeight:700, margin:0, color:'#fff', letterSpacing:'-0.02em' }}>Delete session log?</h3>
-                                    <p style={{ fontSize:'0.8125rem', color:'rgba(255,255,255,0.5)', margin:'0.25rem 0 0 0' }}>Session #{sessionToDelete}</p>
+                                    <h3 id={dialogTitleId} style={{ fontSize:'1.125rem', fontWeight:700, margin:0, color:'#fff', letterSpacing:'-0.02em' }}>Delete session log?</h3>
+                                    <p style={{ fontSize:'0.8125rem', color:'rgba(255,255,255,0.6)', margin:'0.25rem 0 0 0' }}>Session #{sessionToDelete}</p>
                                 </div>
                             </div>
 
-                            <p style={{ color:'rgba(255,255,255,0.6)', fontSize:'0.875rem', lineHeight:1.5, margin:'0.5rem 0 1.5rem 0', textAlign:'left' }}>
+                            <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'0.875rem', lineHeight:1.5, margin:'0.5rem 0 1.5rem 0', textAlign:'left' }}>
                                 This action will permanently remove this session and all its associated intelligence insights. This cannot be undone.
                             </p>
 
+                            {deleteError && (
+                                <p role="alert" style={{ color:'#fca5a5', fontSize:'0.8125rem', lineHeight:1.5, margin:'-0.75rem 0 0.5rem 0', textAlign:'left' }}>
+                                    {deleteError}
+                                </p>
+                            )}
+
                             <div style={{ display:'flex', gap:'0.75rem', justifyContent:'flex-end' }}>
-                                <button 
-                                    onClick={() => setSessionToDelete(null)}
+                                <button
+                                    type="button"
+                                    ref={cancelButtonRef}
+                                    onClick={closeDeleteDialog}
+                                    disabled={deleting}
                                     style={{
                                         padding:'0.625rem 1.25rem', borderRadius:'10px',
                                         background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.08)',
@@ -608,18 +760,20 @@ const HistoryView = ({ onCreateRelay }) => {
                                 >
                                     Cancel
                                 </button>
-                                <button 
+                                <button
+                                    type="button"
                                     onClick={confirmDelete}
+                                    disabled={deleting}
                                     style={{
                                         padding:'0.625rem 1.25rem', borderRadius:'10px',
-                                        background:'#ef4444', border:'1px solid #dc2626',
-                                        color:'#fff', fontSize:'0.8125rem', fontWeight:600, cursor:'pointer',
+                                        background:'#dc2626', border:'1px solid #dc2626',
+                                        color:'#fff', fontSize:'0.8125rem', fontWeight:600, cursor: deleting ? 'wait' : 'pointer',
                                         transition:'all 0.2s', boxShadow:'0 2px 10px rgba(239,68,68,0.2)'
                                     }}
-                                    onMouseEnter={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(239,68,68,0.3)' }}
-                                    onMouseLeave={e => { e.currentTarget.style.background = '#ef4444'; e.currentTarget.style.boxShadow = '0 2px 10px rgba(239,68,68,0.2)' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(239,68,68,0.3)' }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.boxShadow = '0 2px 10px rgba(239,68,68,0.2)' }}
                                 >
-                                    Delete
+                                    {deleting ? 'Deleting...' : 'Delete'}
                                 </button>
                             </div>
                         </div>

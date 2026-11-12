@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-    Play, Pause, CheckCircle2, ArrowRight, ShieldCheck, Clock
+import {
+    Play, Pause, CheckCircle2
 } from 'lucide-react';
 import StepsComponent from './ui/StepsComponent';
 import TabsCardComponent from './ui/TabsCardComponent';
 import './PearlPortalPage.css';
 
-// ── Realistic Customer Conversation Scenarios ──
+// ── Sample conversation scripts (examples, not recordings of real calls) ──
 const CONVERSATIONS = [
     {
         id: 'inbound-pricing',
@@ -15,7 +14,7 @@ const CONVERSATIONS = [
         title: 'Late-night inbound call',
         callerContext: 'Customer calling your dedicated number at 11:30 PM with pricing & onboarding questions',
         callerQuestion: '“Bhaiya pricing kya hai aur WhatsApp pe message kaise bhejte hain?”',
-        pearlResponse: '“Namaste! Main aapko explain karti hoon. ClozFlow mein aap direct apni website link daal kar 5 minute mein dedicated number le sakte hain. Starter plan ₹2,499 se shuru hota hai jisme WhatsApp automated follow-ups bhi included hain. Kya main link aapke WhatsApp par bhej doon abhi?”',
+        pearlResponse: '“Namaste! Main aapko explain karti hoon. ClozFlow mein aap apni website link daal kar apna voice agent kuch hi minutes mein ready kar sakte hain. Pricing ki poori details main aapko WhatsApp par bhej deti hoon. Kya main link abhi bhej doon?”',
         langCode: 'hi-IN',
         pitch: 1.1,
         rate: 1.0,
@@ -49,7 +48,7 @@ const CONVERSATIONS = [
         rate: 1.04,
         duration: '0:13',
         durationSec: 13,
-        takeaway: 'Politely respects their time without letting the deal freeze in an unopened inbox. 84% of prospects agree to the 25-second pitch.'
+        takeaway: 'Politely respects their time without letting the deal freeze in an unopened inbox.'
     },
     {
         id: 'objection-budget',
@@ -67,8 +66,21 @@ const CONVERSATIONS = [
     }
 ];
 
+/** Drive a 0–100 progress value for `durationMs`; returns the interval id (clear it to stop). */
+function startProgressTimer(durationMs, onProgress, onDone) {
+    const startTime = Date.now();
+    const id = setInterval(() => {
+        const pct = Math.min(((Date.now() - startTime) / durationMs) * 100, 100);
+        onProgress(pct);
+        if (pct >= 100) {
+            clearInterval(id);
+            onDone();
+        }
+    }, 80);
+    return id;
+}
+
 const PearlPortalPage = () => {
-    const navigate = useNavigate();
     const [activeScenario, setActiveScenario] = useState(CONVERSATIONS[0]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -116,19 +128,11 @@ const PearlPortalPage = () => {
         }
 
         clearInterval(playbackTimerRef.current);
-        const startTime = Date.now();
-        const totalDurationMs = scenario.durationSec * 1000;
-
-        playbackTimerRef.current = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const pct = Math.min((elapsed / totalDurationMs) * 100, 100);
-            setProgress(pct);
-
-            if (pct >= 100) {
-                clearInterval(playbackTimerRef.current);
-                setIsPlaying(false);
-            }
-        }, 80);
+        playbackTimerRef.current = startProgressTimer(
+            scenario.durationSec * 1000,
+            setProgress,
+            () => setIsPlaying(false)
+        );
     };
 
     useEffect(() => {
@@ -147,9 +151,9 @@ const PearlPortalPage = () => {
                 {/* ── Live Conversations: Hear Pearl in Action ── */}
                 <div className="pearl-section" id="voice-showcase">
                     <div className="pearl-section-head">
-                        <h3 className="pearl-section-title">Hear pearl in real customer conversations</h3>
+                        <h3 className="pearl-section-title">Hear pearl in sample conversations</h3>
                         <p className="pearl-section-sub">
-                            No robotic monotone. No 3-second awkward silence. Tap any scenario below to listen to how Pearl handles real buyers.
+                            Example scripts for common buyer moments. Tap a scenario to hear it read aloud — the preview uses your browser&apos;s built-in voice, not Pearl&apos;s production voice.
                         </p>
                     </div>
 
@@ -199,7 +203,7 @@ const PearlPortalPage = () => {
                                 <div className="pearl-scrub-progress" style={{ width: `${progress}%` }} />
                             </div>
                             <div className="pearl-scrub-meta">
-                                <span>{isPlaying ? 'Playing sample...' : 'Tap listen to hear audio'}</span>
+                                <span>{isPlaying ? 'Playing sample (browser voice)…' : 'Tap listen to hear the sample script'}</span>
                                 <span>{activeScenario.duration}</span>
                             </div>
                         </div>

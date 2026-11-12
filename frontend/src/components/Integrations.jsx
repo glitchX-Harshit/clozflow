@@ -82,7 +82,7 @@ const PEARL_NARRATIVE_TOKENS = [
 
 const Integrations = () => {
     const sectionRef = useRef(null);
-    const [portalProgress, setPortalProgress] = useState(0);
+    const [, setPortalProgress] = useState(0);
 
     useEffect(() => {
         let ctx = gsap.context(() => {

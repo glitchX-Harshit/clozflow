@@ -1,567 +1,1021 @@
-import { useEffect, useRef, useState } from 'react';
-import { useAudioStream } from '../audio/audioStreamClient';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { 
-    Zap, 
-    Mic, 
-    History, 
-    BarChart3, 
-    Target, 
-    Clock, 
-    TrendingUp, 
-    BrainCircuit,
+import { memo, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
     Activity,
+    AlertTriangle,
     ArrowLeft,
-    Eye,
-    Shield,
-    HelpCircle,
-    Lightbulb,
-    MessageSquare,
-    ChevronDown,
-    ChevronUp,
+    BarChart3,
+    BookOpen,
+    Check,
+    CheckCircle2,
+    Circle,
+    Clock,
+    Copy,
     ExternalLink,
-    Wand2
+    History,
+    Info,
+    Mic,
+    Pause,
+    Phone,
+    RefreshCw,
+    Wand2,
 } from 'lucide-react';
+import { useAudioStream } from '../audio/audioStreamClient';
+import { createBridgeEventsClient } from '../audio/bridgeEventsClient';
+import { createLevelBus } from '../audio/levelBus';
 import useCopilotStore from '../store/copilotStore';
 import { useDashboardStore } from '../store/useDashboardStore';
 import { openCopilotWindow } from '../utils/copilotWindow';
-import ClozFlowLogo from '../components/ClozFlowLogo';
+import { useAuth } from '../context/AuthContext';
+import { apiFetch, getAuthToken } from '../lib/apiFetch';
+import { copyText } from '../lib/clipboard';
+import {
+    cardFromSuggestion,
+    formatDuration,
+    formatSpeaker,
+    mapAnalysis,
+    mapCoachCard,
+    mapDealRecord,
+    mapMoment,
+    mapNudges,
+    mapStrip,
+    updateDealHealth,
+} from '../lib/copilotAnalysis';
+import { createCardPolicy } from '../lib/cardPolicy';
+import { createCallClock } from '../lib/callClock';
+import { CONSENT_MODES, DEFAULT_CONSENT_SCRIPT, endMeeting, hangupBridgeCall, listBattlecards } from '../lib/wizardApi';
+import CopilotHud from './wizard/CopilotHud';
+import BattlecardDetail from './wizard/BattlecardDetail';
+import { useHudHotkeys } from './wizard/hudHotkeys';
 import './LiveCall.css';
+
+const MAX_TRANSCRIPT_ENTRIES = 300;
+const NUDGE_MS = 8000;
+const ASK_TIMEOUT_MS = 12000;
+
+const START_ERRORS = {
+    picker_cancelled: 'Screen share was cancelled. Press Start and pick the meeting tab.',
+    permission_denied: 'Screen sharing is blocked. Allow screen recording for this browser and try again.',
+    no_audio: 'The shared tab had no audio.',
+    mic_denied: 'Microphone access is blocked. Allow the microphone for this site (lock icon in the address bar) and try again.',
+    mic_unavailable: 'No microphone was found. Plug one in, or switch this meeting to a different device.',
+    mic_busy: 'Another app is using the microphone. Close it and try again.',
+    socket_rejected: 'Could not connect to the live engine. Check your connection and try again.',
+    socket_timeout: 'The live engine did not respond in time. Try again in a moment.',
+    audio_unavailable: 'This browser could not process the audio. Try the latest Chrome or Edge.',
+    unsupported: 'Tab audio capture is not supported in this browser. Use Chrome or Edge on desktop, or switch to "In person" (microphone).',
+    capture_failed: 'Capture could not start. Please try again.',
+    briefing_expired: 'This meeting session expired — launch it again from the brief.',
+    session_expired: 'Your session expired — sign in again.',
+};
+
+const CONNECTION_LOST = {
+    unreachable: 'Connection lost — the live engine is not reachable.',
+    briefing_expired: 'Connection lost — this meeting session expired. Launch it again from the brief.',
+    session_expired: 'Connection lost — your session expired. Sign in again.',
+    stt_unavailable: 'Connection lost — speech-to-text is unavailable on the server.',
+    not_found: 'This phone call could not be found.',
+};
+
+const BRIDGE_STATUS = {
+    created: 'Setting up the call…',
+    ringing_rep: 'Calling your phone…',
+    rep_answered: 'You answered — calling the prospect…',
+    ringing_prospect: 'Calling the prospect…',
+    connected: 'Connected',
+    ended: 'Call ended',
+};
+
+const isRepSpeaker = (speaker, channel) => channel === 1 || ['salesperson', 'rep', 'agent'].includes(String(speaker || '').toLowerCase());
+
+function statusOf({ isListening, hasStarted, connectionState, bridge }) {
+    if (connectionState === 'failed') return { tone: 'red', label: 'Connection lost' };
+    if (bridge) return { tone: bridge.status === 'connected' ? 'green' : bridge.status === 'ended' ? 'red' : 'amber', label: (BRIDGE_STATUS[bridge.status] || bridge.detail || bridge.status || '').toUpperCase() };
+    if (isListening && connectionState === 'reconnecting') return { tone: 'amber', label: 'Reconnecting…' };
+    if (isListening && connectionState === 'connecting') return { tone: 'amber', label: 'Connecting…' };
+    if (isListening) return { tone: 'green', label: 'Listening' };
+    if (hasStarted) return { tone: 'amber', label: 'Paused' };
+    return { tone: 'muted', label: 'Not started' };
+}
+
+/* ── Call timer (only this component re-renders every second) ── */
+function CallTimer({ clock }) {
+    const seconds = useSyncExternalStore(clock.subscribe, clock.getSnapshot, clock.getSnapshot);
+    return <span style={{ fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{formatDuration(seconds)}</span>;
+}
+
+/* ── Transcript with speakers and a follow-live toggle (WCAG 2.2.2) ── */
+const TranscriptList = memo(function TranscriptList({ entries, hasStarted, isListening }) {
+    const scrollRef = useRef(null);
+    const [follow, setFollow] = useState(true);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (el && follow) el.scrollTop = el.scrollHeight;
+    }, [entries, follow]);
+
+    return (
+        <>
+            <div className="lc-transcript-tools">
+                <span className="lc-panel-title">Transcript</span>
+                <button type="button" className={`lc-toggle ${follow ? 'lc-toggle--on' : ''}`} onClick={() => setFollow((v) => !v)} aria-pressed={follow}>
+                    {follow ? 'Following live' : 'Paused scroll'}
+                </button>
+            </div>
+            <div className="lc-transcript-scroll" ref={scrollRef} style={{ flex: 1, minHeight: 0 }} data-lenis-prevent>
+                {!hasStarted && !isListening ? (
+                    <div className="lc-placeholder">The transcript appears here once you start.</div>
+                ) : entries.length === 0 ? (
+                    <div className="lc-placeholder">{isListening ? 'Listening…' : 'Paused — nothing transcribed yet.'}</div>
+                ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        {entries.map((msg) => {
+                            const rep = isRepSpeaker(msg.speaker, msg.channel);
+                            const system = String(msg.speaker || '').toLowerCase() === 'system';
+                            return (
+                                <div key={msg.id} className={`transcript-entry ${rep ? 'agent' : system ? 'system' : 'prospect'}`}>
+                                    <div className="entry-tag">
+                                        {formatSpeaker(rep ? 'salesperson' : msg.speaker)}
+                                        {typeof msg.tStart === 'number' && <span className="entry-time"> · {formatDuration(msg.tStart)}</span>}
+                                    </div>
+                                    <p className="entry-text">{msg.text}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+        </>
+    );
+});
+
+/* ── Methodology progress strip (deal record): coverage, never a live score ── */
+const DealStrip = memo(function DealStrip({ record }) {
+    if (!record || record.totalCount === 0) return null;
+    return (
+        <div className="lc-deal-strip" aria-label={`${record.methodology.toUpperCase()} coverage`}>
+            <div className="lc-deal-strip__head">
+                <span className="lc-panel-title">{record.methodology === 'none' ? 'Checklist' : record.methodology.toUpperCase()}</span>
+                <span className="lc-deal-strip__count">{record.coveredCount}/{record.totalCount} covered</span>
+            </div>
+            <div className="lc-deal-strip__fields">
+                {record.fields.map((f) => (
+                    <span
+                        key={f.field}
+                        className={`lc-deal-chip ${f.covered ? 'lc-deal-chip--on' : ''}`}
+                        title={f.covered ? `${f.value}${f.evidence ? ` — “${f.evidence}”` : ''}` : 'Not heard yet'}
+                    >
+                        {f.covered ? <CheckCircle2 size={12} aria-hidden="true" /> : <Circle size={12} aria-hidden="true" />}
+                        {f.label}
+                    </span>
+                ))}
+                {record.nextStep?.text && (
+                    <span className={`lc-deal-chip ${record.nextStep.date ? 'lc-deal-chip--on' : 'lc-deal-chip--warn'}`} title={record.nextStep.text}>
+                        <Clock size={12} aria-hidden="true" /> {record.nextStep.date ? `Next step ${record.nextStep.date}` : 'Next step not dated'}
+                    </span>
+                )}
+            </div>
+        </div>
+    );
+});
+
+/* ── Consent gate: capture starts only from one of these buttons ── */
+function ConsentGate({ script, onChoose, disabled, channel }) {
+    const [copied, setCopied] = useState(false);
+    const copy = async () => {
+        if (await copyText(script)) {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1600);
+        }
+    };
+    return (
+        <section className="lc-gate" aria-labelledby="lc-gate-title">
+            <div className="lc-gate__text">
+                <h2 id="lc-gate-title">Before we listen</h2>
+                <p>Tell the other side a notetaker is on. Say this in the first 30 seconds, then press the matching button — capture starts right after.</p>
+                <blockquote className="lc-gate__script">
+                    {script}
+                    <button type="button" className="lc-banner-btn" onClick={copy}>{copied ? <Check size={12} /> : <Copy size={12} />} {copied ? 'Copied' : 'Copy'}</button>
+                </blockquote>
+                <p className="lc-gate__hint">
+                    {channel === 'mic'
+                        ? 'Next: allow the microphone when the browser asks.'
+                        : 'Next: pick the meeting tab in the picker and tick "Also share tab audio", then allow the microphone.'}
+                </p>
+            </div>
+            <div className="lc-gate__actions">
+                {CONSENT_MODES.map((mode) => (
+                    <button
+                        key={mode.id}
+                        type="button"
+                        className={`lc-gate__btn ${mode.id === 'skipped' ? 'lc-gate__btn--quiet' : ''}`}
+                        onClick={() => onChoose(mode.id)}
+                        disabled={disabled}
+                    >
+                        <strong>{mode.label}</strong>
+                        <span>{mode.blurb}</span>
+                    </button>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+/* ── Guided retry for a tab shared without audio ── */
+function NoAudioGuide({ onRetry, onDismiss, busy }) {
+    return (
+        <div className="lc-guide" role="alert">
+            <div className="lc-guide__head"><AlertTriangle size={16} /> <strong>The shared tab had no audio.</strong></div>
+            <ol className="lc-guide__steps">
+                <li>Click <b>Retry</b> below.</li>
+                <li>In the picker, stay on the <b>Chrome Tab</b> pane and pick the meeting tab.</li>
+                <li>Tick <b>“Also share tab audio”</b> (bottom-left) before pressing Share.</li>
+            </ol>
+            <div className="lc-banner-actions">
+                <button type="button" className="lc-banner-btn lc-banner-btn--solid" onClick={onRetry} disabled={busy}><RefreshCw size={12} /> Retry</button>
+                <button type="button" className="lc-banner-btn" onClick={onDismiss}>Dismiss</button>
+            </div>
+        </div>
+    );
+}
 
 const LiveCall = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const transcriptEndRef = useRef(null);
-    
-    // Fallback if no context was passed (e.g. direct URL access)
-    const { callContext } = location.state || { 
-        callContext: {
-            client_name: 'Prospect',
-            product_name: 'Service',
-            call_goal: 'Discovery',
-            client_industry: 'Technology',
-            client_role: 'Decision Maker'
-        }
-    };
-    const contextId = location.state?.contextId || null;
+    const { user } = useAuth() || {};
+
+    const nav = location.state || {};
+    const contextId = nav.contextId || null;
+    const meetingId = nav.meetingId || null;
+    const channel = nav.channel || 'tab_audio';
+    const bridgeCall = nav.bridgeCall || null;
+    const isBridge = channel === 'phone_bridge' && !!bridgeCall;
+    const stateContext = nav.callContext || null;
+    const meetingInfo = nav.meeting || null;
+    const consentScript = nav.consentScript || DEFAULT_CONSENT_SCRIPT;
+    const briefCards = useMemo(() => (Array.isArray(nav.briefCards) ? nav.briefCards : []), [nav.briefCards]);
+    const channels = useMemo(() => (channel === 'mic' ? ['mixed'] : ['rep', 'prospect']), [channel]);
+
+    const [levelBus] = useState(() => createLevelBus());
+    const [clock] = useState(() => createCallClock());
+    const [policy] = useState(() => createCardPolicy());
 
     const [isListening, setIsListening] = useState(false);
-    const [callDuration, setCallDuration] = useState(0);
-    const [wavePhase, setWavePhase] = useState(0);
+    const [hasStarted, setHasStarted] = useState(false);
+    const [starting, setStarting] = useState(false);
+    const [startError, setStartError] = useState(null); // { reason }
+    const [infoNotice, setInfoNotice] = useState(null);
     const [transcript, setTranscript] = useState([]);
-    const [suggestionHistory, setSuggestionHistory] = useState([]);
-    const [latestObjection, setLatestObjection] = useState(null);
-    const [dealHealthScore, setDealHealthScore] = useState(50);
-    const [dealStage, setDealStage] = useState('discovery');
-    const [coachingTip, setCoachingTip] = useState(null);
-    const [spinStage, setSpinStage] = useState('situation');
-    
-    const [reasoningData, setReasoningData] = useState(null);
-    const [showReasoning, setShowReasoning] = useState(false);
+    const [contextState, setContextState] = useState('checking'); // checking | valid | expired | unauthorized | unknown
+    const [fetchedContext, setFetchedContext] = useState(null);
+    const [bridgeState, setBridgeState] = useState(bridgeCall);
+    const [bridgeConnection, setBridgeConnection] = useState('idle');
+    const [openBriefCard, setOpenBriefCard] = useState(null);
+    const [ending, setEnding] = useState(false);
 
-    // Zustand copilot store integration
+    const transcriptSeqRef = useRef(0);
+    const prospectTurnsRef = useRef(0);
+    const insightCountRef = useRef(0);
+    const dealHealthRef = useRef(null);
+    const coachModeRef = useRef(false);
+    const consentRef = useRef(nav.consentMode || null);
+    const expiryTimerRef = useRef(null);
+    const nudgeTimerRef = useRef(null);
+    const askTimerRef = useRef(null);
+    const resetTimerRef = useRef(null);
+    const endRef = useRef(null);
+    const bridgeClientRef = useRef(null);
+    const bridgeCallLogRef = useRef(bridgeCall?.call_log_id ?? null);
+    const savedMeetingRef = useRef(null);
+
     const {
         isPopupVisible,
         setListening,
-        pushSuggestion,
-        setReasoningData: setStoreReasoningData,
+        setConnectionState: setStoreConnectionState,
+        syncFromCall,
         setExternalRefs,
-        resetCopilot,
+        dockToPanel,
+        setHud,
+        setStrip,
+        setFeatures,
+        setNudge,
+        setDealRecord,
+        setRoundTrip,
+        setAskPending,
+        setAskOpen,
+        setMeeting,
+        setBattlecards,
+        setControls,
+        setMeter,
+        pushSuggestion,
+        setNotice,
     } = useCopilotStore();
+    const dealRecord = useCopilotStore((s) => s.dealRecord);
+    const protocolVersion = useCopilotStore((s) => s.protocol);
 
-    const latestSuggestion = suggestionHistory.length > 0 ? suggestionHistory[suggestionHistory.length - 1] : null;
+    const callContext = stateContext || fetchedContext || {};
+    const title = meetingInfo?.title || callContext.client_name || 'Live meeting';
+    const subtitle = [meetingInfo?.prospect_name || callContext.client_name, meetingInfo?.company || callContext.client_industry].filter(Boolean).join(' · ');
 
+    const probeContext = useCallback(async () => {
+        if (!contextId) return 'expired';
+        try {
+            await apiFetch(`/call/context/${encodeURIComponent(contextId)}`);
+            return 'ok';
+        } catch (err) {
+            if (err?.status === 404) return 'expired';
+            if (err?.status === 401) return 'unauthorized';
+            return 'unreachable';
+        }
+    }, [contextId]);
+
+    const contextParam = encodeURIComponent(contextId || '');
+    const wsUrl = `${window.APP_WS_BASE}/ws/audio?context_id=${contextParam}`;
+    const finalizeUrl = `${window.APP_WS_BASE}/ws?context_id=${contextParam}`;
+    const protocolConfig = useMemo(() => ({ protocol: 2, channels, meetingId, intensity: nav.intensity || 'guided' }), [channels, meetingId, nav.intensity]);
+    const {
+        controller,
+        startRecording,
+        stopRecording,
+        endCall,
+        retryConnection,
+        connectionState,
+        connectionReason,
+    } = useAudioStream(wsUrl, { probe: probeContext, finalizeUrl, protocol: protocolConfig });
+
+    /* ── HUD plumbing ─────────────────────────────────── */
+    const syncHud = useCallback(() => setHud(policy.snapshot()), [policy, setHud]);
+
+    const scheduleExpiry = useCallback(() => {
+        clearTimeout(expiryTimerRef.current);
+        const remaining = policy.remainingMs();
+        if (remaining === null) return;
+        expiryTimerRef.current = setTimeout(() => {
+            if (policy.expire()) syncHud();
+            else scheduleExpiry();
+        }, remaining + 20);
+    }, [policy, syncHud]);
+
+    const showNudge = useCallback((nudge) => {
+        clearTimeout(nudgeTimerRef.current);
+        setNudge({ id: `${Date.now()}`, ...nudge });
+        nudgeTimerRef.current = setTimeout(() => setNudge(null), NUDGE_MS);
+    }, [setNudge]);
+
+    const markAsking = useCallback(() => {
+        clearTimeout(askTimerRef.current);
+        setAskPending(true);
+        askTimerRef.current = setTimeout(() => setAskPending(false), ASK_TIMEOUT_MS);
+    }, [setAskPending]);
+
+    const bridgeSend = (obj) => bridgeClientRef.current?.send(obj) ?? false;
+
+    const controls = useMemo(() => ({
+        whatToSay: (length) => {
+            const sent = isBridge ? bridgeSend({ type: 'what_to_say', ...(length ? { length } : {}) }) : controller.whatToSay(length);
+            if (sent) markAsking();
+            return sent;
+        },
+        ask: (question) => {
+            const sent = isBridge ? bridgeSend({ type: 'ask', question }) : controller.ask(question);
+            if (sent) markAsking();
+            return sent;
+        },
+        pin: (id) => {
+            if (policy.pin()) {
+                clearTimeout(expiryTimerRef.current);
+                if (isBridge) bridgeSend({ type: 'pin', id }); else controller.pin(id);
+                syncHud();
+            }
+        },
+        unpin: () => {
+            if (policy.unpin()) {
+                syncHud();
+                scheduleExpiry();
+            }
+        },
+        dismiss: () => {
+            if (policy.dismiss()) {
+                clearTimeout(expiryTimerRef.current);
+                syncHud();
+            }
+        },
+        dismissPinned: () => {
+            if (policy.dismissPinned()) syncHud();
+        },
+        restorePrevious: () => {
+            if (policy.restorePrevious()) {
+                syncHud();
+                scheduleExpiry();
+            }
+        },
+        feedback: (id, value) => (isBridge ? bridgeSend({ type: 'feedback', id, value }) : controller.feedback(id, value)),
+        snooze: (moment, ms) => {
+            policy.snooze(moment, ms);
+            if (isBridge) bridgeSend({ type: 'snooze', moment, ms }); else controller.snooze(moment, ms);
+            syncHud();
+        },
+        unsnooze: (moment) => {
+            policy.unsnooze(moment);
+            syncHud();
+        },
+        setIntensity: (value) => {
+            useCopilotStore.getState().setIntensity(value);
+            if (isBridge) bridgeSend({ type: 'set_intensity', value }); else controller.setIntensity(value);
+        },
+        hoverStart: () => {
+            policy.hoverStart();
+            clearTimeout(expiryTimerRef.current);
+            syncHud();
+        },
+        hoverEnd: () => {
+            policy.hoverEnd();
+            syncHud();
+            scheduleExpiry();
+        },
+        dismissNudge: () => {
+            clearTimeout(nudgeTimerRef.current);
+            useCopilotStore.getState().setNudge(null);
+        },
+        endCall: () => endRef.current?.(),
+    }), [controller, policy, syncHud, scheduleExpiry, markAsking, isBridge]);
+
+    useEffect(() => {
+        setControls(controls);
+        setMeter(levelBus);
+    }, [controls, levelBus, setControls, setMeter]);
+
+    useEffect(() => {
+        useCopilotStore.getState().setIntensity(nav.intensity || 'guided');
+        setMeeting(meetingInfo ? { title: meetingInfo.title, prospectName: meetingInfo.prospect_name, company: meetingInfo.company } : (callContext.client_name ? { title: callContext.client_name } : null));
+    }, [nav.intensity, meetingInfo, callContext.client_name, setMeeting]);
+
+    // Battlecards for "Open card": the ones the brief selected, then the full set for this meeting.
+    useEffect(() => {
+        const initial = [...briefCards, ...(Array.isArray(nav.battlecards) ? nav.battlecards : [])];
+        setBattlecards(initial);
+        if (!meetingId) return undefined;
+        let cancelled = false;
+        listBattlecards({ meeting_id: meetingId })
+            .then((list) => {
+                if (!cancelled && list.length) setBattlecards([...initial, ...list]);
+            })
+            .catch(() => {
+                // The brief's own cards are enough.
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [meetingId, briefCards, nav.battlecards, setBattlecards]);
+
+    /* ── Window lifecycle ─────────────────────────────── */
     const handlePopOut = async () => {
         const refs = await openCopilotWindow();
-        if (refs) {
-            setExternalRefs(refs.win, refs.container);
-            // Sync current state to the store
-            setListening(isListening);
-            if (latestSuggestion) {
-                pushSuggestion(latestSuggestion);
-            }
-            if (reasoningData) {
-                setStoreReasoningData(reasoningData);
-            }
-        }
+        if (refs) setExternalRefs(refs.win, refs.container);
     };
 
+    // Auto-open the copilot window when the page mounts (the Brief page usually opened it already).
+    const autoPopOut = useEffectEvent(() => {
+        if (!useCopilotStore.getState().isPopupVisible) handlePopOut();
+    });
+
     useEffect(() => {
-        // Auto-open copilot window when component mounts
-        if (!isPopupVisible) {
-            handlePopOut();
-        }
+        // StrictMode replays mount → unmount → mount in development: the replay cancels
+        // the pending reset, so the window the Brief page opened survives. A real unmount resets.
+        clearTimeout(resetTimerRef.current);
+        autoPopOut();
         return () => {
-            resetCopilot();
+            resetTimerRef.current = setTimeout(() => useCopilotStore.getState().resetCopilot(), 0);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetCopilot]);
-    
-    // MICROPHONE WEBSOCKET STREAM
-    const wsUrl = contextId ? `${window.APP_WS_BASE}/ws/audio?context_id=${contextId}` : `${window.APP_WS_BASE}/ws/audio`;
-    const { startRecording, stopRecording, isRecording } = useAudioStream(wsUrl);
+    }, []);
 
-    // Call Timer
+    // Validate the briefing once (it expires after four hours).
     useEffect(() => {
-        let interval;
-        if (isListening) {
-            interval = setInterval(() => setCallDuration(d => d + 1), 1000);
-        }
-        return () => clearInterval(interval);
-    }, [isListening]);
+        if (!contextId) return undefined;
+        let cancelled = false;
+        apiFetch(`/call/context/${encodeURIComponent(contextId)}`)
+            .then((data) => {
+                if (cancelled) return;
+                setContextState('valid');
+                if (data?.context && typeof data.context === 'object') setFetchedContext(data.context);
+            })
+            .catch((err) => {
+                if (cancelled) return;
+                setContextState(err?.status === 404 ? 'expired' : err?.status === 401 ? 'unauthorized' : 'unknown');
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [contextId]);
 
-    // Waveform Animation
-    useEffect(() => {
-        let interval;
-        if (isListening) {
-            interval = setInterval(() => setWavePhase(p => p + 1), 100);
-        }
-        return () => clearInterval(interval);
-    }, [isListening]);
+    // Timers owned by this page.
+    useEffect(() => () => {
+        clearTimeout(expiryTimerRef.current);
+        clearTimeout(nudgeTimerRef.current);
+        clearTimeout(askTimerRef.current);
+        clock.dispose();
+        bridgeClientRef.current?.close();
+    }, [clock]);
 
-    const waveHeights = Array.from({ length: 32 }, (_, i) =>
-        isListening ? Math.abs(Math.sin((i + wavePhase) * 0.3)) * 0.8 + 0.1 : 0.1
-    );
-
-    // Auto-scroll transcript
-    useEffect(() => {
-        if (transcriptEndRef.current) {
-            transcriptEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [transcript]);
-
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    };
-
-    const handleStart = async () => {
-        const success = await startRecording({
-            onTranscript: (t) => setTranscript((prev) => [...prev, t]),
-            onAiAnalysis: (analysis) => {
-                const { spin_stage, objection_type, suggested_response, coaching_tip, next_best_question } = analysis;
-
-                if (spin_stage) setSpinStage(spin_stage);
-
-                if (objection_type && objection_type !== 'none') {
-                    setLatestObjection({ type: objection_type });
-                    setTimeout(() => setLatestObjection(null), 8000);
-                }
-
-                if (analysis.deal_signal) {
-                    setDealHealthScore(prev => {
-                        let change = 0;
-                        if (analysis.deal_signal === 'positive') change = 10;
-                        else if (analysis.deal_signal === 'neutral') change = 2;
-                        else if (analysis.deal_signal === 'negative') change = -8;
-                        const target = Math.min(100, Math.max(0, prev + change));
-                        return Math.round(prev * 0.4 + target * 0.6);
-                    });
-                }
-
-                if (suggested_response) {
-                    const newSuggestion = {
-                        id: Date.now(),
-                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                        text: suggested_response,
-                        strategy: analysis.strategy_used || coaching_tip || "Guidance",
-                        persuasion: analysis.intent ? `Intent: ${analysis.intent}` : (analysis.persuasion_strategy || "Strategy"),
-                        type: analysis.topic || objection_type || 'none',
-                        nextQuestion: next_best_question,
-                        // V3 fields
-                        hiddenConcern: analysis.hidden_concern,
-                        conversationGoal: analysis.conversation_goal,
-                        responseType: analysis.response_type,
-                        reasoningChain: analysis.reasoning_chain,
-                        qualityScores: analysis.quality_scores,
-                    };
-                    setSuggestionHistory(prev => [...prev, newSuggestion].slice(-10));
-                    pushSuggestion(newSuggestion);
-                }
-
-                // V3: Store reasoning data
-                if (analysis.reasoning_chain || analysis.hidden_concern) {
-                    const rData = {
-                        hiddenConcern: analysis.hidden_concern,
-                        conversationGoal: analysis.conversation_goal,
-                        responseType: analysis.response_type,
-                        reasoningChain: analysis.reasoning_chain,
-                        qualityScores: analysis.quality_scores,
-                        coachingTip: analysis.coaching_tip,
-                    };
-                    setReasoningData(rData);
-                    setStoreReasoningData(rData);
-                }
-
-                if (analysis.deal_stage) setDealStage(analysis.deal_stage);
-                if (analysis.coaching_tip) setCoachingTip(analysis.coaching_tip);
-            }
+    /* ── Stream callbacks (read state through refs / the store, never closures) ── */
+    const handleTranscript = (t) => {
+        if (!t || typeof t.text !== 'string' || !t.text.trim()) return;
+        if (t.is_final === false) return;
+        transcriptSeqRef.current += 1;
+        const entry = {
+            id: transcriptSeqRef.current,
+            text: t.text.trim(),
+            speaker: t.speaker || 'prospect',
+            channel: typeof t.channel === 'number' ? t.channel : null,
+            tStart: typeof t.t_start === 'number' ? t.t_start : null,
+        };
+        if (!isRepSpeaker(entry.speaker, entry.channel) && entry.speaker !== 'system') prospectTurnsRef.current += 1;
+        setTranscript((prev) => {
+            const next = [...prev, entry];
+            return next.length > MAX_TRANSCRIPT_ENTRIES ? next.slice(-MAX_TRANSCRIPT_ENTRIES) : next;
         });
-        if (success) {
-            setIsListening(true);
-            setListening(true);
-            if (!isPopupVisible) {
-                handlePopOut();
+    };
+
+    const acceptCard = (card, opts = {}) => {
+        if (!card) return;
+        const { accepted, reason } = policy.receiveCard(card, Date.now(), { intensity: useCopilotStore.getState().intensity, ...opts });
+        if (reason !== 'revision') {
+            if (accepted) insightCountRef.current += 1;
+        }
+        if (accepted) {
+            if (card.trigger === 'on_demand' || card.trigger === 'ask') {
+                clearTimeout(askTimerRef.current);
+                useCopilotStore.getState().setAskPending(false);
             }
+            syncHud();
+            scheduleExpiry();
+        } else if (reason === 'chip' || reason === 'intensity') {
+            syncHud();
         }
     };
 
-    const handleStop = () => {
-        stopRecording();
+    const handleAnalysis = (payload) => {
+        // The coach engine also emits a legacy aiAnalysis per card; only old servers need it.
+        if (coachModeRef.current) return;
+        const { suggestion, notice, dealScore, dealSignal } = mapAnalysis(payload, {
+            id: `${Date.now()}-${transcriptSeqRef.current}`,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        });
+        dealHealthRef.current = updateDealHealth(dealHealthRef.current, { dealScore, dealSignal });
+        if (suggestion) {
+            pushSuggestion(suggestion);
+            acceptCard(cardFromSuggestion(suggestion));
+        } else if (notice) {
+            setNotice(notice);
+            showNudge({ kind: 'info', text: notice.message });
+        }
+    };
+
+    const handleCoach = (raw) => acceptCard(mapCoachCard(raw, { receivedAt: new Date().toISOString() }));
+    const handleStrip = (raw) => setStrip(mapStrip(raw));
+    const handleMoment = (raw) => {
+        const m = mapMoment(raw);
+        if (!m) return;
+        policy.receiveMoment(m);
+        syncHud();
+    };
+    const handleMetrics = (metrics, nudges) => {
+        const list = mapNudges(nudges);
+        if (list.length) showNudge(list[0]);
+    };
+    const handleDealRecord = (record) => {
+        const mapped = mapDealRecord(record);
+        if (mapped) setDealRecord(mapped);
+    };
+    const handleNotice = (n) => {
+        if (!n?.text) return;
+        setInfoNotice(n.text);
+    };
+    const handleReady = (data) => {
+        const features = Array.isArray(data?.features) ? data.features : [];
+        coachModeRef.current = features.includes('coach');
+        setFeatures({ features, protocol: 2, engine: data?.engine || null });
+        controller.ping();
+    };
+    const handleProtocol = (version, reason) => {
+        setFeatures({ protocol: version });
+        if (version === 1 && reason === 'no_ready') {
+            coachModeRef.current = false;
+            setInfoNotice('This server runs the classic engine: tips arrive after each prospect turn and only the shared tab is heard.');
+        }
+    };
+    const handlePong = (rtt) => {
+        if (rtt !== null) setRoundTrip(rtt);
+    };
+    const handleSessionSaved = (data) => {
+        if (data?.meeting_id) savedMeetingRef.current = data.meeting_id;
+    };
+    const handleShareEnded = (reason) => {
         setIsListening(false);
         setListening(false);
+        clock.pause();
+        levelBus.reset();
+        setInfoNotice(reason === 'mic_ended' ? 'The microphone was disconnected — press Resume to continue.' : 'Tab sharing ended — press Resume to continue.');
+    };
+    const handleConnectionChange = (state) => setStoreConnectionState(state);
+
+    const streamCallbacks = {
+        onTranscript: handleTranscript,
+        onAiAnalysis: handleAnalysis,
+        onCoach: handleCoach,
+        onStrip: handleStrip,
+        onMoment: handleMoment,
+        onMetrics: handleMetrics,
+        onDealRecord: handleDealRecord,
+        onNotice: handleNotice,
+        onReady: handleReady,
+        onProtocol: handleProtocol,
+        onPong: handlePong,
+        onSessionSaved: handleSessionSaved,
+        onLevel: (rms) => levelBus.push(rms),
+        onEnded: handleShareEnded,
+        onConnectionChange: handleConnectionChange,
     };
 
-    const onExit = () => {
-        stopRecording();
-        navigate('/summary', { state: { dealHealthScore, suggestionHistory, callDuration } });
-    };
-    // V3: Format hidden concern for display
-    const formatLabel = (str) => {
-        if (!str) return '';
-        return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    /* ── Controls ─────────────────────────────────────── */
+    const handleStart = async (consentMode) => {
+        if (starting || isListening) return;
+        setStartError(null);
+        setInfoNotice(null);
+        if (!getAuthToken()) {
+            setStartError({ reason: 'session_expired' });
+            return;
+        }
+        if (consentMode) consentRef.current = consentMode;
+        setStarting(true);
+        levelBus.reset();
+        const firstStart = !hasStarted;
+        const result = await startRecording(streamCallbacks, { consent: consentRef.current || undefined });
+
+        if (!result.ok) {
+            let reason = result.reason;
+            if (reason === 'socket_rejected' || reason === 'socket_timeout') {
+                const verdict = await probeContext();
+                if (verdict === 'expired') reason = 'briefing_expired';
+                else if (verdict === 'unauthorized') reason = 'session_expired';
+            }
+            setStarting(false);
+            if (reason !== 'busy' && reason !== 'cancelled') setStartError({ reason });
+            if (reason === 'briefing_expired') setContextState('expired');
+            return;
+        }
+
+        setStarting(false);
+        setIsListening(true);
+        setHasStarted(true);
+        clock.start();
+        syncFromCall({ isListening: true, hasStarted: true });
+        if (firstStart && !useCopilotStore.getState().isPopupVisible) handlePopOut();
     };
 
-    // V3: Quality score bar color
-    const getScoreColor = (score) => {
-        if (score >= 0.8) return '#10b981';
-        if (score >= 0.5) return '#f59e0b';
-        return '#ef4444';
+    const handlePause = () => {
+        stopRecording({ finalize: false });
+        setIsListening(false);
+        setListening(false);
+        clock.pause();
+        levelBus.reset();
     };
+
+    const goToSummary = async ({ callId, savedMeetingId }) => {
+        const mid = savedMeetingId || savedMeetingRef.current || meetingId;
+        if (mid) {
+            try {
+                await endMeeting(mid, { call_log_id: callId ?? undefined });
+            } catch {
+                // The server's session hook already schedules the debrief; the page polls.
+            }
+            navigate(`/summary?meeting=${encodeURIComponent(mid)}`, { state: { callId: callId ?? null, callDuration: clock.elapsedSeconds() } });
+            return;
+        }
+        navigate('/summary', {
+            state: {
+                dealHealthScore: dealHealthRef.current,
+                insightCount: insightCountRef.current,
+                callDuration: clock.elapsedSeconds(),
+                prospectTurns: prospectTurnsRef.current,
+                contextId,
+                ...(callId !== null && callId !== undefined ? { callId } : {}),
+            },
+        });
+    };
+
+    const handleEndCall = async () => {
+        if (ending) return;
+        setEnding(true);
+        clock.pause();
+        levelBus.reset();
+        setIsListening(false);
+        setListening(false);
+        if (isBridge) {
+            try {
+                await hangupBridgeCall(bridgeState?.call_id || bridgeCall.call_id);
+            } catch {
+                // Already ended, or the carrier beat us to it.
+            }
+            // Give the server a moment to publish call_log_id.
+            const deadline = Date.now() + 4000;
+            while (bridgeCallLogRef.current === null && Date.now() < deadline) {
+                await new Promise((r) => setTimeout(r, 250));
+            }
+            bridgeClientRef.current?.close();
+            await goToSummary({ callId: bridgeCallLogRef.current });
+            return;
+        }
+        // Wait briefly for the server's saved CallLog id so the debrief can link it.
+        const { callId, meetingId: savedMeetingId } = await endCall({ waitMs: 2500 });
+        await goToSummary({ callId, savedMeetingId });
+    };
+
+    useEffect(() => {
+        endRef.current = handleEndCall;
+    });
+
+    /* ── Phone bridge: follow the events socket instead of capturing audio ── */
+    useEffect(() => {
+        if (!isBridge) return undefined;
+        const client = createBridgeEventsClient();
+        bridgeClientRef.current = client;
+        const token = getAuthToken();
+        client.connect(`${window.APP_WS_BASE}/api/copilot/bridge/calls/${encodeURIComponent(bridgeCall.call_id)}/events`, {
+            getProtocols: () => (token ? ['clozflow', `clozflow-auth.${token}`] : ['clozflow']),
+            callbacks: {
+                onConnectionChange: (state) => {
+                    setBridgeConnection(state);
+                    setStoreConnectionState(state);
+                },
+                onCallStatus: (call) => {
+                    if (!call) return;
+                    setBridgeState(call);
+                    if (call.call_log_id !== null && call.call_log_id !== undefined) bridgeCallLogRef.current = call.call_log_id;
+                    const live = call.status === 'connected';
+                    setIsListening(live);
+                    setListening(live);
+                    if (live) {
+                        setHasStarted(true);
+                        syncFromCall({ hasStarted: true });
+                        clock.start();
+                    } else {
+                        clock.pause();
+                    }
+                },
+                onTranscript: handleTranscript,
+                onAiAnalysis: handleAnalysis,
+                onCoach: (raw) => { coachModeRef.current = true; setFeatures({ features: ['coach', 'ask', 'what_to_say', 'feedback'], protocol: 2, engine: 'coach' }); handleCoach(raw); },
+                onStrip: handleStrip,
+                onMoment: handleMoment,
+                onMetrics: handleMetrics,
+                onDealRecord: handleDealRecord,
+                onNotice: handleNotice,
+                onSessionSaved: (data) => {
+                    handleSessionSaved(data);
+                    if (data?.call_id !== undefined && data?.call_id !== null) bridgeCallLogRef.current = data.call_id;
+                },
+                onServerError: (err) => {
+                    if (err?.code === 'stt_unavailable') setInfoNotice(`Speech-to-text dropped on the ${err.speaker === 'salesperson' ? 'your' : "prospect's"} side; the call continues.`);
+                },
+            },
+        });
+        return () => {
+            client.close();
+            bridgeClientRef.current = null;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isBridge, bridgeCall?.call_id]);
+
+    /* ── Hotkeys on the main document ── */
+    const onWhatToSay = useCallback(() => controls.whatToSay(), [controls]);
+    const onAsk = useCallback(() => setAskOpen(true), [setAskOpen]);
+    const onEscape = useCallback(() => {
+        const { askOpen, hud } = useCopilotStore.getState();
+        if (askOpen) {
+            setAskOpen(false);
+            return true;
+        }
+        if (hud.card) {
+            controls.dismiss();
+            return true;
+        }
+        return false;
+    }, [controls, setAskOpen]);
+    useHudHotkeys(typeof document !== 'undefined' ? document : null, { onWhatToSay, onAsk, onEscape });
+
+    /** Leaving mid-stream asks first, then ends the call properly. */
+    const leaveTo = (go) => {
+        if (ending) return; // End Call is already finishing and will open the Summary
+        if (isListening && !window.confirm('End the live session and leave this page? Guidance stops when you leave.')) return;
+        if (isBridge) bridgeClientRef.current?.close(); else stopRecording({ finalize: true });
+        go();
+    };
+
+    const openDashboardTab = (tab) => leaveTo(() => {
+        useDashboardStore.getState().setActiveTab(tab);
+        navigate('/dashboard');
+    });
+
+    if (!contextId) {
+        return <Navigate to="/wizard" replace />;
+    }
+
+    const status = statusOf({ isListening, hasStarted, connectionState: isBridge ? bridgeConnection : connectionState, bridge: isBridge ? bridgeState : null });
+    const briefingExpired = contextState === 'expired';
+    const lostReason = (isBridge ? bridgeConnection : connectionState) === 'failed' ? (connectionReason || 'unreachable') : null;
+    const showGate = !isBridge && !hasStarted && !briefingExpired && contextState !== 'unauthorized';
+
+    const displayName = user?.full_name || user?.username || user?.email?.split('@')[0] || 'Your account';
+    const initial = (user?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U').toUpperCase();
+    const secondaryLine = user?.email && user.email !== displayName ? user.email : '';
+
+    const bannerError = startError && startError.reason !== 'no_audio'
+        ? { reason: startError.reason, text: START_ERRORS[startError.reason] || START_ERRORS.capture_failed }
+        : briefingExpired && !lostReason
+            ? { reason: 'briefing_expired', text: START_ERRORS.briefing_expired }
+            : contextState === 'unauthorized'
+                ? { reason: 'session_expired', text: START_ERRORS.session_expired }
+                : null;
+
+    const renderRecoveryActions = (reason, { allowRetry = false } = {}) => (
+        <div className="lc-banner-actions">
+            {allowRetry && reason !== 'briefing_expired' && reason !== 'session_expired' && !isBridge && (
+                <button type="button" className="lc-banner-btn" onClick={() => retryConnection()}>
+                    <RefreshCw size={12} /> Retry
+                </button>
+            )}
+            {reason === 'session_expired' ? (
+                <button type="button" className="lc-banner-btn" onClick={() => leaveTo(() => navigate('/auth', { state: { view: 'login' } }))}>
+                    Sign in again
+                </button>
+            ) : (reason === 'briefing_expired' || reason === 'socket_rejected' || allowRetry) && (
+                <button type="button" className="lc-banner-btn" onClick={() => leaveTo(() => navigate(meetingId ? `/wizard/meetings/${encodeURIComponent(meetingId)}` : '/wizard'))}>
+                    {meetingId ? 'Back to the brief' : 'Back to the Wizard'}
+                </button>
+            )}
+        </div>
+    );
 
     return (
-        <div className="db-layout">
+        <div className="lc-layout">
             {/* ── SIDEBAR */}
-            <aside className="db-sidebar">
-                <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <img 
-                        src="/clozflow_gradient_logo.png" 
-                        alt="Clozflow" 
-                        style={{ height: '30px', width: 'auto', objectFit: 'contain', display: 'block' }} 
-                    />
-                </div>
+            <aside className="lc-sidebar">
+                <button type="button" className="lc-sidebar-logo" onClick={() => leaveTo(() => navigate('/'))} aria-label="ClozFlow home">
+                    <img src="/clozflow_gradient_logo.png" alt="" style={{ height: '30px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+                </button>
 
-                <nav className="db-nav">
-                    <button className="db-nav-item active"><Activity size={18} strokeWidth={2.5} /> Live Call</button>
-                    <button className="db-nav-item"><History size={18} /> History</button>
-                    <button className="db-nav-item"><BarChart3 size={18} /> Analytics</button>
-                    <button className="db-nav-item" onClick={() => { useDashboardStore.getState().setActiveTab('wizard'); navigate('/dashboard'); }}><Wand2 size={18} /> Wizard</button>
+                <nav className="lc-nav" aria-label="Live call navigation">
+                    <button type="button" className="lc-nav-item active" aria-current="page"><Activity size={18} strokeWidth={2.5} /> <span className="lc-nav-label">Live Call</span></button>
+                    <button type="button" className="lc-nav-item" onClick={() => leaveTo(() => navigate('/wizard'))}><Wand2 size={18} /> <span className="lc-nav-label">Wizard</span></button>
+                    <button type="button" className="lc-nav-item" onClick={() => openDashboardTab('history')}><History size={18} /> <span className="lc-nav-label">History</span></button>
+                    <button type="button" className="lc-nav-item" onClick={() => openDashboardTab('analytics')}><BarChart3 size={18} /> <span className="lc-nav-label">Analytics</span></button>
                 </nav>
 
-                <div className="db-user-section">
-                    <div className="db-user-info">
-                        <div className="db-user-avatar" style={{ background: 'var(--surface)', color: 'var(--text)', border: '1px solid var(--border)' }}>JR</div>
-                        <div className="db-user-details">
-                            <span className="db-user-name">Jake Rivera</span>
-                            <span className="db-user-role">Account Executive</span>
+                <div className="lc-user-section">
+                    <div className="lc-user-info" title={displayName}>
+                        <div className="lc-user-avatar">{initial}</div>
+                        <div className="lc-user-details">
+                            <span className="lc-user-name">{displayName}</span>
+                            {secondaryLine && <span className="lc-user-role">{secondaryLine}</span>}
                         </div>
                     </div>
-                    <button className="db-logout-btn interactive" onClick={() => navigate('/dashboard')}>
-                        <ArrowLeft size={14} strokeWidth={2.5} /> Exit Session
+                    <button type="button" className="lc-exit-btn interactive" onClick={() => leaveTo(() => navigate('/dashboard'))}>
+                        <ArrowLeft size={14} strokeWidth={2.5} /> <span className="lc-exit-label">Exit Session</span>
                     </button>
                 </div>
             </aside>
 
             {/* ── MAIN CONTENT */}
-            <main className="db-main" data-lenis-prevent>
-                {/* Header Strip */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                    <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.05em' }}>
-                            Intelligence Session
-                        </h1>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginTop: '0.6rem', fontSize: '0.875rem', color: 'var(--text-dim)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <Clock size={16} /> <span style={{ fontWeight: 600 }}>{formatTime(callDuration)}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: isListening ? '#10b981' : '#f43f5e' }} />
-                                <span style={{ fontWeight: 700, fontSize: '0.8125rem' }}>{isListening ? 'STREAMING ACTIVE' : 'WAITING TO START'}</span>
-                            </div>
+            <main className="lc-main" data-lenis-prevent>
+                <div className="lc-header">
+                    <div className="lc-header-title">
+                        <h1>{title}</h1>
+                        <div className="lc-header-meta">
+                            {subtitle && <span className="lc-header-sub">{subtitle}</span>}
+                            <span className="lc-header-item"><Clock size={15} /> <CallTimer clock={clock} /></span>
+                            <span className="lc-header-item" role="status">
+                                <span className={`lc-status-dot lc-status-dot--${status.tone}`} />
+                                <span style={{ fontWeight: 700, fontSize: '0.8125rem' }}>{status.label}</span>
+                            </span>
+                            <span className="lc-header-item lc-header-item--muted">
+                                {isBridge ? <Phone size={14} /> : <Mic size={14} />}
+                                {isBridge ? 'Phone bridge' : channel === 'mic' ? 'Microphone' : 'Tab audio + microphone'}
+                                {protocolVersion === 1 && ' · classic engine'}
+                            </span>
                         </div>
                     </div>
-                    
-                    {!isListening ? (
-                        <button className="btn btn-primary interactive shadow-sm" onClick={handleStart} style={{ padding: '0 2rem', height: '56px', borderRadius: '12px', fontSize: '1rem' }}>
-                            <Mic size={18} /> Start Strategic Mode
-                        </button>
-                    ) : (
-                        <div style={{ display: 'flex', gap: '1rem' }}>
-                            <button className="btn btn-outline interactive shadow-sm" onClick={handleStop} style={{ padding: '0 2rem', height: '56px', borderRadius: '12px', borderColor: '#fecaca', color: '#ef4444', fontSize: '1rem' }}>
-                                <Mic size={18} /> Stop Session
+
+                    <div className="lc-header-actions">
+                        {!isBridge && hasStarted && (isListening ? (
+                            <button className="lc-action-btn lc-action-btn--quiet" onClick={handlePause} disabled={ending}>
+                                <Pause size={16} /> Pause
                             </button>
-                            <button className="btn btn-primary interactive shadow-sm" onClick={onExit} style={{ padding: '0 2rem', height: '56px', borderRadius: '12px', fontSize: '1rem' }}>
-                                End Call
+                        ) : (
+                            <button className="lc-action-btn" onClick={() => handleStart()} disabled={starting || briefingExpired || ending} aria-busy={starting}>
+                                <Mic size={16} /> {starting ? 'Starting…' : 'Resume'}
                             </button>
-                        </div>
-                    )}
+                        ))}
+                        {!isPopupVisible && (
+                            <button type="button" className="lc-action-btn lc-action-btn--quiet" onClick={handlePopOut} title="Open the floating copilot window">
+                                <ExternalLink size={15} /> Pop out
+                            </button>
+                        )}
+                        {(hasStarted || isBridge) && (
+                            <button className="lc-action-btn lc-action-btn--end" onClick={handleEndCall} disabled={ending} aria-busy={ending}>
+                                {ending ? 'Saving…' : isBridge ? 'Hang up' : 'End & debrief'}
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                <div className="db-content-grid">
-                    {/* LEFT PANEL */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', minHeight: 0 }}>
-                        {/* THE WAVEFORM CARD */}
-                        <div className="card" style={{ padding: '2rem' }}>
-                            <div className="db-panel-header" style={{ marginBottom: '1.75rem' }}>
-                                <span className="db-panel-title">Audio Stream</span>
-                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-dim)', padding: '0.3rem 0.75rem', borderRadius: '999px' }}>LIVE</div>
+                {(bannerError || lostReason || infoNotice || startError?.reason === 'no_audio') && (
+                    <div className="lc-banners">
+                        {lostReason && (
+                            <div className="lc-banner lc-banner--error" role="alert">
+                                <AlertTriangle size={16} />
+                                <span className="lc-banner-text">{CONNECTION_LOST[lostReason] || CONNECTION_LOST.unreachable}</span>
+                                {renderRecoveryActions(lostReason, { allowRetry: true })}
                             </div>
-                            <div className="db-waveform" style={{ height: '80px' }}>
-                                {waveHeights.map((h, i) => (
-                                    <div 
-                                        key={i} 
-                                        className="db-wave-bar" 
-                                        style={{ 
-                                            height: `${h * 100}%`, 
-                                            background: isListening ? 'var(--accent)' : 'var(--border)',
-                                            opacity: isListening ? (i % 2 === 0 ? 1 : 0.6) : 0.3
-                                        }} 
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* BRIEFING CARD */}
-                        <div className="card" style={{ padding: '2rem', flex: 1, minHeight: 0 }}>
-                            <div className="db-panel-header" style={{ marginBottom: '1.5rem' }}>
-                                <span className="db-panel-title">Prospect Context</span>
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                                <div style={{ background: 'var(--surface)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Client</span>
-                                    <div style={{ fontSize: '1.125rem', fontWeight: 800, marginTop: '0.25rem' }}>{callContext.client_name}</div>
-                                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>{callContext.client_industry} • {callContext.client_role}</div>
-                                </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
-                                    <div className="card shadow-sm" style={{ padding: '1rem', background: '#fafafa' }}>
-                                        <div style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}><Target size={16} strokeWidth={2.5} /></div>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>Defined Goal</div>
-                                        <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>{callContext.call_goal}</div>
-                                    </div>
-                                    <div className="card shadow-sm" style={{ padding: '1rem', background: '#fafafa' }}>
-                                        <div style={{ color: 'var(--accent-mid)', marginBottom: '0.5rem' }}><BrainCircuit size={16} strokeWidth={2.5} /></div>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>Product Pitch</div>
-                                        <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>{callContext.product_name}</div>
-                                        {callContext.product_price && (
-                                            <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem', fontWeight: 'bold' }}>Price: {callContext.product_price}</div>
-                                        )}
-                                        {callContext.product_specification && (
-                                            <div className="entry-text" style={{ fontSize: '0.8125rem', marginTop: '0.25rem' }}>Spec: {callContext.product_specification}</div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* MIDDLE PANEL - AI COACH */}
-                    <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                        <div className="db-panel-header" style={{ marginBottom: '2rem' }}>
-                            <span className="db-panel-title">Strategic Guidance</span>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                {!isPopupVisible && (
-                                    <button
-                                        className="btn-icon interactive"
-                                        onClick={handlePopOut}
-                                        title="Pop out copilot window"
-                                        style={{ 
-                                            background: 'rgba(255, 255, 255, 0.05)', 
-                                            border: '1px solid rgba(255, 255, 255, 0.1)', 
-                                            color: 'var(--text-dim)', 
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            padding: '6px',
-                                            borderRadius: '6px',
-                                            transition: 'all 0.15s ease',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                                            e.currentTarget.style.color = 'var(--text)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                                            e.currentTarget.style.color = 'var(--text-dim)';
-                                        }}
-                                    >
-                                        <ExternalLink size={14} />
-                                    </button>
+                        )}
+                        {startError?.reason === 'no_audio' && (
+                            <NoAudioGuide onRetry={() => handleStart()} onDismiss={() => setStartError(null)} busy={starting} />
+                        )}
+                        {bannerError && !lostReason && (
+                            <div className="lc-banner lc-banner--error" role="alert">
+                                <AlertTriangle size={16} />
+                                <span className="lc-banner-text">{bannerError.text}</span>
+                                {renderRecoveryActions(bannerError.reason)}
+                                {startError && (
+                                    <button type="button" className="lc-banner-dismiss" onClick={() => setStartError(null)} aria-label="Dismiss">×</button>
                                 )}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
-                                    <div className={isListening ? 'ai-ring' : ''} style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)' }} />
-                                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent)', letterSpacing: '0.05em' }}>V3 ENGINE</span>
-                                </div>
                             </div>
-                        </div>
-                        
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: (latestSuggestion && !isPopupVisible) ? 'flex-start' : 'center', textAlign: (latestSuggestion && !isPopupVisible) ? 'left' : 'center', padding: '0 1rem', minHeight: 0, overflowY: 'auto' }}>
-                            {isPopupVisible ? (
-                                <div className="animate-fade-in" style={{ color: 'var(--text-dim)', textAlign: 'center', padding: '2rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                                    <div style={{ marginBottom: '1.5rem', opacity: 0.3, color: 'var(--accent)' }}><ExternalLink size={48} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Copilot Popped Out</h4>
-                                    <p style={{ fontSize: '0.875rem', maxWidth: '260px', margin: '0 auto 1.5rem auto', lineHeight: 1.5 }}>
-                                        Strategic recommendations are showing in the external Picture-in-Picture window.
-                                    </p>
-                                    <button 
-                                        className="btn btn-outline interactive"
-                                        onClick={() => useCopilotStore.getState().dockToPanel()}
-                                        style={{ fontSize: '0.8125rem', padding: '0.5rem 1.25rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer' }}
-                                    >
-                                        Dock Back to Panel
-                                    </button>
+                        )}
+                        {infoNotice && (
+                            <div className="lc-banner lc-banner--warn" role="status">
+                                <Info size={16} />
+                                <span className="lc-banner-text">{infoNotice}</span>
+                                <button type="button" className="lc-banner-dismiss" onClick={() => setInfoNotice(null)} aria-label="Dismiss">×</button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {showGate && (
+                    <ConsentGate script={consentScript} onChoose={(mode) => handleStart(mode)} disabled={starting} channel={channel} />
+                )}
+
+                <div className="lc-content-grid lc-content-grid--hud">
+                    {/* LEFT: the now card */}
+                    <section className="card lc-card lc-hud-panel" aria-label="Copilot">
+                        {isPopupVisible ? (
+                            <div className="lc-hud-away">
+                                <ExternalLink size={36} strokeWidth={1.5} aria-hidden="true" />
+                                <h3>Showing in the floating window</h3>
+                                <p>Keep it over your meeting. The card, hotkeys and Ask box all work from there.</p>
+                                <button type="button" className="lc-action-btn lc-action-btn--quiet" onClick={dockToPanel}>Dock back here</button>
+                            </div>
+                        ) : (
+                            <CopilotHud compact={false} dark={false} meter={levelBus} />
+                        )}
+                    </section>
+
+                    {/* RIGHT: coverage, deal cards, transcript */}
+                    <section className="lc-right-column">
+                        <DealStrip record={dealRecord} />
+
+                        {briefCards.length > 0 && (
+                            <div className="card lc-card lc-brief-cards">
+                                <div className="lc-panel-header">
+                                    <span className="lc-panel-title"><BookOpen size={12} /> Cards for this deal</span>
+                                    <span className="lc-deal-strip__count">{briefCards.length}</span>
                                 </div>
-                            ) : !isListening ? (
-                                <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
-                                    <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><Zap size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Reasoning Engine Standby</h4>
-                                    <p style={{ fontSize: '0.9375rem', maxWidth: '300px', margin: '0 auto' }}>V3 reasoning-first analysis will appear here once the session begins.</p>
+                                <div className="lc-brief-cards__row">
+                                    {briefCards.map((c) => (
+                                        <button
+                                            key={c.id}
+                                            type="button"
+                                            className={`lc-brief-card ${openBriefCard === c.id ? 'lc-brief-card--open' : ''}`}
+                                            onClick={() => setOpenBriefCard(openBriefCard === c.id ? null : c.id)}
+                                            aria-expanded={openBriefCard === c.id}
+                                        >
+                                            <span className="lc-brief-card__dot" style={{ background: c.accent }} aria-hidden="true" />
+                                            {c.title}
+                                        </button>
+                                    ))}
                                 </div>
-                            ) : !latestSuggestion ? (
-                                <div className="animate-fade-in" style={{ color: 'var(--text-dim)' }}>
-                                    <div style={{ marginBottom: '1.5rem', opacity: 0.3 }}><BrainCircuit size={64} strokeWidth={1.5} /></div>
-                                    <h4 style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: 800 }}>Reasoning Engine Active...</h4>
-                                </div>
-                            ) : (
-                                <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                    {/* V3: Hidden Concern + Goal Badges */}
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                        {latestObjection?.type && (
-                                            <div className="v3-badge v3-badge--alert">
-                                                {latestObjection.type.toUpperCase()} DETECTED
-                                            </div>
-                                        )}
-                                        {reasoningData?.hiddenConcern && (
-                                            <div className="v3-badge v3-badge--concern">
-                                                <Shield size={12} />
-                                                {formatLabel(reasoningData.hiddenConcern)}
-                                            </div>
-                                        )}
-                                        {reasoningData?.conversationGoal && (
-                                            <div className="v3-badge v3-badge--goal">
-                                                <Target size={12} />
-                                                {formatLabel(reasoningData.conversationGoal)}
-                                            </div>
-                                        )}
-                                        {reasoningData?.responseType && (
-                                            <div className="v3-badge v3-badge--type">
-                                                <Lightbulb size={12} />
-                                                {formatLabel(reasoningData.responseType)}
-                                            </div>
-                                        )}
+                                {openBriefCard && (
+                                    <div className="lc-brief-card__detail">
+                                        <BattlecardDetail card={briefCards.find((c) => c.id === openBriefCard)} showTriggers={false} />
                                     </div>
-
-                                    {/* Main Response */}
-                                    <p style={{ fontSize: '1.6rem', fontWeight: 800, lineHeight: 1.35, color: 'var(--text)', letterSpacing: '-0.03em' }}>
-                                        "{latestSuggestion.text}"
-                                    </p>
-
-                                    {/* Next Question */}
-                                    {latestSuggestion.nextQuestion && (
-                                        <div className="v3-next-move">
-                                            <TrendingUp size={20} color="var(--accent)" strokeWidth={2.5} />
-                                            <div>
-                                                <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>Next Strategic Move</div>
-                                                <div style={{ fontSize: '0.875rem', color: 'var(--text-dim)', marginTop: '0.25rem', lineHeight: 1.4 }}>Ask: "{latestSuggestion.nextQuestion}"</div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* V3: Coaching Tip */}
-                                    {reasoningData?.coachingTip && (
-                                        <div className="v3-coaching-tip">
-                                            <MessageSquare size={14} />
-                                            <span>{reasoningData.coachingTip}</span>
-                                        </div>
-                                    )}
-
-                                    {/* V3: Reasoning Chain Toggle */}
-                                    <button 
-                                        className="v3-reasoning-toggle"
-                                        onClick={() => setShowReasoning(!showReasoning)}
-                                    >
-                                        <Eye size={14} />
-                                        <span>AI Reasoning</span>
-                                        {showReasoning ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                                    </button>
-
-                                    {showReasoning && reasoningData?.reasoningChain && (
-                                        <div className="v3-reasoning-panel animate-fade-in">
-                                            <div className="v3-reasoning-item">
-                                                <span className="v3-reasoning-label">Protecting</span>
-                                                <span className="v3-reasoning-value">{formatLabel(reasoningData.reasoningChain.what_are_they_protecting)}</span>
-                                            </div>
-                                            <div className="v3-reasoning-item">
-                                                <span className="v3-reasoning-label">Worried About</span>
-                                                <span className="v3-reasoning-value">{formatLabel(reasoningData.reasoningChain.what_are_they_worried_about)}</span>
-                                            </div>
-                                            <div className="v3-reasoning-item">
-                                                <span className="v3-reasoning-label">Missing Info</span>
-                                                <span className="v3-reasoning-value">{reasoningData.reasoningChain.what_information_am_i_missing}</span>
-                                            </div>
-                                            <div className="v3-reasoning-item">
-                                                <span className="v3-reasoning-label">Diagnose First?</span>
-                                                <span className="v3-reasoning-value">{reasoningData.reasoningChain.should_i_diagnose_first ? 'Yes' : 'No'}</span>
-                                            </div>
-
-                                            {/* V3: Quality Scores */}
-                                            {reasoningData.qualityScores && (
-                                                <div className="v3-quality-scores">
-                                                    <span className="v3-reasoning-label" style={{ marginBottom: '0.5rem', display: 'block' }}>Quality Scores</span>
-                                                    {Object.entries(reasoningData.qualityScores).map(([key, value]) => (
-                                                        <div key={key} className="v3-score-row">
-                                                            <span className="v3-score-label">{formatLabel(key)}</span>
-                                                            <div className="v3-score-bar-bg">
-                                                                <div 
-                                                                    className="v3-score-bar-fill" 
-                                                                    style={{ 
-                                                                        width: `${(value || 0) * 100}%`,
-                                                                        background: getScoreColor(value || 0),
-                                                                    }} 
-                                                                />
-                                                            </div>
-                                                            <span className="v3-score-value">{Math.round((value || 0) * 100)}%</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* RIGHT PANEL - TRANSCRIPT */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', minHeight: 0 }}>
-                        <div className="card" style={{ flex: 1, padding: '2rem', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                            <div className="db-panel-header" style={{ marginBottom: '1.5rem' }}>
-                                <span className="db-panel-title">Live Transcription</span>
+                                )}
                             </div>
-                            <div className="db-transcript-scroll" style={{ flex: 1, minHeight: 0 }} data-lenis-prevent>
-                               {!isListening ? (
-                                   <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
-                                       Waiting for stream...
-                                   </div>
-                               ) : transcript.length === 0 ? (
-                                   <div className="animate-fade-in" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', fontSize: '0.875rem', fontStyle: 'italic' }}>
-                                       Listening...
-                                   </div>
-                               ) : (
-                                   <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column' }}>
-                                       {transcript.map((msg, i) => (
-                                           <div key={i} className="transcript-entry prospect">
-                                               <div className="entry-tag">Prospect</div>
-                                               <p className="entry-text">{msg.text}</p>
-                                           </div>
-                                       ))}
-                                       <div ref={transcriptEndRef} />
-                                   </div>
-                               )}
-                            </div>
+                        )}
+
+                        <div className="card lc-card lc-transcript-card">
+                            <TranscriptList entries={transcript} hasStarted={hasStarted} isListening={isListening} />
                         </div>
-                    </div>
+                    </section>
                 </div>
             </main>
         </div>

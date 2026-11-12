@@ -176,3 +176,17 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+/* Keyboard focus (options are focusable for arrow-key navigation) */
+.custom-dropdown-item:focus {
+  outline: none;
+}
+.custom-dropdown-item:focus-visible {
+  outline: 2px solid var(--accent, #1e40af);
+  outline-offset: -2px;
+  background: #f3f4f6;
+}
+.custom-dropdown-trigger:focus-visible {
+  outline: 2px solid var(--accent, #1e40af);
+  outline-offset: 2px;
+}

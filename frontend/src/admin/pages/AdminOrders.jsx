@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   ShoppingBag,
   Download,
@@ -7,38 +7,24 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
+import { formatServerDateTime } from '../../lib/dates';
+import { useAdminQuery } from '../services/useAdminQuery';
 import StatusBadge from '../components/StatusBadge';
 import EmptyState from '../components/EmptyState';
 
 export default function AdminOrders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchOrders = async () => {
-    setLoading(true);
-    try {
-      const res = await adminApi.getOrders({
-        status: statusFilter,
-        page,
-        pageSize: 25
-      });
-      setOrders(res.items || []);
-      setTotal(res.total || 0);
-      setTotalPages(res.total_pages || 1);
-    } catch (err) {
-      console.error('Failed to load orders:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchOrders();
-  }, [page, statusFilter]);
+  const query = useAdminQuery(JSON.stringify([statusFilter, page]), () => adminApi.getOrders({
+    status: statusFilter,
+    page,
+    pageSize: 25
+  }));
+  const orders = query.data?.items || [];
+  const total = query.data?.total || 0;
+  const totalPages = query.data?.total_pages || 1;
+  const loading = query.loading;
 
   const handleExport = () => {
     adminApi.downloadExport('orders').catch((err) => alert(err.message));
@@ -79,8 +65,14 @@ export default function AdminOrders() {
             </div>
           </div>
 
+          {query.error && (
+            <div role="alert" style={{ margin: '0 0 16px', padding: '12px 16px', borderRadius: '10px', backgroundColor: 'var(--admin-danger-dim)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#f87171', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+              <span>{query.error}</span>
+              <button type="button" className="admin-btn" onClick={query.reload}>Retry</button>
+            </div>
+          )}
           <div className="admin-table-container">
-            {loading ? (
+            {loading && orders.length === 0 ? (
               <div style={{ padding: '48px', display: 'flex', justifyContent: 'center' }}>
                 <Loader2 size={28} style={{ animation: 'spin 1s linear infinite', color: 'var(--admin-accent)' }} />
               </div>
@@ -111,7 +103,7 @@ export default function AdminOrders() {
                       <td><StatusBadge status={o.status} /></td>
                       <td style={{ textTransform: 'capitalize' }}>{o.provider}</td>
                       <td style={{ fontSize: '12px' }}>
-                        {o.created_at ? new Date(o.created_at).toLocaleString() : '—'}
+                        {formatServerDateTime(o.created_at)}
                       </td>
                     </tr>
                   ))}

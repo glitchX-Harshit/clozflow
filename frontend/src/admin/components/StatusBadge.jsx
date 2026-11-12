@@ -1,4 +1,4 @@
-export default function StatusBadge({ status, type = 'status' }) {
+export default function StatusBadge({ status }) {
   if (!status) return <span className="admin-badge admin-badge-canceled">—</span>;
   
   const s = String(status).toLowerCase();
@@ -18,7 +18,7 @@ export default function StatusBadge({ status, type = 'status' }) {
 
   return (
     <span className={`admin-badge ${badgeClass}`}>
-      {status.replace(/_/g, ' ')}
+      {String(status).replace(/_/g, ' ')}
     </span>
   );
 }

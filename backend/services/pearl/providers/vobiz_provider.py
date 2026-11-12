@@ -1,6 +1,13 @@
+import logging
 import os
 import httpx
 from typing import Optional, Dict, Any
+from urllib.parse import quote
+
+from ..carrier_auth import carrier_query, public_base_url
+
+logger = logging.getLogger(__name__)
+
 
 class VobizTelephonyProvider:
     """
@@ -40,6 +47,7 @@ class VobizTelephonyProvider:
         Initiate an outbound call via Vobiz API.
         Vobiz hits the answer_url upon pickup which serves VobizXML with <Stream> tag
         connecting to the Pearl WebSocket endpoint for bidirectional audio AI.
+        ``custom_field`` is the Pearl call id; the callback URLs carry its per-call token.
         """
         if not self.auth_id or not self.auth_secret:
             return {
@@ -54,6 +62,15 @@ class VobizTelephonyProvider:
                 "error": "Vobiz caller ID (VOBIZ_CALLER_ID) is required but missing."
             }
 
+        # Callbacks must reach this server. There is deliberately no default host: a
+        # fallback URL would send call events (and their tokens) to someone else.
+        public_url = public_base_url()
+        if not public_url:
+            return {
+                "success": False,
+                "error": "PEARL_PUBLIC_URL is not configured; Vobiz cannot reach the answer/hangup webhooks."
+            }
+
         # Normalize target number
         clean_to = to_number.strip()
         if not clean_to.startswith("+") and not clean_to.startswith("91") and len(clean_to) == 10:
@@ -61,10 +78,9 @@ class VobizTelephonyProvider:
         elif not clean_to.startswith("+"):
             clean_to = f"+{clean_to}"
 
-        # Resolve public answer webhook URL
-        public_url = os.getenv("PEARL_PUBLIC_URL", "https://circle-riverbank-mumbling.ngrok-free.dev").rstrip("/")
-        answer_url = f"{public_url}/api/pearl/vobiz/answer?call_id={custom_field}"
-        hangup_url = f"{public_url}/api/pearl/vobiz/events?call_id={custom_field}"
+        query = carrier_query(custom_field)
+        answer_url = f"{public_url}/api/pearl/vobiz/answer?{query}"
+        hangup_url = f"{public_url}/api/pearl/vobiz/events?{query}"
 
         url = f"{self.base_url}/api/v1/Account/{self.auth_id}/Call/"
         payload = {
@@ -76,8 +92,7 @@ class VobizTelephonyProvider:
             "hangup_method": "POST"
         }
 
-        print(f"[Vobiz API] Initiating call to {clean_to} from {caller} (call_id: {custom_field})")
-        print(f"[Vobiz API] Answer URL: {answer_url}")
+        logger.info("[Vobiz API] Initiating call %s", str(custom_field)[:8])
 
         async with httpx.AsyncClient(timeout=12.0) as client:
             try:
@@ -91,7 +106,7 @@ class VobizTelephonyProvider:
                 if response.status_code in (200, 201):
                     data = response.json()
                     provider_call_id = data.get("request_uuid") or data.get("call_uuid") or data.get("api_id")
-                    print(f"[Vobiz API] Call queued successfully. Provider Call ID: {provider_call_id}")
+                    logger.info("[Vobiz API] Call %s queued by carrier", str(custom_field)[:8])
                     return {
                         "success": True,
                         "provider_call_id": provider_call_id,
@@ -99,8 +114,8 @@ class VobizTelephonyProvider:
                         "raw": data
                     }
                 else:
-                    err_msg = f"Vobiz HTTP {response.status_code}: {response.text}"
-                    print(f"[Vobiz API] Error: {err_msg}")
+                    err_msg = f"Vobiz HTTP {response.status_code}: {response.text[:300]}"
+                    logger.warning("[Vobiz API] Call %s rejected: HTTP %s", str(custom_field)[:8], response.status_code)
                     return {
                         "success": False,
                         "error": err_msg,
@@ -109,18 +124,30 @@ class VobizTelephonyProvider:
 
             except httpx.RequestError as exc:
                 err_msg = f"Vobiz connection error: {exc}"
-                print(f"[Vobiz API] Request Exception: {err_msg}")
+                logger.warning("[Vobiz API] Request exception: %s", exc)
                 return {
                     "success": False,
                     "error": err_msg
                 }
             except Exception as exc:
                 err_msg = f"Vobiz unexpected error: {exc}"
-                print(f"[Vobiz API] Exception: {err_msg}")
+                logger.warning("[Vobiz API] Exception: %s", exc)
                 return {
                     "success": False,
                     "error": err_msg
                 }
+
+    async def hangup_call(self, provider_call_id: str) -> Dict[str, Any]:
+        """Best-effort hangup / cancel of a live or ringing call."""
+        if not self.auth_id or not self.auth_secret or not provider_call_id:
+            return {"success": False, "error": "Vobiz credentials or call id missing."}
+        url = f"{self.base_url}/api/v1/Account/{self.auth_id}/Call/{quote(str(provider_call_id), safe='')}/"
+        async with httpx.AsyncClient(timeout=6.0) as client:
+            try:
+                response = await client.delete(url, headers=self._headers(), auth=(self.auth_id, self.auth_secret))
+                return {"success": response.status_code in (200, 202, 204), "status_code": response.status_code}
+            except Exception as exc:
+                return {"success": False, "error": str(exc)}
 
     async def get_call_status(self, provider_call_id: str) -> Dict[str, Any]:
         """Query live status of a call from Vobiz API."""

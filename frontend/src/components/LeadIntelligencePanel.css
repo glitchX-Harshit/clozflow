@@ -986,3 +986,36 @@
         display: none !important;
     }
 }
+
+/* ── Inline failure with Retry ───────────────────────────────────── */
+.li-panel-error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    color: #b91c1c;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.li-panel-error-retry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.li-toggle-btn:focus-visible,
+.li-header-close:focus-visible,
+.li-suggestion-chip:focus-visible,
+.li-lead-action-btn:focus-visible,
+.li-btn:focus-visible,
+.li-discover-btn:focus-visible,
+.li-chat-send-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}

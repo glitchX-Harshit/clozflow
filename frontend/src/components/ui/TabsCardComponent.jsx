@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
 import './TabsCardComponent.css';
@@ -71,7 +71,7 @@ export default function TabsCardComponent() {
 
                                 <AnimatePresence initial={false}>
                                     {isSelected && (
-                                        <motion.p
+                                        <Motion.p
                                             className="tabs-item-desc"
                                             initial={{ opacity: 0, height: 0 }}
                                             animate={{ opacity: 1, height: 'auto' }}
@@ -83,7 +83,7 @@ export default function TabsCardComponent() {
                                             }}
                                         >
                                             {tab.description}
-                                        </motion.p>
+                                        </Motion.p>
                                     )}
                                 </AnimatePresence>
 
@@ -117,7 +117,7 @@ export default function TabsCardComponent() {
                 <div className="tabs-card-image-panel">
                     <div className="tabs-image-viewport">
                         <AnimatePresence mode="wait">
-                            <motion.div
+                            <Motion.div
                                 key={activeTab.id}
                                 className="tabs-image-inner"
                                 initial={{ opacity: 0, scale: 0.98 }}
@@ -144,7 +144,7 @@ export default function TabsCardComponent() {
                                         <ArrowRight size={14} />
                                     </button>
                                 </div>
-                            </motion.div>
+                            </Motion.div>
                         </AnimatePresence>
                     </div>
                 </div>

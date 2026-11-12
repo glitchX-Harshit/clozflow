@@ -5,10 +5,57 @@
 
 const API_BASE = typeof window !== 'undefined' && typeof window.APP_API_BASE === 'string'
   ? window.APP_API_BASE
-  : (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8100' : '');
+  : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
+
+const ADMIN_TOKEN_KEY = 'admin_token';
+
+const readStorage = (key) => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * The admin console keeps its own session (`admin_token`, written by the admin
+ * sign-in) so signing in here no longer replaces the customer app's `token`.
+ * Without one it falls back to the customer session (an admin account signed
+ * into the customer app goes straight in).
+ */
+export function getAdminToken() {
+  return readStorage(ADMIN_TOKEN_KEY) || readStorage('token') || '';
+}
+
+export function setAdminToken(token) {
+  try {
+    localStorage.setItem(ADMIN_TOKEN_KEY, token);
+  } catch {
+    // Storage blocked: the admin session lasts for this page only.
+  }
+}
+
+/** Forget the admin-console session only. */
+export function clearAdminToken() {
+  try {
+    localStorage.removeItem(ADMIN_TOKEN_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+/** Admin "Log out": ends the console's own session, or the customer session it was borrowing. */
+export function clearAdminSession() {
+  try {
+    if (localStorage.getItem(ADMIN_TOKEN_KEY)) localStorage.removeItem(ADMIN_TOKEN_KEY);
+    else localStorage.removeItem('token');
+  } catch {
+    // ignore
+  }
+}
 
 function getAuthHeaders() {
-  const token = localStorage.getItem('token');
+  const token = getAdminToken();
   const headers = {
     'Content-Type': 'application/json'
   };
@@ -206,7 +253,7 @@ export const adminApi = {
 
   // CSV Export Trigger
   downloadExport: async (resource) => {
-    const token = localStorage.getItem('token');
+    const token = getAdminToken();
     const res = await fetch(`${API_BASE}/api/admin/export/${resource}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -223,6 +270,7 @@ export const adminApi = {
     document.body.appendChild(a);
     a.click();
     a.remove();
-    window.URL.revokeObjectURL(url);
+    // Revoking immediately can cancel the download in some browsers.
+    setTimeout(() => window.URL.revokeObjectURL(url), 30000);
   }
 };

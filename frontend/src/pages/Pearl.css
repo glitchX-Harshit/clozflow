@@ -105,12 +105,22 @@
   border: 1px solid #bbf7d0;
 }
 
-.pearl-badge-status.dialing, 
-.pearl-badge-status.preparing,
-.pearl-badge-status.connecting {
+.pearl-badge-status.dialing {
   background: #fffbeb;
   color: #b45309;
   border: 1px solid #fde68a;
+}
+
+.pearl-badge-status.failed {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.pearl-badge-status.ended {
+  background: #f4f4f5;
+  color: #3f3f46;
+  border: 1px solid #e4e4e7;
 }
 
 .status-ping {
@@ -168,6 +178,13 @@
 
 .banner-action-btn:hover {
   background: #fee2e2;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 /* ══════════════════════════════════════════════════
@@ -323,15 +340,41 @@
   border-radius: 4px;
 }
 
-.pearl-dynamic-import-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.85rem 1.15rem;
-  background: var(--surface-2, #f4f4f5);
-  border: 1px solid var(--border, #e4e4e7);
-  border-radius: 7px;
-  font-size: 0.82rem;
+.pearl-clean-input-wrap.has-error {
+  border-color: #f87171;
+}
+
+.pearl-clean-input-wrap.has-error:focus-within {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px #dc2626;
+}
+
+/* Field helper text (phone validation, load errors) */
+.pearl-field-hint {
+  display: block;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-dim, #71717a);
+  margin-top: 0.1rem;
+}
+
+.pearl-field-hint.is-error {
+  color: #b91c1c;
+}
+
+.pearl-field-hint.is-valid {
+  color: #166534;
+}
+
+.pearl-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 650;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .banner-text {
@@ -349,22 +392,40 @@
   color: var(--text-dim, #71717a);
 }
 
-.pill-action-btn {
-  padding: 0.35rem 0.85rem;
-  background: #ffffff;
-  border: 1px solid #d4d4d8;
-  border-radius: 6px;
-  font-size: 0.76rem;
-  font-weight: 650;
-  color: var(--text, #09090b);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
+/* Saved-agent settings used for the call (read-only) */
+.pearl-agent-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 
-.pill-action-btn:hover {
-  background: #f4f4f5;
-  border-color: #a1a1aa;
+.agent-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 0.85rem;
+  background: #ffffff;
+  border: 1px solid var(--border, #e4e4e7);
+  border-radius: 7px;
+  min-width: 0;
+}
+
+.agent-summary-item strong {
+  font-size: 0.84rem;
+  font-weight: 650;
+  color: var(--text, #09090b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary-label {
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim, #71717a);
 }
 
 /* ── Section 02: Acoustics & Dialect ── */
@@ -658,6 +719,29 @@
   border-color: #09090b;
 }
 
+/* Real checkbox, visually replaced by .switch-checkbox but still focusable / announced */
+.pearl-sr-checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.pearl-sr-checkbox:focus-visible + .switch-checkbox {
+  outline: 2px solid #09090b;
+  outline-offset: 2px;
+}
+
+.pearl-sr-checkbox:disabled + .switch-checkbox {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .security-text {
   font-size: 0.75rem;
   color: var(--text, #3f3f46);
@@ -702,6 +786,15 @@
 .pearl-btn-launch.disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.pearl-btn-launch:focus-visible,
+.source-pill:focus-visible,
+.dialect-pill:focus-visible,
+.preset-pill:focus-visible,
+.banner-action-btn:focus-visible {
+  outline: 2px solid #09090b;
+  outline-offset: 2px;
 }
 
 /* ══════════════════════════════════════════════════
@@ -900,10 +993,60 @@
   font-family: inherit;
 }
 
-.pearl-btn-cancel:hover {
+.pearl-btn-cancel:hover:not(:disabled) {
   background: #ef4444;
   color: #ffffff;
   border-color: #ef4444;
+}
+
+.pearl-btn-cancel:disabled,
+.pearl-quick-hangup:disabled,
+.dock-hangup-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.pearl-btn-cancel:focus-visible,
+.pearl-quick-hangup:focus-visible,
+.dock-hangup-btn:focus-visible,
+.pearl-btn-solid:focus-visible,
+.chat-copy-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Live-update fallback note and inline errors */
+.pearl-live-note {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  margin: 0 0 1.25rem 0;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #e4e4e7;
+  background: #f4f4f5;
+  color: #3f3f46;
+}
+
+.pearl-live-note.on-dark {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #d4d4d8;
+}
+
+.pearl-live-note.is-error {
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.pearl-inline-error {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin: 0.85rem 0 0 0;
+  color: #b91c1c;
+}
+
+.pearl-inline-error.on-dark {
+  color: #fca5a5;
 }
 
 /* ── Live Cockpit Bar ── */
@@ -943,12 +1086,6 @@
   background: #10b981;
 }
 
-.codec-tag {
-  font-family: 'JetBrains Mono', monospace, sans-serif;
-  font-size: 0.68rem;
-  color: #71717a;
-}
-
 .cockpit-call-timer {
   display: inline-flex;
   align-items: center;
@@ -970,12 +1107,6 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-}
-
-.telephony-meta-pill {
-  font-family: 'JetBrains Mono', monospace, sans-serif;
-  font-size: 0.7rem;
-  color: #71717a;
 }
 
 .pearl-quick-hangup {
@@ -1278,57 +1409,43 @@
   color: #ffffff;
 }
 
-.intel-badge {
-  font-family: 'JetBrains Mono', monospace, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #10b981;
-}
-
-.meter-bar-track {
-  width: 100%;
-  height: 4px;
-  border-radius: 2px;
-  background: #27272a;
-  overflow: hidden;
-}
-
-.meter-bar-fill {
-  height: 100%;
-  background: #10b981;
-}
-
-.intel-pill-cloud {
+/* Call details (real values only) */
+.pearl-call-details {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.intel-signal-tag,
-.intel-objection-tag {
-  font-family: 'JetBrains Mono', monospace, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 650;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-}
-
-.intel-signal-tag {
-  background: rgba(16, 185, 129, 0.1);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-}
-
-.intel-objection-tag {
-  background: rgba(245, 158, 11, 0.1);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.25);
-}
-
-.intel-empty-note {
-  font-size: 0.74rem;
-  color: #52525b;
+  flex-direction: column;
+  gap: 0.5rem;
   margin: 0;
+}
+
+.pearl-call-details > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.76rem;
+  border-bottom: 1px solid #1f1f23;
+  padding-bottom: 0.45rem;
+}
+
+.pearl-call-details > div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.pearl-call-details dt {
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.pearl-call-details dd {
+  margin: 0;
+  color: #f4f4f5;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 /* Floating Dock */
@@ -1348,37 +1465,6 @@
   border-radius: 6px;
 }
 
-.dock-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 5px;
-  background: transparent;
-  border: none;
-  color: #a1a1aa;
-  font-size: 0.76rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.dock-btn:hover {
-  background: #27272a;
-  color: #ffffff;
-}
-
-.dock-btn.active-mute {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-}
-
-.dock-btn.active-speaker {
-  background: #27272a;
-  color: #ffffff;
-}
-
 .dock-hangup-btn {
   display: inline-flex;
   align-items: center;
@@ -1395,7 +1481,7 @@
   font-family: inherit;
 }
 
-.dock-hangup-btn:hover {
+.dock-hangup-btn:hover:not(:disabled) {
   background: #dc2626;
 }
 
@@ -1421,7 +1507,17 @@
   margin-bottom: 1rem;
 }
 
-.ended-card h2 {
+.ended-icon-wrap.completed {
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.ended-icon-wrap.failed {
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.pearl-ended-card h2 {
   font-size: 1.35rem;
   font-weight: 650;
   margin: 0 0 0.25rem 0;
@@ -1467,6 +1563,21 @@
   color: #ffffff;
 }
 
+.stat-val.stat-val-text {
+  font-family: inherit;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.pearl-ended-transcript {
+  width: 100%;
+  max-width: 600px;
+  min-height: 0;
+  max-height: 320px;
+  margin-bottom: 1.75rem;
+  text-align: left;
+}
+
 .pearl-btn-solid {
   display: inline-flex;
   align-items: center;
@@ -1505,5 +1616,52 @@
   }
   .ended-stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .pearl-agent-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .pearl-hero-header {
+    flex-direction: column;
+  }
+  .hero-headline {
+    font-size: 1.35rem;
+  }
+  .pearl-studio-canvas {
+    padding: 1.25rem 1rem;
+  }
+  .pearl-dialing-stage,
+  .pearl-cockpit-stage,
+  .pearl-ended-stage {
+    padding: 1.25rem 1rem;
+  }
+  .flow-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pearl-knowledge-row,
+  .launch-security-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .knowledge-select-wrap {
+    min-width: 0;
+  }
+  .launch-status-summary {
+    flex-shrink: 1;
+  }
+  .pearl-carrier-ribbon,
+  .pearl-cockpit-bar {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+  .pearl-alert-banner {
+    flex-wrap: wrap;
+  }
+  .dialing-step-pipeline {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }

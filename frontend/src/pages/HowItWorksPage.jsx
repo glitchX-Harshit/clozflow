@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { copyText } from '../lib/clipboard';
 import './HowItWorksPage.css';
 
 // ── Sovereign Voice Personas Dataset (Clean & Proprietary) ──
@@ -41,8 +42,8 @@ export default function HowItWorksPage() {
 
   const selectedVoice = VOICE_PERSONAS.find((v) => v.id === activePersona) || VOICE_PERSONAS[0];
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
+  const handleShare = async () => {
+    if (!(await copyText(window.location.href))) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

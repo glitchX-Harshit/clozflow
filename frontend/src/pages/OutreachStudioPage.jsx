@@ -1,8 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useEffectEvent, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
     ArrowLeft,
-    Send,
     MessageCircle,
     Sparkles,
     Copy,
@@ -12,69 +11,40 @@ import {
     AlertTriangle,
     Loader2,
     TrendingUp,
-    Phone
+    Phone,
+    RotateCcw,
 } from 'lucide-react';
 import './OutreachStudioPage.css';
 import MagButton from '../components/MagButton';
+import { ApiError, apiFetch } from '../lib/apiFetch';
+import { copyText } from '../lib/clipboard';
+import { isSampleLead } from '../lib/leadSearch';
+import {
+    EMPTY_DRAFT,
+    OUTREACH_UNAVAILABLE_MESSAGE,
+    currentMessage,
+    draftFromGenerated,
+    editDraft,
+    isDraftEdited,
+    isFallbackOutreach,
+    resetDraft,
+} from '../lib/outreachDraft';
+import { DEFAULT_COUNTRY_CODE, isValidWhatsAppNumber, normalizeWhatsAppNumber, whatsAppUrl } from '../lib/phone';
+import { useLeadFinderStore } from '../store/useLeadFinderStore';
 
-const API_BASE = window.APP_API_BASE;
+const LANGUAGE_LABELS = { english: 'English', hinglish: 'Hinglish', hindi: 'Hindi', spanish: 'Spanish', french: 'French' };
 
-const scoreLevel = (score) => {
-    if (score >= 70) return 'high';
-    if (score >= 40) return 'medium';
-    return 'low';
-};
-
-const guessCountryCode = (text) => {
-    if (!text) return null;
-    const t = text.toLowerCase();
-    
-    if (/\b(spain|espana|madrid|barcelona|valencia|seville|zaragoza|malaga|murcia|palma|las palmas|bilbao|alicante|cordoba)\b/.test(t)) return '+34';
-    if (/\b(us|usa|united states|america|new york|los angeles|chicago|houston|phoenix|san fran|san farnsico|california|texas|florida|boston|seattle|miami|canada|toronto|vancouver|montreal|calgary)\b/.test(t) || t.includes('san fran') || /\b(ca|ny|tx|fl)\b/.test(t)) return '+1';
-    if (/\b(uk|united kingdom|london|manchester|birmingham|liverpool|edinburgh|glasgow)\b/.test(t)) return '+44';
-    if (/\b(australia|sydney|melbourne|brisbane|perth|adelaide)\b/.test(t)) return '+61';
-    if (/\b(uae|united arab emirates|dubai|abu dhabi|sharjah)\b/.test(t)) return '+971';
-    if (/\b(germany|berlin|munich|hamburg|frankfurt)\b/.test(t)) return '+49';
-    if (/\b(france|paris|marseille|lyon|toulouse)\b/.test(t)) return '+33';
-    if (/\b(italy|rome|milan|naples|turin|palermo|genoa|bologna|florence)\b/.test(t)) return '+39';
-    if (/\b(india|delhi|mumbai|pune|hyderabad|jaipur|bangalore|chennai|lucknow|kolkata|ahmedabad|surat|noida|gurgaon|kochi|indore|chandigarh)\b/.test(t)) return '+91';
-    if (/\b(nepal|kathmandu|pokhara|lalitpur|bhaktapur)\b/.test(t)) return '+977';
-    if (/\b(netherlands|amsterdam|rotterdam|hague|utrecht)\b/.test(t)) return '+31';
-    if (/\b(belgium|brussels|antwerp|ghent|bruges)\b/.test(t)) return '+32';
-    if (/\b(switzerland|zurich|geneva|basel|bern)\b/.test(t)) return '+41';
-    if (/\b(austria|vienna|salzburg|innsbruck|graz)\b/.test(t)) return '+43';
-    if (/\b(sweden|stockholm|gothenburg|malmo)\b/.test(t)) return '+46';
-    if (/\b(norway|oslo|bergen|trondheim)\b/.test(t)) return '+47';
-    if (/\b(denmark|copenhagen|aarhus|odense)\b/.test(t)) return '+45';
-    if (/\b(finland|helsinki|espoo|tampere)\b/.test(t)) return '+358';
-    if (/\b(portugal|lisbon|porto|amadora)\b/.test(t)) return '+351';
-    if (/\b(greece|athens|thessaloniki|patras)\b/.test(t)) return '+30';
-    if (/\b(russia|moscow|saint petersburg|novosibirsk)\b/.test(t)) return '+7';
-    if (/\b(china|beijing|shanghai|shenzhen|guangzhou)\b/.test(t)) return '+86';
-    if (/\b(japan|tokyo|osaka|kyoto|yokohama)\b/.test(t)) return '+81';
-    if (/\b(south korea|seoul|busan|incheon)\b/.test(t)) return '+82';
-    if (/\b(new zealand|auckland|wellington|christchurch)\b/.test(t)) return '+64';
-    if (/\b(south africa|johannesburg|cape town|durban|pretoria)\b/.test(t)) return '+27';
-    if (/\b(turkey|istanbul|ankara|izmir)\b/.test(t)) return '+90';
-    if (/\b(saudi arabia|riyadh|jeddah|mecca|medina)\b/.test(t)) return '+966';
-    if (/\b(malaysia|kuala lumpur|penang|johor)\b/.test(t)) return '+60';
-    if (/\b(thailand|bangkok|phuket|chiang mai)\b/.test(t)) return '+66';
-    if (/\b(vietnam|hanoi|ho chi minh|da nang)\b/.test(t)) return '+84';
-    if (/\b(indonesia|jakarta|bali|surabaya)\b/.test(t)) return '+62';
-    if (/\b(philippines|manila|cebu|davao)\b/.test(t)) return '+63';
-    if (/\b(ireland|dublin|cork|galway)\b/.test(t)) return '+353';
-    
-    return null;
-};
-
-const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: propOnBack }) => {
+const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: propOnBack, query: propQuery }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    
+    const storeQuery = useLeadFinderStore((s) => s.query);
+
     const lead = propLead || location.state?.lead;
     const userOffer = propUserOffer || location.state?.userOffer || '';
-    const query = location.state?.query || '';
+    // Inside the Dashboard the query is not passed down; the Lead Finder store still has it.
+    const query = propQuery ?? location.state?.query ?? storeQuery ?? '';
     const onBackClick = propOnBack || (() => navigate(-1));
+    const sample = isSampleLead(lead);
 
     useEffect(() => {
         if (!lead) {
@@ -85,119 +55,112 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
     const [generatedMessage, setGeneratedMessage] = useState(null);
     const [generating, setGenerating] = useState(false);
     const [language, setLanguage] = useState('english');
+    const [generatedLanguage, setGeneratedLanguage] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [editedMessage, setEditedMessage] = useState('');
+    const [draftState, setDraftState] = useState(EMPTY_DRAFT);
     const [copied, setCopied] = useState(false);
     const [error, setError] = useState(null);
-    
-    // Manage target phone number explicitly so country code can be added/edited
-    const [targetPhone, setTargetPhone] = useState('');
+    const copiedTimerRef = useRef(null);
 
-    useEffect(() => {
-        if (lead?.phone_number) {
-            // Remove everything except digits and the plus sign
-            let num = lead.phone_number.replace(/[^\d+]/g, '');
-            
-            // Try to guess country code from the search query or the lead's city/address
-            const guessedCode = guessCountryCode(query) || guessCountryCode(lead.city) || guessCountryCode(lead.address) || '+91';
-            
-            if (!num.startsWith('+')) {
-                // If it starts with 0 and is likely a local number length, strip the 0
-                if (num.startsWith('0') && num.length <= 11) {
-                    num = num.substring(1);
-                }
-                
-                // If the length indicates a local number without a country code (<= 10 digits)
-                if (num.length <= 10) {
-                    num = guessedCode + num;
-                } else {
-                    // If it's longer than 10 digits without a +, it probably already includes the country code.
-                    // For example, 14155551234 or 919876543210
-                    num = '+' + num;
-                }
-            }
-            
-            setTargetPhone(num);
-        }
-    }, [lead, query]);
+    // Target phone number, editable so the country code can be checked.
+    const [phone, setPhone] = useState(() => normalizeWhatsAppNumber(lead, query));
+    const targetPhone = phone.number;
 
-    const handleGenerate = useCallback(async (autoOpenWa = false) => {
+    useEffect(() => () => clearTimeout(copiedTimerRef.current), []);
+
+    const handleGenerate = useCallback(async () => {
         if (!lead) return;
         setGenerating(true);
         setError(null);
 
         try {
-            const resp = await fetch(`${API_BASE}/outreach/generate`, {
+            const data = await apiFetch('/outreach/generate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+                body: {
                     lead_data: lead,
                     channel: 'whatsapp',
                     user_offer: userOffer,
                     language: language,
-                }),
+                },
             });
-            if (!resp.ok) throw new Error('Message generation failed');
-            const data = await resp.json();
-            setGeneratedMessage(data);
-            setEditedMessage(data.opening_message || '');
-            
-            if (autoOpenWa && targetPhone) {
-                const encodedMessage = encodeURIComponent(data.opening_message || '');
-                const waUrl = `https://api.whatsapp.com/send?phone=${targetPhone.replace(/\D/g, '')}&text=${encodedMessage}`;
-                window.open(waUrl, '_blank');
+            if (isFallbackOutreach(data)) {
+                // The server's failure placeholder must never become the message to send.
+                setError(OUTREACH_UNAVAILABLE_MESSAGE);
+                return;
             }
+            setGeneratedMessage(data);
+            setGeneratedLanguage(language);
+            setDraftState(draftFromGenerated(data.opening_message));
+            setIsEditing(false);
         } catch (err) {
             console.error('Generate error:', err);
-            setError('Failed to generate message. Please check your connection and try again.');
+            // Keep the previous draft; only show why this attempt failed.
+            setError(err instanceof ApiError && err.status !== 0
+                ? err.message
+                : 'Failed to generate message. Please check your connection and try again.');
         } finally {
             setGenerating(false);
         }
-    }, [lead, userOffer, targetPhone, language]);
+    }, [lead, userOffer, language]);
 
-    // Automatically trigger generation on mount if not already done
+    // Generate once when the page opens for a lead.
+    const generateOnOpen = useEffectEvent(() => {
+        handleGenerate();
+    });
+
     useEffect(() => {
-        if (lead && !generatedMessage && !generating && !error) {
-            handleGenerate(false);
-        }
-    }, [lead, generatedMessage, generating, error, handleGenerate]);
+        if (lead) generateOnOpen();
+    }, [lead]);
 
-    const handleCopy = useCallback((text) => {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(() => {
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-            }).catch(console.error);
-        }
-    }, []);
+    const draft = currentMessage(draftState);
+    const edited = isDraftEdited(draftState);
 
-    const openWhatsApp = () => {
-        if (!targetPhone) {
-            setError("Please provide a valid WhatsApp number with country code.");
+    const handleRegenerate = () => {
+        if (edited && draft && !window.confirm('Replace your edited message with a new AI draft?')) return;
+        handleGenerate();
+    };
+
+    const handleCopy = async () => {
+        if (!draft) return;
+        const ok = await copyText(draft);
+        if (!ok) {
+            setError('Could not copy the message — select it and copy manually.');
             return;
         }
-        const text = isEditing ? editedMessage : generatedMessage?.opening_message;
-        const encodedMessage = encodeURIComponent(text || '');
-        const waUrl = `https://api.whatsapp.com/send?phone=${targetPhone.replace(/\D/g, '')}&text=${encodedMessage}`;
-        window.open(waUrl, '_blank');
+        setCopied(true);
+        clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    };
+
+    const phoneValid = isValidWhatsAppNumber(targetPhone);
+    const canLaunch = !!draft && phoneValid && !generating && !sample;
+
+    const openWhatsApp = () => {
+        if (!phoneValid) {
+            setError('Enter a WhatsApp number with its country code (8–15 digits).');
+            return;
+        }
+        if (!draft) return;
+        window.open(whatsAppUrl(targetPhone, draft), '_blank', 'noopener,noreferrer');
     };
 
     if (!lead) return null;
 
-    const messageText = isEditing ? editedMessage : (generatedMessage?.opening_message || '');
+    const languageChanged = generatedMessage && generatedLanguage && language !== generatedLanguage;
 
     return (
         <div className={`os-v3-wrapper ${propLead ? 'os-v3-wrapper--nested' : ''}`}>
-            
-            
+
+
 
             <div className="os-v3-ambient-glow" />
-            
+
             <div className="os-v3-workspace-header">
-                <MagButton 
-                    className="os-v3-back" 
+                <MagButton
+                    className="os-v3-back"
                     onClick={onBackClick}
                     label="Back to Discovery"
+                    aria-label="Back to Discovery"
                     icon={<ArrowLeft size={16} strokeWidth={2.5} />}
                     variant="outline"
                     magnetStrength={0.2}
@@ -206,25 +169,36 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
             </div>
 
             <div className="os-v3-workspace animate-fade-in-up">
-                
+
                 {/* Left Side: Message Composer & Recipient Input */}
                 <div className="os-v3-main-pane">
-                    
+
                     {error && (
-                        <div className="os-v3-error">
+                        <div className="os-v3-error" role="alert">
                             <AlertTriangle size={18} />
                             <span>{error}</span>
                         </div>
                     )}
 
+                    {sample && (
+                        <div className="os-v3-error os-v3-error--warn" role="status">
+                            <AlertTriangle size={18} />
+                            <span>This is a sample lead generated without live data. Its phone number is not real, so WhatsApp is disabled.</span>
+                        </div>
+                    )}
+
                     <div className="os-v3-section-card">
                         <div className="os-v3-section-header">
-                            <span className="os-v3-badge"><Sparkles size={12}/> AI Outreach Editor</span>
+                            <span className="os-v3-badge">
+                                <Sparkles size={12}/> AI Outreach Editor
+                                {edited && <span className="os-v3-edited-tag">Edited</span>}
+                            </span>
                             <div className="os-v3-message-actions">
-                                <select 
+                                <select
                                     value={language}
                                     onChange={(e) => setLanguage(e.target.value)}
                                     className="os-v3-language-select"
+                                    aria-label="Message language"
                                     style={{
                                         background: 'var(--surface)',
                                         border: '1px solid var(--border)',
@@ -233,24 +207,48 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                                         padding: '4px 8px',
                                         fontSize: '0.75rem',
                                         marginRight: '8px',
-                                        outline: 'none',
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    <option value="english">English</option>
-                                    <option value="hinglish">Hinglish</option>
-                                    <option value="hindi">Hindi</option>
-                                    <option value="spanish">Spanish</option>
-                                    <option value="french">French</option>
+                                    {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
+                                        <option key={value} value={value}>{label}</option>
+                                    ))}
                                 </select>
-                                <button className="os-v3-icon-btn" onClick={() => handleCopy(messageText)} title="Copy message">
+                                <button
+                                    type="button"
+                                    className="os-v3-icon-btn"
+                                    onClick={handleCopy}
+                                    disabled={!draft}
+                                    title="Copy message"
+                                    aria-label={copied ? 'Message copied' : 'Copy message'}
+                                >
                                     {copied ? <CheckCircle2 size={16} color="#10b981"/> : <Copy size={16} />}
                                 </button>
-                                <button className="os-v3-icon-btn" onClick={() => setIsEditing(!isEditing)} title={isEditing ? "Save & View" : "Edit message"}>
+                                <button
+                                    type="button"
+                                    className="os-v3-icon-btn"
+                                    onClick={() => setIsEditing(!isEditing)}
+                                    title={isEditing ? "Save & View" : "Edit message"}
+                                    aria-label={isEditing ? 'Save and view message' : 'Edit message'}
+                                    aria-pressed={isEditing}
+                                >
                                     <Edit3 size={16} />
                                 </button>
                             </div>
                         </div>
+
+                        {(languageChanged || edited) && (
+                            <div className="os-v3-draft-hints">
+                                {languageChanged && (
+                                    <span>Regenerate to apply {LANGUAGE_LABELS[language]}.</span>
+                                )}
+                                {edited && (
+                                    <button type="button" className="os-v3-link-btn" onClick={() => setDraftState(resetDraft)}>
+                                        <RotateCcw size={12} /> Reset to AI draft
+                                    </button>
+                                )}
+                            </div>
+                        )}
 
                         {generating && !generatedMessage ? (
                             <div className="os-v3-skeleton-message" />
@@ -259,13 +257,14 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                                 {isEditing ? (
                                     <textarea
                                         className="os-v3-message-input"
-                                        value={editedMessage}
-                                        onChange={(e) => setEditedMessage(e.target.value)}
+                                        aria-label="Outreach message"
+                                        value={draftState.draft}
+                                        onChange={(e) => setDraftState((prev) => editDraft(prev, e.target.value))}
                                         autoFocus
                                     />
                                 ) : (
                                     <p className="os-v3-message-content">
-                                        {messageText || "No message generated yet. Click Regenerate below to create one."}
+                                        {draft || "No message generated yet. Click Regenerate below to create one."}
                                     </p>
                                 )}
                             </div>
@@ -276,41 +275,53 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                     <div className="os-v3-section-card">
                         <h3 className="os-v3-section-title">Outbound Channel Settings</h3>
                         <div className="os-v3-form-group">
-                            <label className="os-v3-input-label">
+                            <label className="os-v3-input-label" htmlFor="os-whatsapp-number">
                                 <Phone size={14} /> <span>WhatsApp Phone Number (with Country Code)</span>
                             </label>
-                            <input 
-                                type="text"
+                            <input
+                                id="os-whatsapp-number"
+                                type="tel"
                                 value={targetPhone}
-                                onChange={(e) => setTargetPhone(e.target.value)}
+                                onChange={(e) => setPhone({ number: e.target.value, guessed: false, code: null })}
                                 placeholder="Include country code (e.g., +14155551234 or +919876543210)"
                                 className="os-v3-text-field"
+                                aria-invalid={!!targetPhone && !phoneValid}
+                                aria-describedby="os-whatsapp-hint"
                             />
+                            <p id="os-whatsapp-hint" className={`os-v3-field-hint ${targetPhone && !phoneValid ? 'os-v3-field-hint--error' : ''}`}>
+                                {targetPhone && !phoneValid
+                                    ? 'Enter the full number with country code (8–15 digits).'
+                                    : phone.guessed
+                                        ? `Assumed ${phone.code || DEFAULT_COUNTRY_CODE} — check the country code.`
+                                        : !targetPhone ? 'No phone number is listed for this lead.' : ' '}
+                            </p>
                         </div>
 
                         {/* Dispatch Button Grid */}
                         <div className="os-v3-bottom-actions">
-                            <MagButton 
-                                className="os-v3-secondary-btn" 
-                                onClick={() => handleGenerate(false)}
+                            <MagButton
+                                className="os-v3-secondary-btn"
+                                onClick={handleRegenerate}
                                 disabled={generating}
                                 label={generating ? "Generating..." : "Regenerate Hook"}
                                 hoverLabel="Synthesize Hook"
+                                aria-label={generating ? 'Generating message' : 'Regenerate message'}
                                 icon={generating ? <Loader2 size={18} className="spin"/> : <RefreshCw size={18} />}
                                 variant="outline"
                                 magnetStrength={0.25}
                             />
-                            <MagButton 
-                                className="os-v3-primary-btn" 
+                            <MagButton
+                                className="os-v3-primary-btn"
                                 onClick={openWhatsApp}
-                                disabled={!targetPhone || generating}
+                                disabled={!canLaunch}
                                 label="Launch WhatsApp Chat"
                                 hoverLabel="Open In WhatsApp"
+                                aria-label="Launch WhatsApp chat"
                                 icon={<MessageCircle size={18} />}
                                 variant="custom"
                                 magnetStrength={0.25}
                             />
-                            
+
                         </div>
                     </div>
 
@@ -318,14 +329,14 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
 
                 {/* Right Side: Lead Metadata & AI Strategy Cards */}
                 <div className="os-v3-side-pane">
-                    
+
                     {/* Lead Metadata Card */}
                     <div className="os-v3-sidebar-card">
                         <div className="os-v3-lead-meta-header">
                             <span className="os-v3-sidebar-tag">TARGET PROFILE</span>
                         </div>
                         <h2 className="os-v3-lead-title">{lead.business_name}</h2>
-                        
+
                         <div className="os-v3-lead-details">
                             {lead.category && (
                                 <div className="os-v3-detail-item">
@@ -376,7 +387,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                                     <span className="os-v3-intel-lbl">Psychological Hook Angle</span>
                                     <p className="os-v3-intel-text">{generatedMessage.observation}</p>
                                 </div>
-                                
+
                                 <div className="os-v3-intel-section">
                                     <span className="os-v3-intel-lbl">Predicted Prospect Reply</span>
                                     <p className="os-v3-intel-text">"{generatedMessage.likely_reply}"</p>
@@ -384,7 +395,7 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
 
                                 {generatedMessage.likely_response_rate && (
                                     <div className={`os-v3-rate-badge rate-${generatedMessage.likely_response_rate.toLowerCase()}`}>
-                                        <TrendingUp size={12} /> 
+                                        <TrendingUp size={12} />
                                         <span>{generatedMessage.likely_response_rate} Conversion Probability</span>
                                     </div>
                                 )}
@@ -397,11 +408,10 @@ const OutreachStudioPage = ({ lead: propLead, userOffer: propUserOffer, onBack: 
                 </div>
 
             </div>
-            
-            
+
+
         </div>
     );
 };
 
 export default OutreachStudioPage;
-

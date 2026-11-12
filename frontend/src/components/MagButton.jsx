@@ -34,6 +34,12 @@ const MagButton = ({
     const fillRef = useRef(null);
     const [hovered, setHovered] = useState(false);
 
+    /* The label is drawn twice (resting + hover copy) and split into per-letter
+       spans, so screen readers would read it twice or letter by letter. Give the
+       button one accessible name and hide the visual layers instead. */
+    const textLabel = typeof label === 'string' || typeof label === 'number' ? String(label) : null;
+    const accessibleName = rest['aria-label'] || textLabel || undefined;
+
     /* Helper to split a string into staggered character spans */
     const renderChars = (text) => {
         if (typeof text !== 'string') return text;
@@ -132,6 +138,7 @@ const MagButton = ({
                 className,
             ].filter(Boolean).join(' ')}
             {...rest}
+            aria-label={accessibleName}
         >
             {/* Ambient premium glow */}
             <span className="mag-glow" aria-hidden="true" />
@@ -149,17 +156,17 @@ const MagButton = ({
             <span className="mag-inner">
                 {splitText ? (
                     <>
-                        <span className="mag-label mag-label--default mag-label--split">
+                        <span className="mag-label mag-label--default mag-label--split" aria-hidden={accessibleName ? 'true' : undefined}>
                             {renderChars(label)}
                         </span>
-                        <span className="mag-label mag-label--hover mag-label--split">
+                        <span className="mag-label mag-label--hover mag-label--split" aria-hidden="true">
                             {renderChars(hoverLabel || label)}
                         </span>
                     </>
                 ) : (
                     <>
-                        <span className="mag-label mag-label--default">{label}</span>
-                        <span className="mag-label mag-label--hover">{hoverLabel || label}</span>
+                        <span className="mag-label mag-label--default" aria-hidden={accessibleName ? 'true' : undefined}>{label}</span>
+                        <span className="mag-label mag-label--hover" aria-hidden="true">{hoverLabel || label}</span>
                     </>
                 )}
             </span>

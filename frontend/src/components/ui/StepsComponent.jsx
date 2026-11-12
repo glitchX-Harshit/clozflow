@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Globe, Phone, Headphones, Sparkles } from 'lucide-react';
 import './StepsComponent.css';
 
@@ -42,7 +42,7 @@ export default function StepsComponent() {
                     const IconComponent = step.icon;
 
                     return (
-                        <motion.div
+                        <Motion.div
                             key={step.number}
                             className={`framer-card-item ${isActive ? 'is-active' : 'is-inactive'}`}
                             onClick={() => setActiveIdx(idx)}
@@ -64,7 +64,7 @@ export default function StepsComponent() {
                             <div className="framer-card-icon-box">
                                 <IconComponent size={19} strokeWidth={2} />
                             </div>
-                        </motion.div>
+                        </Motion.div>
                     );
                 })}
             </div>
@@ -80,7 +80,7 @@ export default function StepsComponent() {
                         const isActive = activeIdx === idx;
 
                         return (
-                            <motion.div
+                            <Motion.div
                                 key={step.number}
                                 className={`framer-pill-slot ${isActive ? 'slot-active' : 'slot-inactive'}`}
                                 layout
@@ -99,7 +99,7 @@ export default function StepsComponent() {
                                 >
                                     <span>{step.number}</span>
                                 </button>
-                            </motion.div>
+                            </Motion.div>
                         );
                     })}
                 </div>

@@ -1,23 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { 
-    LayoutGrid, 
-    Phone, 
-    History, 
-    Target, 
-    Settings, 
-    LogOut, 
+import {
+    LayoutGrid,
+    History,
+    Settings,
+    LogOut,
     Zap,
-    Clock,
     ChevronRight,
-    TrendingUp,
-    ShieldCheck,
     MessageSquare,
     Search,
     Loader2,
-    FileText,
     Sparkle,
     Send,
     Menu,
@@ -25,38 +19,98 @@ import {
     Wand2,
     Wallet,
     Headphones,
-    ChevronDown
+    ChevronDown,
+    BrainCircuit,
+    RotateCcw
 } from 'lucide-react';
 import { useDashboardStore } from '../store/useDashboardStore';
 import HistoryView from '../components/HistoryView';
 import AnalyticsPage from './AnalyticsPage';
 import WizardPage from './WizardPage';
 import SettingsShell from './SettingsShell';
-import MagButton from '../components/MagButton';
 import LeadFinder from './LeadFinder';
 import OutreachStudioPage from './OutreachStudioPage';
 import WalletPage from './WalletPage';
 import { gsap } from 'gsap';
-import ClozFlowLogo from '../components/ClozFlowLogo';
-import Pearl from './Pearl';
+// The Pearl tab's sections (and a few other screens) use classes from Pearl.css; the Pearl
+// dialpad module itself is loaded lazily by AgentWorkspace.
+import './Pearl.css';
 import PearlSecondarySidebar from '../components/PearlSecondarySidebar';
 import PearlSubSectionView from './pearl/PearlSubSectionView';
 import RelayDashboard from './RelayDashboard';
 import RelayBuilder from './RelayBuilder';
+import { apiFetch, apiUrl } from '../lib/apiFetch';
+import { dayAndMonth } from '../lib/dates';
+import { OPEN_WALLET_EVENT, buildDashboardSearch, parseDashboardSearch } from '../lib/dashboardLinks';
 import './DashboardOverview.css';
 import pearlLogo from '../assets/pearl-logo.png';
 
+const LOCAL_MODE = import.meta.env.VITE_AUTH_MODE === 'local';
+const SUPPORT_MAILTO = 'mailto:support@clozflow.com?subject=Support%20Inquiry';
 
-const getModuleIcon = (id) => {
-    switch(id) {
-        case 1: return <ShieldCheck size={20} />;
-        case 2: return <TrendingUp size={20} />;
-        case 3: return <MessageSquare size={20} />;
-        default: return <Zap size={20} />;
+// `href` items open another screen instead of switching the dashboard tab.
+const BRAIN_NAV_ITEM = { id: 'brain', label: 'Brain', icon: BrainCircuit, href: '/brain' };
+
+const DASHBOARD_NAV_ITEMS = [
+    { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
+    { id: 'leads',      label: 'Lead Finder',   icon: Search },
+    { id: 'history',    label: 'Session History', icon: History },
+    { id: 'relay',      label: 'Relay',          icon: Send },
+    { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
+    { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
+    ...(LOCAL_MODE ? [BRAIN_NAV_ITEM] : []),
+    { id: 'wallet',     label: 'Wallet & Billing', icon: Wallet },
+    { id: 'settings',   label: 'Settings',       icon: Settings },
+];
+
+const MOBILE_MENU_ITEMS = [
+    { id: 'overview', label: 'Overview', desc: 'Performance overview & analytics stats', icon: LayoutGrid },
+    { id: 'leads', label: 'Lead Finder', desc: 'Multi-level geographic lead discovery', icon: Search },
+    { id: 'history', label: 'Session History', desc: 'Call transcripts & diagnostic ratings', icon: History },
+    { id: 'relay', label: 'Relay', desc: 'Follow-up pages & meeting booking', icon: Send },
+    { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
+    { id: 'wizard', label: 'Wizard', desc: 'Virtual meeting copilot for Meet & Zoom', icon: Wand2 },
+    ...(LOCAL_MODE ? [{ ...BRAIN_NAV_ITEM, label: 'ClozFlow Brain', desc: 'Local conversation intelligence workspace' }] : []),
+    { id: 'wallet', label: 'Wallet & Billing', desc: 'Credits balance, top-ups & usage meter', icon: Wallet },
+    { id: 'settings', label: 'Settings', desc: 'Workspace details & prompt overrides', icon: Settings },
+];
+
+const DEFAULT_STATS = [
+    { label: 'Close Velocity', value: '-', color: '#22c55e', trend: '-', desc: 'loading' },
+    { label: 'Psychological Leverage', value: '-', color: '#6366f1', trend: '-', desc: 'loading' },
+    { label: 'Momentum Index', value: '-', color: '#f59e0b', trend: '-', desc: 'loading' },
+    { label: 'Risk Intensity', value: '-', color: '#ef4444', trend: '-', desc: 'loading' }
+];
+
+const DEFAULT_MODULES = [
+    { id: 1, title: 'Risk Mitigation', value: '-', desc: 'Identify hesitation early. Deal risks are automatically flagged.' },
+    { id: 2, title: 'Strategic Influence', value: '-', desc: 'Track effective frameworks and monitor perspective shifts in conversations.' },
+    { id: 3, title: 'Conversation Analysis', value: '-', desc: 'Discover missed opportunities and high-leverage moments in your calls.' }
+];
+
+/** Enter / Space activate a non-button element that acts as one. */
+const onActivateKey = (handler) => (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handler(e);
     }
 };
 
-const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, stats, modules }) => (
+/** Profile picture, else the sign-in provider's picture, else the initial. */
+const UserInitialAvatar = ({ user, className, style }) => {
+    const [failedSrc, setFailedSrc] = useState(null);
+    const src = user?.profile_image ? apiUrl(user.profile_image) : (user?.avatar_url || null);
+    const initial = (user?.full_name || user?.email || 'U').charAt(0).toUpperCase();
+    return (
+        <div className={className} style={style} aria-hidden="true">
+            {src && failedSrc !== src
+                ? <img src={src} onError={() => setFailedSrc(src)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                : initial}
+        </div>
+    );
+};
+
+const OverviewTab = memo(({ user, recentCalls, loadingCalls, callsError, onRetry, onViewAll, onOpenSession, onOpenAnalytics, stats, modules }) => (
     <div className="overview-container">
         <header className="ov-clean-header">
             <div className="ov-header-text">
@@ -68,7 +122,12 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, sta
         </header>
 
         <div className="ov-metrics-section">
-            <h3 className="ov-section-title-clean">Key Metrics</h3>
+            <div className="ov-ledger-header-flex">
+                <h3 className="ov-section-title-clean" style={{ margin: 0, borderBottom: 'none', paddingBottom: 0 }}>Key Metrics</h3>
+                <button type="button" onClick={onOpenAnalytics} className="ov-view-all-btn">
+                    Intelligence <ChevronRight size={14} aria-hidden="true" />
+                </button>
+            </div>
             <div className="ov-telemetry-grid">
                 {stats.map((stat, idx) => {
                     const cardAccent = idx === 0 ? 'var(--accent)' : idx === 1 ? '#6366f1' : idx === 2 ? '#f59e0b' : '#ef4444';
@@ -92,10 +151,10 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, sta
             <h3 className="ov-section-title-clean">Active Strategies</h3>
             <div className="ov-strategies-grid">
                 {modules.map((mod, idx) => (
-                    <div key={idx} className="ov-strategy-card">
+                    <div key={mod.id ?? idx} className="ov-strategy-card">
                         <div className="ov-strategy-header">
                             <h4 className="ov-strategy-title">{mod.title}</h4>
-                            <span className="ov-strategy-status"><Sparkle size={12} /> Active</span>
+                            <span className="ov-strategy-status"><Sparkle size={12} aria-hidden="true" /> Active</span>
                         </div>
                         <p className="ov-strategy-desc">{mod.desc}</p>
                     </div>
@@ -106,23 +165,30 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, sta
         <div className="ov-ledger-section">
             <div className="ov-ledger-header-flex">
                 <h3 className="ov-section-title-clean" style={{ margin: 0, borderBottom: 'none', paddingBottom: 0 }}>Recent Sessions</h3>
-                <button onClick={onViewAll} className="ov-view-all-btn">
-                    View All <ChevronRight size={14} />
+                <button type="button" onClick={onViewAll} className="ov-view-all-btn">
+                    View All <ChevronRight size={14} aria-hidden="true" />
                 </button>
             </div>
-            
+
             <div className="relay-ledger-container" style={{ marginTop: 0 }}>
                 {loadingCalls ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
-                        <Loader2 className="animate-spin" size={24} color="var(--accent)" />
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }} role="status" aria-label="Loading recent sessions">
+                        <Loader2 className="animate-spin" size={24} color="var(--accent)" aria-hidden="true" />
                     </div>
                 ) : recentCalls && recentCalls.length > 0 ? (
                     recentCalls.map((call, idx) => {
-                        const dateObj = new Date(call.timestamp);
-                        const day = dateObj.getDate();
-                        const month = dateObj.toLocaleString('default', { month: 'short' });
+                        const { day, month } = dayAndMonth(call.timestamp);
+                        const open = () => onOpenSession(call.id);
                         return (
-                            <div key={call.id || `call-${idx}`} onClick={onViewAll} className="relay-ledger-row">
+                            <div
+                                key={call.id || `call-${idx}`}
+                                onClick={open}
+                                onKeyDown={onActivateKey(open)}
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`Open session #${call.id}`}
+                                className="relay-ledger-row"
+                            >
                                 <div className="rl-col rl-date">
                                     <span className="rl-day">{day}</span>
                                     <span className="rl-month">{month}</span>
@@ -134,57 +200,91 @@ const OverviewTab = ({ user, navigate, recentCalls, loadingCalls, onViewAll, sta
                                 <div className="rl-col rl-status mobile-hide">
                                     <div className="rl-status-indicator">
                                         <span className="rl-dot" style={{ backgroundColor: '#10b981' }}></span>
-                                        <span style={{ color: '#10b981' }}>Completed</span>
+                                        <span style={{ color: '#047857' }}>Completed</span>
                                     </div>
                                 </div>
                                 <div className="rl-col rl-actions" style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
                                     <div className="rl-stats">
-                                        <MessageSquare size={14} />
-                                        <span>{call.message_count}</span>
-                                        <Zap size={14} style={{ marginLeft: '4px' }} />
-                                        <span>{call.insight_count}</span>
+                                        <MessageSquare size={14} aria-label="Messages" />
+                                        <span>{call.message_count ?? 0}</span>
+                                        <Zap size={14} style={{ marginLeft: '4px' }} aria-label="Insights" />
+                                        <span>{call.insight_count ?? 0}</span>
                                     </div>
-                                    <ChevronRight size={18} className="rl-arrow" />
+                                    <ChevronRight size={18} className="rl-arrow" aria-hidden="true" />
                                 </div>
                             </div>
                         );
                     })
+                ) : callsError ? (
+                    <div className="ov-empty-state" role="alert">
+                        <h4 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 600 }}>Couldn't load recent sessions</h4>
+                        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--text-dim)' }}>{callsError}</p>
+                        <button type="button" onClick={onRetry} className="ov-view-all-btn">
+                            <RotateCcw size={14} aria-hidden="true" /> Try again
+                        </button>
+                    </div>
                 ) : (
                     <div className="ov-empty-state">
-                        <History size={32} color="var(--text-muted)" style={{ marginBottom: '12px' }} />
-                        <h4 style={{ margin: '0 0 8px 0', fontSize: '16px' }}>No recent sessions</h4>
+                        <History size={32} color="var(--text-muted)" style={{ marginBottom: '12px' }} aria-hidden="true" />
+                        <h4 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 600 }}>No recent sessions</h4>
                         <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-dim)' }}>Start a new session to see analytics here.</p>
                     </div>
                 )}
             </div>
         </div>
     </div>
-);
+));
 
 const Dashboard = () => {
-    const { activeTab, setActiveTab } = useDashboardStore();
+    const activeTab = useDashboardStore((s) => s.activeTab);
+    const setActiveTab = useDashboardStore((s) => s.setActiveTab);
+    const pearlSubTab = useDashboardStore((s) => s.pearlSection);
+    const setPearlSubTab = useDashboardStore((s) => s.setPearlSection);
+    const settingsPanel = useDashboardStore((s) => s.settingsPanel);
+    const setSettingsPanel = useDashboardStore((s) => s.setSettingsPanel);
+    const applyDeepLink = useDashboardStore((s) => s.applyDeepLink);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [recentCalls, setRecentCalls] = useState([]);
     const [loadingCalls, setLoadingCalls] = useState(true);
-    const [statsData, setStatsData] = useState([
-        { label: 'Close Velocity', value: '-', color: '#22c55e', trend: '-', desc: 'loading' },
-        { label: 'Psychological Leverage', value: '-', color: '#6366f1', trend: '-', desc: 'loading' },
-        { label: 'Momentum Index', value: '-', color: '#f59e0b', trend: '-', desc: 'loading' },
-        { label: 'Risk Intensity', value: '-', color: '#ef4444', trend: '-', desc: 'loading' }
-    ]);
-    const [modulesData, setModulesData] = useState([
-        { id: 1, title: 'Risk Mitigation', value: '-', desc: 'Identify hesitation early. Deal risks are automatically flagged.' },
-        { id: 2, title: 'Strategic Influence', value: '-', desc: 'Track effective frameworks and monitor perspective shifts in conversations.' },
-        { id: 3, title: 'Conversation Analysis', value: '-', desc: 'Discover missed opportunities and high-leverage moments in your calls.' }
-    ]);
+    const [callsError, setCallsError] = useState(null);
+    const [overviewReload, setOverviewReload] = useState(0);
+    const [statsData, setStatsData] = useState(DEFAULT_STATS);
+    const [modulesData, setModulesData] = useState(DEFAULT_MODULES);
     const [currentLeadForOutreach, setCurrentLeadForOutreach] = useState(null);
     const [outreachUserOffer, setOutreachUserOffer] = useState('');
+    const [leadTab, setLeadTab] = useState(activeTab);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [relayCallId, setRelayCallId] = useState(null);
+    const [historyFocusId, setHistoryFocusId] = useState(null);
+    const [walletBalance, setWalletBalance] = useState(0.0);
+    const [isSuperuser, setIsSuperuser] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const userPillRef = useRef(null);
+    const popoverMenuRef = useRef(null);
+    const [popoverPos, setPopoverPos] = useState({ bottom: 76, left: 16, width: 220 });
 
-    useEffect(() => {
+    // Switching tabs drops the lead picked for Outreach Studio.
+    if (leadTab !== activeTab) {
+        setLeadTab(activeTab);
         setCurrentLeadForOutreach(null);
-    }, [activeTab]);
+    }
+
+    // ── Deep links: URL → state (`?tab=pearl&section=knowledge`, back/forward) …
+    useEffect(() => {
+        const { tab, section } = parseDashboardSearch(location.search);
+        if (tab) applyDeepLink(tab, section);
+    }, [location.search, applyDeepLink]);
+
+    // … and state → URL, so the open tab survives a reload and can be shared.
+    useEffect(() => {
+        // Read the store directly: the link effect above may have just updated it in this commit.
+        const state = useDashboardStore.getState();
+        const section = state.activeTab === 'pearl' ? state.pearlSection : state.activeTab === 'settings' ? state.settingsPanel : null;
+        const search = buildDashboardSearch(state.activeTab, section);
+        if (search !== location.search) navigate({ pathname: location.pathname, search }, { replace: true });
+    }, [activeTab, pearlSubTab, settingsPanel, location.pathname, location.search, navigate]);
 
     const handleLogout = () => {
         logout();
@@ -194,10 +294,9 @@ const Dashboard = () => {
     const indicatorRef = useRef(null);
     const sidebarRef = useRef(null);
     const [sidebarHovered, setSidebarHovered] = useState(false);
-    const [pearlSubTab, setPearlSubTab] = useState('agents');
 
     // GSAP hover expand/collapse for primary menu bar
-    const handleSidebarMouseEnter = () => {
+    const handleSidebarMouseEnter = useCallback(() => {
         setSidebarHovered(true);
         if (sidebarRef.current) {
             gsap.killTweensOf(sidebarRef.current);
@@ -222,9 +321,9 @@ const Dashboard = () => {
                 ease: 'power2.out'
             });
         }
-    };
+    }, []);
 
-    const handleSidebarMouseLeave = () => {
+    const handleSidebarMouseLeave = useCallback(() => {
         if (userMenuOpen) return;
         setSidebarHovered(false);
         if (sidebarRef.current) {
@@ -249,7 +348,7 @@ const Dashboard = () => {
                 ease: 'power2.out'
             });
         }
-    };
+    }, [userMenuOpen]);
 
     // Awwwards elastic/rotational entrance animation
     useEffect(() => {
@@ -258,29 +357,32 @@ const Dashboard = () => {
             { xPercent: -100, opacity: 0 },
             { xPercent: 0, opacity: 1, duration: 1.35, ease: 'power4.out' }
         );
-        
+
         gsap.fromTo('.db-sidebar-logo',
             { y: -25, opacity: 0, scale: 0.9 },
             { y: 0, opacity: 1, scale: 1, duration: 0.75, delay: 0.4, ease: 'power3.out' }
         );
-        
+
         // Staggered slide in for navigation items
         gsap.fromTo('.db-nav-item',
             { x: -35, opacity: 0 },
             { x: 0, opacity: 1, duration: 0.6, stagger: 0.05, delay: 0.45, ease: 'power3.out' }
         );
-        
+
         // Rotational stagger for icons
         gsap.fromTo('.db-nav-item svg',
             { rotate: -135, scale: 0.7 },
             { rotate: 0, scale: 1, duration: 0.7, stagger: 0.05, delay: 0.48, ease: 'back.out(1.5)' }
         );
-        
+
         gsap.fromTo('.db-user-section',
             { y: 30, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.75, delay: 0.8, ease: 'power3.out' }
         );
     }, []);
+
+    // Intelligence (analytics) is part of Overview in the navigation.
+    const navActiveId = activeTab === 'analytics' ? 'overview' : activeTab;
 
     // Awwwards menu sliding highlight active dock
     useEffect(() => {
@@ -289,7 +391,7 @@ const Dashboard = () => {
             const rect = activeEl.getBoundingClientRect();
             const parentRect = activeEl.parentElement.getBoundingClientRect();
             const relativeTop = rect.top - parentRect.top;
-            
+
             gsap.to(indicatorRef.current, {
                 top: relativeTop,
                 height: rect.height,
@@ -298,58 +400,43 @@ const Dashboard = () => {
             });
 
             // Dynamically manage pearl class on indicator
-            if (activeTab === 'pearl') {
+            if (navActiveId === 'pearl') {
                 indicatorRef.current.classList.add('pearl-active');
             } else {
                 indicatorRef.current.classList.remove('pearl-active');
             }
         }
-    }, [activeTab, sidebarHovered]);
+    }, [navActiveId, sidebarHovered]);
 
-
-
+    // Overview data: refetched every time the tab is opened (and on "Try again").
     useEffect(() => {
-        const fetchDashboardData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const headers = {};
-                if (token) headers['Authorization'] = `Bearer ${token}`;
-
-                // Fetch recent calls
-                const callsRes = await fetch(`${window.APP_API_BASE}/calls/`, { headers });
-                if (callsRes.ok) {
-                    const data = await callsRes.json();
-                    setRecentCalls(data.slice(0, 3));
-                }
-
-                // Fetch real intelligence stats
-                const statsRes = await fetch(`${window.APP_API_BASE}/calls/stats`, { headers });
-                if (statsRes.ok) {
-                    const statsData = await statsRes.json();
-                    if (statsData.stats && statsData.stats.length > 0) setStatsData(statsData.stats);
-                    if (statsData.modules && statsData.modules.length > 0) setModulesData(statsData.modules);
-                }
-            } catch (err) {
-                console.error('Failed to fetch dashboard data:', err);
-            } finally {
-                setLoadingCalls(false);
+        if (activeTab !== 'overview') return undefined;
+        let cancelled = false;
+        (async () => {
+            const [callsResult, statsResult] = await Promise.allSettled([
+                apiFetch('/calls/'),
+                apiFetch('/calls/stats'),
+            ]);
+            if (cancelled) return;
+            if (callsResult.status === 'fulfilled') {
+                setRecentCalls(Array.isArray(callsResult.value) ? callsResult.value.slice(0, 3) : []);
+                setCallsError(null);
+            } else {
+                setCallsError(callsResult.reason?.message || 'Could not reach the server.');
             }
+            if (statsResult.status === 'fulfilled') {
+                const stats = statsResult.value || {};
+                if (Array.isArray(stats.stats) && stats.stats.length > 0) setStatsData(stats.stats);
+                if (Array.isArray(stats.modules) && stats.modules.length > 0) setModulesData(stats.modules);
+            }
+            setLoadingCalls(false);
+        })();
+        return () => {
+            cancelled = true;
         };
-        
-        if (activeTab === 'overview') {
-            fetchDashboardData();
-        }
-    }, [activeTab]);
+    }, [activeTab, overviewReload]);
 
-    const [relayCallId, setRelayCallId] = useState(null);
-    const [walletBalance, setWalletBalance] = useState(0.0);
-    const [isSuperuser, setIsSuperuser] = useState(false);
-    const [userMenuOpen, setUserMenuOpen] = useState(false);
-    const userPillRef = useRef(null);
-    const popoverMenuRef = useRef(null);
-    const [popoverPos, setPopoverPos] = useState({ bottom: 76, left: 16, width: 220 });
-
-    const updatePopoverPosition = () => {
+    const updatePopoverPosition = useCallback(() => {
         if (!userPillRef.current) return;
         const rect = userPillRef.current.getBoundingClientRect();
         const isCollapsed = rect.width < 140;
@@ -369,22 +456,24 @@ const Dashboard = () => {
                 width: Math.max(220, rect.width)
             });
         }
-    };
+    }, []);
 
     useEffect(() => {
-        if (userMenuOpen) {
-            updatePopoverPosition();
-            const handleScrollOrResize = () => updatePopoverPosition();
-            window.addEventListener('resize', handleScrollOrResize);
-            window.addEventListener('scroll', handleScrollOrResize, true);
-            return () => {
-                window.removeEventListener('resize', handleScrollOrResize);
-                window.removeEventListener('scroll', handleScrollOrResize, true);
-            };
-        }
-    }, [userMenuOpen, sidebarHovered]);
+        if (!userMenuOpen) return undefined;
+        const frame = requestAnimationFrame(updatePopoverPosition);
+        const handleScrollOrResize = () => updatePopoverPosition();
+        window.addEventListener('resize', handleScrollOrResize);
+        window.addEventListener('scroll', handleScrollOrResize, true);
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('resize', handleScrollOrResize);
+            window.removeEventListener('scroll', handleScrollOrResize, true);
+        };
+    }, [userMenuOpen, sidebarHovered, updatePopoverPosition]);
 
+    // Close the user menu on an outside click or Escape; move focus into it when it opens.
     useEffect(() => {
+        if (!userMenuOpen) return undefined;
         const handleClickOutside = (e) => {
             if (
                 userPillRef.current && !userPillRef.current.contains(e.target) &&
@@ -393,114 +482,164 @@ const Dashboard = () => {
                 setUserMenuOpen(false);
             }
         };
-        if (userMenuOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        const handleKey = (e) => {
+            if (e.key === 'Escape') {
+                setUserMenuOpen(false);
+                userPillRef.current?.focus();
+            }
+        };
+        const focusFrame = requestAnimationFrame(() => {
+            popoverMenuRef.current?.querySelector('[role="menuitem"]')?.focus();
+        });
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleKey);
+        return () => {
+            cancelAnimationFrame(focusFrame);
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleKey);
+        };
     }, [userMenuOpen]);
 
-    const fetchWalletBalance = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${window.APP_API_BASE || ''}/api/wallet/balance`, {
-                headers: { Authorization: token ? `Bearer ${token}` : '' }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setWalletBalance(data.credit_balance || 0.0);
-                setIsSuperuser(Boolean(data.is_superuser));
-            }
-        } catch (e) {
-            // silent catch
-        }
-    };
-
+    // Escape closes the mobile navigation overlay.
     useEffect(() => {
-        fetchWalletBalance();
+        if (!menuOpen) return undefined;
+        const handleKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+    }, [menuOpen]);
+
+    // Sidebar wallet pill: refreshed on every tab change (silent on errors).
+    useEffect(() => {
+        let cancelled = false;
+        apiFetch('/api/wallet/balance')
+            .then((data) => {
+                if (cancelled || !data) return;
+                setWalletBalance(Number(data.credit_balance) || 0.0);
+                setIsSuperuser(Boolean(data.is_superuser));
+            })
+            .catch(() => {});
+        return () => {
+            cancelled = true;
+        };
     }, [activeTab]);
 
+    // Any screen can open Wallet & Billing (e.g. after a 402): see openWalletTab() in lib/dashboardLinks.
     useEffect(() => {
-        const handleOpenWallet = () => setActiveTab('wallet');
-        window.addEventListener('open-wallet-tab', handleOpenWallet);
-        return () => window.removeEventListener('open-wallet-tab', handleOpenWallet);
-    }, []);
+        const handleOpenWallet = () => {
+            setActiveTab('wallet');
+            setMenuOpen(false);
+        };
+        window.addEventListener(OPEN_WALLET_EVENT, handleOpenWallet);
+        return () => window.removeEventListener(OPEN_WALLET_EVENT, handleOpenWallet);
+    }, [setActiveTab]);
 
-    const navItems = [
-        { id: 'overview',   label: 'Overview',      icon: LayoutGrid },
-        { id: 'leads',      label: 'Lead Finder',   icon: Search },
-        { id: 'history',    label: 'Session History', icon: History },
-        { id: 'relay',      label: 'Relay',          icon: Send },
-        { id: 'pearl',      label: 'Pearl',         icon: Sparkle },
-        { id: 'wizard',     label: 'Wizard',         icon: Wand2 },
-        { id: 'wallet',     label: 'Wallet & Billing', icon: Wallet },
-        { id: 'settings',   label: 'Settings',       icon: Settings },
-    ];
+    const selectNavItem = (item) => {
+        setMenuOpen(false);
+        setUserMenuOpen(false);
+        if (item.href) {
+            navigate(item.href);
+            return;
+        }
+        setActiveTab(item.id);
+    };
+
+    const navItems = DASHBOARD_NAV_ITEMS;
+    const handleViewAllHistory = useCallback(() => setActiveTab('history'), [setActiveTab]);
+    const handleOpenSession = useCallback((callId) => {
+        setHistoryFocusId(callId);
+        setActiveTab('history');
+    }, [setActiveTab]);
+    const handleOpenAnalytics = useCallback(() => setActiveTab('analytics'), [setActiveTab]);
+    const handleRetryOverview = useCallback(() => setOverviewReload((n) => n + 1), []);
+    const handleHistoryFocusHandled = useCallback(() => setHistoryFocusId(null), []);
+    const displayName = user?.full_name || user?.username || user?.email?.split('@')[0] || 'Operator';
+    const toggleUserMenu = (e) => {
+        e.stopPropagation();
+        setUserMenuOpen(prev => !prev);
+    };
 
     return (
         <div className="db-layout" data-lenis-prevent="true">
             {/* Sidebar — desktop only with GSAP hover expansion */}
-            <aside 
+            <aside
                 className={`db-sidebar ${sidebarHovered ? 'expanded' : ''}`}
                 ref={sidebarRef}
                 onMouseEnter={handleSidebarMouseEnter}
                 onMouseLeave={handleSidebarMouseLeave}
                 data-lenis-prevent="true"
+                aria-label="Primary"
             >
-                <div className="db-sidebar-logo" onClick={() => navigate('/')}>
-                    <div className="db-sidebar-mark">
+                <div
+                    className="db-sidebar-logo"
+                    onClick={() => navigate('/')}
+                    onKeyDown={onActivateKey(() => navigate('/'))}
+                    role="link"
+                    tabIndex={0}
+                    aria-label="ClozFlow home"
+                >
+                    <div className="db-sidebar-mark" aria-hidden="true">
                         <span>C<span className="dot">.</span></span>
                     </div>
                     <div className="db-sidebar-logo-text">
-                        <img 
-                            src="/clozflow_gradient_logo.png" 
-                            alt="Clozflow" 
-                            style={{ height: '30px', width: 'auto', objectFit: 'contain', display: 'block' }} 
+                        <img
+                            src="/clozflow_gradient_logo.png"
+                            alt=""
+                            style={{ height: '30px', width: 'auto', objectFit: 'contain', display: 'block' }}
                         />
                     </div>
                 </div>
 
-                <nav className="db-nav" style={{ position: 'relative' }}>
+                <nav className="db-nav" style={{ position: 'relative' }} aria-label="Dashboard sections">
                     {/* Shared sliding active background indicator */}
-                    <div className="db-nav-indicator" ref={indicatorRef}></div>
-                    
+                    <div className="db-nav-indicator" ref={indicatorRef} aria-hidden="true"></div>
+
                     {navItems.map((item) => {
                         const Icon = item.icon;
-                        const isActive = activeTab === item.id;
+                        const isActive = navActiveId === item.id;
                         return (
                             <button
+                                type="button"
                                 key={item.id}
-                                onClick={() => setActiveTab(item.id)}
+                                onClick={() => selectNavItem(item)}
                                 className={`db-nav-item ${isActive ? 'active' : ''} ${item.id === 'pearl' ? 'db-nav-item-pearl' : ''}`}
                                 title={!sidebarHovered ? item.label : undefined}
+                                aria-label={item.label}
+                                aria-current={isActive ? 'page' : undefined}
                             >
                                 {item.id === 'pearl' ? (
-                                    <img src={pearlLogo} alt="Pearl" className="db-nav-icon pearl-logo-img" style={{ width: 18, height: 18, objectFit: 'contain' }} />
+                                    <img src={pearlLogo} alt="" className="db-nav-icon pearl-logo-img" style={{ width: 18, height: 18, objectFit: 'contain' }} />
                                 ) : (
-                                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="db-nav-icon" />
+                                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="db-nav-icon" aria-hidden="true" />
                                 )}
                                 <span className="db-nav-label">{item.label}</span>
-                                {isActive && sidebarHovered && <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />}
+                                {isActive && sidebarHovered && <ChevronRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} aria-hidden="true" />}
                             </button>
                         );
                     })}
                 </nav>
 
                 {/* Primary Sidebar Wallet Pill (1 INR = 1 Credit) */}
-                <div 
-                    className="db-sidebar-wallet-pill" 
+                <div
+                    className="db-sidebar-wallet-pill"
                     onClick={() => setActiveTab('wallet')}
+                    onKeyDown={onActivateKey(() => setActiveTab('wallet'))}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={isSuperuser ? 'Wallet & Billing: unlimited credits (admin mode)' : `Wallet & Billing: balance ₹${walletBalance.toFixed(2)}`}
                     title={!sidebarHovered ? (isSuperuser ? 'Unlimited Credits (Admin Mode)' : `Wallet Balance: ₹${walletBalance.toFixed(2)}`) : undefined}
                 >
-                    <div className="db-sidebar-wallet-icon-box">
+                    <div className="db-sidebar-wallet-icon-box" aria-hidden="true">
                         <Wallet size={16} />
                     </div>
-                    <div className="db-sidebar-wallet-info">
+                    <div className="db-sidebar-wallet-info" aria-hidden="true">
                         <span className="db-sidebar-wallet-title">{isSuperuser ? 'Admin Access' : 'Wallet Credits'}</span>
                         <span className="db-sidebar-wallet-amount">{isSuperuser ? '⚡ Unlimited' : `₹${walletBalance.toFixed(2)}`}</span>
                     </div>
-                    <button 
+                    <button
                         type="button"
                         className="db-sidebar-wallet-add-btn"
+                        tabIndex={-1}
+                        aria-hidden="true"
                         onClick={(e) => {
                             e.stopPropagation();
                             setActiveTab('wallet');
@@ -513,38 +652,39 @@ const Dashboard = () => {
 
                 <div className="db-user-section">
                     {/* Interactive Profile Pill Trigger */}
-                    <div 
+                    <div
                         ref={userPillRef}
                         className={`db-user-pill ${userMenuOpen ? 'active' : ''}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setUserMenuOpen(prev => !prev);
-                        }}
-                        title={!sidebarHovered ? (user?.full_name || user?.username || user?.email?.split('@')[0]) : undefined}
+                        onClick={toggleUserMenu}
+                        onKeyDown={onActivateKey(toggleUserMenu)}
+                        role="button"
+                        tabIndex={0}
+                        aria-haspopup="menu"
+                        aria-expanded={userMenuOpen}
+                        aria-label={`Account menu for ${displayName}`}
+                        title={!sidebarHovered ? displayName : undefined}
                     >
-                        <div className="db-user-avatar">
-                            {user?.profile_image
-                                ? <img src={`${window.APP_API_BASE}${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                                : user?.full_name ? user.full_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || 'U'
-                            }
-                        </div>
+                        <UserInitialAvatar user={user} className="db-user-avatar" />
                         <div className="db-user-details">
                             <span className="db-user-name">
                                 {user?.full_name || user?.username || user?.email?.split('@')[0]}
                             </span>
                         </div>
-                        <ChevronDown 
-                            size={14} 
-                            className={`db-user-chevron ${userMenuOpen ? 'rotated' : ''}`} 
+                        <ChevronDown
+                            size={14}
+                            aria-hidden="true"
+                            className={`db-user-chevron ${userMenuOpen ? 'rotated' : ''}`}
                         />
                     </div>
                 </div>
 
                 {/* Floating Profile Popover Menu rendered via Portal (Breaks out of overflow:hidden & z-index stacking context) */}
                 {userMenuOpen && typeof document !== 'undefined' && createPortal(
-                    <div 
+                    <div
                         ref={popoverMenuRef}
                         className="db-user-popover-portal animate-fade-in"
+                        role="menu"
+                        aria-label="Account"
                         style={{
                             position: 'fixed',
                             bottom: `${popoverPos.bottom}px`,
@@ -564,36 +704,39 @@ const Dashboard = () => {
                     >
                         <button
                             type="button"
+                            role="menuitem"
                             className="db-user-popover-item"
                             onClick={() => {
                                 setActiveTab('settings');
                                 setUserMenuOpen(false);
                             }}
                         >
-                            <Settings size={16} />
+                            <Settings size={16} aria-hidden="true" />
                             <span>Settings</span>
                         </button>
                         <button
                             type="button"
+                            role="menuitem"
                             className="db-user-popover-item"
                             onClick={() => {
-                                window.open('mailto:support@clozflow.com?subject=Support%20Inquiry', '_blank');
+                                window.open(SUPPORT_MAILTO, '_blank');
                                 setUserMenuOpen(false);
                             }}
                         >
-                            <Headphones size={16} />
+                            <Headphones size={16} aria-hidden="true" />
                             <span>Support</span>
                         </button>
-                        <div style={{ height: '1px', background: '#f1f5f9', margin: '4px 0' }} />
+                        <div role="separator" style={{ height: '1px', background: '#f1f5f9', margin: '4px 0' }} />
                         <button
                             type="button"
+                            role="menuitem"
                             className="db-user-popover-item logout"
                             onClick={() => {
                                 setUserMenuOpen(false);
                                 handleLogout();
                             }}
                         >
-                            <LogOut size={16} />
+                            <LogOut size={16} aria-hidden="true" />
                             <span>Logout</span>
                         </button>
                     </div>,
@@ -603,31 +746,34 @@ const Dashboard = () => {
 
             {/* Pearl Secondary Sidebar — Sits flush without margin right next to primary bar */}
             {activeTab === 'pearl' && (
-                <PearlSecondarySidebar 
-                    activeSection={pearlSubTab} 
-                    onSelectSection={setPearlSubTab} 
+                <PearlSecondarySidebar
+                    activeSection={pearlSubTab}
+                    onSelectSection={setPearlSubTab}
                 />
             )}
 
             {/* Main content */}
             <main className={`db-main ${activeTab === 'pearl' ? 'has-pearl-sec' : ''}`} data-lenis-prevent="true">
                 {activeTab === 'overview'  && (
-                    <OverviewTab 
-                        user={user} 
-                        navigate={navigate} 
+                    <OverviewTab
+                        user={user}
                         recentCalls={recentCalls}
                         loadingCalls={loadingCalls}
-                        onViewAll={() => setActiveTab('history')}
+                        callsError={callsError}
+                        onRetry={handleRetryOverview}
+                        onViewAll={handleViewAllHistory}
+                        onOpenSession={handleOpenSession}
+                        onOpenAnalytics={handleOpenAnalytics}
                         stats={statsData}
                         modules={modulesData}
                     />
                 )}
                 {activeTab === 'leads'     && (
                     currentLeadForOutreach ? (
-                        <OutreachStudioPage 
-                            lead={currentLeadForOutreach} 
-                            userOffer={outreachUserOffer} 
-                            onBack={() => setCurrentLeadForOutreach(null)} 
+                        <OutreachStudioPage
+                            lead={currentLeadForOutreach}
+                            userOffer={outreachUserOffer}
+                            onBack={() => setCurrentLeadForOutreach(null)}
                         />
                     ) : (
                         <LeadFinder onOutreach={(lead, offer) => {
@@ -636,7 +782,13 @@ const Dashboard = () => {
                         }} />
                     )
                 )}
-                {activeTab === 'history'   && <HistoryView onCreateRelay={(callId) => { setRelayCallId(callId); setActiveTab('relay'); }} />}
+                {activeTab === 'history'   && (
+                    <HistoryView
+                        initialCallId={historyFocusId}
+                        onInitialCallHandled={handleHistoryFocusHandled}
+                        onCreateRelay={(callId) => { setRelayCallId(callId); setActiveTab('relay'); }}
+                    />
+                )}
                 {activeTab === 'relay'     && (
                     relayCallId ? (
                         <RelayBuilder callId={relayCallId} onBack={() => setRelayCallId(null)} />
@@ -645,75 +797,75 @@ const Dashboard = () => {
                     )
                 )}
                 {activeTab === 'pearl'     && (
-                    <PearlSubSectionView 
-                        section={pearlSubTab} 
-                        onNavigateSection={setPearlSubTab} 
+                    <PearlSubSectionView
+                        section={pearlSubTab}
+                        onNavigateSection={setPearlSubTab}
                         user={user}
                     />
                 )}
-                {activeTab === 'analytics' && <AnalyticsPage />}
+                {activeTab === 'analytics' && <AnalyticsPage onBack={() => setActiveTab('overview')} />}
                 {activeTab === 'wizard'    && <WizardPage />}
-                {activeTab === 'wallet'    && <WalletPage onBalanceUpdated={(newBal) => setWalletBalance(newBal)} />}
-                {activeTab === 'settings'  && <SettingsShell />}
+                {activeTab === 'wallet'    && <WalletPage onBalanceUpdated={(newBal) => setWalletBalance(Number(newBal) || 0)} />}
+                {activeTab === 'settings'  && <SettingsShell initialPanel={settingsPanel} onPanelChange={setSettingsPanel} />}
             </main>
             {/* Floating pill dock — mobile only */}
-            <div className="db-bottom-nav">
+            <nav className="db-bottom-nav" aria-label="Quick navigation">
                 {/* Overview */}
                 <button
+                    type="button"
                     onClick={() => { setActiveTab('overview'); setMenuOpen(false); }}
-                    className={`db-bottom-tab ${activeTab === 'overview' ? 'active' : ''}`}
+                    className={`db-bottom-tab ${navActiveId === 'overview' ? 'active' : ''}`}
+                    aria-current={navActiveId === 'overview' ? 'page' : undefined}
                 >
-                    <LayoutGrid size={20} strokeWidth={activeTab === 'overview' ? 2.5 : 1.75} />
+                    <LayoutGrid size={20} strokeWidth={navActiveId === 'overview' ? 2.5 : 1.75} aria-hidden="true" />
                     <span>Overview</span>
                 </button>
 
                 {/* Pearl */}
                 <button
+                    type="button"
                     onClick={() => { setActiveTab('pearl'); setMenuOpen(false); }}
                     className={`db-bottom-tab ${activeTab === 'pearl' ? 'active' : ''} db-bottom-tab-pearl`}
+                    aria-current={activeTab === 'pearl' ? 'page' : undefined}
                 >
-                    <img src={pearlLogo} alt="Pearl" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                    <img src={pearlLogo} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
                     <span>Pearl</span>
                 </button>
 
                 {/* More Menu Toggle */}
                 <button
+                    type="button"
                     onClick={() => setMenuOpen(!menuOpen)}
                     className={`db-bottom-tab ${menuOpen ? 'active' : ''}`}
+                    aria-expanded={menuOpen}
+                    aria-controls="db-mobile-navigation"
                 >
-                    {menuOpen ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={1.75} />}
+                    {menuOpen ? <X size={20} strokeWidth={2} aria-hidden="true" /> : <Menu size={20} strokeWidth={1.75} aria-hidden="true" />}
                     <span>Menu</span>
                 </button>
-            </div>
+            </nav>
 
             {/* Fullscreen Mobile Navigation Drawer Overlay */}
             {menuOpen && (
-                <div className="db-mobile-overlay animate-fade-in" data-lenis-prevent="true">
+                <div className="db-mobile-overlay animate-fade-in" data-lenis-prevent="true" id="db-mobile-navigation" role="dialog" aria-modal="true" aria-label="Navigation">
                     <div className="db-mobile-overlay-header">
                         <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>Navigation</span>
-                        <button onClick={() => setMenuOpen(false)} className="db-mobile-overlay-close">
-                            <X size={20} />
+                        <button type="button" onClick={() => setMenuOpen(false)} className="db-mobile-overlay-close" aria-label="Close navigation">
+                            <X size={20} aria-hidden="true" />
                         </button>
                     </div>
-                    
+
                     <div className="db-mobile-overlay-content">
-                        {[
-                            { id: 'overview', label: 'Overview', desc: 'Performance overview & analytics stats', icon: LayoutGrid },
-                            { id: 'leads', label: 'Lead Finder', desc: 'Multi-level geographic lead discovery', icon: Search },
-                            { id: 'history', label: 'Session History', desc: 'Call transcripts & diagnostic ratings', icon: History },
-                            { id: 'relay', label: 'Relay', desc: 'Follow-up pages & meeting booking', icon: Send },
-                            { id: 'pearl', label: 'Pearl Coach', desc: 'Real-time conversation guiding system', icon: Sparkle },
-                            { id: 'wizard', label: 'Wizard', desc: 'Virtual meeting copilot for Meet & Zoom', icon: Wand2 },
-                            { id: 'wallet', label: 'Wallet & Billing', desc: 'Credits balance, top-ups & usage meter', icon: Wallet },
-                            { id: 'settings', label: 'Settings', desc: 'Workspace details & prompt overrides', icon: Settings },
-                        ].map((item) => {
+                        {MOBILE_MENU_ITEMS.map((item) => {
                             const Icon = item.icon;
-                            const isActive = activeTab === item.id;
+                            const isActive = navActiveId === item.id;
                             return (
                                 <button
+                                    type="button"
                                     key={item.id}
-                                    onClick={() => { setActiveTab(item.id); setMenuOpen(false); }}
+                                    onClick={() => selectNavItem(item)}
                                     className={`db-mobile-overlay-item ${isActive ? 'active' : ''}`}
+                                    aria-current={isActive ? 'page' : undefined}
                                     style={{
                                         display: 'flex', alignItems: 'center', gap: '1rem',
                                         width: '100%', padding: '1rem 1.25rem', background: isActive ? 'var(--surface)' : 'transparent',
@@ -726,14 +878,14 @@ const Dashboard = () => {
                                         background: isActive ? 'var(--text)' : 'var(--bg)',
                                         color: isActive ? 'var(--bg)' : 'var(--text)',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
-                                    }}>
+                                    }} aria-hidden="true">
                                         <Icon size={18} />
                                     </div>
                                     <div>
                                         <div style={{ fontSize: '0.925rem', fontWeight: 700, color: 'var(--text)' }}>{item.label}</div>
                                         <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginTop: 2 }}>{item.desc}</div>
                                     </div>
-                                    <ChevronRight size={15} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }} />
+                                    <ChevronRight size={15} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }} aria-hidden="true" />
                                 </button>
                             );
                         })}
@@ -741,12 +893,10 @@ const Dashboard = () => {
 
                     <div className="db-mobile-overlay-footer">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                            <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, overflow: 'hidden' }}>
-                                {user?.profile_image
-                                    ? <img src={`${window.APP_API_BASE}${user.profile_image}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                                    : user?.full_name ? user.full_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || 'U'
-                                }
-                            </div>
+                            <UserInitialAvatar
+                                user={user}
+                                style={{ width: 40, height: 40, borderRadius: '12px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, overflow: 'hidden', flexShrink: 0 }}
+                            />
                             <div style={{ minWidth: 0, flex: 1 }}>
                                 <div style={{ fontSize: '0.92rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {user?.full_name || user?.username || 'Operator'}
@@ -767,32 +917,33 @@ const Dashboard = () => {
                                     borderRadius: 10, padding: '0.65rem', color: 'var(--text)', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer'
                                 }}
                             >
-                                <Settings size={14} /> Settings
+                                <Settings size={14} aria-hidden="true" /> Settings
                             </button>
                             <button
                                 type="button"
-                                onClick={() => { window.open('mailto:support@clozflow.com?subject=Support%20Inquiry', '_blank'); setMenuOpen(false); }}
+                                onClick={() => { window.open(SUPPORT_MAILTO, '_blank'); setMenuOpen(false); }}
                                 style={{
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
                                     background: 'var(--surface)', border: '1px solid var(--border)',
                                     borderRadius: 10, padding: '0.65rem', color: 'var(--text)', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer'
                                 }}
                             >
-                                <Headphones size={14} /> Support
+                                <Headphones size={14} aria-hidden="true" /> Support
                             </button>
                         </div>
 
                         <button
+                            type="button"
                             onClick={() => { handleLogout(); setMenuOpen(false); }}
                             className="interactive"
                             style={{
                                 display: 'flex', alignItems: 'center', gap: '0.5rem',
                                 background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)',
                                 borderRadius: 12, padding: '0.75rem 1.5rem', width: '100%',
-                                justifyContent: 'center', color: '#ef4444', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer'
+                                justifyContent: 'center', color: '#dc2626', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer'
                             }}
                         >
-                            <LogOut size={15} /> Log out
+                            <LogOut size={15} aria-hidden="true" /> Log out
                         </button>
                     </div>
                 </div>
@@ -1604,6 +1755,86 @@ const Dashboard = () => {
                 .session-list-item:hover .session-chevron {
                     transform: translateX(4px);
                     color: var(--text);
+                }
+
+                /* ── User pill & account menu (design spec §9.4; previously unstyled) ── */
+                .db-user-pill {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    padding: 0.35rem;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    overflow: hidden;
+                    outline: none;
+                    transition: background 0.2s ease;
+                }
+                .db-user-pill:hover,
+                .db-user-pill.active {
+                    background: var(--surface-2);
+                }
+                .db-user-pill:focus-visible {
+                    box-shadow: 0 0 0 2px var(--accent);
+                }
+                .db-user-avatar {
+                    background: #EAF0F6;
+                    border: 1px solid var(--border);
+                    color: var(--text);
+                    overflow: hidden;
+                    box-sizing: border-box;
+                }
+                .db-user-chevron {
+                    margin-left: auto;
+                    flex-shrink: 0;
+                    color: var(--text-dim);
+                    opacity: 0;
+                    transition: transform 0.25s ease;
+                }
+                .db-user-chevron.rotated {
+                    transform: rotate(180deg);
+                }
+                .db-user-popover-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    width: 100%;
+                    height: 40px;
+                    padding: 0 12px;
+                    border: none;
+                    border-radius: 10px;
+                    background: transparent;
+                    font: inherit;
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #0A0A0A;
+                    text-align: left;
+                    cursor: pointer;
+                }
+                .db-user-popover-item svg {
+                    color: #6B7280;
+                    flex-shrink: 0;
+                }
+                .db-user-popover-item:hover,
+                .db-user-popover-item:focus-visible {
+                    background: #F1F5F9;
+                    outline: none;
+                }
+                .db-user-popover-item.logout,
+                .db-user-popover-item.logout svg {
+                    color: #EF4444;
+                }
+                .db-user-popover-item.logout:hover,
+                .db-user-popover-item.logout:focus-visible {
+                    background: #FEF2F2;
+                }
+                .db-nav-item:focus-visible,
+                .db-sidebar-wallet-pill:focus-visible,
+                .db-sidebar-logo:focus-visible,
+                .db-bottom-tab:focus-visible,
+                .db-mobile-overlay-item:focus-visible,
+                .db-mobile-overlay-close:focus-visible {
+                    outline: 2px solid var(--accent);
+                    outline-offset: 2px;
                 }
 
                 /* ── 1200px ── */

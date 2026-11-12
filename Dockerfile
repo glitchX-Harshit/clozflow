@@ -29,6 +29,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Stream Python logs to supervisord immediately
+ENV PYTHONUNBUFFERED=1
+
 # Install Python backend dependencies
 COPY backend/requirements_full.txt ./requirements.txt
 # Install PyTorch CPU-only first for smaller image size
@@ -59,6 +62,11 @@ RUN chmod +x /app/entrypoint.sh
 # Nginx will be configured to listen on this port via entrypoint.sh.
 ENV PORT=8080
 EXPOSE ${PORT}
+
+# Healthy only when nginx is up AND proxies to a running backend (/health is a FastAPI route).
+# The start period covers loading torch, Silero VAD and the embedding model.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 \
+    CMD curl -fsS "http://127.0.0.1:${PORT}/health" || exit 1
 
 # Run the entrypoint script
 CMD ["/app/entrypoint.sh"]

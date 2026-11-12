@@ -64,6 +64,7 @@ _OVERRIDE_REGEX = re.compile("|".join(_OVERRIDE_PATTERNS), re.IGNORECASE)
 _EXFILTRATION_REGEX = re.compile("|".join(_EXFILTRATION_PATTERNS), re.IGNORECASE)
 _PERSONA_HIJACK_REGEX = re.compile("|".join(_PERSONA_HIJACK_PATTERNS), re.IGNORECASE)
 _COERCED_COMMITMENT_REGEX = re.compile("|".join(_COERCED_COMMITMENT_PATTERNS), re.IGNORECASE)
+_WHITESPACE_REGEX = re.compile(r"[ \t]{2,}")
 
 
 # ── Natural Conversational Deflection Responses (In Character) ─────────────
@@ -71,7 +72,7 @@ _COERCED_COMMITMENT_REGEX = re.compile("|".join(_COERCED_COMMITMENT_PATTERNS), r
 _DEFLECTION_RESPONSES = [
     "Haha, bilkul nahi! Main toh seedhe business results aur conversion ki baat karne aayi hoon. Batayiye, aapka current outbound process kaisa chal raha hai?",
     "Nice try! But honestly, main yahan aapke sales pipeline ko streamline karne ki baat kar rahi hoon. Let's focus on that — challenges kahan aa rahe hain?",
-    "Dekhiye, main Pearl hoon aur mera focus sirf aapki company ke growth aur conversions pe hai. Chaliye main topic pe aate hain, what's your biggest priority right now?",
+    "Samajh rahi hoon, but honestly mera focus sirf aapki company ke growth aur conversions pe hai. Chaliye main topic pe aate hain, what's your biggest priority right now?",
     "Haha, good one! But shortcuts ya tricks chhodte hain, let's talk real business. Aapki team currently leads kaise handle kar rahi hai?",
 ]
 
@@ -122,5 +123,5 @@ def sanitize_input_tokens(text: str) -> str:
     # Strip known control markers
     sanitized = _CONTROL_TOKEN_REGEX.sub("", text)
     # Strip excessive repeated whitespace
-    sanitized = re.sub(r"[ \t]{2,}", " ", sanitized)
+    sanitized = _WHITESPACE_REGEX.sub(" ", sanitized)
     return sanitized.strip()

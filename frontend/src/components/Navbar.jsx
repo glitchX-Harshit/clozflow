@@ -15,13 +15,41 @@ const MoonIcon = () => (
   </svg>
 );
 
+const THEME_KEY = 'clozflow:marketing-theme';
+
+const readTheme = () => {
+  try {
+    return sessionStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
+  } catch {
+    return 'light';
+  }
+};
+
+/** The dark look only exists on marketing pages: it is set on <html> while a Navbar is mounted. */
+const applyTheme = (mode) => {
+  const root = document.documentElement;
+  if (mode === 'dark') {
+    root.classList.add('dark');
+    root.style.setProperty('--bg', '#111110');
+    root.style.setProperty('--text', '#F1EFEA');
+  } else {
+    root.classList.remove('dark');
+    root.style.removeProperty('--bg');
+    root.style.removeProperty('--text');
+  }
+};
+
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
-  const [mode, setMode] = useState(() => {
-    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-  });
+  const [mode, setMode] = useState(readTheme);
+
+  // Apply the marketing theme; leaving the marketing pages restores the (light-only) product look.
+  useEffect(() => {
+    applyTheme(mode);
+    return () => applyTheme('light');
+  }, [mode]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -34,27 +62,23 @@ export default function Navbar() {
   const toggleTheme = () => {
     const next = mode === 'dark' ? 'light' : 'dark';
     setMode(next);
-    if (next === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.setProperty('--bg', '#111110');
-      document.documentElement.style.setProperty('--text', '#F1EFEA');
-    } else {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.style.setProperty('--bg', '#f4f6f8');
-      document.documentElement.style.setProperty('--text', '#0a0a0a');
+    try {
+      sessionStorage.setItem(THEME_KEY, next);
+    } catch {
+      // Storage blocked: the choice lasts until the next page.
     }
   };
 
   const navLinks = [
     {
       label: 'Product',
-      href: '/#objections',
+      href: '/#how-it-works',
       onClick: (e) => {
         e.preventDefault();
         if (location.pathname === '/') {
-          document.getElementById('objections')?.scrollIntoView({ behavior: 'smooth' });
+          document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
         } else {
-          navigate('/#objections');
+          navigate('/#how-it-works');
         }
       },
     },
@@ -112,6 +136,7 @@ export default function Navbar() {
                 className={`editorial-navbar__link ${l.active ? 'editorial-navbar__link--active' : ''}`} 
                 href={l.href} 
                 onClick={l.onClick}
+                aria-current={l.active ? 'page' : undefined}
               >
                 {l.label}
               </a>

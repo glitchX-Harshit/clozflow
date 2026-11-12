@@ -1,7 +1,11 @@
+# Every third-party module the backend (and the rag/ml code it imports) uses.
+# torch/torchaudio are installed first by the Dockerfile from the CPU wheel
+# index; silero-vad depends on them, so a plain `pip install -r` also gets them.
+
 # ─── Core Web Framework ───
 fastapi
 uvicorn
-websockets>=14.0,<18.0
+websockets>=12.0,<14.0
 starlette
 python-multipart
 
@@ -10,6 +14,7 @@ python-dotenv
 pydantic
 pydantic-settings
 passlib[bcrypt]
+bcrypt
 PyJWT
 
 # ─── Database ───
@@ -20,6 +25,8 @@ psycopg2-binary
 
 # ─── HTTP Client ───
 httpx
+# imported directly by services/knowledge/url_safety.py (also an httpx dependency)
+httpcore
 requests
 
 # ─── AI / LLM ───
@@ -45,7 +52,23 @@ sentence-transformers
 # ─── PDF Reports ───
 reportlab
 
+# ─── Knowledge ingestion (crawler + uploaded documents) ───
+# bs4 is imported at startup (routers/knowledge.py -> services/knowledge/crawler.py)
+beautifulsoup4
+pypdf
+python-docx
+openpyxl
+
+# ─── Audio ───
+# MP3 fallback decoding for Pearl TTS
+miniaudio
+# audioop (Pearl 8 kHz -> 16 kHz resampling) left the stdlib in Python 3.13
+audioop-lts; python_version >= "3.13"
+
 # ─── Misc Utilities ───
 PyYAML
 phonenumbers
 aiofiles
+# IANA time zones for Pearl campaign calling windows (zoneinfo uses it when the OS has no
+# tz database, e.g. Windows or a slim image without the tzdata package)
+tzdata

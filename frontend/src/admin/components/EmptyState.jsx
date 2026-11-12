@@ -1,10 +1,11 @@
-import { Database, Inbox } from 'lucide-react';
+import { Database } from 'lucide-react';
 
 export default function EmptyState({
   title = "No data recorded",
   description = "No records exist for the selected filters or time period. All metrics represent genuine database rows.",
-  icon: Icon = Database
+  icon = Database
 }) {
+  const Icon = icon;
   return (
     <div className="admin-empty-state">
       <div style={{

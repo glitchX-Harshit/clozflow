@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShieldAlert, ArrowLeft, Loader2, Lock, Mail, KeyRound, ShieldCheck } from 'lucide-react';
-import { adminApi } from '../services/adminApi';
+import { adminApi, clearAdminToken, getAdminToken, setAdminToken } from '../services/adminApi';
 
 export default function AdminProtectedRoute({ children }) {
   const [authState, setAuthState] = useState({
@@ -21,7 +21,7 @@ export default function AdminProtectedRoute({ children }) {
 
   const verifyAdmin = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAdminToken();
       if (!token) {
         setAuthState({ loading: false, isAdmin: false, user: null, error: 'NO_TOKEN' });
         setShowLoginForm(true);
@@ -36,6 +36,8 @@ export default function AdminProtectedRoute({ children }) {
         setAuthState({ loading: false, isAdmin: false, user: adminUser, error: 'FORBIDDEN' });
       }
     } catch (err) {
+      // A stale admin-console session must not block a fresh sign-in.
+      if (err.message === 'Authentication required') clearAdminToken();
       setAuthState({
         loading: false,
         isAdmin: false,
@@ -62,7 +64,7 @@ export default function AdminProtectedRoute({ children }) {
     try {
       const API_BASE = typeof window !== 'undefined' && typeof window.APP_API_BASE === 'string'
         ? window.APP_API_BASE
-        : (typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:8100' : '');
+        : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8000' : '');
       const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -79,7 +81,9 @@ export default function AdminProtectedRoute({ children }) {
 
       const authData = await res.json();
       const token = authData.access_token;
-      localStorage.setItem('token', token);
+      if (!token) throw new Error('Incorrect email or password');
+      // Kept apart from the customer app's session (`token`).
+      setAdminToken(token);
 
       setAuthState({
         loading: false,
@@ -382,7 +386,8 @@ export default function AdminProtectedRoute({ children }) {
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
         <button
           onClick={() => {
-            localStorage.removeItem('token');
+            // Sign in with another account here without signing the customer app out.
+            clearAdminToken();
             setShowLoginForm(true);
           }}
           style={{

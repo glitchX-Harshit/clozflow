@@ -70,8 +70,10 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
     const [error, setError]               = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     
-    const { loginWithEmail, loginWithGoogle, loginWithOAuth } = useAuth();
+    const { loginWithEmail, loginWithGoogle, loginWithOAuth, sessionNotice, clearSessionNotice } = useAuth();
     const cardRef = useRef(null);
+    // Why the user landed here (e.g. "Your session expired — sign in again."), until they act.
+    const banner = error || sessionNotice || null;
 
     const handleOAuth = async (provider) => {
         setOauthLoading(provider);
@@ -93,6 +95,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
     const handleContinueClick = async (e) => {
         e.preventDefault();
         setError(null);
+        clearSessionNotice?.();
 
         if (step === 'email') {
             if (!formData.email.trim()) {
@@ -151,9 +154,9 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
                 <div className="pill-header">
                     <h1 className="pill-title">Log in to your account</h1>
                 </div>
-                {error && (
-                    <div className="pill-error-banner">
-                        {error}
+                {banner && (
+                    <div className="pill-error-banner" role="alert">
+                        {banner}
                     </div>
                 )}
 
@@ -239,11 +242,11 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
                                 />
                                 <span>
                                     I accept the{' '}
-                                    <a href="/terms" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
+                                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
                                         terms of service
                                     </a>{' '}
                                     &{' '}
-                                    <a href="/privacy" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
+                                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
                                         privacy policy
                                     </a>
                                 </span>
@@ -287,7 +290,8 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
                                 type="button"
                                 className="pill-password-toggle"
                                 onClick={() => setShowPassword(!showPassword)}
-                                tabIndex="-1"
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                aria-pressed={showPassword}
                             >
                                 {showPassword ? <EyeIcon /> : <EyeOffIcon />}
                             </button>
@@ -342,7 +346,7 @@ const Login = ({ onBack, onSwitchToSignup, onLoginSuccess }) => {
                 <p className="pill-footer-prompt">
                     Don't have an account?{' '}
                     <a
-                        href="/signup"
+                        href="/auth"
                         className="pill-footer-link"
                         onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}
                     >

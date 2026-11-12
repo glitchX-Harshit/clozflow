@@ -4,12 +4,48 @@ ElevenLabs TTS Provider — Optimized for realtime phone latency.
 Key optimizations:
 - Persistent httpx.AsyncClient (no TCP+TLS per utterance)
 - Streaming TTS used by default
-- Model ID configurable via env (ELEVENLABS_MODEL_ID)
-- optimize_streaming_latency param for lowest latency
+- Raw PCM requested via ``output_format`` (default ``pcm_8000`` = 16-bit LE mono 8 kHz,
+  what the Pearl telephony and browser pipelines play) instead of the MP3 default
+- Configuration read through ``elevenlabs_settings()`` only (see below)
+
+Environment (first non-empty name wins):
+    API key   ELEVENLABS_API_KEY, ELEVEN_LABS_API_KEY
+    voice id  ELEVENLABS_VOICE_ID, ELEVEN_LABS_VOICE_ID
+    model id  ELEVENLABS_MODEL_ID, ELEVEN_LABS_MODEL_ID   (default eleven_turbo_v2)
 """
 import os
 import httpx
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
+
+DEFAULT_VOICE_ID = "OtEfb2LVzIE45wdYe54M"
+DEFAULT_MODEL_ID = "eleven_turbo_v2"
+DEFAULT_OUTPUT_FORMAT = "pcm_8000"
+API_BASE_URL = "https://api.elevenlabs.io"
+
+
+def _first_env(*names: str) -> Optional[str]:
+    for name in names:
+        value = (os.getenv(name) or "").strip()
+        if value:
+            return value
+    return None
+
+
+def elevenlabs_api_key() -> Optional[str]:
+    """The ElevenLabs key: ELEVENLABS_API_KEY, falling back to the older ELEVEN_LABS_API_KEY."""
+    return _first_env("ELEVENLABS_API_KEY", "ELEVEN_LABS_API_KEY")
+
+
+def elevenlabs_settings() -> dict:
+    return {
+        "api_key": elevenlabs_api_key(),
+        "voice_id": _first_env("ELEVENLABS_VOICE_ID", "ELEVEN_LABS_VOICE_ID") or DEFAULT_VOICE_ID,
+        "model_id": _first_env("ELEVENLABS_MODEL_ID", "ELEVEN_LABS_MODEL_ID") or DEFAULT_MODEL_ID,
+    }
+
+
+def elevenlabs_configured() -> bool:
+    return bool(elevenlabs_api_key())
 
 
 # Persistent client — shared across all TTS calls in this process
@@ -31,10 +67,11 @@ class ElevenLabsTTSProvider:
     Handles converting text to speech.
     """
     def __init__(self):
-        self.api_key = os.getenv("ELEVENLABS_API_KEY") or os.getenv("ELEVEN_LABS_API_KEY")
-        self.default_voice_id = os.getenv("ELEVENLABS_VOICE_ID", "OtEfb2LVzIE45wdYe54M")
-        self.model_id = os.getenv("ELEVENLABS_MODEL_ID", "eleven_turbo_v2")
-        
+        settings = elevenlabs_settings()
+        self.api_key = settings["api_key"]
+        self.default_voice_id = settings["voice_id"]
+        self.model_id = settings["model_id"]
+
     @property
     def provider_name(self) -> str:
         return "elevenlabs"
@@ -58,33 +95,31 @@ class ElevenLabsTTSProvider:
     async def synthesize(self, text: str, options: dict = None) -> bytes:
         options = options or {}
         voice_id = options.get("voice_id", self.default_voice_id)
+        output_format = options.get("output_format", DEFAULT_OUTPUT_FORMAT)
         if not self.api_key:
             raise ValueError("ElevenLabs API Key not configured")
-            
-        url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+
+        url = f"{API_BASE_URL}/v1/text-to-speech/{voice_id}"
         client = _get_tts_client()
         response = await client.post(
-            url, json=self._payload(text), headers=self._headers(), timeout=15.0
+            url, params={"output_format": output_format}, json=self._payload(text),
+            headers=self._headers(), timeout=15.0
         )
         response.raise_for_status()
         return response.content
 
     async def stream(self, text: str, options: dict = None) -> AsyncGenerator[bytes, None]:
-        """Stream TTS audio chunks. First chunk arrives fastest with optimize_streaming_latency."""
+        """Stream TTS audio chunks in ``options['output_format']`` (default pcm_8000)."""
         options = options or {}
         voice_id = options.get("voice_id", self.default_voice_id)
+        output_format = options.get("output_format", DEFAULT_OUTPUT_FORMAT)
         if not self.api_key:
             raise ValueError("ElevenLabs API Key not configured")
 
-        # optimize_streaming_latency=4 = max latency optimization
-        url = (
-            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream"
-            f"?optimize_streaming_latency=4"
-        )
-        
+        url = f"{API_BASE_URL}/v1/text-to-speech/{voice_id}/stream"
         client = _get_tts_client()
         async with client.stream(
-            "POST", url, json=self._payload(text), headers=self._headers()
+            "POST", url, params={"output_format": output_format}, json=self._payload(text), headers=self._headers()
         ) as response:
             response.raise_for_status()
             async for chunk in response.aiter_bytes(chunk_size=4096):

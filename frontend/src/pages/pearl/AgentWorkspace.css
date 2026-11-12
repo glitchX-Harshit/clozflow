@@ -265,10 +265,40 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #10b981;
+  background: #94a3b8;
   border: 2px solid #ffffff;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
+
+/* Status tones (from agent.status) */
+.agent-monogram-status-dot.tone-slate { background: #94a3b8; }
+.agent-monogram-status-dot.tone-blue { background: #3b82f6; }
+.agent-monogram-status-dot.tone-green { background: #10b981; }
+.agent-monogram-status-dot.tone-amber { background: #f59e0b; }
+.agent-monogram-status-dot.tone-red { background: #ef4444; }
+
+.agent-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.agent-status-pill {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.agent-status-pill.tone-blue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.agent-status-pill.tone-green { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
+.agent-status-pill.tone-amber { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+.agent-status-pill.tone-red { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
 
 /* ── Identity Typography ─────────────────────────────────────────────────── */
 .agent-card-identity-col {
@@ -305,6 +335,41 @@
   color: #18181b;
 }
 
+/* Stretched "open" button: covers the card so a click anywhere opens the editor,
+   while keyboard users get one real, focusable button (no nested interactive roles). */
+.agent-card-open-btn {
+  display: block;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agent-card-open-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+}
+
+.agent-card-open-btn:focus {
+  outline: none;
+}
+
+.agent-card-open-btn:focus-visible::after {
+  outline: 2px solid #09090b;
+  outline-offset: 2px;
+}
+
 .agent-version-badge {
   font-size: 0.68rem;
   font-weight: 500;
@@ -327,8 +392,16 @@
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.agent-card-desc.is-empty {
+  color: #a1a1aa;
+  font-style: italic;
 }
 
 /* ── Specifications Chips ────────────────────────────────────────────────── */
@@ -375,6 +448,8 @@
 
 /* ── Card Footer ─────────────────────────────────────────────────────────── */
 .agent-card-footer {
+  position: relative;
+  z-index: 1; /* above the stretched open button */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -464,6 +539,76 @@
   border-color: #fecaca;
 }
 
+.agent-tool-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.agent-tool-btn:focus-visible,
+.agent-btn-test-cta:focus-visible,
+.agent-btn-primary:focus-visible,
+.agent-btn-subtle:focus-visible {
+  outline: 2px solid #09090b;
+  outline-offset: 2px;
+}
+
+/* ── Inline notices (duplicate / delete results) ─────────────────────────── */
+.agent-ws-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -16px 0 24px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.agent-ws-notice.error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.agent-ws-notice.success {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.agent-ws-notice span {
+  flex: 1;
+}
+
+.agent-ws-notice-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  border-radius: 4px;
+}
+
+.agent-ws-notice-close:focus-visible {
+  outline: 2px solid currentColor;
+}
+
+.agent-error-box .agent-empty-monogram {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+/* ── Call console wrapper ────────────────────────────────────────────────── */
+.agent-ws-dialpad-wrap {
+  padding: 2rem 2.5rem 4rem 2.5rem;
+}
+
 /* ── Empty State ─────────────────────────────────────────────────────────── */
 .agent-empty-box {
   text-align: center;
@@ -532,5 +677,19 @@
 
   .agent-ws-card {
     padding: 24px;
+  }
+
+  .agent-ws-dialpad-wrap {
+    padding: 1.25rem 1rem 3rem 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .agent-ws-filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .agent-card-footer {
+    flex-wrap: wrap;
   }
 }

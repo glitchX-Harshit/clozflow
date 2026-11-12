@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft,
   UserCheck,
@@ -16,15 +16,17 @@ import {
   PhoneCall
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
+import { formatServerDate, formatServerDateTime } from '../../lib/dates';
+import { useAdminQuery } from '../services/useAdminQuery';
 import StatusBadge from '../components/StatusBadge';
 import EmptyState from '../components/EmptyState';
 
 export default function AdminUserDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const query = useAdminQuery(String(id), () => adminApi.getUserDetail(id));
+  const data = query.data;
+  const loading = query.loading;
+  const error = data ? null : query.error;
   const [mutating, setMutating] = useState(false);
 
   // Status mutation modal state
@@ -38,18 +40,7 @@ export default function AdminUserDetail() {
   const [creditType, setCreditType] = useState('adjustment');
   const [creditReason, setCreditReason] = useState('');
 
-  const loadUser = async () => {
-    setLoading(true);
-    try {
-      const res = await adminApi.getUserDetail(id);
-      setData(res);
-      setNewStatus(res.user?.account_status === 'suspended' ? 'active' : 'suspended');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loadUser = () => query.reload();
 
   const handleCreditAdjustment = async (e) => {
     e.preventDefault();
@@ -66,10 +57,6 @@ export default function AdminUserDetail() {
       setMutating(false);
     }
   };
-
-  useEffect(() => {
-    loadUser();
-  }, [id]);
 
   const handleStatusChange = async (e) => {
     e.preventDefault();
@@ -111,7 +98,6 @@ export default function AdminUserDetail() {
     payments = [],
     copilot_sessions = [],
     pearl_agents = [],
-    recent_activities = [],
     credit_transactions = [],
     telephony_provisioning = {},
     pearl_economics = {}
@@ -140,7 +126,10 @@ export default function AdminUserDetail() {
             <Coins size={14} /> Adjust Credits
           </button>
           <button
-            onClick={() => setShowStatusModal(true)}
+            onClick={() => {
+              setNewStatus(user?.account_status === 'suspended' ? 'active' : 'suspended');
+              setShowStatusModal(true);
+            }}
             className="admin-btn"
             style={{
               borderColor: user.account_status === 'active' ? 'rgba(239, 68, 68, 0.4)' : 'rgba(16, 185, 129, 0.4)',
@@ -182,7 +171,7 @@ export default function AdminUserDetail() {
                 <span>{user.sales_style || '—'}</span>
 
                 <span style={{ color: 'var(--admin-text-muted)' }}>Registered</span>
-                <span>{user.created_at ? new Date(user.created_at).toLocaleString() : '—'}</span>
+                <span>{formatServerDateTime(user.created_at)}</span>
               </div>
             </div>
           </div>
@@ -210,7 +199,7 @@ export default function AdminUserDetail() {
                 <span style={{ color: 'var(--admin-text-dim)' }}>{telephony_provisioning.kyc_status || 'Not tracked'}</span>
 
                 <span style={{ color: 'var(--admin-text-muted)' }}>Last Account Update</span>
-                <span>{user.updated_at ? new Date(user.updated_at).toLocaleString() : '—'}</span>
+                <span>{formatServerDateTime(user.updated_at)}</span>
               </div>
             </div>
           </div>
@@ -309,7 +298,7 @@ export default function AdminUserDetail() {
                         <td className="mono">₹{(s.amount || 0).toLocaleString()}</td>
                         <td><StatusBadge status={s.status} /></td>
                         <td style={{ fontSize: '12px' }}>
-                          {s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}
+                          {formatServerDate(s.created_at)}
                         </td>
                       </tr>
                     ))}
@@ -354,7 +343,7 @@ export default function AdminUserDetail() {
                         <td className="mono">{tx.balance_after}</td>
                         <td style={{ fontSize: '12px' }}>{tx.description || '—'}</td>
                         <td style={{ fontSize: '12px' }}>
-                          {tx.created_at ? new Date(tx.created_at).toLocaleDateString() : '—'}
+                          {formatServerDate(tx.created_at)}
                         </td>
                       </tr>
                     ))}
@@ -402,7 +391,7 @@ export default function AdminUserDetail() {
                       <td className="mono strong">₹{(p.net_amount || 0).toLocaleString()}</td>
                       <td><StatusBadge status={p.status} /></td>
                       <td style={{ fontSize: '12px' }}>
-                        {p.created_at ? new Date(p.created_at).toLocaleString() : '—'}
+                        {formatServerDateTime(p.created_at)}
                       </td>
                     </tr>
                   ))}
@@ -445,7 +434,7 @@ export default function AdminUserDetail() {
                         <td><StatusBadge status={a.status} /></td>
                         <td style={{ textTransform: 'capitalize' }}>{a.call_provider}</td>
                         <td style={{ fontSize: '12px' }}>
-                          {a.created_at ? new Date(a.created_at).toLocaleDateString() : '—'}
+                          {formatServerDate(a.created_at)}
                         </td>
                       </tr>
                     ))}
@@ -486,7 +475,7 @@ export default function AdminUserDetail() {
                         <td style={{ fontSize: '12px' }}>{c.stage}</td>
                         <td>{c.buying_intent}/10</td>
                         <td style={{ fontSize: '12px' }}>
-                          {c.created_at ? new Date(c.created_at).toLocaleDateString() : '—'}
+                          {formatServerDate(c.created_at)}
                         </td>
                       </tr>
                     ))}

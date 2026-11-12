@@ -143,7 +143,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                     <h1 className="pill-title">Create your account</h1>
                 </div>
                 {error && (
-                    <div className="pill-error-banner">
+                    <div className="pill-error-banner" role="alert">
                         {error}
                     </div>
                 )}
@@ -191,7 +191,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                             <button
                                 type="button"
                                 className="pill-sso-btn"
-                                onClick={() => setStep('details')}
+                                onClick={() => setError('Phone authentication currently requires enterprise setup.')}
                             >
                                 <span className="pill-sso-icon">
                                     <PhoneIcon />
@@ -230,11 +230,11 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                                 />
                                 <span>
                                     I accept the{' '}
-                                    <a href="/terms" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
+                                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
                                         terms of service
                                     </a>{' '}
                                     &{' '}
-                                    <a href="/privacy" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
+                                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="pill-terms-link" onClick={(e) => e.stopPropagation()}>
                                         privacy policy
                                     </a>
                                 </span>
@@ -289,7 +289,8 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                                 type="button"
                                 className="pill-password-toggle"
                                 onClick={() => setShowPassword(!showPassword)}
-                                tabIndex="-1"
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                aria-pressed={showPassword}
                             >
                                 {showPassword ? <EyeIcon /> : <EyeOffIcon />}
                             </button>
@@ -312,7 +313,7 @@ const Signup = ({ onBack, onSwitchToLogin, onSignupSuccess }) => {
                 <p className="pill-footer-prompt">
                     Already have an account?{' '}
                     <a
-                        href="/login"
+                        href="/auth"
                         className="pill-footer-link"
                         onClick={(e) => { e.preventDefault(); onSwitchToLogin(); }}
                     >

@@ -1,161 +1,66 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import {
-    Zap,
-    BrainCircuit,
-    TrendingUp,
-    X,
-    MessageSquare,
-    ArrowDownToLine,
-} from 'lucide-react';
 import useCopilotStore from '../store/copilotStore';
+import CopilotHud from '../pages/wizard/CopilotHud';
+import { useHudHotkeys } from '../pages/wizard/hudHotkeys';
 import './LiveCopilotPopup.css';
 
 /**
- * LiveCopilotPopup — Renders copilot content into the external window.
+ * LiveCopilotPopup — renders the copilot HUD into the external window.
  *
- * This component is mounted at the App root. It reads the external
- * window container from the Zustand store and portals content into it.
- *
- * No in-page popup mode — the popup ONLY lives in the external window.
- * When docked, the LiveCall dashboard panel handles the UI instead.
+ * Mounted once at the App root. It reads the external window container from
+ * the Zustand store and portals the HUD into it; the audio pipeline and the
+ * card policy stay in the Live Call page (the main tab), so closing this window
+ * never stops capture. Hotkeys are attached to the external document and the
+ * primary button receives focus when the window opens.
  */
 const LiveCopilotPopup = () => {
-    const {
-        externalContainer,
-        isListening,
-        latestSuggestion,
-        suggestionCount,
-        reasoningData,
-        dockToPanel,
-        hidePopup,
-    } = useCopilotStore();
+    const externalContainer = useCopilotStore((s) => s.externalContainer);
+    const externalWindow = useCopilotStore((s) => s.externalWindow);
+    const controls = useCopilotStore((s) => s.controls);
+    const meter = useCopilotStore((s) => s.meter);
+    const dockToPanel = useCopilotStore((s) => s.dockToPanel);
+    const hidePopup = useCopilotStore((s) => s.hidePopup);
+    const setAskOpen = useCopilotStore((s) => s.setAskOpen);
 
-    // ── Animation key for new suggestions ──
-    const [animKey, setAnimKey] = useState(0);
-    const prevSuggestionId = useRef(null);
-    const bodyRef = useRef(null);
-
-    // Re-animate when new suggestion arrives
-    useEffect(() => {
-        if (latestSuggestion && latestSuggestion.id !== prevSuggestionId.current) {
-            prevSuggestionId.current = latestSuggestion.id;
-            setAnimKey(k => k + 1);
-            if (bodyRef.current) bodyRef.current.scrollTop = 0;
+    const onWhatToSay = useCallback(() => controls.whatToSay?.(), [controls]);
+    const onAsk = useCallback(() => setAskOpen(true), [setAskOpen]);
+    const onEscape = useCallback(() => {
+        const { askOpen, hud } = useCopilotStore.getState();
+        if (askOpen) {
+            setAskOpen(false);
+            return true;
         }
-    }, [latestSuggestion]);
+        if (hud.card) {
+            controls.dismiss?.();
+            return true;
+        }
+        return false;
+    }, [controls, setAskOpen]);
 
-    // Nothing to render if no external window is open
+    useHudHotkeys(externalWindow?.document || null, { onWhatToSay, onAsk, onEscape });
+
+    // Focus management: land on the primary action when the window opens.
+    useEffect(() => {
+        if (!externalContainer) return undefined;
+        const id = setTimeout(() => {
+            try {
+                externalContainer.querySelector('[data-hud-primary]')?.focus();
+            } catch {
+                // The window may be closing.
+            }
+        }, 60);
+        return () => clearTimeout(id);
+    }, [externalContainer]);
+
     if (!externalContainer) return null;
 
-    const content = (
-        <div className="copilot-popup" style={{ height: '100%' }}>
-            {/* ── Header ── */}
-            <div className="copilot-popup__header">
-                <div className="copilot-popup__header-left">
-                    <div className={`copilot-popup__wave ${!isListening ? 'copilot-popup__wave--idle' : ''}`}>
-                        <span className="copilot-popup__wave-bar" />
-                        <span className="copilot-popup__wave-bar" />
-                        <span className="copilot-popup__wave-bar" />
-                    </div>
-                    <span className="copilot-popup__title">ClozFlow Copilot</span>
-                    {isListening && (
-                        <span className="copilot-popup__live-badge">LIVE</span>
-                    )}
-                </div>
-
-                <div className="copilot-popup__header-actions">
-                    {/* Dock back into dashboard panel */}
-                    <button
-                        className="copilot-popup__btn copilot-popup__btn--dock"
-                        onClick={dockToPanel}
-                        title="Dock back to dashboard"
-                    >
-                        <ArrowDownToLine size={13} />
-                    </button>
-
-                    {/* Close */}
-                    <button
-                        className="copilot-popup__btn copilot-popup__btn--close"
-                        onClick={hidePopup}
-                        title="Close copilot"
-                    >
-                        <X size={13} />
-                    </button>
-                </div>
-            </div>
-
-            <div className="copilot-popup__divider" />
-
-            {/* ── Body ── */}
-            <div className="copilot-popup__body" ref={bodyRef}>
-                {!latestSuggestion ? (
-                    /* Idle / Waiting */
-                    <div className="copilot-popup__idle">
-                        <div className="copilot-popup__idle-ring">
-                            <BrainCircuit size={32} strokeWidth={1.5} />
-                        </div>
-                        <span className="copilot-popup__idle-text">
-                            {isListening ? 'Analyzing conversation...' : 'Waiting to start'}
-                        </span>
-                        <span className="copilot-popup__idle-sub">
-                            {isListening
-                                ? 'AI responses will appear here in real-time.'
-                                : 'Start your session to activate the engine.'}
-                        </span>
-                    </div>
-                ) : (
-                    <>
-                        {/* AI Response */}
-                        <div className="copilot-popup__response" key={`r-${animKey}`}>
-                            <div className="copilot-popup__response-label">
-                                <Zap size={11} strokeWidth={2.5} />
-                                <span>Say This</span>
-                            </div>
-                            <div className="copilot-popup__response-text">
-                                "{latestSuggestion.text}"
-                            </div>
-                            {latestSuggestion.strategy && (
-                                <div className="copilot-popup__strategy">
-                                    {latestSuggestion.strategy}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Next Question */}
-                        {latestSuggestion.nextQuestion && (
-                            <div className="copilot-popup__next" key={`n-${animKey}`}>
-                                <div className="copilot-popup__next-label">
-                                    <TrendingUp size={11} strokeWidth={2.5} />
-                                    <span>Ask Next</span>
-                                </div>
-                                <div className="copilot-popup__next-text">
-                                    "{latestSuggestion.nextQuestion}"
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Coaching Tip */}
-                        {reasoningData?.coachingTip && (
-                            <div className="copilot-popup__tip" key={`t-${animKey}`}>
-                                <MessageSquare size={12} strokeWidth={2} />
-                                <span>{reasoningData.coachingTip}</span>
-                            </div>
-                        )}
-
-                        {/* Count */}
-                        {suggestionCount > 1 && (
-                            <div className="copilot-popup__history-count">
-                                {suggestionCount} insights generated
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
-        </div>
+    return createPortal(
+        <div className="copilot-popup">
+            <CopilotHud compact dark onDock={dockToPanel} onClose={hidePopup} meter={meter || null} />
+        </div>,
+        externalContainer,
     );
-
-    return createPortal(content, externalContainer);
 };
 
 export default LiveCopilotPopup;

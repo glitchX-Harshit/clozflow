@@ -1,7 +1,6 @@
 import os
 import re
-import socket
-import ipaddress
+import time
 import asyncio
 from typing import List, Dict, Any, Optional, Set, Callable
 from urllib.parse import urlparse, urljoin
@@ -12,93 +11,36 @@ from bs4 import BeautifulSoup
 
 
 # ── SSRF Security Guard ───────────────────────────────────────────────────────
+# All URL validation and the connect-time IP check live in url_safety; the
+# names below are re-exported for existing imports.
 
-ALLOW_LOCALHOST_CRAWL = os.getenv("ALLOW_LOCALHOST_CRAWL", "false").lower() in ("true", "1", "yes")
+from services.knowledge.url_safety import (  # noqa: E402,F401
+    BLOCKED_HOSTNAMES,
+    UnsafeURLError,
+    allow_private_targets,
+    decode_body,
+    fetch_limited,
+    normalize_url,
+    safe_async_client,
+    validate_url_security,
+    validate_url_security_async,
+)
 
-BLOCKED_IP_NETWORKS = [
-    ipaddress.ip_network("0.0.0.0/8"),
-    ipaddress.ip_network("10.0.0.0/8"),
-    ipaddress.ip_network("100.64.0.0/10"),
-    ipaddress.ip_network("127.0.0.0/8"),
-    ipaddress.ip_network("169.254.0.0/16"),       # Cloud metadata (AWS, GCP, Azure, DigitalOcean)
-    ipaddress.ip_network("172.16.0.0/12"),
-    ipaddress.ip_network("192.0.0.0/24"),
-    ipaddress.ip_network("192.0.2.0/24"),
-    ipaddress.ip_network("192.168.0.0/16"),
-    ipaddress.ip_network("198.18.0.0/15"),
-    ipaddress.ip_network("198.51.100.0/24"),
-    ipaddress.ip_network("203.0.113.0/24"),
-    ipaddress.ip_network("224.0.0.0/4"),          # Multicast
-    ipaddress.ip_network("240.0.0.0/4"),          # Reserved
-    ipaddress.ip_network("::/128"),
-    ipaddress.ip_network("::1/128"),              # IPv6 loopback
-    ipaddress.ip_network("fc00::/7"),             # IPv6 unique local
-    ipaddress.ip_network("fe80::/10"),            # IPv6 link-local
-]
+ALLOW_LOCALHOST_CRAWL = allow_private_targets()
 
-BLOCKED_HOSTNAMES = {
-    "localhost",
-    "127.0.0.1",
-    "0.0.0.0",
-    "metadata.google.internal",
-    "instance-data",
-}
+# Crawl limits (pages / bytes / time / frontier).
+MAX_PAGES_HARD_CAP = 50
+MAX_PAGE_BYTES = int(os.getenv("CRAWL_MAX_PAGE_BYTES", str(3 * 1024 * 1024)))
+PAGE_DEADLINE_SECONDS = float(os.getenv("CRAWL_PAGE_DEADLINE_SECONDS", "20"))
+MAX_CRAWL_SECONDS = float(os.getenv("CRAWL_MAX_SECONDS", "150"))
+MAX_FRONTIER = 300
+MAX_SITEMAP_URLS = 500
 
-def validate_url_security(url: str) -> tuple[bool, str]:
-    """
-    Validates a URL against SSRF, dangerous schemes, and private IP targets.
-    Returns (is_safe, error_or_normalized_url).
-    """
-    try:
-        url = url.strip()
-        if not url.startswith(("http://", "https://")):
-            url = f"https://{url}"
 
-        parsed = urlparse(url)
-        if not parsed.scheme or parsed.scheme.lower() not in ("http", "https"):
-            return False, "Only HTTP and HTTPS URLs are permitted."
-
-        hostname = parsed.hostname
-        if not hostname:
-            return False, "Invalid URL: missing hostname."
-
-        hostname_lower = hostname.lower()
-        is_local_host = (
-            hostname_lower in ("localhost", "127.0.0.1", "0.0.0.0")
-            or hostname_lower.endswith(".local")
-        )
-
-        if is_local_host:
-            if ALLOW_LOCALHOST_CRAWL:
-                normalized = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
-                if parsed.query:
-                    normalized += f"?{parsed.query}"
-                return True, normalized
-            return False, "Destination 'localhost' is restricted for security (SSRF protection). To test local sites, use an ngrok/localtunnel URL or set ALLOW_LOCALHOST_CRAWL=true in backend/.env."
-
-        if hostname_lower in BLOCKED_HOSTNAMES or hostname_lower.endswith(".internal"):
-            return False, f"Target destination '{hostname}' is not permitted."
-
-        # DNS resolution check
-        try:
-            addr_info = socket.getaddrinfo(hostname, None)
-            for item in addr_info:
-                ip_str = item[4][0]
-                ip_obj = ipaddress.ip_address(ip_str)
-                for net in BLOCKED_IP_NETWORKS:
-                    if ip_obj in net:
-                        if ALLOW_LOCALHOST_CRAWL and (ip_obj.is_loopback or ip_obj.is_private):
-                            continue
-                        return False, f"Destination IP {ip_str} resolves to a private or restricted network."
-        except socket.gaierror:
-            return False, f"Could not resolve domain '{hostname}'."
-
-        normalized = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
-        if parsed.query:
-            normalized += f"?{parsed.query}"
-        return True, normalized
-    except Exception as e:
-        return False, f"URL validation failed: {str(e)}"
+def _same_site(host: str, base_host: str) -> bool:
+    host = (host or "").lower()
+    base_host = (base_host or "").lower()
+    return bool(host) and host.removeprefix("www.") == base_host.removeprefix("www.")
 
 
 # ── Page Priority Categorization ─────────────────────────────────────────────
@@ -326,7 +268,8 @@ def extract_markdown_internal_links(base_url: str, text: str) -> List[str]:
     base_domain = parsed_base.netloc.lower().replace("www.", "")
 
     # 1. Full absolute URLs matching base domain
-    raw_abs = re.findall(rf"https?://(?:www\.)?{re.escape(base_domain)}[a-zA-Z0-9_\-\/\.\?\=\#]+", text)
+    # The host must end right after base_domain (no "example.com.evil.net").
+    raw_abs = re.findall(rf"https?://(?:www\.)?{re.escape(base_domain)}(?:[/?#][a-zA-Z0-9_\-\/\.\?\=\#]*)?(?![a-zA-Z0-9.\-])", text)
     # 2. Markdown relative paths [text](/path)
     raw_rel = re.findall(r"\]\((/[a-zA-Z0-9_\-\/]+)\)", text)
 
@@ -352,21 +295,42 @@ def extract_markdown_internal_links(base_url: str, text: str) -> List[str]:
 # ── Production Website Crawler ───────────────────────────────────────────────
 
 class WebsiteCrawler:
+    """Bounded, SSRF-guarded crawler.
+
+    Every request (pages, sitemaps, reader fallback, each redirect hop) goes
+    through ``url_safety.safe_async_client``, which validates the resolved IP
+    at connect time. Limits: ``max_pages`` pages, ``max_page_bytes`` per
+    response body, ``page_deadline_seconds`` per fetch, ``max_total_seconds``
+    for the whole crawl, and a bounded frontier.
+    """
+
     def __init__(
         self,
         base_url: str,
         max_pages: int = 18,
         max_depth: int = 2,
         request_timeout: float = 12.0,
-        event_callback: Optional[Callable[[Dict[str, Any]], Any]] = None
+        event_callback: Optional[Callable[[Dict[str, Any]], Any]] = None,
+        max_total_seconds: float = MAX_CRAWL_SECONDS,
+        max_page_bytes: int = MAX_PAGE_BYTES,
+        page_deadline_seconds: float = PAGE_DEADLINE_SECONDS,
+        network_backend=None,
     ):
         self.base_url = base_url
-        self.max_pages = max_pages
+        self.max_pages = max(1, min(int(max_pages), MAX_PAGES_HARD_CAP))
         self.max_depth = max_depth
         self.timeout = request_timeout
         self.event_callback = event_callback
+        self.max_total_seconds = max_total_seconds
+        self.max_page_bytes = max_page_bytes
+        self.page_deadline_seconds = page_deadline_seconds
+        self._network_backend = network_backend
         self.visited: Set[str] = set()
         self.results: List[Dict[str, Any]] = []
+        self._started = 0.0
+
+    def _time_left(self) -> float:
+        return self.max_total_seconds - (time.monotonic() - self._started)
 
     async def _emit_event(self, event_type: str, data: Dict[str, Any]):
         if self.event_callback:
@@ -375,11 +339,20 @@ class WebsiteCrawler:
                 if asyncio.iscoroutine(res):
                     await res
             except Exception as e:
-                print(f"[Crawler Event Error] {e}")
+                print(f"[Crawler Event Error] {type(e).__name__}")
+
+    async def _get(self, client: httpx.AsyncClient, url: str, headers: Optional[dict] = None, deadline: Optional[float] = None):
+        """(response, text, truncated) with size and time caps."""
+        deadline = min(deadline or self.page_deadline_seconds, max(1.0, self._time_left()))
+        response, body, truncated = await fetch_limited(
+            client, url, max_bytes=self.max_page_bytes, deadline_seconds=deadline, headers=headers
+        )
+        return response, decode_body(response, body), truncated
 
     async def _discover_sitemap_urls(self, client: httpx.AsyncClient) -> List[str]:
         """Attempt to read sitemap.xml for high-priority pages."""
         parsed = urlparse(self.base_url)
+        base_host = (parsed.hostname or "").lower()
         sitemap_candidates = [
             f"{parsed.scheme}://{parsed.netloc}/sitemap.xml",
             f"{parsed.scheme}://{parsed.netloc}/sitemap_index.xml",
@@ -389,32 +362,36 @@ class WebsiteCrawler:
         ]
         urls_found = []
         for s_url in sitemap_candidates:
+            if self._time_left() <= 0:
+                break
             try:
-                is_safe, _ = validate_url_security(s_url)
-                if not is_safe:
-                    continue
-                resp = await client.get(s_url, timeout=6.0, follow_redirects=True)
-                if resp.status_code == 200 and "xml" in resp.headers.get("content-type", ""):
-                    root = ET.fromstring(resp.text)
+                resp, text, truncated = await self._get(client, s_url, deadline=6.0)
+                if resp.status_code == 200 and "xml" in resp.headers.get("content-type", "") and not truncated:
+                    root = ET.fromstring(text)
                     # Namespace-agnostic tag check
                     for elem in root.iter():
                         if elem.tag.endswith("loc") and elem.text:
                             loc = elem.text.strip()
-                            if loc.startswith("http") and parsed.netloc in loc:
+                            loc_host = (urlparse(loc).hostname or "").lower()
+                            if loc.startswith("http") and _same_site(loc_host, base_host):
                                 urls_found.append(loc)
+                                if len(urls_found) >= MAX_SITEMAP_URLS:
+                                    break
                 if urls_found:
                     break
+            except UnsafeURLError:
+                break
             except Exception:
                 pass
         return urls_found
 
     async def crawl(self) -> List[Dict[str, Any]]:
-        is_safe, norm_url = validate_url_security(self.base_url)
+        is_safe, norm_url = await validate_url_security_async(self.base_url)
         if not is_safe:
             raise ValueError(f"Security validation failed: {norm_url}")
 
+        self._started = time.monotonic()
         self.base_url = norm_url
-        parsed_base = urlparse(self.base_url)
 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -429,22 +406,7 @@ class WebsiteCrawler:
 
         await self._emit_event("connecting", {"url": self.base_url, "message": "Connecting to website..."})
 
-        # Production SSRF Guard: Validate redirect targets before following
-        async def _verify_redirect_safety(response: httpx.Response):
-            if response.is_redirect:
-                loc = response.headers.get("Location")
-                if loc:
-                    target = urljoin(str(response.url), loc)
-                    is_safe, err = validate_url_security(target)
-                    if not is_safe:
-                        raise ValueError(f"SSRF violation: Redirect to prohibited destination blocked: {target}")
-
-        async with httpx.AsyncClient(
-            headers=headers,
-            timeout=self.timeout,
-            follow_redirects=True,
-            event_hooks={"response": [_verify_redirect_safety]}
-        ) as client:
+        async with safe_async_client(timeout=self.timeout, headers=headers, network_backend=self._network_backend) as client:
             # 1. Discover sitemap links
             sitemap_urls = await self._discover_sitemap_urls(client)
             if sitemap_urls:
@@ -456,7 +418,7 @@ class WebsiteCrawler:
 
             # 2. Main bounded concurrent crawl loop
             concurrency_limit = 3
-            while frontier and len(self.results) < self.max_pages:
+            while frontier and len(self.results) < self.max_pages and self._time_left() > 0:
                 frontier.sort(key=lambda x: (x[0], -x[1]))
                 batch = []
                 while frontier and len(batch) < concurrency_limit and (len(self.results) + len(batch)) < self.max_pages:
@@ -466,8 +428,10 @@ class WebsiteCrawler:
                         continue
                     self.visited.add(clean_curr)
 
-                    is_safe, validated_url = validate_url_security(current_url)
-                    if not is_safe:
+                    # Syntax/hostname check here; the IP is validated at connect time.
+                    try:
+                        validated_url = normalize_url(current_url)
+                    except UnsafeURLError:
                         continue
                     batch.append((score, depth, current_url, validated_url))
 
@@ -479,6 +443,9 @@ class WebsiteCrawler:
                     for score, depth, current_url, validated_url in batch
                 ]
                 await asyncio.gather(*tasks)
+                if len(frontier) > MAX_FRONTIER:
+                    frontier.sort(key=lambda x: (x[0], -x[1]))
+                    del frontier[: len(frontier) - MAX_FRONTIER]
                 await asyncio.sleep(0.1)
 
         await self._emit_event("crawl_completed", {
@@ -488,6 +455,16 @@ class WebsiteCrawler:
         })
 
         return self.results
+
+    async def _reader_fallback(self, client: httpx.AsyncClient, validated_url: str) -> Optional[str]:
+        """Rendered-text fallback via the public r.jina.ai reader (bot walls / SPAs)."""
+        try:
+            resp, text, _ = await self._get(client, f"https://r.jina.ai/{validated_url}", headers={"x-no-cache": "true"}, deadline=15.0)
+            if resp.status_code == 200:
+                return text
+        except Exception as fb_err:
+            print(f"[Crawler Fallback Failed] {type(fb_err).__name__}")
+        return None
 
     async def _process_single_page(
         self,
@@ -506,35 +483,30 @@ class WebsiteCrawler:
         })
 
         try:
-            resp = await client.get(validated_url)
+            resp, resp_text, _truncated = await self._get(client, validated_url)
             is_markdown_fallback = False
             extracted = None
 
             if resp.status_code != 200:
                 # Resilient fallback: If rate-limited (429) or bot-shielded (403/503), fetch via reader proxy
                 if resp.status_code in (403, 429, 503):
-                    try:
-                        jina_url = f"https://r.jina.ai/{validated_url}"
-                        fallback_resp = await client.get(jina_url, headers={"x-no-cache": "true"}, timeout=15.0)
-                        if fallback_resp.status_code == 200 and len(fallback_resp.text) > 40:
-                            f_text = fallback_resp.text
-                            title_m = re.search(r"^Title:\s*(.+)$", f_text, re.M)
-                            f_title = title_m.group(1).strip() if title_m else (urlparse(current_url).netloc)
-                            clean_content = re.sub(r"^Title:.*?\n|URL Source:.*?\n|Published Time:.*?\n|Warning:.*?\n|Markdown Content:\n", "", f_text).strip()
-                            clean_content = re.sub(r"!\[.*?\]\(.*?\)", "", clean_content)
-                            clean_content = re.sub(r"\n{3,}", "\n\n", clean_content).strip()
+                    f_text = await self._reader_fallback(client, validated_url)
+                    if f_text and len(f_text) > 40:
+                        title_m = re.search(r"^Title:\s*(.+)$", f_text, re.M)
+                        f_title = title_m.group(1).strip() if title_m else (urlparse(current_url).netloc)
+                        clean_content = re.sub(r"^Title:.*?\n|URL Source:.*?\n|Published Time:.*?\n|Warning:.*?\n|Markdown Content:\n", "", f_text).strip()
+                        clean_content = re.sub(r"!\[.*?\]\(.*?\)", "", clean_content)
+                        clean_content = re.sub(r"\n{3,}", "\n\n", clean_content).strip()
 
-                            discovered_markdown_links = extract_markdown_internal_links(self.base_url, f_text)
+                        discovered_markdown_links = extract_markdown_internal_links(self.base_url, f_text)
 
-                            extracted = {
-                                "title": f_title,
-                                "clean_text": clean_content,
-                                "meta_description": f"Verified intelligence for {f_title}",
-                                "internal_links": discovered_markdown_links
-                            }
-                            is_markdown_fallback = True
-                    except Exception as fb_err:
-                        print(f"[Crawler Fallback Failed] {fb_err}")
+                        extracted = {
+                            "title": f_title,
+                            "clean_text": clean_content,
+                            "meta_description": f"Verified intelligence for {f_title}",
+                            "internal_links": discovered_markdown_links
+                        }
+                        is_markdown_fallback = True
 
                 if not is_markdown_fallback:
                     self.results.append({
@@ -552,52 +524,45 @@ class WebsiteCrawler:
                 if "text/html" not in content_type and "text/plain" not in content_type:
                     return
 
-                extracted = extract_clean_page_content(resp.text, str(resp.url))
+                # HTML parsing is CPU-bound: keep it off the event loop.
+                extracted = await asyncio.to_thread(extract_clean_page_content, resp_text, str(resp.url))
 
                 # Single Page App (SPA) / Client-Rendered DOM Detection
-                soup_has_headings = bool(re.search(r"<\s*h[1-4][^>]*>", resp.text, re.I))
+                soup_has_headings = bool(re.search(r"<\s*h[1-4][^>]*>", resp_text, re.I))
                 is_unhydrated_spa = (
                     (len(extracted.get("clean_text", "")) < 600 or not soup_has_headings)
                     and (
-                        '<div id="root"' in resp.text
-                        or '<div id="app"' in resp.text
-                        or '<div id="__next"' in resp.text
-                        or '<main id=' in resp.text
-                        or 'window.__INITIAL_STATE__' in resp.text
-                        or '<script' in resp.text
+                        '<div id="root"' in resp_text
+                        or '<div id="app"' in resp_text
+                        or '<div id="__next"' in resp_text
+                        or '<main id=' in resp_text
+                        or 'window.__INITIAL_STATE__' in resp_text
+                        or '<script' in resp_text
                     )
                 )
                 if is_unhydrated_spa:
-                    try:
-                        jina_url = f"https://r.jina.ai/{validated_url}"
-                        fallback_resp = await client.get(jina_url, headers={"x-no-cache": "true"}, timeout=15.0)
-                        if fallback_resp.status_code == 200 and len(fallback_resp.text) > len(extracted.get("clean_text", "")):
-                            f_text = fallback_resp.text
-                            # If Jina returned a stale or partial cache snapshot, force fresh render with query parameter
-                            if "Warning: This is a cached snapshot" in f_text or len(f_text) < 900:
-                                try:
-                                    buster_resp = await client.get(f"https://r.jina.ai/{validated_url}?no-cache=1", headers={"x-no-cache": "true"}, timeout=15.0)
-                                    if buster_resp.status_code == 200 and len(buster_resp.text) > len(f_text):
-                                        f_text = buster_resp.text
-                                except Exception:
-                                    pass
+                    f_text = await self._reader_fallback(client, validated_url)
+                    if f_text and len(f_text) > len(extracted.get("clean_text", "")):
+                        # If Jina returned a stale or partial cache snapshot, force fresh render with query parameter
+                        if "Warning: This is a cached snapshot" in f_text or len(f_text) < 900:
+                            buster = await self._reader_fallback(client, f"{validated_url}?no-cache=1")
+                            if buster and len(buster) > len(f_text):
+                                f_text = buster
 
-                            title_m = re.search(r"^Title:\s*(.+)$", f_text, re.M)
-                            f_title = title_m.group(1).strip() if title_m else (extracted.get("title") or urlparse(current_url).netloc)
-                            clean_content = re.sub(r"^Title:.*?\n|URL Source:.*?\n|Published Time:.*?\n|Warning:.*?\n|Markdown Content:\n", "", f_text).strip()
-                            clean_content = re.sub(r"!\[.*?\]\(.*?\)", "", clean_content)
-                            clean_content = re.sub(r"\n{3,}", "\n\n", clean_content).strip()
+                        title_m = re.search(r"^Title:\s*(.+)$", f_text, re.M)
+                        f_title = title_m.group(1).strip() if title_m else (extracted.get("title") or urlparse(current_url).netloc)
+                        clean_content = re.sub(r"^Title:.*?\n|URL Source:.*?\n|Published Time:.*?\n|Warning:.*?\n|Markdown Content:\n", "", f_text).strip()
+                        clean_content = re.sub(r"!\[.*?\]\(.*?\)", "", clean_content)
+                        clean_content = re.sub(r"\n{3,}", "\n\n", clean_content).strip()
 
-                            discovered_markdown_links = extract_markdown_internal_links(self.base_url, f_text)
+                        discovered_markdown_links = extract_markdown_internal_links(self.base_url, f_text)
 
-                            extracted = {
-                                "title": f_title if f_title and f_title != "Untitled Page" else extracted["title"],
-                                "clean_text": clean_content,
-                                "meta_description": extracted.get("meta_description") or f"Verified intelligence for {f_title}",
-                                "internal_links": list(set(extracted.get("internal_links", []) + discovered_markdown_links))
-                            }
-                    except Exception as spa_err:
-                        print(f"[Crawler SPA Reader Fallback Failed] {spa_err}")
+                        extracted = {
+                            "title": f_title if f_title and f_title != "Untitled Page" else extracted["title"],
+                            "clean_text": clean_content,
+                            "meta_description": extracted.get("meta_description") or f"Verified intelligence for {f_title}",
+                            "internal_links": list(set(extracted.get("internal_links", []) + discovered_markdown_links))
+                        }
 
             if not extracted or len(extracted.get("clean_text", "")) < 40:
                 return
@@ -629,26 +594,31 @@ class WebsiteCrawler:
             # Add discovered internal links to frontier if depth allows
             if depth < self.max_depth:
                 for link in extracted["internal_links"]:
+                    if len(frontier) >= MAX_FRONTIER:
+                        break
                     clean_link = link.split("?")[0].rstrip("/")
                     if clean_link not in self.visited:
                         l_score, _ = score_page_priority(urlparse(link).path)
                         frontier.append((l_score, depth + 1, link))
 
+        except UnsafeURLError as e:
+            self.results.append({
+                "url": current_url,
+                "title": "Blocked",
+                "clean_text": "",
+                "status": "failed",
+                "http_status": 0,
+                "error_message": str(e)
+            })
+            await self._emit_event("page_error", {"url": current_url, "error": str(e)})
         except Exception as e:
+            reason = "Timed out" if isinstance(e, asyncio.TimeoutError) else (str(e) or type(e).__name__)
             self.results.append({
                 "url": current_url,
                 "title": "Crawl Error",
                 "clean_text": "",
                 "status": "failed",
                 "http_status": 500,
-                "error_message": str(e)
+                "error_message": reason[:300]
             })
-            await self._emit_event("page_error", {"url": current_url, "error": str(e)})
-
-        await self._emit_event("crawl_completed", {
-            "total_pages": len(self.results),
-            "successful_pages": len([p for p in self.results if p["status"] == "processed"]),
-            "message": f"Crawl complete. {len(self.results)} pages ingested."
-        })
-
-        return self.results
+            await self._emit_event("page_error", {"url": current_url, "error": reason[:300]})

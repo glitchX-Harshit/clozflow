@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion as Motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Play, Pause } from 'lucide-react';
 import mascotVoicePoster from '../assets/clozflow-ai-voice-mascot-poster.webp';
 import conversionCloudscape from '../assets/conversion-cloudscape.webp';
@@ -69,7 +69,6 @@ export default function DepthBlurCarousel({
     maxRotation = 75,
     perspective = 450,
     borderRadius = 16,
-    scrollDamping = 100,
     blurSpread = 25,
     blurStrength = 24
 }) {
@@ -294,7 +293,7 @@ export default function DepthBlurCarousel({
     };
 
     return (
-        <motion.div
+        <Motion.div
             className="dbc-stage"
             ref={mountRef}
             onWheel={handleWheel}
@@ -394,7 +393,7 @@ export default function DepthBlurCarousel({
                     <ArrowRight size={16} />
                 </button>
             </div>
-        </motion.div>
+        </Motion.div>
     );
 }
 
@@ -448,7 +447,7 @@ function ImageDepthCard({
     const visibilityOpacity = useTransform(absOffset, [0, 5, 7], [1, 1, 0]);
 
     return (
-        <motion.div
+        <Motion.div
             className="dbc-card-anchor"
             onClick={onClick}
             style={{
@@ -462,7 +461,7 @@ function ImageDepthCard({
                 zIndex
             }}
         >
-            <motion.div
+            <Motion.div
                 className="dbc-card-surface"
                 style={{
                     borderRadius,
@@ -521,7 +520,7 @@ function ImageDepthCard({
                         </button>
                     </div>
                 )}
-            </motion.div>
-        </motion.div>
+            </Motion.div>
+        </Motion.div>
     );
 }

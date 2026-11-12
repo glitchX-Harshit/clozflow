@@ -2,6 +2,10 @@
 # ─── Learning Filter ─────────────────────────────────────────────────────────
 # Pipeline that runs responses through the validator and quality scorer.
 # Routes approved data to high_quality_learning.jsonl and rejected to rejected_learning.jsonl.
+#
+# The log lines contain what the prospect said on a real call, so nothing is
+# written unless CLOZFLOW_LEARNING_LOG is set to true/1/yes/on (default off).
+# The approve/reject decision is returned either way.
 
 import os
 import json
@@ -11,6 +15,11 @@ _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 APPROVED_LOG = os.path.join(_ROOT, "logs", "high_quality_learning.jsonl")
 REJECTED_LOG = os.path.join(_ROOT, "logs", "rejected_learning.jsonl")
+
+
+def learning_log_enabled() -> bool:
+    """True only when CLOZFLOW_LEARNING_LOG opts in to saving call speech to disk."""
+    return os.getenv("CLOZFLOW_LEARNING_LOG", "").strip().lower() in ("1", "true", "yes", "on")
 
 from ml.evaluation.response_validator import validate_response
 from ml.evaluation.quality_scorer import score_quality
@@ -52,7 +61,10 @@ def filter_and_log_interaction(
         else:
             reject_reason = f"low_quality_score ({quality_result['score']:.2f})"
             
-    # 3. Log to appropriate file
+    # 3. Log to appropriate file (opt-in: entries contain prospect speech)
+    if not learning_log_enabled():
+        return is_approved
+
     log_entry = {
         "timestamp": time.time(),
         "message": message,

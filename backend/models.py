@@ -4,6 +4,11 @@ from datetime import datetime
 from database import Base
 import models_knowledge  # Register knowledge tables
 
+# password_hash marker for accounts created from a Supabase (cloud) sign-in.
+# Their password lives in Supabase, so it can't be checked or changed locally.
+SUPABASE_SYNCED_PASSWORD_HASH = "supabase_synced"
+
+
 class User(Base):
     __tablename__ = "users"
     id              = Column(Integer, primary_key=True, index=True)
@@ -30,6 +35,7 @@ class User(Base):
     ai_tone             = Column(String, default="assertive")
     ai_objection_pressure = Column(String, default="balanced")
     ai_speed            = Column(String, default="balanced")
+    ai_override_prompt  = Column(Text, nullable=True)    # user's extra copilot instructions (≤ 4000 chars)
 
     # ── Notifications ───────────────────────────────
     notif_call_summary      = Column(Boolean, default=True)
@@ -46,6 +52,11 @@ class User(Base):
     call_logs = relationship("CallLog", back_populates="user")
     capsules  = relationship("Capsule", back_populates="user")
     leads     = relationship("Lead", back_populates="user")
+
+    @property
+    def auth_provider(self) -> str:
+        """``"supabase"`` for cloud sign-in accounts (no local password), else ``"local"``."""
+        return "supabase" if self.password_hash == SUPABASE_SYNCED_PASSWORD_HASH else "local"
 
 
 # ── Product & Company Capsule (knowledge intelligence template) ──────────────

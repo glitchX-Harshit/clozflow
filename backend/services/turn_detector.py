@@ -48,6 +48,9 @@ class TurnDetector:
         self.silence_start: Optional[float] = None
         self.speech_start: Optional[float] = None
         self._monitor_task: Optional[asyncio.Task] = None
+        # Strong references to dispatched turn callbacks: the event loop only keeps
+        # weak ones, so an unreferenced task can be garbage-collected mid-flight.
+        self._turn_tasks: set = set()
 
     def on_speech_start(self):
         if self.tracker:
@@ -249,9 +252,9 @@ class TurnDetector:
             silence_ms = (time.monotonic() - self.silence_start) * 1000
 
         word_count = len(text.split())
+        # Never log what was said (call transcripts are personal data).
         print(f"[TURN COMPLETE] [{reason}] "
-              f"(silence: {silence_ms:.0f}ms, {word_count} words): "
-              f"{text[:100]}{'...' if len(text) > 100 else ''}")
+              f"(silence: {silence_ms:.0f}ms, {word_count} words)")
 
         self.state = TurnState.IDLE
         self.transcript_buffer = ""
@@ -262,9 +265,11 @@ class TurnDetector:
 
         try:
             # Decouple: Dispatch to orchestrator without blocking/binding the silence monitor
-            asyncio.create_task(self.on_turn_complete(text))
+            task = asyncio.create_task(self.on_turn_complete(text))
+            self._turn_tasks.add(task)
+            task.add_done_callback(self._turn_tasks.discard)
         except Exception as e:
-            print(f"[TURN ERROR] Turn complete callback error: {e}")
+            print(f"[TURN ERROR] Turn complete callback error: {type(e).__name__}")
 
     def _reset_state(self):
         self.state = TurnState.IDLE

@@ -54,5 +54,23 @@ class CallContextEngine:
             self.sessions.pop(context_id, None)
             conn.execute(briefs.delete().where(briefs.c.context_id == context_id))
 
+    # ── The CallLog of a brief: Pause/resume reconnects append to one History entry ──
+
+    def get_call_log_id(self, context_id):
+        context = self.get_context(context_id) if context_id else None
+        value = (context or {}).get('call_log_id')
+        return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+    def set_call_log_id(self, context_id, call_log_id):
+        with self._lock:
+            context = self.get_context(context_id) if context_id else None
+            if not context:
+                return False
+            context['call_log_id'] = int(call_log_id)
+            with engine.begin() as conn:
+                conn.execute(briefs.update().where(briefs.c.context_id == context_id).values(payload=context))
+            self.sessions[context_id] = context
+            return True
+
 
 call_context_engine = CallContextEngine()

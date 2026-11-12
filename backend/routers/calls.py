@@ -1,24 +1,43 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
-from typing import List
-from database import get_db
+from typing import List, Optional
+from database import get_db, utc_isoformat
 from models import CallLog, User
+from models_relay import Relay
 from routers.auth import get_current_user
 from services.report_generator import generate_call_report
-from pydantic import BaseModel
+from services.transcript_manager import parse_call_log, parse_insights, parse_transcript, as_number, as_text
+from pydantic import BaseModel, ConfigDict, field_serializer
 from datetime import datetime
 
 router = APIRouter(prefix="/calls", tags=["calls"])
 
 class CallLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     user_id: int
-    timestamp: datetime
+    timestamp: Optional[datetime]
     message_count: int
     insight_count: int
 
-    class Config:
-        from_attributes = True
+    @field_serializer("timestamp")
+    def _timestamp_utc(self, value: Optional[datetime]) -> Optional[str]:
+        return utc_isoformat(value)
+
+
+def _owned_call(db: Session, call_id: int, user: User) -> CallLog:
+    """The caller's own call log; other users' calls are indistinguishable from missing ones."""
+    call_log = db.query(CallLog).filter(CallLog.id == call_id, CallLog.user_id == user.id).first()
+    if not call_log:
+        raise HTTPException(status_code=404, detail="Call record not found")
+    return call_log
+
+
+def _payload(item) -> dict:
+    payload = item.get("payload") if isinstance(item, dict) else None
+    return payload if isinstance(payload, dict) else {}
+
 
 @router.get("/", response_model=List[CallLogResponse])
 def get_call_history(
@@ -28,27 +47,19 @@ def get_call_history(
     """
     Returns the call history for the current authenticated user.
     """
-    import json
     calls = db.query(CallLog).filter(CallLog.user_id == current_user.id).order_by(CallLog.timestamp.desc()).all()
-    
+
     # Custom formatting to add counts
     results = []
     for call in calls:
-        try:
-            msg_count = len(json.loads(call.transcript or "[]"))
-            ins_count = len(json.loads(call.ai_suggestions or "[]"))
-        except:
-            msg_count = 0
-            ins_count = 0
-            
         results.append({
             "id": call.id,
             "user_id": call.user_id,
             "timestamp": call.timestamp,
-            "message_count": msg_count,
-            "insight_count": ins_count
+            "message_count": len(parse_transcript(call.transcript)),
+            "insight_count": len(parse_insights(call.ai_suggestions))
         })
-    
+
     return results
 
 @router.get("/stats")
@@ -59,7 +70,6 @@ def get_call_stats(
     """
     Returns real aggregated intelligence stats based on the user's call history.
     """
-    import json
     calls = db.query(CallLog).filter(CallLog.user_id == current_user.id).all()
     
     if not calls:
@@ -90,13 +100,8 @@ def get_call_stats(
     real_insights_list = []
 
     for call in calls:
-        try:
-            transcript_data = json.loads(call.transcript or "[]")
-            ai_data = json.loads(call.ai_suggestions or "[]")
-        except:
-            transcript_data = []
-            ai_data = []
-            
+        transcript_data, ai_data = parse_call_log(call.transcript, call.ai_suggestions)
+
         total_msgs += len(transcript_data)
         total_insights += len(ai_data)
         
@@ -111,13 +116,14 @@ def get_call_stats(
 
             # Turn-by-turn confidence indexing
             for idx, item in enumerate(ai_data):
+                payload = _payload(item)
                 turn_num = idx + 1
-                conf = int(item.get("payload", {}).get("confidence", 0.5) * 100)
+                conf = int(as_number(payload.get("confidence"), 0.5) * 100)
                 turn_conf_sum[turn_num] = turn_conf_sum.get(turn_num, 0) + conf
                 turn_counts[turn_num] = turn_counts.get(turn_num, 0) + 1
 
                 # Classify objection / concern types
-                concern = item.get("payload", {}).get("hidden_concern", "").lower()
+                concern = as_text(payload.get("hidden_concern")).lower()
                 if "price" in concern or "roi" in concern or "budget" in concern:
                     objection_counts["Pricing & ROI"] += 1
                 elif "trust" in concern or "proof" in concern or "skeptic" in concern:
@@ -127,7 +133,7 @@ def get_call_stats(
                 else:
                     objection_counts["Implementation & Risk"] += 1
 
-                tip = item.get("payload", {}).get("coaching_tip")
+                tip = as_text(payload.get("coaching_tip"))
                 if tip and tip not in real_insights_list:
                     real_insights_list.append(tip)
 
@@ -222,10 +228,11 @@ def calculate_session_details(transcript_data: list, ai_data: list) -> dict:
         return details
 
     # Calculate realistic metrics based on AI confidence and quality scores
-    avg_confidence = sum([item.get("payload", {}).get("confidence", 0) for item in ai_data]) / len(ai_data)
-    
+    avg_confidence = sum(as_number(_payload(item).get("confidence"), 0) for item in ai_data) / len(ai_data)
+
     # Calculate a score based on the "diagnosis" quality score if available, otherwise just use confidence inverted
-    diag_scores = [item.get("payload", {}).get("quality_scores", {}).get("diagnosis", 0) for item in ai_data if item.get("payload", {}).get("quality_scores")]
+    diag_scores = [as_number(_payload(item)["quality_scores"].get("diagnosis"), 0) for item in ai_data
+                   if isinstance(_payload(item).get("quality_scores"), dict)]
     if diag_scores:
         avg_diag = sum(diag_scores) / len(diag_scores)
     else:
@@ -246,37 +253,41 @@ def calculate_session_details(transcript_data: list, ai_data: list) -> dict:
 
     turn = 1
     for i, item in enumerate(ai_data):
-        payload = item.get("payload", {})
-        conf = payload.get("confidence", 0.5)
-        strategy = payload.get("strategy", "Exploration")
-        
-        # Determine associated transcript text if possible (using the previous transcript item)
+        payload = _payload(item)
+        conf = as_number(payload.get("confidence"), 0.5)
+        strategy = as_text(payload.get("strategy"), "Exploration")
+
+        # The transcript line this insight answered: its turn_index, or (rows saved
+        # before turn_index existed) the line at the same position.
+        line = item.get("turn_index") if isinstance(item, dict) else None
+        if not isinstance(line, int) or isinstance(line, bool):
+            line = i
         transcript_text = "Unknown phrase"
-        if i < len(transcript_data):
-            transcript_text = f'"{transcript_data[i].get("text", "")[:40]}..."'
-        
+        if 0 <= line < len(transcript_data) and isinstance(transcript_data[line], dict):
+            transcript_text = f'"{as_text(transcript_data[line].get("text"))[:40]}..."'
+
         # Strategy Timeline
         res_color = 'good' if conf > 0.7 else ('warn' if conf > 0.4 else 'danger')
         details["strategyTimeline"].append({
             "turn": f"T{turn}",
             "strategy": strategy,
             "result": res_color,
-            "note": payload.get("coaching_tip", "Standard interaction.")
+            "note": as_text(payload.get("coaching_tip"), "Standard interaction.")
         })
-        
+
         # Momentum Breaks
         if conf < 0.45:
             details["momentumBreaks"].append({
                 "turn": f"T{turn}",
                 "event": f"Resistance Spike",
                 "type": 'warn',
-                "note": payload.get("hidden_concern", "Prospect showed signs of disengagement.")
+                "note": as_text(payload.get("hidden_concern"), "Prospect showed signs of disengagement.")
             })
-            
+
         # Opportunity Branching (Deep Research)
         # Show all insights instead of limiting to 3, to give a full session report.
         if conf < 0.6:
-            concern = payload.get('hidden_concern', 'Underlying Motivation')
+            concern = as_text(payload.get('hidden_concern'), 'Underlying Motivation')
             
             # More detailed predictions to outperform Gong/Genesys
             predictions = {
@@ -300,7 +311,7 @@ def calculate_session_details(transcript_data: list, ai_data: list) -> dict:
                     "lost_ground": f"Lost leverage on {concern}. Pricing objections are now highly likely to surface next."
                 },
                 "alternative_path": {
-                    "action": payload.get("suggested_response", "Ask a clarifying question."),
+                    "action": as_text(payload.get("suggested_response"), "Ask a clarifying question."),
                     "result": f"Opens up {concern} discovery",
                     "opportunity_status": "GRABBED",
                     "trajectory": "Conversation Turnaround. Prospect drops defensive walls and feels understood.",
@@ -319,27 +330,39 @@ def get_call_details(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    import json
-    call_log = db.query(CallLog).filter(CallLog.id == call_id, CallLog.user_id == current_user.id).first()
-    if not call_log:
-        raise HTTPException(status_code=404, detail="Call record not found")
-        
-    try:
-        transcript_data = json.loads(call_log.transcript or "[]")
-        ai_data = json.loads(call_log.ai_suggestions or "[]")
-    except:
-        transcript_data = []
-        ai_data = []
-        
+    call_log = _owned_call(db, call_id, current_user)
+    transcript_data, ai_data = parse_call_log(call_log.transcript, call_log.ai_suggestions)
+
     details = calculate_session_details(transcript_data, ai_data)
-        
+
     return {
         "id": call_log.id,
         "user_id": call_log.user_id,
-        "timestamp": call_log.timestamp,
+        "timestamp": utc_isoformat(call_log.timestamp),
         "message_count": len(transcript_data),
         "insight_count": len(ai_data),
         "details": details
+    }
+
+@router.get("/{call_id}/transcript")
+def get_call_transcript(
+    call_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    The saved transcript and AI insights of one of the caller's own calls.
+    Stored JSON and legacy plain-text rows are both normalised.
+    """
+    call_log = _owned_call(db, call_id, current_user)
+    transcript, insights = parse_call_log(call_log.transcript, call_log.ai_suggestions)
+    return {
+        "call_id": call_log.id,
+        "timestamp": utc_isoformat(call_log.timestamp),
+        "transcript": transcript,
+        "insights": insights,
+        "message_count": len(transcript),
+        "insight_count": len(insights),
     }
 
 @router.get("/{call_id}/report")
@@ -351,14 +374,12 @@ def download_call_report(
     """
     Generates and returns a PDF report for the specified call.
     """
-    call_log = db.query(CallLog).filter(CallLog.id == call_id, CallLog.user_id == current_user.id).first()
-    if not call_log:
-        raise HTTPException(status_code=404, detail="Call record not found")
-        
+    call_log = _owned_call(db, call_id, current_user)
+
     try:
         pdf_buffer = generate_call_report(call_log)
         pdf_filename = f"hexagon_report_{call_id}.pdf"
-        
+
         return Response(
             content=pdf_buffer.getvalue(),
             media_type="application/pdf",
@@ -367,7 +388,7 @@ def download_call_report(
             }
         )
     except Exception as e:
-        print(f"❌ PDF Generation Error: {e}")
+        print(f"❌ PDF Generation Error: {type(e).__name__}")
         raise HTTPException(status_code=500, detail="Failed to generate report")
 
 @router.delete("/{call_id}")
@@ -379,10 +400,14 @@ def delete_call_log(
     """
     Deletes a specific call log for the current authenticated user.
     """
-    call_log = db.query(CallLog).filter(CallLog.id == call_id, CallLog.user_id == current_user.id).first()
-    if not call_log:
-        raise HTTPException(status_code=404, detail="Call record not found")
-        
+    call_log = _owned_call(db, call_id, current_user)
+    # relays.call_id is a NOT NULL foreign key to this row.
+    if db.query(Relay.id).filter(Relay.call_id == call_log.id).first():
+        raise HTTPException(
+            status_code=409,
+            detail="This call is linked to a Relay page. Delete the Relay first, then delete the call."
+        )
+
     db.delete(call_log)
     db.commit()
     return {"message": "Call log deleted"}

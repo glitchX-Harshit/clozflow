@@ -1,81 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { Loader2, Plus, Clock, ArrowRight, ExternalLink, MessageSquare, Calendar, Trash2, Send } from 'lucide-react';
-import RelayBuilder from './RelayBuilder';
+import { useState, useEffect } from 'react';
+import { Loader2, ArrowRight, ExternalLink, MessageSquare, Trash2, RotateCcw } from 'lucide-react';
+import { apiFetch } from '../lib/apiFetch';
+import { dayAndMonth } from '../lib/dates';
+
+const STATUS_COLORS = {
+  draft: '#64748b',
+  published: '#2563eb',
+  opened: '#b45309',
+  booked: '#047857',
+  question_received: '#7c3aed',
+  not_interested: '#dc2626',
+  cancelled: '#dc2626',
+  completed: '#047857',
+};
+
+const getStatusColor = (status) => STATUS_COLORS[status] || '#64748b';
+
+const formatStatus = (status) => {
+  if (!status) return 'Draft';
+  return status.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+};
 
 const RelayDashboard = ({ onOpenBuilder }) => {
-  const [relays, setRelays] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
+  const [state, setState] = useState({ key: -1, relays: [], error: null });
+  const [actionError, setActionError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
-  // If a builder is active via props (e.g. from Dashboard tab system), we might not render the list.
-  // But typically this component is just the list view.
-  
+  const loading = state.key !== reloadKey;
+  const relays = state.relays;
+  const error = loading ? null : state.error;
+
   useEffect(() => {
-    fetchRelays();
-  }, []);
-
-  const fetchRelays = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${window.APP_API_BASE || ''}/api/relay/`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+    let cancelled = false;
+    // Trailing slash on purpose: `/api/relay` answers with a redirect.
+    apiFetch('/api/relay/')
+      .then((data) => {
+        if (!cancelled) setState({ key: reloadKey, relays: Array.isArray(data) ? data : [], error: null });
+      })
+      .catch((err) => {
+        if (!cancelled) setState((prev) => ({ key: reloadKey, relays: prev.relays, error: err?.message || 'Failed to fetch relays' }));
       });
-      if (!res.ok) throw new Error('Failed to fetch relays');
-      const data = await res.json();
-      setRelays(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, [reloadKey]);
 
   const handleDelete = async (e, relayId) => {
     e.stopPropagation();
     if (!window.confirm('Are you sure you want to delete this Relay? This cannot be undone.')) return;
-    
+    setActionError(null);
+    setDeletingId(relayId);
     try {
-      const res = await fetch(`${window.APP_API_BASE || ''}/api/relay/${relayId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      if (!res.ok) throw new Error('Failed to delete relay');
-      setRelays(relays.filter(r => r.id !== relayId));
+      await apiFetch(`/api/relay/${relayId}`, { method: 'DELETE' });
+      setState((prev) => ({ ...prev, relays: prev.relays.filter(r => r.id !== relayId) }));
     } catch (err) {
-      alert(err.message);
+      setActionError(`Failed to delete relay: ${err.message}`);
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'draft': return '#94a3b8';
-      case 'published': return '#3b82f6';
-      case 'opened': return '#f59e0b';
-      case 'booked': return '#10b981';
-      case 'question_received': return '#8b5cf6';
-      case 'not_interested': 
-      case 'cancelled': return '#ef4444';
-      case 'completed': return '#10b981';
-      default: return '#94a3b8';
-    }
-  };
-
-  const formatStatus = (status) => {
-    if (!status) return 'Draft';
-    return status.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-  };
-
-  if (loading) {
+  if (loading && relays.length === 0) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '64px' }}>
-        <Loader2 size={32} style={{ animation: 'spin 1s linear infinite', color: 'var(--accent)' }} />
+      <div role="status" aria-label="Loading relays" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '64px' }}>
+        <Loader2 size={32} aria-hidden="true" style={{ animation: 'spin 1s linear infinite', color: 'var(--accent)' }} />
       </div>
     );
   }
+
+  const errorText = error || actionError;
 
   return (
     <div style={styles.container}>
@@ -86,25 +80,32 @@ const RelayDashboard = ({ onOpenBuilder }) => {
         </div>
       </header>
 
-      {error && (
-        <div style={{ padding: '16px', background: '#fee2e2', color: '#ef4444', borderRadius: 'var(--r-md)', marginBottom: '24px' }}>
-          {error}
+      {errorText && (
+        <div role="alert" style={{ padding: '16px', background: '#fee2e2', color: '#b91c1c', borderRadius: 'var(--r-md)', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+          <span>{errorText}</span>
+          {error && (
+            <button type="button" onClick={() => setReloadKey((k) => k + 1)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: '1px solid currentColor', color: 'inherit', borderRadius: 8, padding: '6px 12px', cursor: 'pointer', fontWeight: 600 }}>
+              <RotateCcw size={14} aria-hidden="true" /> Try again
+            </button>
+          )}
         </div>
       )}
 
       {relays.length === 0 ? (
-        <div style={styles.emptyState}>
-          <div style={styles.emptyIconWrapper}>
-            <ExternalLink size={24} color="var(--text-muted)" />
+        !error && (
+          <div style={styles.emptyState}>
+            <div style={styles.emptyIconWrapper} aria-hidden="true">
+              <ExternalLink size={24} color="var(--text-dim)" />
+            </div>
+            <h3 style={styles.emptyTitle}>No Relays Yet</h3>
+            <p style={styles.emptyText}>
+              Every cold call is a deal waiting to happen. After your next call, create a Relay to arm your champion with exactly what they need to sell it internally.
+            </p>
           </div>
-          <h3 style={styles.emptyTitle}>No Relays Yet</h3>
-          <p style={styles.emptyText}>
-            Every cold call is a deal waiting to happen. After your next call, create a Relay to arm your champion with exactly what they need to sell it internally.
-          </p>
-        </div>
+        )
       ) : (
         <div className="relay-ledger-container">
-          <div className="relay-ledger-header">
+          <div className="relay-ledger-header" aria-hidden="true">
             <span>Date</span>
             <span style={{ flex: 2 }}>Prospect Details</span>
             <span>Status</span>
@@ -113,15 +114,22 @@ const RelayDashboard = ({ onOpenBuilder }) => {
 
           {relays.map(relay => {
             const statusColor = getStatusColor(relay.status);
-            const dateObj = new Date(relay.created_at);
-            const day = dateObj.getDate();
-            const month = dateObj.toLocaleString('default', { month: 'short' });
+            const { day, month } = dayAndMonth(relay.created_at);
+            const unanswered = Number(relay.unanswered_questions) || 0;
+            const open = () => onOpenBuilder(relay.call_id);
 
             return (
-              <div 
-                key={relay.id} 
+              <div
+                key={relay.id}
                 className="relay-ledger-row"
-                onClick={() => onOpenBuilder(relay.call_id)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open Relay for ${relay.prospect_name || 'Unknown Prospect'} (${formatStatus(relay.status)})`}
+                onClick={open}
+                onKeyDown={(e) => {
+                  if (e.target !== e.currentTarget) return;
+                  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+                }}
               >
                 {/* Date Column */}
                 <div className="rl-col rl-date">
@@ -145,18 +153,23 @@ const RelayDashboard = ({ onOpenBuilder }) => {
 
                 {/* Actions */}
                 <div className="rl-col rl-actions" style={{ textAlign: 'right', justifyContent: 'flex-end' }}>
-                  <div className="rl-stats">
-                    <MessageSquare size={14} />
+                  <div className="rl-stats" title={unanswered ? `${unanswered} unanswered` : undefined}>
+                    <MessageSquare size={14} aria-label="Questions" />
                     <span>{relay.question_count || 0}</span>
+                    {unanswered > 0 && <span className="rl-unanswered">{unanswered} new</span>}
                   </div>
-                  <button 
+                  <button
+                    type="button"
                     className="rl-delete-btn"
-                    onClick={(e) => handleDelete(e, relay.id)} 
+                    onClick={(e) => handleDelete(e, relay.id)}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    disabled={deletingId === relay.id}
                     title="Delete Relay"
+                    aria-label={`Delete Relay for ${relay.prospect_name || 'Unknown Prospect'}`}
                   >
-                    <Trash2 size={15} />
+                    {deletingId === relay.id ? <Loader2 size={15} aria-hidden="true" style={{ animation: 'spin 1s linear infinite' }} /> : <Trash2 size={15} aria-hidden="true" />}
                   </button>
-                  <ArrowRight size={18} className="rl-arrow" />
+                  <ArrowRight size={18} className="rl-arrow" aria-hidden="true" />
                 </div>
               </div>
             );
@@ -230,7 +243,7 @@ const RelayDashboard = ({ onOpenBuilder }) => {
         }
         .rl-business {
           font-size: 0.875rem;
-          color: var(--text-muted);
+          color: var(--text-dim);
           margin: 0;
         }
         .rl-status-indicator {
@@ -258,7 +271,7 @@ const RelayDashboard = ({ onOpenBuilder }) => {
           align-items: center;
           gap: 6px;
           font-size: 13px;
-          color: var(--text-muted);
+          color: var(--text-dim);
         }
         .rl-delete-btn {
           background: transparent;
@@ -274,9 +287,33 @@ const RelayDashboard = ({ onOpenBuilder }) => {
           opacity: 0;
           transform: scale(0.9);
         }
-        .relay-ledger-row:hover .rl-delete-btn {
+        .relay-ledger-row:hover .rl-delete-btn,
+        .relay-ledger-row:focus-within .rl-delete-btn,
+        .rl-delete-btn:focus-visible {
           opacity: 1;
           transform: scale(1);
+        }
+        .relay-ledger-row:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: -2px;
+        }
+        .rl-delete-btn:focus-visible {
+          outline: 2px solid var(--accent);
+        }
+        .rl-unanswered {
+          margin-left: 6px;
+          padding: 1px 7px;
+          border-radius: 99px;
+          background: var(--accent);
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 700;
+        }
+        @media (hover: none) {
+          .rl-delete-btn {
+            opacity: 1;
+            transform: none;
+          }
         }
         .rl-delete-btn:hover {
           background: #fee2e2;
@@ -350,6 +387,7 @@ const styles = {
     color: 'var(--text-dim)',
     maxWidth: '400px',
     lineHeight: 1.5,
+    margin: 0,
   }
 };
 

@@ -27,6 +27,7 @@ dependencies = [
     "pydantic>=2.6.0",
     "pydantic-settings>=2.2.0",
     "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.0.0",
     "PyJWT>=2.8.0",
 
     # Database
@@ -37,6 +38,7 @@ dependencies = [
 
     # HTTP Client
     "httpx>=0.27.0",
+    "httpcore>=1.0.0",
     "requests>=2.31.0",
 
     # AI & LLM Providers
@@ -62,6 +64,16 @@ dependencies = [
     # PDF & Asset Generation
     "reportlab>=4.1.0",
 
+    # Knowledge ingestion (website crawl + uploaded documents)
+    "beautifulsoup4>=4.12.0",
+    "pypdf>=4.0.0",
+    "python-docx>=1.1.0",
+    "openpyxl>=3.1.0",
+
+    # Audio (TTS MP3 fallback; audioop left the stdlib in Python 3.13)
+    "miniaudio>=1.59",
+    "audioop-lts>=0.2.1; python_version >= '3.13'",
+
     # Utilities
     "PyYAML>=6.0.1",
     "phonenumbers>=8.13.0",
@@ -71,7 +83,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
-    "pytest-asyncio>=0.23.0",
+    "anyio>=4.0.0",   # async tests run through anyio's pytest plugin (see conftest.py)
     "httpx>=0.27.0",
     "black>=24.0.0",
     "ruff>=0.3.0",
@@ -82,6 +94,6 @@ line-length = 100
 target-version = "py310"
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# New tests live in tests/; older ones are still at the backend root.
+testpaths = ["tests", "test_*.py"]
 python_files = ["test_*.py"]
-asyncio_mode = "auto"

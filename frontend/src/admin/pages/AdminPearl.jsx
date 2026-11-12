@@ -12,7 +12,8 @@ import {
   Users
 } from 'lucide-react';
 import { adminApi } from '../services/adminApi';
-import { useAdminPeriod } from '../components/AdminLayout';
+import { formatServerDateTime } from '../../lib/dates';
+import { useAdminPeriod } from '../components/adminPeriod';
 import KPICard from '../components/KPICard';
 import PeriodSelector from '../components/PeriodSelector';
 import StatusBadge from '../components/StatusBadge';
@@ -22,6 +23,7 @@ export default function AdminPearl() {
   const { period, setPeriod } = useAdminPeriod();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -29,9 +31,9 @@ export default function AdminPearl() {
       setLoading(true);
       try {
         const res = await adminApi.getPearlMetrics(period);
-        if (isMounted) setData(res);
+        if (isMounted) { setData(res); setLoadError(null); }
       } catch (err) {
-        console.error('Failed to load Pearl telemetry:', err);
+        if (isMounted) setLoadError(`Error loading Pearl telemetry: ${err.message}`);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -57,10 +59,8 @@ export default function AdminPearl() {
   const userEconomics = data?.user_economics || [];
   const breakdowns = data?.breakdowns || {};
   const statuses = breakdowns.statuses || {};
-  const outcomes = breakdowns.outcomes || {};
   const providers = breakdowns.providers || {};
   const unitEconomics = data?.unit_economics || {};
-  const agents = data?.agents || [];
   const recentCalls = data?.recent_calls || [];
 
   return (
@@ -80,6 +80,11 @@ export default function AdminPearl() {
       </header>
 
       <div className="admin-content">
+        {loadError && (
+          <div role="alert" style={{ marginBottom: '24px', padding: '14px 18px', borderRadius: '12px', backgroundColor: 'var(--admin-danger-dim)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#f87171', fontSize: '13px' }}>
+            {loadError}
+          </div>
+        )}
         {/* ── Executive Financial Proof Grid (Top Proof Bar) ── */}
         <div className="admin-kpi-grid" style={{ marginBottom: '24px' }}>
           <KPICard
@@ -434,7 +439,7 @@ export default function AdminPearl() {
                           </span>
                         </td>
                         <td style={{ fontSize: '12px' }}>
-                          {c.created_at ? new Date(c.created_at).toLocaleString() : '—'}
+                          {formatServerDateTime(c.created_at)}
                         </td>
                       </tr>
                     );

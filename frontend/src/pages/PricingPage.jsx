@@ -34,7 +34,7 @@ const PLANS = [
     isFeatured: false,
     featuresTitle: 'Includes',
     features: [
-      'Pay only for connected minutes',
+      'Pay only for connected minutes, ₹3.00 / min',
       'All Indic voice models included',
       'Instant web & phone test sandbox',
       'Credits never expire',
@@ -53,7 +53,7 @@ const PLANS = [
     featuresTitle: 'Everything on Pay as you go, plus',
     features: [
       '₹6,999 credits pre-loaded',
-      'Lower ₹3.25 / min voice closer rate',
+      'All-inclusive ₹3.00 / min voice rate',
       '1 dedicated Indian virtual number',
       'Real-time CRM webhook sync',
       'Standard 8-hour support SLA'
@@ -71,7 +71,7 @@ const PLANS = [
     featuresTitle: 'Everything on Pro, plus',
     features: [
       '₹34,999 credits pre-loaded',
-      'Discounted ₹3.15 / min voice rate',
+      'All-inclusive ₹3.00 / min voice rate',
       '5 dedicated Indian virtual lines',
       'Adaptive objection handling engine',
       'Priority 24/7 dedicated support',
@@ -90,7 +90,7 @@ const PLANS = [
     featuresTitle: 'Everything on Growth, plus',
     features: [
       '₹99,999 credits pre-loaded',
-      'Lowest public rate: ₹3.00 / min',
+      'All-inclusive ₹3.00 / min voice rate',
       '20 dedicated virtual lines',
       'Direct SIP trunk interconnection',
       'Dedicated Account Executive',
@@ -120,8 +120,9 @@ const PLANS = [
 
 // ── Minimal Per-Minute Rates ──
 const PER_MINUTE_RATES = [
-  { service: 'Inbound AI Voice Closer', unit: 'per minute', payg: '₹3.50', pro: '₹3.25', growth: '₹3.15', business: '₹3.00' },
-  { service: 'Outbound Cold Qualification Agent', unit: 'per minute', payg: '₹3.50', pro: '₹3.25', growth: '₹3.15', business: '₹3.00' },
+  // One all-inclusive call rate on every plan (backend RATE_PEARL_CALL_PER_MIN).
+  { service: 'Inbound AI Voice Closer', unit: 'per minute', payg: '₹3.00', pro: '₹3.00', growth: '₹3.00', business: '₹3.00' },
+  { service: 'Outbound Cold Qualification Agent', unit: 'per minute', payg: '₹3.00', pro: '₹3.00', growth: '₹3.00', business: '₹3.00' },
   { service: 'Warm Call Forwarding (PSTN)', unit: 'per 30s pulse', payg: '₹0.40', pro: '₹0.40', growth: '₹0.40', business: '₹0.40' },
   { service: 'SIP Trunk Transfer', unit: 'per 30s pulse', payg: '₹0.35', pro: '₹0.35', growth: '₹0.35', business: '₹0.35' },
   { service: 'Simulate & Sandbox Test Calls', unit: 'per test run', payg: '₹2.00', pro: '₹2.00', growth: '₹2.00', business: '₹2.00' }
@@ -134,17 +135,15 @@ export default function PricingPage() {
   const avgDuration = 2.5; // minutes per call
   const totalCalls = Math.round(callMinutes / avgDuration);
 
-  // Tiered rate
-  let effectiveRate = 3.5;
+  // Every plan bills calls at the same all-inclusive rate; the volume only
+  // picks which plan's pre-loaded credits fit best.
+  const effectiveRate = 3.0;
   let recommendedPlan = 'Pay As You Go';
   if (callMinutes >= 25000) {
-    effectiveRate = 3.0;
     recommendedPlan = 'Business';
   } else if (callMinutes >= 5000) {
-    effectiveRate = 3.15;
     recommendedPlan = 'Growth';
   } else if (callMinutes >= 1500) {
-    effectiveRate = 3.25;
     recommendedPlan = 'Pro';
   }
 
@@ -317,7 +316,7 @@ export default function PricingPage() {
               <ul className="human-roi__points">
                 <li className="human-roi__point">
                   <span className="human-roi__point-bullet">✓</span>
-                  <span>Effective tiered rate of <strong>₹{effectiveRate} / minute</strong></span>
+                  <span>All-inclusive rate of <strong>₹{effectiveRate.toFixed(2)} / minute</strong></span>
                 </li>
                 <li className="human-roi__point">
                   <span className="human-roi__point-bullet">✓</span>
@@ -385,7 +384,7 @@ export default function PricingPage() {
             <div className="minimal-faq__item">
               <h3 className="minimal-faq__q">How do credits and monthly billing work?</h3>
               <p className="minimal-faq__a">
-                ₹1 INR equals 1 ClozFlow AI credit. On monthly subscription plans (Pro, Growth, Business), your credits are pre-loaded on the 1st of every billing cycle and unlock lower per-minute rates. Unused credits roll over for 60 days.
+                ₹1 INR equals 1 ClozFlow AI credit. On monthly subscription plans (Pro, Growth, Business), your credits are pre-loaded on the 1st of every billing cycle. Calls cost ₹3.00 per connected minute on every plan, voice AI and telephony included. Unused credits roll over for 60 days.
               </p>
             </div>
 

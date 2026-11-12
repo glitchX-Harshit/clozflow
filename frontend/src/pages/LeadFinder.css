@@ -3002,3 +3002,101 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(var(--accent-rgb, 99, 91, 255), 0.15);
 }
+
+/* ── Indeterminate search bar (the search reports no real progress) ── */
+.lf__flat-bar--indeterminate {
+    width: 35%;
+    animation: lf-indeterminate 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes lf-indeterminate {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(290%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lf__flat-bar--indeterminate { animation: none; width: 100%; opacity: 0.4; }
+}
+
+/* ── Sample (generated) lead data ── */
+.lf__sample-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    color: #92400e;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.lf__sample-notice svg { flex-shrink: 0; margin-top: 0.1rem; }
+
+.lf__sample-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.12rem 0.45rem;
+    border-radius: 6px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #92400e;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.lf__results-badge--sample {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #92400e;
+}
+
+/* ── Clear filters / deep-search stop ── */
+.lf__filter-clear,
+.lf__deep-stop-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    border: 1px dashed var(--border-strong);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lf__filter-clear:hover,
+.lf__deep-stop-btn:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+}
+
+.lf__deep-stop-btn {
+    margin-left: auto;
+    border-style: solid;
+}
+
+/* ── Keyboard focus for rows, chips and tabs ── */
+.lf__workspace-item:focus-visible,
+.lf__history-item:focus-visible,
+.lf__tab:focus-visible,
+.lf__offer-chip:focus-visible,
+.lf__filter-chip:focus-visible,
+.lf__mode-chip:focus-visible,
+.lf__example-chip:focus-visible,
+.lf__filter-clear:focus-visible,
+.lf__deep-stop-btn:focus-visible,
+.lf__export-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}

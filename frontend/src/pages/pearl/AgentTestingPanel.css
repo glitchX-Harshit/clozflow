@@ -510,3 +510,101 @@
   border-color: #fee2e2;
   color: #b91c1c;
 }
+
+.tp-min-banner-dismiss {
+  flex-shrink: 0;
+  margin-left: 8px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tp-min-banner-dismiss:hover {
+  background: rgba(185, 28, 28, 0.08);
+}
+
+/* The message takes the free space, so actions stay together on the right. */
+.tp-min-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* "Top up in Wallet" next to a 402 message; sits beside the dismiss button. */
+.tp-min-banner-action {
+  flex-shrink: 0;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: #09090b;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tp-min-banner-action:hover {
+  background: #27272a;
+}
+
+/* Paid-session confirmation (nothing is charged until the user starts a session) */
+.tp-min-session-gate {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tp-min-gate-note {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #52525b;
+  text-align: center;
+}
+
+.tp-min-chat-gate {
+  padding: 12px 20px 0 20px;
+  border-top: 1px solid #f4f4f5;
+}
+
+.tp-min-session-note {
+  margin: -8px 0 0 0;
+  font-size: 0.72rem;
+  color: #a1a1aa;
+  text-align: center;
+}
+
+.tp-min-btn-icon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tp-min-btn-icon:disabled:hover {
+  background: transparent;
+  color: #71717a;
+}
+
+.testing-panel-container:focus {
+  outline: none;
+}
+
+.tp-min-btn-icon:focus-visible,
+.tp-min-tab:focus-visible,
+.tp-min-btn-primary:focus-visible,
+.tp-min-btn-subtle:focus-visible,
+.tp-min-btn-danger:focus-visible,
+.tp-min-btn-send:focus-visible,
+.tp-min-banner-action:focus-visible,
+.tp-min-banner-dismiss:focus-visible {
+  outline: 2px solid #09090b;
+  outline-offset: 2px;
+}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowUpRight, ArrowRight, CornerDownRight, Volume2 } from 'lucide-react';
 import './HeroTelemetryCard.css';
 

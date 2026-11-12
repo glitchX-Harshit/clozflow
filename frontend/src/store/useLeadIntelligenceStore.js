@@ -8,9 +8,11 @@ import { persist } from 'zustand/middleware';
  * Intentionally separate from useLeadFinderStore to keep
  * the intelligence layer modular and independently replaceable.
  */
+let messageSeq = 0;
+
 export const useLeadIntelligenceStore = create(
     persist(
-        (set, get) => ({
+        (set) => ({
             // ── Panel UI state ─────────────────────────────────────────────
             isPanelOpen: false,
             togglePanel: () => set((s) => ({ isPanelOpen: !s.isPanelOpen })),
@@ -21,9 +23,13 @@ export const useLeadIntelligenceStore = create(
             setPanelWidth: (panelWidth) => set({ panelWidth }),
 
             // ── Panel view state ───────────────────────────────────────────
-            // 'empty' | 'understanding' | 'icp' | 'active' | 'results' | 'lead'
+            // 'empty' | 'understanding' | 'icp' | 'active' | 'lead'
             panelState: 'empty',
-            setPanelState: (panelState) => set({ panelState }),
+            setPanelState: (panelState) => set({ panelState, panelError: null }),
+
+            // ── Last failure shown in the panel ({ message, retry }) ────────
+            panelError: null,
+            setPanelError: (panelError) => set({ panelError }),
 
             // ── User offer input (for ICP discovery) ──────────────────────
             offerInput: '',
@@ -38,13 +44,13 @@ export const useLeadIntelligenceStore = create(
             //   usefulSignals: string[],
             //   derivedFrom: string,
             // }
-            setIcp: (icp) => set({ icp, panelState: 'icp' }),
-            clearIcp: () => set({ icp: null, panelState: 'empty', messages: [] }),
+            setIcp: (icp) => set({ icp, panelState: 'icp', panelError: null }),
+            clearIcp: () => set({ icp: null, panelState: 'empty', messages: [], panelError: null }),
 
             // ── Conversation messages ──────────────────────────────────────
             messages: [],
             addMessage: (msg) => set((s) => ({
-                messages: [...s.messages, { ...msg, id: Date.now() }]
+                messages: [...s.messages, { ...msg, id: `${Date.now()}-${++messageSeq}` }]
             })),
             clearMessages: () => set({ messages: [] }),
 
@@ -57,13 +63,6 @@ export const useLeadIntelligenceStore = create(
             // resultsSummary: { total, highRelevance, strongSignals }
             setResultsSummary: (resultsSummary) => set({ resultsSummary }),
 
-            // ── Currently selected lead (for Lead Analysis state) ──────────
-            analyzedLead: null,
-            setAnalyzedLead: (analyzedLead) => set({
-                analyzedLead,
-                panelState: analyzedLead ? 'lead' : get().panelState
-            }),
-
             // ── Loading state ──────────────────────────────────────────────
             isLoading: false,
             setIsLoading: (isLoading) => set({ isLoading }),
@@ -74,11 +73,12 @@ export const useLeadIntelligenceStore = create(
         }),
         {
             name: 'lead-intelligence-panel',
-            // Only persist ICP and panel open state
+            // Only persist ICP and panel open state. Transient views (loading, conversation,
+            // a selected lead's analysis) reopen on the ICP card — the selected lead is not persisted.
             partialize: (state) => ({
                 icp: state.icp,
                 offerInput: state.offerInput,
-                panelState: state.panelState === 'understanding' || state.panelState === 'active'
+                panelState: ['understanding', 'active', 'lead'].includes(state.panelState)
                     ? (state.icp ? 'icp' : 'empty')
                     : state.panelState,
                 isPanelOpen: state.isPanelOpen,
