@@ -8,7 +8,6 @@ import multiprocessing
 import sys
 import time
 import urllib.request
-import urllib.error
 import uuid
 import websockets
 
